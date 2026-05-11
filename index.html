@@ -685,57 +685,184 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
        NUTRITION
   ══════════════════════════════════ -->
   <div class="panel" id="panel-nutrition">
+
+    <!-- CHOLESTEROL ALERT -->
+    <div style="background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(34,197,94,.08));border:1px solid rgba(245,158,11,.35);border-radius:14px;padding:18px 20px;margin-bottom:20px;">
+      <div style="font-weight:700;font-size:1rem;margin-bottom:10px;color:var(--yellow);">❤️ תוכנית תזונה מותאמת לכולסטרול</div>
+      <div style="font-size:.87rem;color:var(--muted2);line-height:1.9;">
+        <strong style="color:var(--green);">✅ מה מורידים:</strong> שומן רווי (בשר אדום, חלמון ביצה מרובה, חלב שומני)<br>
+        <strong style="color:var(--cyan);">✅ מה מוסיפים:</strong> אומגה 3 (סלמון, סרדינים, אגוזי מלך), שמן זית, שיבולת שועל (Beta-Glucan)<br>
+        <strong style="color:var(--blue);">✅ עדיין בונים מסה:</strong> החלפנו מקורות שומן רעים בשומן בריא — הקלוריות נשמרות
+      </div>
+    </div>
+
     <div class="card">
-      <div class="card-head"><h2>🎯 יעדי מאקרו יומיים</h2></div>
+      <div class="card-head"><h2>🎯 יעדי מאקרו יומיים</h2><span class="badge badge-green">ידידותי לכולסטרול</span></div>
       <div class="card-body">
         <div class="grid-4">
           <div class="stat-box red"><div class="val">2,750</div><div class="lbl">קלוריות</div></div>
           <div class="stat-box blue"><div class="val">150g</div><div class="lbl">חלבון (2.5g/kg)</div></div>
-          <div class="stat-box yellow"><div class="val">340g</div><div class="lbl">פחמימות</div></div>
-          <div class="stat-box green"><div class="val">80g</div><div class="lbl">שומן</div></div>
+          <div class="stat-box yellow"><div class="val">350g</div><div class="lbl">פחמימות</div></div>
+          <div class="stat-box green"><div class="val">65g</div><div class="lbl">שומן (בריא בלבד)</div></div>
+        </div>
+        <div style="margin-top:14px;font-size:.82rem;color:var(--muted);line-height:1.8;">
+          🔴 <strong style="color:var(--text)">שומן רווי:</strong> מתחת ל-15g ביום &nbsp;|&nbsp;
+          🟢 <strong style="color:var(--text)">שומן בלתי רווי:</strong> עיקר השומן — אבוקדו, שמן זית, אגוזים, דגים שמנים
         </div>
       </div>
     </div>
+
     <div class="card">
       <div class="card-head"><h2>🍽️ 6 ארוחות ביום</h2></div>
       <div class="card-body">
+
+        <!-- ארוחה 1 -->
         <div class="meal-row">
-          <div class="meal-top"><div><div class="meal-name">🌅 ארוחה 1 — בוקר</div><div class="meal-time">07:00</div></div><div class="meal-cals">~680 קל׳</div></div>
-          <div class="meal-foods">🥚 4 ביצים טרופות · 🥣 80g שיבולת שועל + חלב · 🍌 בננה · 🍯 דבש + קינמון</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 40g</span><span class="mp mp-c">פחמימות 85g</span><span class="mp mp-f">שומן 22g</span></div>
+          <div class="meal-top">
+            <div><div class="meal-name">🌅 ארוחה 1 — בוקר</div><div class="meal-time">07:00</div></div>
+            <div class="meal-cals">~620 קל׳</div>
+          </div>
+          <div class="meal-foods">
+            🥚 2 ביצים שלמות + 4 חלבונים (מפחית כולסטרול מחלמונים) ·
+            🥣 100g שיבולת שועל עם מים/חלב דל שומן (Beta-Glucan מוריד כולסטרול!) ·
+            🫐 קומץ אוכמניות · 🥑 ¼ אבוקדו
+          </div>
+          <div style="font-size:.75rem;color:var(--green);margin-bottom:8px;">✅ Beta-Glucan בשיבולת שועל הוכח קלינית להורדת LDL</div>
+          <div class="meal-macros"><span class="mp mp-p">חלבון 38g</span><span class="mp mp-c">פחמימות 70g</span><span class="mp mp-f">שומן 16g</span></div>
         </div>
+
+        <!-- ארוחה 2 -->
         <div class="meal-row">
-          <div class="meal-top"><div><div class="meal-name">🍎 ארוחה 2 — ביניים</div><div class="meal-time">10:30</div></div><div class="meal-cals">~380 קל׳</div></div>
-          <div class="meal-foods">🥛 200g יוגורט יווני 5% · 🥜 30g אגוזי מלך · 🍓 פירות יער</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 24g</span><span class="mp mp-c">פחמימות 18g</span><span class="mp mp-f">שומן 22g</span></div>
+          <div class="meal-top">
+            <div><div class="meal-name">🍎 ארוחה 2 — ביניים</div><div class="meal-time">10:30</div></div>
+            <div class="meal-cals">~360 קל׳</div>
+          </div>
+          <div class="meal-foods">
+            🥛 200g יוגורט יווני 0% (דל שומן) ·
+            🥜 25g אגוזי מלך (אומגה 3!) ·
+            🍓 קומץ פירות יער ·
+            🍯 כפית דבש
+          </div>
+          <div style="font-size:.75rem;color:var(--green);margin-bottom:8px;">✅ אגוזי מלך — הכי עשיר בALA (אומגה 3 צמחי) מבין כל האגוזים</div>
+          <div class="meal-macros"><span class="mp mp-p">חלבון 22g</span><span class="mp mp-c">פחמימות 22g</span><span class="mp mp-f">שומן 18g</span></div>
         </div>
+
+        <!-- ארוחה 3 -->
         <div class="meal-row">
-          <div class="meal-top"><div><div class="meal-name">🌞 ארוחה 3 — צהריים ⭐</div><div class="meal-time">13:00</div></div><div class="meal-cals">~720 קל׳</div></div>
-          <div class="meal-foods">🍗 200g חזה עוף · 🍚 150g אורז מלא · 🥦 ירקות מוקפצים · 🫒 שמן זית</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 49g</span><span class="mp mp-c">פחמימות 55g</span><span class="mp mp-f">שומן 14g</span></div>
+          <div class="meal-top">
+            <div><div class="meal-name">🌞 ארוחה 3 — צהריים ⭐</div><div class="meal-time">13:00</div></div>
+            <div class="meal-cals">~700 קל׳</div>
+          </div>
+          <div class="meal-foods">
+            🐟 200g סלמון בגריל / מוגרי / טונה (3–4 פעמים בשבוע, ימים אחרים: 200g חזה עוף) ·
+            🍚 150g אורז מלא ·
+            🥦 ירקות מוקפצים בשמן זית ·
+            🍋 לימון ועשבי תיבול
+          </div>
+          <div style="font-size:.75rem;color:var(--green);margin-bottom:8px;">✅ סלמון — EPA+DHA מורידים טריגליצרידים ומעלים HDL (כולסטרול טוב)</div>
+          <div class="meal-macros"><span class="mp mp-p">חלבון 48g</span><span class="mp mp-c">פחמימות 55g</span><span class="mp mp-f">שומן 14g</span></div>
         </div>
+
+        <!-- ארוחה 4 -->
         <div class="meal-row">
-          <div class="meal-top"><div><div class="meal-name">🏋️ ארוחה 4 — לפני אימון</div><div class="meal-time">16:30 (60–90 דק׳ לפני)</div></div><div class="meal-cals">~450 קל׳</div></div>
-          <div class="meal-foods">🍞 2 פרוסות לחם מלא · 🧀 100g גבינה לבנה 5% · 🍌 בננה · ☕ קפה שחור</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 20g</span><span class="mp mp-c">פחמימות 72g</span><span class="mp mp-f">שומן 6g</span></div>
+          <div class="meal-top">
+            <div><div class="meal-name">🏋️ ארוחה 4 — לפני אימון</div><div class="meal-time">16:30 (60–90 דק׳ לפני)</div></div>
+            <div class="meal-cals">~430 קל׳</div>
+          </div>
+          <div class="meal-foods">
+            🍞 2 פרוסות לחם שיפון מלא ·
+            🧀 100g גבינה לבנה 1% (דל שומן) ·
+            🍌 בננה ·
+            ☕ קפה שחור
+          </div>
+          <div style="font-size:.75rem;color:var(--yellow);margin-bottom:8px;">⚠️ החלפנו גבינה 5% ב-1% — חוסך 4g שומן רווי ביום</div>
+          <div class="meal-macros"><span class="mp mp-p">חלבון 22g</span><span class="mp mp-c">פחמימות 68g</span><span class="mp mp-f">שומן 4g</span></div>
         </div>
+
+        <!-- ארוחה 5 -->
         <div class="meal-row" style="border-color:rgba(230,57,70,.4);">
-          <div class="meal-top"><div><div class="meal-name">⚡ ארוחה 5 — אחרי אימון ⭐⭐</div><div class="meal-time" style="color:var(--red)">תוך 30–45 דק׳ מסיום</div></div><div class="meal-cals">~320 קל׳</div></div>
-          <div class="meal-foods">💪 1 מנת Whey · 🍌 בננה · 🥛 200ml חלב 3% · 🍯 כף דבש</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 31g</span><span class="mp mp-c">פחמימות 52g</span><span class="mp mp-f">שומן 3g</span></div>
+          <div class="meal-top">
+            <div><div class="meal-name">⚡ ארוחה 5 — אחרי אימון ⭐⭐</div><div class="meal-time" style="color:var(--red)">תוך 30–45 דק׳ מסיום</div></div>
+            <div class="meal-cals">~310 קל׳</div>
+          </div>
+          <div class="meal-foods">
+            💪 1 מנת Whey Isolate (דל שומן רווי יותר מ-Concentrate) ·
+            🍌 בננה ·
+            🥛 200ml חלב שיבולת שועל / חלב 1% ·
+            🍯 כף דבש
+          </div>
+          <div style="font-size:.75rem;color:var(--green);margin-bottom:8px;">✅ Whey Isolate עדיף לכולסטרול — פחות שומן רווי מ-Concentrate</div>
+          <div class="meal-macros"><span class="mp mp-p">חלבון 30g</span><span class="mp mp-c">פחמימות 50g</span><span class="mp mp-f">שומן 3g</span></div>
         </div>
+
+        <!-- ארוחה 6 -->
         <div class="meal-row">
-          <div class="meal-top"><div><div class="meal-name">🌙 ארוחה 6 — ערב</div><div class="meal-time">20:30</div></div><div class="meal-cals">~720 קל׳</div></div>
-          <div class="meal-foods">🥩 200g בשר בקר רזה / סלמון · 🍠 200g בטטה · 🥗 סלט + טחינה · 🫒 שמן זית</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 48g</span><span class="mp mp-c">פחמימות 55g</span><span class="mp mp-f">שומן 18g</span></div>
+          <div class="meal-top">
+            <div><div class="meal-name">🌙 ארוחה 6 — ערב</div><div class="meal-time">20:30</div></div>
+            <div class="meal-cals">~680 קל׳</div>
+          </div>
+          <div class="meal-foods">
+            🐟 200g דג לבן (בורי, מוסר, דניס) / הודו / עוף — <span style="color:var(--red);font-size:.8rem;">⚠️ בשר אדום מקסימום פעם בשבוע</span> ·
+            🍠 200g בטטה ·
+            🥗 סלט ירקות גדול עם 1 כף שמן זית + לימון ·
+            🥑 ½ אבוקדו
+          </div>
+          <div style="font-size:.75rem;color:var(--green);margin-bottom:8px;">✅ אבוקדו — עשיר בשומן חד-בלתי-רווי שמוריד LDL ומעלה HDL</div>
+          <div class="meal-macros"><span class="mp mp-p">חלבון 44g</span><span class="mp mp-c">פחמימות 55g</span><span class="mp mp-f">שומן 16g</span></div>
         </div>
+
+        <!-- לפני שינה -->
         <div class="meal-row">
-          <div class="meal-top"><div><div class="meal-name">💤 לפני שינה — אופציונלי</div><div class="meal-time">22:00</div></div><div class="meal-cals">~220 קל׳</div></div>
-          <div class="meal-foods">🥛 200g קוטג׳ 5% + קקאו + סטיביה — חלבון קזאין איטי לשיקום בשינה</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 20g</span><span class="mp mp-c">פחמימות 8g</span><span class="mp mp-f">שומן 6g</span></div>
+          <div class="meal-top">
+            <div><div class="meal-name">💤 לפני שינה — אופציונלי</div><div class="meal-time">22:00</div></div>
+            <div class="meal-cals">~180 קל׳</div>
+          </div>
+          <div class="meal-foods">
+            🥛 200g קוטג׳ 1% (החלפנו מ-5% — פחות שומן רווי) ·
+            קקאו טבעי + סטיביה · קינמון
+          </div>
+          <div style="font-size:.75rem;color:var(--green);margin-bottom:8px;">✅ קזאין איטי לשיקום שריר בשינה, עם מינימום שומן רווי</div>
+          <div class="meal-macros"><span class="mp mp-p">חלבון 22g</span><span class="mp mp-c">פחמימות 6g</span><span class="mp mp-f">שומן 2g</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CHOLESTEROL DO/DON'T -->
+    <div class="card">
+      <div class="card-head"><h2>❤️ מה לאכול ומה להימנע — כולסטרול</h2></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div style="background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.25);border-radius:12px;padding:16px;">
+            <div style="font-weight:700;color:var(--green);margin-bottom:12px;">✅ מומלץ — מוריד כולסטרול</div>
+            <div style="font-size:.85rem;color:var(--muted2);line-height:2;">
+              🐟 סלמון, מוגרי, סרדינים (3×/שבוע)<br>
+              🥣 שיבולת שועל (Beta-Glucan)<br>
+              🥑 אבוקדו (שומן חד בלתי רווי)<br>
+              🫒 שמן זית Extra Virgin<br>
+              🥜 אגוזי מלך, שקדים<br>
+              🫘 קטניות — עדשים, חומוס<br>
+              🍓 פירות יער (נוגדי חמצון)<br>
+              🧄 שום (מוריד LDL)
+            </div>
+          </div>
+          <div style="background:rgba(230,57,70,.07);border:1px solid rgba(230,57,70,.25);border-radius:12px;padding:16px;">
+            <div style="font-weight:700;color:var(--red);margin-bottom:12px;">❌ להימנע — מעלה כולסטרול</div>
+            <div style="font-size:.85rem;color:var(--muted2);line-height:2;">
+              🥩 בשר אדום שמן — מקסימום 1×/שבוע<br>
+              🧈 חמאה, שמנת, גהי<br>
+              🧀 גבינות שמנות (צהובה, קשה)<br>
+              🍟 מטוגן בשמן לא איכותי<br>
+              🥐 מאפים, עוגות, קרואסון<br>
+              🌭 נקניקיות, בשרים מעובדים<br>
+              🥛 חלב מלא — החלף ב-1% או שיבולת שועל<br>
+              🍕 אוכל מהיר — טרנס פאט
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 
   <!-- ══════════════════════════════════
@@ -758,9 +885,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
             <div style="font-size:1.2rem;margin-bottom:8px;">☀️ ויטמין D3 + K2</div>
             <div style="font-size:.84rem;color:var(--muted2);line-height:1.8;">מינון: 2,000–4,000 IU D3 + 100mcg K2<br>K2 מכוון את הסידן לעצמות<br><span style="color:var(--green);">✅ חשוב לטסטוסטרון</span></div>
           </div>
-          <div style="background:var(--bg3);border-radius:12px;padding:18px;border:1px solid var(--border2);">
-            <div style="font-size:1.2rem;margin-bottom:8px;">🐟 אומגה 3</div>
-            <div style="font-size:.84rem;color:var(--muted2);line-height:1.8;">מינון: 2g EPA+DHA ביום עם אוכל<br>מפחית דלקת + מאיץ שיקום<br><span style="color:var(--green);">✅ מומלץ</span></div>
+          <div style="background:var(--bg3);border-radius:12px;padding:18px;border:1px solid rgba(34,197,94,.4);">
+            <div style="font-size:1.2rem;margin-bottom:8px;">🐟 אומגה 3 — חובה לכולסטרול!</div>
+            <div style="font-size:.84rem;color:var(--muted2);line-height:1.8;">מינון: <strong style="color:var(--green);">3–4g EPA+DHA ביום</strong><br>מפחית טריגליצרידים עד 30%<br>מעלה HDL (כולסטרול טוב)<br><span style="color:var(--green);">⭐ הכי חשוב עבורך</span></div>
           </div>
         </div>
       </div>
