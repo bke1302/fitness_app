@@ -195,6 +195,105 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 /* MUSCLE PART TAG */
 .part-tag{font-size:.68rem;padding:2px 7px;border-radius:999px;background:rgba(6,182,212,.12);color:var(--cyan);border:1px solid rgba(6,182,212,.25);white-space:nowrap;margin-top:3px;display:inline-block;}
 
+/* ══ TODAY HERO BANNER ══ */
+.today-hero{border-radius:16px;padding:22px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;transition:transform .2s;background:linear-gradient(135deg,var(--red),#9333ea);}
+.today-hero:hover{transform:translateY(-2px);}
+.today-hero-info .today-hero-day{font-size:.78rem;color:rgba(255,255,255,.75);font-weight:600;margin-bottom:4px;}
+.today-hero-info .today-hero-title{font-size:1.5rem;font-weight:800;color:#fff;}
+.today-hero-info .today-hero-sub{font-size:.84rem;color:rgba(255,255,255,.8);margin-top:4px;}
+.today-hero-hint{margin-top:10px;font-size:.78rem;color:rgba(255,255,255,.65);}
+.today-hero-emoji{font-size:3rem;}
+.today-hero-rest{background:linear-gradient(135deg,rgba(34,197,94,.2),rgba(6,182,212,.15));border:1px solid rgba(34,197,94,.3)!important;cursor:default;}
+.today-hero-rest:hover{transform:none;}
+
+/* ══ REST TIMER ══ */
+.timer-float{position:fixed;bottom:24px;right:24px;z-index:290;display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+.timer-presets{display:none;flex-direction:column;gap:4px;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:8px;box-shadow:0 8px 32px rgba(0,0,0,.5);}
+.timer-presets.show{display:flex;}
+.timer-presets button{background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:8px;padding:7px 16px;cursor:pointer;font-family:var(--font);font-size:.82rem;white-space:nowrap;}
+.timer-presets button:hover{border-color:var(--red);color:var(--red);}
+.timer-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--muted2);border-radius:999px;padding:10px 18px;cursor:pointer;font-size:.85rem;font-weight:700;font-family:var(--font);transition:all .2s;white-space:nowrap;}
+.timer-btn:hover{border-color:var(--red);color:var(--text);}
+.timer-btn.running{background:linear-gradient(135deg,var(--red),#9333ea);border-color:transparent;color:#fff;min-width:90px;text-align:center;}
+.timer-ring{position:relative;width:62px;height:62px;display:none;}
+.timer-ring.show{display:flex;align-items:center;justify-content:center;}
+.ring-track{fill:none;stroke:var(--bg4);stroke-width:5;}
+.ring-prog{fill:none;stroke:var(--red);stroke-width:5;stroke-linecap:round;transform-origin:30px 30px;transform:rotate(-90deg);transition:stroke-dashoffset .95s linear;}
+.ring-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.88rem;color:var(--text);}
+
+/* ══ MOBILE CARD LAYOUT ══ */
+@media(max-width:600px){
+  .ex-table thead{display:none;}
+  .ex-table tbody tr[onclick]{display:flex!important;flex-wrap:wrap;align-items:flex-start;gap:4px;padding:12px 4px;border-bottom:1px solid var(--border);}
+  .ex-table tbody tr[onclick] td{display:inline-flex;border:none;padding:2px 0;align-items:flex-start;}
+  .ex-table tbody tr[onclick] td:nth-child(1){flex-shrink:0;padding-top:3px;}
+  .ex-table tbody tr[onclick] td:nth-child(2){flex:1;min-width:0;flex-direction:column;}
+  .ex-table tbody tr[onclick] td:nth-child(3){width:100%;order:3;flex-wrap:wrap;gap:4px;}
+  .ex-table tbody tr[onclick] td:nth-child(4){order:2;font-size:.9rem;font-weight:800;}
+  .ex-table tbody tr[onclick] td:nth-child(5),
+  .ex-table tbody tr[onclick] td:nth-child(6){display:none!important;}
+  .ex-table tbody tr:not([onclick]){display:block!important;}
+}
+
+/* ══ SET CHECKBOXES ══ */
+.set-checks{display:flex;gap:5px;margin-top:6px;}
+.set-check{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border2);background:var(--bg4);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;color:transparent;transition:all .2s;flex-shrink:0;user-select:none;}
+.set-check.done{background:var(--green);border-color:var(--green);color:#fff;}
+.ex-done-text{text-decoration:line-through;color:var(--muted)!important;}
+.ex-done-en{text-decoration:line-through;}
+
+/* ══ STREAK ══ */
+.streak-box{background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(230,57,70,.08));border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:16px;text-align:center;}
+.streak-box .val{color:var(--yellow);}
+.streak-msg{font-size:.78rem;color:var(--yellow);font-weight:700;margin-top:4px;}
+
+/* ══ INSTALL BANNER ══ */
+.install-banner{background:linear-gradient(135deg,rgba(230,57,70,.1),rgba(147,51,234,.08));border:1px solid rgba(230,57,70,.22);border-radius:12px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.install-banner-text{font-size:.84rem;color:var(--muted2);line-height:1.5;}
+.install-banner-text strong{color:var(--text);}
+.install-banner-actions{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+.install-banner-btn{background:linear-gradient(135deg,var(--red),#9333ea);color:#fff;border:none;border-radius:999px;padding:8px 18px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap;}
+.install-banner-dismiss{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:4px 8px;}
+
+/* ══ PR SECTION (modal) ══ */
+.pr-section{background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:14px;margin-top:16px;}
+.pr-title{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.pr-inputs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.pr-input{background:var(--bg4);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-family:var(--font);font-size:.88rem;width:80px;text-align:center;}
+.pr-input:focus{outline:none;border-color:var(--blue);}
+.pr-x{color:var(--muted);font-size:.85rem;}
+.pr-save-btn{background:var(--blue);border:none;color:#fff;border-radius:8px;padding:7px 14px;cursor:pointer;font-family:var(--font);font-size:.82rem;font-weight:700;white-space:nowrap;}
+.pr-display{font-size:.85rem;margin-top:8px;font-weight:600;min-height:20px;}
+
+/* ══ CELEBRATION MODAL ══ */
+.celebrate-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+.celebrate-overlay.show{display:flex;}
+.celebrate-box{background:var(--bg2);border:1px solid rgba(34,197,94,.4);border-radius:24px;padding:40px 32px;text-align:center;max-width:320px;width:100%;}
+.celebrate-emoji{font-size:4rem;margin-bottom:12px;}
+.celebrate-title{font-size:1.4rem;font-weight:800;margin-bottom:8px;color:var(--green);}
+.celebrate-sub{font-size:.9rem;color:var(--muted2);line-height:1.7;margin-bottom:24px;}
+.celebrate-close{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;border:none;border-radius:999px;padding:12px 32px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:var(--font);}
+
+/* ══ SETTINGS ══ */
+.settings-field{margin-bottom:16px;}
+.settings-label{font-size:.76rem;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;display:block;}
+.settings-input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;color:var(--text);font-family:var(--font);font-size:.9rem;}
+.settings-input:focus{outline:none;border-color:var(--blue);}
+.settings-save{background:linear-gradient(135deg,var(--red),#9333ea);color:#fff;border:none;border-radius:999px;padding:11px 28px;cursor:pointer;font-family:var(--font);font-size:.9rem;font-weight:700;}
+.bmr-display{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;font-size:.84rem;color:var(--muted2);margin-top:12px;line-height:1.8;}
+.bmr-display strong{color:var(--text);}
+
+/* ══ WEIGHT CHART ══ */
+.weight-chart-wrap{width:100%;overflow-x:auto;}
+.weight-log-form{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.wl-input{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;color:var(--text);font-family:var(--font);font-size:.85rem;}
+.wl-input:focus{outline:none;border-color:var(--blue);}
+.weight-add-btn{background:var(--blue);border:none;color:#fff;border-radius:8px;padding:8px 16px;cursor:pointer;font-family:var(--font);font-size:.85rem;font-weight:700;white-space:nowrap;}
+.wlog-entry{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:.85rem;}
+.wlog-entry:last-child{border-bottom:none;}
+.wlog-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;padding:2px 6px;border-radius:4px;}
+.wlog-del:hover{color:var(--red);}
+
 @media(max-width:768px){
   .sidebar{transform:translateX(100%);width:78vw;max-width:280px;}
   .sidebar.open{transform:translateX(0);}
@@ -253,6 +352,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="nav-group-title">מידע</div>
     <button class="nav-btn" onclick="showPanel('tips',this)"><span class="nav-icon">💡</span> טיפים מהמאמן</button>
     <button class="nav-btn" onclick="showPanel('timeline',this)"><span class="nav-icon">📈</span> ציר זמן</button>
+    <div class="nav-group-title">אישי</div>
+    <button class="nav-btn" onclick="showPanel('progress',this)"><span class="nav-icon">📊</span> התקדמות משקל</button>
+    <button class="nav-btn" onclick="showPanel('settings',this)"><span class="nav-icon">⚙️</span> הגדרות</button>
   </nav>
   <div class="sidebar-footer">
     <div class="user-chip">
@@ -284,6 +386,24 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   ══════════════════════════════════ -->
   <div class="panel active" id="panel-dashboard">
 
+    <!-- INSTALL BANNER -->
+    <div class="install-banner" id="install-banner" style="display:none;">
+      <div class="install-banner-text"><strong>📲 התקן כאפליקציה</strong><br>גישה מהירה מהמסך הראשי — ללא דפדפן</div>
+      <div class="install-banner-actions">
+        <button class="install-banner-btn" id="install-banner-btn">התקן</button>
+        <button class="install-banner-dismiss" onclick="dismissInstallBanner()">✕</button>
+      </div>
+    </div>
+
+    <!-- TODAY HERO -->
+    <div class="today-hero" id="today-hero">
+      <div class="today-hero-info">
+        <div class="today-hero-day">טוען...</div>
+        <div class="today-hero-title">ProFit</div>
+      </div>
+      <div class="today-hero-emoji">💪</div>
+    </div>
+
     <div class="trainer-note">
       <strong>💬 מדוע Push/Pull/Legs/Arms לימים שלך?</strong><br>
       א׳+ב׳ הם יומיים רצופים — Push ואז Pull מושלם כי שרירי הדחיפה (חזה, כתפיים, טריצפס) לא נוגעים בשרירי המשיכה (גב, בייסס). ג׳ מנוחה. ד׳+ה׳ — רגליים ואז ידיים — שוב אין חפיפה. <strong>כל שריר מקבל 48–72 שעות שיקום מלא.</strong> זה הפיצול שהשתמשתי בו עם הספורטאים הטובים ביותר שעבדתי איתם.
@@ -293,10 +413,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="card-head"><h2>📊 הנתונים שלך</h2><span class="badge badge-green">Lean Bulk</span></div>
       <div class="card-body">
         <div class="grid-4" style="margin-bottom:14px;">
-          <div class="stat-box red"><div class="val">2,750</div><div class="lbl">קלוריות יומיות</div></div>
-          <div class="stat-box blue"><div class="val">150g</div><div class="lbl">חלבון יומי</div></div>
+          <div class="stat-box red"><div class="val" id="dash-cals">2,750</div><div class="lbl">קלוריות יומיות</div></div>
+          <div class="stat-box blue"><div class="val" id="dash-protein">150g</div><div class="lbl">חלבון יומי</div></div>
           <div class="stat-box yellow"><div class="val">340g</div><div class="lbl">פחמימות יומיות</div></div>
-          <div class="stat-box green"><div class="val">80g</div><div class="lbl">שומן יומי</div></div>
+          <div class="streak-box stat-box" style="text-align:center;" onclick="showPanel('progress')">
+            <div class="val streak-box" id="streak-num" style="color:var(--yellow);">0</div>
+            <div class="lbl">ימי רצף 🔥</div>
+            <div class="streak-msg" id="streak-msg">מתחילים!</div>
+          </div>
         </div>
         <div class="pbar"><div class="pbar-top"><span>BMR</span><span style="color:var(--cyan)">1,512 קל׳</span></div><div class="pbar-track"><div class="pbar-fill" style="width:55%;background:var(--cyan)"></div></div></div>
         <div class="pbar"><div class="pbar-top"><span>TDEE (×1.55)</span><span style="color:var(--blue)">2,344 קל׳</span></div><div class="pbar-track"><div class="pbar-fill" style="width:85%;background:var(--blue)"></div></div></div>
@@ -308,7 +432,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="card-head"><h2>📅 השבוע שלך</h2></div>
       <div class="card-body">
         <div class="week-bar">
-          <div class="day-cell active-day" onclick="goDay('push')">
+          <div class="day-cell" onclick="goDay('push')">
             <div class="dc-name">ראשון</div><div class="dc-icon">💥</div>
             <div class="dc-type" style="color:var(--red)">PUSH</div>
             <div class="dc-label">חזה · כתף · טרי</div>
@@ -1173,6 +1297,94 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
   </div>
 
+  <!-- ══════════════════════════════════
+       PROGRESS PANEL
+  ══════════════════════════════════ -->
+  <div class="panel" id="panel-progress">
+    <div class="card">
+      <div class="card-head"><h2>📊 גרף משקל גוף</h2><span class="badge badge-cyan">לאורך זמן</span></div>
+      <div class="card-body">
+        <div class="weight-log-form">
+          <input type="date" id="wl-date" class="wl-input" />
+          <input type="number" id="wl-kg" class="wl-input" placeholder="משקל (ק״ג)" step="0.1" min="20" max="300" style="width:130px;" />
+          <button class="weight-add-btn" onclick="addWeightForm()">+ הוסף</button>
+        </div>
+        <div class="weight-chart-wrap">
+          <svg id="weight-svg" viewBox="0 0 600 200" width="100%" style="min-width:260px;display:block;">
+            <text x="50%" y="50%" text-anchor="middle" fill="var(--muted)" font-size="13">הוסף לפחות 2 מדידות לגרף</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h2>📋 היסטוריית מדידות</h2></div>
+      <div class="card-body">
+        <div id="weight-log-list"><div style="color:var(--muted);font-size:.85rem;padding:6px 0;">אין רשומות עדיין — הוסף מדידה ראשונה למעלה!</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h2>🔥 רצף אימונים</h2></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="stat-box" style="text-align:center;background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(230,57,70,.07));border-color:rgba(245,158,11,.3);">
+            <div class="val" id="streak-num2" style="color:var(--yellow);font-size:3rem;">0</div>
+            <div class="lbl">ימי אימון ברצף</div>
+            <div class="streak-msg" id="streak-msg2" style="margin-top:6px;">מתחילים! 🌱</div>
+          </div>
+          <div style="font-size:.85rem;color:var(--muted2);line-height:2;padding:16px 0;">
+            🔵 <strong style="color:var(--text)">0–3 ימים:</strong> מתחילים! 🌱<br>
+            🟡 <strong style="color:var(--text)">4–7 ימים:</strong> התחלה טובה! 💪<br>
+            🔴 <strong style="color:var(--text)">8–14 ימים:</strong> אחלה קצב! 🔥<br>
+            🟣 <strong style="color:var(--text)">15+ ימים:</strong> מכונה! 🚀
+          </div>
+        </div>
+        <div style="font-size:.8rem;color:var(--muted);margin-top:12px;">* הרצף מחושב לפי ימי אימון (א׳ ב׳ ד׳ ה׳) שבהם סימנת את כל התרגילים כהושלמו.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       SETTINGS PANEL
+  ══════════════════════════════════ -->
+  <div class="panel" id="panel-settings">
+    <div class="card">
+      <div class="card-head"><h2>⚙️ הגדרות אישיות</h2></div>
+      <div class="card-body">
+        <form id="settings-form" onsubmit="return false;">
+          <div class="grid-2">
+            <div class="settings-field">
+              <label class="settings-label" for="sf-name">שם</label>
+              <input id="sf-name" class="settings-input" type="text" placeholder="השם שלך" />
+            </div>
+            <div class="settings-field">
+              <label class="settings-label" for="sf-age">גיל</label>
+              <input id="sf-age" class="settings-input" type="number" min="16" max="80" placeholder="גיל" oninput="updateBMRPreview()"/>
+            </div>
+            <div class="settings-field">
+              <label class="settings-label" for="sf-weight">משקל (ק״ג)</label>
+              <input id="sf-weight" class="settings-input" type="number" min="30" max="250" step="0.1" placeholder="משקל" oninput="updateBMRPreview()"/>
+            </div>
+            <div class="settings-field">
+              <label class="settings-label" for="sf-height">גובה (ס״מ)</label>
+              <input id="sf-height" class="settings-input" type="number" min="100" max="230" placeholder="גובה" oninput="updateBMRPreview()"/>
+            </div>
+          </div>
+          <div class="bmr-display" id="bmr-preview">
+            ✏️ הזן נתונים לחישוב BMR ו-TDEE
+          </div>
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+            <label class="settings-label" for="sf-calories">יעד קלוריות יומי</label>
+            <input id="sf-calories" class="settings-input" type="number" min="1500" max="5000" placeholder="קלוריות יומי" />
+            <div style="font-size:.78rem;color:var(--muted);margin-top:6px;">* ממולץ: TDEE + 400 ל-Lean Bulk</div>
+          </div>
+          <div style="margin-top:20px;">
+            <button class="settings-save" onclick="saveSettingsForm()">💾 שמור הגדרות</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   </div><!-- /content -->
 </div><!-- /main -->
 
@@ -1191,6 +1403,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="m-text" id="m-muscles"></div>
     <div class="m-section">טיפים לביצוע</div>
     <ul class="tips-list" id="m-tips"></ul>
+    <div class="pr-section">
+      <div class="pr-title">🏆 שיא אישי (PR)</div>
+      <div class="pr-inputs">
+        <input type="number" id="pr-kg" class="pr-input" placeholder="ק״ג" min="0" step="0.5"/>
+        <span class="pr-x">×</span>
+        <input type="number" id="pr-reps" class="pr-input" placeholder="חזרות" min="1" max="50"/>
+        <button class="pr-save-btn" onclick="savePRFromModal()">שמור PR</button>
+      </div>
+      <div class="pr-display" id="pr-display"></div>
+    </div>
   </div>
 </div>
 
@@ -1298,8 +1520,10 @@ const EX = {
     tips:['ידיים צמודות — אצבעות נוגעות','גוף ישר לחלוטין','מרפקים כלפי מאחור בירידה','עד כישלון מוחלט']}
 };
 
+let _currentExKey = null;
 function openModal(key){
   const e=EX[key]; if(!e)return;
+  _currentExKey = key;
   document.getElementById('m-title').textContent=e.name+' — '+e.en;
   document.getElementById('m-emoji').textContent=e.e;
   document.getElementById('m-desc').textContent=e.desc;
@@ -1310,6 +1534,16 @@ function openModal(key){
      <div class="info-pill">מנוחה: <strong>${e.rest}</strong></div>
      <div class="info-pill">עצימות: <strong>${e.lvl}</strong></div>`;
   document.getElementById('m-tips').innerHTML=e.tips.map(t=>`<li><span>✅</span><span>${t}</span></li>`).join('');
+  // Load PR
+  const prs = getPRs();
+  const pr = prs[key];
+  const kgEl = document.getElementById('pr-kg');
+  const repsEl = document.getElementById('pr-reps');
+  const dispEl = document.getElementById('pr-display');
+  if(kgEl) kgEl.value = pr ? pr.kg : '';
+  if(repsEl) repsEl.value = pr ? pr.reps : '';
+  if(dispEl) dispEl.textContent = pr ? `📅 שיא נוכחי: ${pr.kg}ק"ג × ${pr.reps} (${pr.date})` : '';
+  if(dispEl) dispEl.style.color = 'var(--cyan)';
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
@@ -1317,7 +1551,7 @@ function closeModal(){document.getElementById('modal-overlay').classList.remove(
 function closeModalBg(ev){if(ev.target.id==='modal-overlay')closeModal();}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
-const TITLES={dashboard:'לוח בקרה',schedule:'לוח שבועי',push:'ראשון — PUSH DAY',pull:'שני — PULL DAY',legs:'רביעי — LEGS DAY',arms:'חמישי — ARMS DAY',nutrition:'תוכנית תזונה',supplements:'תוספי תזונה',tips:'טיפים מהמאמן',timeline:'ציר זמן'};
+const TITLES={dashboard:'לוח בקרה',schedule:'לוח שבועי',push:'ראשון — PUSH DAY',pull:'שני — PULL DAY',legs:'רביעי — LEGS DAY',arms:'חמישי — ARMS DAY',nutrition:'תוכנית תזונה',supplements:'תוספי תזונה',tips:'טיפים מהמאמן',timeline:'ציר זמן',progress:'התקדמות משקל',settings:'הגדרות אישיות'};
 function showPanel(name,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
@@ -1360,35 +1594,450 @@ if('serviceWorker' in navigator){
 
 // ── INSTALL PROMPT ──
 let deferredPrompt;
-const installBtn = document.getElementById('install-btn');
-
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  if(installBtn) {
-    installBtn.style.display = 'flex';
-    installBtn.onclick = async () => {
+  if(!localStorage.getItem('pf_installDismissed')){
+    const banner=document.getElementById('install-banner');
+    if(banner) banner.style.display='flex';
+    const btn=document.getElementById('install-banner-btn');
+    if(btn) btn.onclick=async()=>{
+      if(!deferredPrompt) return;
       deferredPrompt.prompt();
-      const {outcome} = await deferredPrompt.userChoice;
-      if(outcome === 'accepted') installBtn.style.display = 'none';
-      deferredPrompt = null;
+      const {outcome}=await deferredPrompt.userChoice;
+      if(outcome==='accepted') dismissInstallBanner();
+      deferredPrompt=null;
     };
   }
 });
 
 window.addEventListener('appinstalled', () => {
-  if(installBtn) installBtn.style.display = 'none';
+  const banner = document.getElementById('install-banner');
+  if(banner) banner.style.display = 'none';
+});
+
+// ═══════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════
+const SETTINGS_KEY = 'proFit_settings';
+const DEFAULT_S = {name:'המשתמש שלי',weight:60,height:170,age:31,calories:2750};
+function getSettings(){ try{return{...DEFAULT_S,...JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}')};}catch(e){return{...DEFAULT_S};} }
+function saveSettings(s){ localStorage.setItem(SETTINGS_KEY,JSON.stringify(s)); applySettings(s); }
+function applySettings(s){
+  const chips = document.querySelectorAll('.stats-chips .chip strong');
+  if(chips[0]) chips[0].textContent = s.weight+' ק"ג';
+  if(chips[1]) chips[1].textContent = s.height+' ס"מ';
+  const sub = document.querySelector('.user-sub');
+  if(sub) sub.textContent = s.weight+' ק"ג · '+s.height+' ס"מ · '+s.age;
+  const nm = document.querySelector('.user-name');
+  if(nm) nm.textContent = s.name;
+  const av = document.querySelector('.user-avatar');
+  if(av) av.textContent = (s.name||'מ').charAt(0);
+  const calEl = document.getElementById('dash-cals');
+  if(calEl) calEl.textContent = s.calories.toLocaleString('he-IL');
+}
+function updateBMRPreview(){
+  const w=parseFloat(document.getElementById('sf-weight')?.value)||0;
+  const h=parseFloat(document.getElementById('sf-height')?.value)||0;
+  const a=parseInt(document.getElementById('sf-age')?.value)||0;
+  const prev=document.getElementById('bmr-preview');
+  if(!prev||!w||!h||!a){if(prev)prev.innerHTML='✏️ הזן נתונים לחישוב BMR ו-TDEE';return;}
+  const bmr=Math.round(10*w+6.25*h-5*a+5);
+  const tdee=Math.round(bmr*1.55);
+  const lean=tdee+400;
+  prev.innerHTML=`<strong>BMR:</strong> ${bmr.toLocaleString()} קל׳ &nbsp;|&nbsp; <strong>TDEE (×1.55):</strong> ${tdee.toLocaleString()} קל׳ &nbsp;|&nbsp; <strong>Lean Bulk (+400):</strong> ${lean.toLocaleString()} קל׳`;
+  // Auto-fill calories
+  const calIn=document.getElementById('sf-calories');
+  if(calIn && !calIn.dataset.touched) calIn.value = lean;
+}
+function saveSettingsForm(){
+  const name=(document.getElementById('sf-name')?.value||'').trim()||'המשתמש שלי';
+  const weight=parseFloat(document.getElementById('sf-weight')?.value)||60;
+  const height=parseFloat(document.getElementById('sf-height')?.value)||170;
+  const age=parseInt(document.getElementById('sf-age')?.value)||31;
+  const calories=parseInt(document.getElementById('sf-calories')?.value)||2750;
+  saveSettings({name,weight,height,age,calories});
+  const btn=document.querySelector('#settings-form .settings-save');
+  if(btn){const o=btn.textContent;btn.textContent='✅ נשמר!';setTimeout(()=>btn.textContent=o,2000);}
+}
+
+// ═══════════════════════════════════════════════════
+// PERSONAL RECORDS
+// ═══════════════════════════════════════════════════
+const PR_KEY='proFit_pr';
+function getPRs(){ try{return JSON.parse(localStorage.getItem(PR_KEY)||'{}')}catch(e){return{};} }
+function savePRFromModal(){
+  const key=_currentExKey; if(!key) return;
+  const kg=parseFloat(document.getElementById('pr-kg')?.value);
+  const reps=parseInt(document.getElementById('pr-reps')?.value);
+  const disp=document.getElementById('pr-display');
+  if(isNaN(kg)||isNaN(reps)||kg<=0||reps<=0){if(disp){disp.textContent='⚠️ הזן ק"ג וחזרות';disp.style.color='var(--red)';}return;}
+  const prs=getPRs(); const prev=prs[key];
+  const isNew=!prev||kg>prev.kg||(kg===prev.kg&&reps>prev.reps);
+  prs[key]={kg,reps,date:new Date().toISOString().slice(0,10)};
+  localStorage.setItem(PR_KEY,JSON.stringify(prs));
+  if(disp){
+    disp.textContent=isNew?'🏆 שיא חדש! '+kg+'ק"ג × '+reps:'✅ נשמר: '+kg+'ק"ג × '+reps;
+    disp.style.color=isNew?'var(--yellow)':'var(--cyan)';
+  }
+  if(isNew&&navigator.vibrate) navigator.vibrate([200,100,200,100,400]);
+}
+
+// ═══════════════════════════════════════════════════
+// WORKOUT LOGGER (set checkboxes)
+// ═══════════════════════════════════════════════════
+const LOG_KEY='proFit_log';
+function getLog(){ try{return JSON.parse(localStorage.getItem(LOG_KEY)||'{}')}catch(e){return{};} }
+function saveLog(log){ localStorage.setItem(LOG_KEY,JSON.stringify(log)); }
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+function initCheckboxes(){
+  const today=todayStr(); const log=getLog();
+  document.querySelectorAll('.ex-table tbody tr[onclick]').forEach(tr=>{
+    const m=tr.getAttribute('onclick').match(/openModal\('(\w+)'\)/);
+    if(!m) return;
+    const key=m[1];
+    const ex=EX[key];
+    const sc=Math.min(parseInt((ex?.sets||'3×10').split('×')[0])||3,6);
+    const cell=tr.querySelector('.sets-cell');
+    if(!cell||cell.querySelector('.set-checks')) return;
+    const div=document.createElement('div');
+    div.className='set-checks';
+    for(let i=0;i<sc;i++){
+      const box=document.createElement('div');
+      box.className='set-check';
+      const saved=log[today]?.[key]?.[i];
+      if(saved){box.classList.add('done');box.textContent='✓';}
+      box.addEventListener('click',function(e){
+        e.stopPropagation();
+        const done=!box.classList.contains('done');
+        box.classList.toggle('done',done);
+        box.textContent=done?'✓':'';
+        const l=getLog();
+        if(!l[today]) l[today]={};
+        if(!l[today][key]) l[today][key]={};
+        l[today][key][i]=done;
+        saveLog(l);
+        if(navigator.vibrate) navigator.vibrate(25);
+        updateExRow(tr,key);
+        checkPanelDone(tr.closest('.panel'));
+      });
+      div.appendChild(box);
+    }
+    cell.appendChild(div);
+    updateExRow(tr,key);
+  });
+}
+
+function updateExRow(tr,key){
+  const checks=[...tr.querySelectorAll('.set-check')];
+  const all=checks.length>0&&checks.every(c=>c.classList.contains('done'));
+  const nm=tr.querySelector('.ex-name-main');
+  const en=tr.querySelector('.ex-name-en');
+  if(nm) nm.classList.toggle('ex-done-text',all);
+  if(en) en.classList.toggle('ex-done-en',all);
+  tr.style.opacity=all?'0.55':'';
+}
+
+function checkPanelDone(panel){
+  if(!panel) return;
+  const rows=[...panel.querySelectorAll('.ex-table tbody tr[onclick]')];
+  if(!rows.length) return;
+  const all=rows.every(tr=>{
+    const c=[...tr.querySelectorAll('.set-check')];
+    return c.length>0&&c.every(b=>b.classList.contains('done'));
+  });
+  if(!all) return;
+  const today=todayStr(); const log=getLog();
+  if(log[today]?.__complete) return;
+  if(!log[today]) log[today]={};
+  log[today].__complete=true;
+  saveLog(log);
+  if(navigator.vibrate) navigator.vibrate([100,50,200]);
+  updateStreak();
+  // confetti-ish message
+  const ct=document.getElementById('celebrate-text');
+  const day=panel.id.replace('panel-','').toUpperCase();
+  if(ct) ct.innerHTML=`כל הכבוד! סיימת את יום ה-${day}! 🔥<br>הגוף שלך מתחזק מאימון לאימון.`;
+  document.getElementById('celebrate-overlay').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+
+function closeCelebration(){
+  document.getElementById('celebrate-overlay').classList.remove('show');
+  document.body.style.overflow='';
+}
+
+// ═══════════════════════════════════════════════════
+// STREAK
+// ═══════════════════════════════════════════════════
+const TRAIN_DAYS=[0,1,3,4];
+const HEB_DAYS2=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+
+function computeStreak(){
+  const log=getLog();
+  let streak=0;
+  const today=new Date();
+  for(let i=1;i<90;i++){
+    const d=new Date(today); d.setDate(today.getDate()-i);
+    const dow=d.getDay();
+    if(!TRAIN_DAYS.includes(dow)) continue;
+    const ds=d.toISOString().slice(0,10);
+    if(log[ds]?.__complete) streak++;
+    else break;
+  }
+  return streak;
+}
+
+function updateStreak(){
+  const n=computeStreak();
+  ['streak-num','streak-num2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
+  const msgs=[[0,0,'מתחילים! 🌱'],[1,3,'התחלה טובה! 💪'],[4,7,'אחלה קצב! 🔥'],[8,14,'מכונה! 🚀'],[15,999,'אגדה! 👑']];
+  const msg=(msgs.find(([lo,hi])=>n>=lo&&n<=hi)||msgs[0])[2];
+  ['streak-msg','streak-msg2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=msg;});
+}
+
+// ═══════════════════════════════════════════════════
+// TODAY HERO BANNER
+// ═══════════════════════════════════════════════════
+const DAY_CFG={
+  0:{panel:'push',icon:'💥',label:'PUSH DAY',sub:'חזה · כתפיים · טריצפס',grad:'linear-gradient(135deg,#e63946,#9333ea)'},
+  1:{panel:'pull',icon:'🔄',label:'PULL DAY',sub:'גב · בייסס · כתף אחורית',grad:'linear-gradient(135deg,#3b82f6,#06b6d4)'},
+  3:{panel:'legs',icon:'🦵',label:'LEGS DAY',sub:'ירכיים · ירך אחורי · שוק',grad:'linear-gradient(135deg,#a855f7,#3b82f6)'},
+  4:{panel:'arms',icon:'💪',label:'ARMS DAY',sub:'בייסס · טריצפס · כתף',grad:'linear-gradient(135deg,#f59e0b,#e63946)'}
+};
+const HEB_DAYS3=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+
+function initTodayHero(){
+  const d=new Date().getDay();
+  const hero=document.getElementById('today-hero');
+  if(!hero) return;
+  const cfg=DAY_CFG[d];
+  const log=getLog(); const today=todayStr();
+  const done=log[today]?.__complete;
+  if(cfg){
+    hero.style.background=cfg.grad;
+    hero.style.cursor='pointer';
+    hero.innerHTML=`
+      <div class="today-hero-info">
+        <div class="today-hero-day">📅 היום — יום ${HEB_DAYS3[d]}</div>
+        <div class="today-hero-title">${cfg.icon} ${cfg.label}${done?' ✅':''}</div>
+        <div class="today-hero-sub">${cfg.sub}</div>
+        <div class="today-hero-hint">${done?'הושלם היום! כל הכבוד 💪':'לחץ לפתיחת האימון ←'}</div>
+      </div>
+      <div class="today-hero-emoji">${done?'✅':cfg.icon}</div>`;
+    hero.onclick=()=>{
+      document.querySelectorAll('.nav-btn').forEach(b=>{
+        if(b.getAttribute('onclick')?.includes("'"+cfg.panel+"'")) b.click();
+      });
+    };
+  } else {
+    hero.style.background='linear-gradient(135deg,rgba(34,197,94,.2),rgba(6,182,212,.15))';
+    hero.style.border='1px solid rgba(34,197,94,.3)';
+    hero.style.cursor='default';
+    hero.innerHTML=`
+      <div class="today-hero-info">
+        <div class="today-hero-day">📅 היום — יום ${HEB_DAYS3[d]}</div>
+        <div class="today-hero-title" style="color:#fff">😴 יום מנוחה</div>
+        <div class="today-hero-sub" style="color:rgba(255,255,255,.8)">שיקום, שינה, תזונה. הגוף גדל כשאתה נח.</div>
+      </div>
+      <div class="today-hero-emoji">💚</div>`;
+  }
+  // Highlight today in week bars
+  document.querySelectorAll('.week-bar .day-cell').forEach((c,i)=>{
+    c.classList.toggle('active-day',i===d);
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// ANIMATED STATS
+// ═══════════════════════════════════════════════════
+function animateStats(){
+  document.querySelectorAll('#panel-dashboard .stat-box .val').forEach(el=>{
+    const raw=el.textContent.replace(/,/g,'');
+    const num=parseFloat(raw);
+    if(isNaN(num)) return;
+    const suffix=el.textContent.replace(/[\d,\.]/g,'');
+    const start=performance.now();
+    const dur=900;
+    (function step(now){
+      const t=Math.min((now-start)/dur,1);
+      const ease=1-Math.pow(1-t,3);
+      el.textContent=Math.round(ease*num).toLocaleString('he-IL')+suffix;
+      if(t<1) requestAnimationFrame(step);
+    })(start);
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// REST TIMER
+// ═══════════════════════════════════════════════════
+let _timerIv=null, _timerTotal=0, _timerRemain=0;
+const CIRC=2*Math.PI*24; // r=24
+
+function onTimerBtnClick(){
+  if(_timerIv){ cancelTimer(); }
+  else { document.getElementById('timer-presets').classList.toggle('show'); }
+}
+function pickTimer(sec){
+  document.getElementById('timer-presets').classList.remove('show');
+  if(_timerIv){ clearInterval(_timerIv); _timerIv=null; }
+  _timerTotal=sec; _timerRemain=sec;
+  const btn=document.getElementById('timer-btn');
+  const ring=document.getElementById('timer-ring');
+  btn.classList.add('running');
+  ring.classList.add('show');
+  tickTimer();
+  _timerIv=setInterval(()=>{
+    _timerRemain--;
+    tickTimer();
+    if(_timerRemain<=0){
+      clearInterval(_timerIv); _timerIv=null;
+      btn.classList.remove('running');
+      ring.classList.remove('show');
+      btn.textContent='⏱ מנוחה';
+      if(navigator.vibrate) navigator.vibrate([200,100,200]);
+    }
+  },1000);
+}
+function cancelTimer(){
+  if(_timerIv){clearInterval(_timerIv);_timerIv=null;}
+  document.getElementById('timer-btn').classList.remove('running');
+  document.getElementById('timer-ring').classList.remove('show');
+  document.getElementById('timer-btn').textContent='⏱ מנוחה';
+}
+function tickTimer(){
+  const m=Math.floor(_timerRemain/60), s=_timerRemain%60;
+  document.getElementById('timer-btn').textContent=m+':'+(s<10?'0':'')+s;
+  document.getElementById('ring-text').textContent=m+':'+(s<10?'0':'')+s;
+  const prog=document.getElementById('ring-prog');
+  if(prog) prog.style.strokeDashoffset=CIRC*(1-_timerRemain/_timerTotal);
+}
+
+// ═══════════════════════════════════════════════════
+// WEIGHT CHART
+// ═══════════════════════════════════════════════════
+const WLOG_KEY='proFit_weight';
+function getWLog(){ try{return JSON.parse(localStorage.getItem(WLOG_KEY)||'[]')}catch(e){return[];} }
+function addWeightForm(){
+  const dEl=document.getElementById('wl-date');
+  const kEl=document.getElementById('wl-kg');
+  const date=dEl?.value; const kg=parseFloat(kEl?.value);
+  if(!date||isNaN(kg)||kg<20||kg>350) return;
+  const log=getWLog();
+  const idx=log.findIndex(e=>e.date===date);
+  if(idx>=0) log[idx].kg=kg; else log.push({date,kg});
+  log.sort((a,b)=>a.date.localeCompare(b.date));
+  localStorage.setItem(WLOG_KEY,JSON.stringify(log));
+  if(kEl) kEl.value='';
+  renderWLog(); renderWChart();
+}
+function deleteWEntry(date){
+  const log=getWLog().filter(e=>e.date!==date);
+  localStorage.setItem(WLOG_KEY,JSON.stringify(log));
+  renderWLog(); renderWChart();
+}
+function renderWLog(){
+  const el=document.getElementById('weight-log-list'); if(!el) return;
+  const log=getWLog();
+  if(!log.length){el.innerHTML='<div style="color:var(--muted);font-size:.85rem;padding:6px 0;">אין רשומות עדיין — הוסף מדידה ראשונה!</div>';return;}
+  el.innerHTML=log.slice().reverse().map(e=>`<div class="wlog-entry">
+    <span>${e.date.split('-').reverse().join('/')}</span>
+    <strong style="color:var(--cyan)">${e.kg} ק"ג</strong>
+    <button class="wlog-del" onclick="deleteWEntry('${e.date}')">✕</button>
+  </div>`).join('');
+}
+function renderWChart(){
+  const svg=document.getElementById('weight-svg'); if(!svg) return;
+  const log=getWLog();
+  if(log.length<2){svg.innerHTML='<text x="50%" y="50%" text-anchor="middle" fill="var(--muted)" font-family="Segoe UI,sans-serif" font-size="13">הוסף לפחות 2 מדידות לגרף</text>';return;}
+  const W=600,H=200,P={t:24,r:20,b:32,l:46};
+  const kgs=log.map(e=>e.kg);
+  const minK=Math.min(...kgs)-0.5, maxK=Math.max(...kgs)+0.5;
+  const n=log.length;
+  const xs=i=>P.l+(i/(n-1))*(W-P.l-P.r);
+  const ys=k=>P.t+(1-(k-minK)/(maxK-minK))*(H-P.t-P.b);
+  let h='<defs><linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient><linearGradient id="ca" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#06b6d4" stop-opacity=".4"/><stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/></linearGradient></defs>';
+  for(let r=0;r<4;r++){const y=P.t+r*(H-P.t-P.b)/3;const v=(maxK-(maxK-minK)*r/3).toFixed(1);h+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#252b38" stroke-width="1"/><text x="${P.l-6}" y="${y+4}" text-anchor="end" fill="#6b7a99" font-size="9" font-family="Segoe UI,sans-serif">${v}</text>`;}
+  const pts=log.map((e,i)=>`${xs(i)},${ys(e.kg)}`).join(' ');
+  h+=`<polygon points="${xs(0)},${H-P.b} ${pts} ${xs(n-1)},${H-P.b}" fill="url(#ca)"/>`;
+  h+=`<polyline points="${pts}" fill="none" stroke="url(#cg)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  log.forEach((e,i)=>{
+    h+=`<circle cx="${xs(i)}" cy="${ys(e.kg)}" r="4" fill="#06b6d4" stroke="#0a0c10" stroke-width="2"/>`;
+    if(n<=8||i===0||i===n-1) h+=`<text x="${xs(i)}" y="${ys(e.kg)-9}" text-anchor="middle" fill="#eaf0fb" font-size="10" font-weight="700" font-family="Segoe UI,sans-serif">${e.kg}</text>`;
+  });
+  const step=Math.max(1,Math.floor(n/6));
+  log.forEach((e,i)=>{if(i%step===0||i===n-1)h+=`<text x="${xs(i)}" y="${H-P.b+14}" text-anchor="middle" fill="#6b7a99" font-size="9" font-family="Segoe UI,sans-serif">${e.date.slice(5).replace('-','/')}</text>`;});
+  svg.innerHTML=h;
+}
+
+// ═══════════════════════════════════════════════════
+// INSTALL BANNER
+// ═══════════════════════════════════════════════════
+function dismissInstallBanner(){
+  localStorage.setItem('pf_installDismissed','1');
+  document.getElementById('install-banner').style.display='none';
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+window.addEventListener('load',()=>{
+  const s=getSettings();
+  applySettings(s);
+  // Pre-fill settings form
+  const sf=document.getElementById('sf-name'); if(sf) sf.value=s.name;
+  const sw=document.getElementById('sf-weight'); if(sw) sw.value=s.weight;
+  const sh=document.getElementById('sf-height'); if(sh) sh.value=s.height;
+  const sa=document.getElementById('sf-age'); if(sa) sa.value=s.age;
+  const sc2=document.getElementById('sf-calories'); if(sc2) sc2.value=s.calories;
+  // Set today's date in weight log form
+  const dEl=document.getElementById('wl-date');
+  if(dEl) dEl.value=todayStr();
+  initTodayHero();
+  initCheckboxes();
+  updateStreak();
+  animateStats();
+  renderWLog();
+  renderWChart();
+  // Install banner
+  if(localStorage.getItem('pf_installDismissed')){
+    const b=document.getElementById('install-banner'); if(b) b.style.display='none';
+  }
+});
+
+// Close timer presets if clicking elsewhere
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.timer-float')) document.getElementById('timer-presets')?.classList.remove('show');
 });
 </script>
 
-<!-- INSTALL BUTTON -->
-<div id="install-btn" style="display:none;position:fixed;bottom:24px;left:24px;z-index:300;
-  background:linear-gradient(135deg,#e63946,#9333ea);color:#fff;border:none;
-  border-radius:999px;padding:12px 20px;cursor:pointer;font-family:'Segoe UI',sans-serif;
-  font-size:.9rem;font-weight:700;align-items:center;gap:10px;
-  box-shadow:0 4px 24px rgba(230,57,70,0.5);direction:rtl;">
-  <span style="font-size:1.2rem;">📲</span>
-  <span>התקן אפליקציה</span>
+<!-- CELEBRATION MODAL -->
+<div class="celebrate-overlay" id="celebrate-overlay">
+  <div class="celebrate-box">
+    <div class="celebrate-emoji">💪</div>
+    <div class="celebrate-title">אימון הושלם!</div>
+    <div class="celebrate-sub" id="celebrate-text">כל הכבוד! סיימת את האימון של היום.<br>הגוף שלך מתחזק מאימון לאימון. 🔥</div>
+    <button class="celebrate-close" onclick="closeCelebration()">👍 תודה!</button>
+  </div>
+</div>
+
+<!-- REST TIMER -->
+<div class="timer-float" id="timer-float">
+  <div class="timer-presets" id="timer-presets">
+    <button onclick="pickTimer(60);event.stopPropagation()">60 שנ׳</button>
+    <button onclick="pickTimer(90);event.stopPropagation()">90 שנ׳</button>
+    <button onclick="pickTimer(120);event.stopPropagation()">2 דק׳</button>
+    <button onclick="pickTimer(180);event.stopPropagation()">3 דק׳</button>
+  </div>
+  <div class="timer-ring" id="timer-ring">
+    <svg width="62" height="62" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="24" class="ring-track"/>
+      <circle cx="30" cy="30" r="24" id="ring-prog" class="ring-prog" stroke-dasharray="150.8" stroke-dashoffset="0"/>
+    </svg>
+    <div class="ring-text" id="ring-text">0:00</div>
+  </div>
+  <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">⏱ מנוחה</button>
 </div>
 
 </body>

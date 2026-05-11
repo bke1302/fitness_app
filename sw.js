@@ -1,9 +1,16 @@
-const CACHE = 'proFit-v1';
+const CACHE = 'proFit-v3';
 const ASSETS = [
   '/fitness_app/',
   '/fitness_app/index.html',
   '/fitness_app/manifest.json',
+  '/fitness_app/sw.js',
+  '/fitness_app/icons/icon-72.png',
+  '/fitness_app/icons/icon-96.png',
+  '/fitness_app/icons/icon-128.png',
+  '/fitness_app/icons/icon-144.png',
+  '/fitness_app/icons/icon-152.png',
   '/fitness_app/icons/icon-192.png',
+  '/fitness_app/icons/icon-384.png',
   '/fitness_app/icons/icon-512.png'
 ];
 
