@@ -183,30 +183,57 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .tl-line{position:absolute;right:0;top:0;bottom:-28px;width:2px;background:var(--border2);}
 
 /* HAMBURGER */
-.hamburger{display:none;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;cursor:pointer;font-size:1.1rem;line-height:1;color:var(--text);}
+.hamburger{display:none;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:1.2rem;line-height:1;color:var(--text);}
+
+/* SIDEBAR OVERLAY — closes sidebar on mobile tap */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99;backdrop-filter:blur(2px);}
+.sidebar-overlay.show{display:block;}
+
+/* SIDEBAR CLOSE BUTTON (mobile) */
+.sidebar-close{display:none;position:absolute;top:16px;left:16px;background:var(--bg3);border:1px solid var(--border2);color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;align-items:center;justify-content:center;}
+
+/* MUSCLE PART TAG */
+.part-tag{font-size:.68rem;padding:2px 7px;border-radius:999px;background:rgba(6,182,212,.12);color:var(--cyan);border:1px solid rgba(6,182,212,.25);white-space:nowrap;margin-top:3px;display:inline-block;}
 
 @media(max-width:768px){
-  .sidebar{transform:translateX(100%);width:260px;}
+  .sidebar{transform:translateX(100%);width:78vw;max-width:280px;}
   .sidebar.open{transform:translateX(0);}
+  .sidebar-close{display:flex;}
   .main{margin-right:0;}
   .topbar{padding:12px 16px;}
-  .content{padding:14px;}
+  .content{padding:12px;}
   .grid-4{grid-template-columns:repeat(2,1fr);}
   .grid-3{grid-template-columns:1fr;}
   .hamburger{display:block;}
   .stats-chips{display:none;}
   .week-bar{gap:4px;}
-  .day-cell{padding:10px 3px;}
-  .day-cell .dc-icon{font-size:1.1rem;}
-  .ex-table th:nth-child(5),.ex-table td:nth-child(5){display:none;}
+  .day-cell{padding:8px 3px;}
+  .day-cell .dc-icon{font-size:1rem;}
+  .day-cell .dc-label{display:none;}
+  /* Table: hide rest+level cols on mobile */
+  .ex-table th:nth-child(5),.ex-table td:nth-child(5),
+  .ex-table th:nth-child(6),.ex-table td:nth-child(6){display:none;}
+  .card-body{padding:14px;}
+  .card-head{padding:14px 16px;}
+  .ex-table td{padding:10px 8px;}
+  .ex-table th{padding:8px;}
+  .trainer-note{font-size:.82rem;}
 }
-@media(max-width:480px){.grid-4{grid-template-columns:repeat(2,1fr);}.grid-2{grid-template-columns:1fr;}}
+@media(max-width:480px){
+  .grid-4{grid-template-columns:repeat(2,1fr);}
+  .grid-2{grid-template-columns:1fr;}
+  .ex-table th:nth-child(3),.ex-table td:nth-child(3){display:none;}
+}
 </style>
 </head>
 <body>
 
+<!-- SIDEBAR OVERLAY (closes on tap outside) -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
+  <button class="sidebar-close" id="sidebar-close" onclick="closeSidebar()">✕</button>
   <div class="logo">
     <h1>ProFit</h1>
     <p>Push / Pull / Legs / Arms</p>
@@ -564,60 +591,151 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="card-head">
         <h2>🦵 רביעי — LEGS DAY</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <span class="badge badge-purple">ירכיים</span>
-          <span class="badge badge-red">ישבן</span>
+          <span class="badge badge-purple">Quads</span>
+          <span class="badge badge-red">Hamstrings</span>
+          <span class="badge badge-yellow">ישבן</span>
           <span class="badge badge-blue">שוק</span>
-          <span class="badge badge-yellow">~80 דק׳</span>
+          <span class="badge badge-yellow">~85 דק׳</span>
         </div>
       </div>
       <div class="card-body">
+
+        <!-- LEGS MAP -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;">
+          <div style="background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:12px;">
+            <div style="font-weight:700;color:var(--purple);margin-bottom:8px;font-size:.88rem;">🦵 Quadriceps — 4 ראשים</div>
+            <div style="font-size:.8rem;color:var(--muted2);line-height:1.9;">
+              🟣 <strong>Vastus Lateralis</strong> — רוחב חיצוני<br>
+              🟣 <strong>VMO / Teardrop</strong> — טיפה מעל ברך<br>
+              🟣 <strong>Rectus Femoris</strong> — קדמי אמצעי
+            </div>
+          </div>
+          <div style="background:rgba(230,57,70,.08);border:1px solid rgba(230,57,70,.2);border-radius:10px;padding:12px;">
+            <div style="font-weight:700;color:var(--red);margin-bottom:8px;font-size:.88rem;">🦵 שוק — 2 שרירים שונים!</div>
+            <div style="font-size:.8rem;color:var(--muted2);line-height:1.9;">
+              🔴 <strong>Gastrocnemius</strong> — עמידה רגל ישרה<br>
+              🔴 <strong>Soleus</strong> — ישיבה ברך כפופה<br>
+              ⚠️ <em>רוב האנשים עובדים רק על אחד!</em>
+            </div>
+          </div>
+        </div>
+
         <table class="ex-table">
-          <thead><tr><th>#</th><th>תרגיל</th><th>שריר</th><th>סטים × חזרות</th><th>מנוחה</th><th>עצימות</th></tr></thead>
+          <thead><tr><th>#</th><th>תרגיל</th><th>חלק שריר</th><th>סטים × חזרות</th><th>מנוחה</th><th>סוג</th></tr></thead>
           <tbody>
+
+            <!-- QUADS -->
+            <tr style="background:rgba(168,85,247,.04);">
+              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--purple);letter-spacing:1px;text-transform:uppercase;">── ירכיים קדמיות (Quads) ──</td>
+            </tr>
             <tr onclick="openModal('squat')">
               <td><div class="ex-num-cell">1</div></td>
-              <td><div class="ex-name-main">סקוואט — מוט גבוה</div><div class="ex-name-en">High Bar Barbell Squat</div><div class="ex-why">מלך כל התרגילים — לא ניתן להחליפו</div></td>
-              <td><span class="muscle-tag">כל הרגל</span></td>
-              <td class="sets-cell">4 × 5–8</td><td class="rest-cell">3 דק׳</td>
-              <td><span class="badge badge-red">כבד מאוד</span></td>
+              <td>
+                <div class="ex-name-main">Hack Squat / סקוואט</div>
+                <div class="ex-name-en">Hack Squat or Barbell Squat</div>
+                <div class="ex-why">נפח כללי — בסיס לכל שאר</div>
+              </td>
+              <td><span class="muscle-tag">כל ה-Quad</span><br><span class="part-tag">מסה כללית</span></td>
+              <td class="sets-cell">4 × 6–8</td><td class="rest-cell">3 דק׳</td>
+              <td><span class="badge badge-red">כבד</span></td>
             </tr>
             <tr onclick="openModal('legPress')">
               <td><div class="ex-num-cell">2</div></td>
-              <td><div class="ex-name-main">לחיצת רגליים — פלטה גבוהה</div><div class="ex-name-en">High Foot Leg Press</div><div class="ex-why">דגש על ישבן + ירך אחורי בפלטה גבוהה</div></td>
-              <td><span class="muscle-tag">ירכיים + ישבן</span></td>
-              <td class="sets-cell">4 × 10–12</td><td class="rest-cell">2 דק׳</td>
+              <td>
+                <div class="ex-name-main">לחיצת רגליים — רגל צרה</div>
+                <div class="ex-name-en">Leg Press — Feet Close &amp; Low</div>
+                <div class="ex-why">רגליים צמודות ונמוכות = Vastus Lateralis (רוחב חיצוני)</div>
+              </td>
+              <td><span class="muscle-tag">Vastus Lateralis</span><br><span class="part-tag">רוחב חיצוני</span></td>
+              <td class="sets-cell">3 × 10–12</td><td class="rest-cell">2 דק׳</td>
               <td><span class="badge badge-yellow">בינוני</span></td>
             </tr>
             <tr onclick="openModal('legExt')">
               <td><div class="ex-num-cell">3</div></td>
-              <td><div class="ex-name-main">פשיטות רגליים</div><div class="ex-name-en">Leg Extension</div><div class="ex-why">בידוד ל-Quad — בסוף סט החזק 2 שנ׳</div></td>
-              <td><span class="muscle-tag">ארבע ראשי</span></td>
+              <td>
+                <div class="ex-name-main">פשיטות רגליים + עצירה</div>
+                <div class="ex-name-en">Leg Extension — 2sec Pause</div>
+                <div class="ex-why">החזק 2 שנ׳ בפשיטה = VMO "טיפה" מעל הברך</div>
+              </td>
+              <td><span class="muscle-tag">VMO Teardrop</span><br><span class="part-tag">טיפה מעל הברך</span></td>
               <td class="sets-cell">3 × 12–15</td><td class="rest-cell">60 שנ׳</td>
               <td><span class="badge badge-green">בידוד</span></td>
             </tr>
-            <tr onclick="openModal('legCurl')">
+
+            <!-- HAMSTRINGS + GLUTES -->
+            <tr style="background:rgba(230,57,70,.04);">
+              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--red);letter-spacing:1px;text-transform:uppercase;">── ירך אחורי + ישבן ──</td>
+            </tr>
+            <tr onclick="openModal('rdl')">
               <td><div class="ex-num-cell">4</div></td>
-              <td><div class="ex-name-main">כפיפות רגליים — שכיבה</div><div class="ex-name-en">Lying Leg Curl</div><div class="ex-why">ירך אחורי מוזנח = פציעות ברכיים</div></td>
-              <td><span class="muscle-tag">Hamstrings</span></td>
-              <td class="sets-cell">3 × 12–15</td><td class="rest-cell">60 שנ׳</td>
+              <td>
+                <div class="ex-name-main">דד-ליפט רומני</div>
+                <div class="ex-name-en">Romanian Deadlift</div>
+                <div class="ex-why">Hamstring Long Head — מתיחה מלאה</div>
+              </td>
+              <td><span class="muscle-tag">Ham. Long Head</span><br><span class="part-tag">ירך אחורי + גב תחתון</span></td>
+              <td class="sets-cell">3 × 8–10</td><td class="rest-cell">2 דק׳</td>
+              <td><span class="badge badge-red">כבד</span></td>
+            </tr>
+            <tr onclick="openModal('legCurl')">
+              <td><div class="ex-num-cell">5</div></td>
+              <td>
+                <div class="ex-name-main">כפיפות רגל שכיבה</div>
+                <div class="ex-name-en">Lying Leg Curl</div>
+                <div class="ex-why">Ham. Short Head — כיווץ מלא</div>
+              </td>
+              <td><span class="muscle-tag">Ham. Short Head</span><br><span class="part-tag">כפיפה מלאה</span></td>
+              <td class="sets-cell">3 × 12</td><td class="rest-cell">60 שנ׳</td>
               <td><span class="badge badge-green">בידוד</span></td>
             </tr>
             <tr onclick="openModal('lunges')">
-              <td><div class="ex-num-cell">5</div></td>
-              <td><div class="ex-name-main">פסיעות בולגריות</div><div class="ex-name-en">Bulgarian Split Squat</div><div class="ex-why">הכי כואב, הכי אפקטיבי לישבן + ירכיים</div></td>
-              <td><span class="muscle-tag">ישבן + ירכיים</span></td>
+              <td><div class="ex-num-cell">6</div></td>
+              <td>
+                <div class="ex-name-main">פסיעות בולגריות</div>
+                <div class="ex-name-en">Bulgarian Split Squat</div>
+                <div class="ex-why">ישבן + ירכיים — הכי אפקטיבי ליחידה</div>
+              </td>
+              <td><span class="muscle-tag">Glutes + Quads</span><br><span class="part-tag">ישבן + ירכיים</span></td>
               <td class="sets-cell">3 × 10 לצד</td><td class="rest-cell">90 שנ׳</td>
               <td><span class="badge badge-red">קשה</span></td>
             </tr>
+
+            <!-- CALVES -->
+            <tr style="background:rgba(59,130,246,.04);">
+              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;">── שוק — 2 תרגילים = 2 שרירים שונים! ──</td>
+            </tr>
             <tr onclick="openModal('calfRaise')">
-              <td><div class="ex-num-cell">6</div></td>
-              <td><div class="ex-name-main">עריסת עגל עמידה</div><div class="ex-name-en">Standing Calf Raise</div><div class="ex-why">שוק = שריר עיקש, צריך נפח + כאב</div></td>
-              <td><span class="muscle-tag">שוק</span></td>
-              <td class="sets-cell">5 × 15–20</td><td class="rest-cell">45 שנ׳</td>
+              <td><div class="ex-num-cell">7</div></td>
+              <td>
+                <div class="ex-name-main">עריסת עגל עמידה</div>
+                <div class="ex-name-en">Standing Calf Raise</div>
+                <div class="ex-why">רגל ישרה = Gastrocnemius (שריר עליון, ה"בליטה")</div>
+              </td>
+              <td><span class="muscle-tag">Gastrocnemius</span><br><span class="part-tag">בליטה עליונה</span></td>
+              <td class="sets-cell">4 × 15–20</td><td class="rest-cell">45 שנ׳</td>
               <td><span class="badge badge-green">בידוד</span></td>
             </tr>
+            <tr onclick="openModal('calfRaise')">
+              <td><div class="ex-num-cell">8</div></td>
+              <td>
+                <div class="ex-name-main">עריסת עגל ישיבה ⭐</div>
+                <div class="ex-name-en">Seated Calf Raise</div>
+                <div class="ex-why">ברך כפופה = Soleus — שריר שונה! רוב האנשים לעולם לא מאמנים אותו</div>
+              </td>
+              <td><span class="muscle-tag">Soleus</span><br><span class="part-tag">שוק תחתון + עובי</span></td>
+              <td class="sets-cell">4 × 15–20</td><td class="rest-cell">45 שנ׳</td>
+              <td><span class="badge badge-cyan">חדש!</span></td>
+            </tr>
+
           </tbody>
         </table>
+
+        <div style="margin-top:16px;background:var(--bg3);border-radius:10px;padding:14px;font-size:.82rem;color:var(--muted2);line-height:1.8;">
+          <strong style="color:var(--text);">⏱ זמן משוער:</strong> ~85 דק׳ &nbsp;|&nbsp;
+          <strong style="color:var(--text);">Quads:</strong> 10 סטים &nbsp;|&nbsp;
+          <strong style="color:var(--text);">Hamstrings:</strong> 6 סטים &nbsp;|&nbsp;
+          <strong style="color:var(--text);">שוק:</strong> 8 סטים (2 שרירים!)
+        </div>
       </div>
     </div>
   </div>
@@ -637,65 +755,151 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <span class="badge badge-blue">בייסס</span>
           <span class="badge badge-purple">טריצפס</span>
           <span class="badge badge-cyan">כתף</span>
-          <span class="badge badge-yellow">~65 דק׳</span>
+          <span class="badge badge-yellow">~75 דק׳</span>
         </div>
       </div>
       <div class="card-body">
-        <div style="font-size:.82rem;color:var(--purple);margin-bottom:14px;font-weight:600;">💡 תרגילים 1+2 ו-3+4 הם Superset — בצע אחד אחרי השני בלי מנוחה ביניהם, אז נוח 75 שנ׳</div>
+
+        <!-- ARMS MAP -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;">
+          <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:12px;">
+            <div style="font-weight:700;color:var(--blue);margin-bottom:8px;font-size:.88rem;">💪 בייסס — 3 חלקים</div>
+            <div style="font-size:.8rem;color:var(--muted2);line-height:1.9;">
+              🔵 <strong>Long Head</strong> — הפיק (גובה הזרוע)<br>
+              🔵 <strong>Short Head</strong> — הרוחב<br>
+              🔵 <strong>Brachialis</strong> — מתחת לבייסס, <em>מרים אותה</em>
+            </div>
+          </div>
+          <div style="background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:12px;">
+            <div style="font-weight:700;color:var(--purple);margin-bottom:8px;font-size:.88rem;">💪 טריצפס — 3 חלקים</div>
+            <div style="font-size:.8rem;color:var(--muted2);line-height:1.9;">
+              🟣 <strong>Long Head</strong> — 60% מהזרוע!<br>
+              🟣 <strong>Lateral Head</strong> — הפרסה הצדדית<br>
+              🟣 <strong>Medial Head</strong> — בסיס הזרוע
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size:.82rem;color:var(--purple);margin-bottom:14px;font-weight:600;background:rgba(168,85,247,.08);padding:10px 14px;border-radius:8px;">
+          💡 SS = Superset — בצע שני התרגילים ברצף ללא מנוחה, אז נוח 75 שנ׳. פחות זמן, יותר pump.
+        </div>
+
         <table class="ex-table">
-          <thead><tr><th>#</th><th>תרגיל</th><th>שריר</th><th>סטים × חזרות</th><th>מנוחה</th><th></th></tr></thead>
+          <thead><tr><th>#</th><th>תרגיל</th><th>חלק שריר</th><th>סטים × חזרות</th><th>מנוחה</th><th>סוג</th></tr></thead>
           <tbody>
+
+            <!-- BICEPS SECTION -->
+            <tr style="background:rgba(59,130,246,.04);">
+              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;">── בייסס ──</td>
+            </tr>
             <tr onclick="openModal('bbCurl')">
               <td><div class="ex-num-cell">1A</div></td>
-              <td><div class="ex-name-main"><span class="superset-label">SS</span>כפיפות מוט EZ</div><div class="ex-name-en">EZ Bar Curl</div><div class="ex-why">נפח בייסס — עומס מקסימלי</div></td>
-              <td><span class="muscle-tag">בייסס</span></td>
-              <td class="sets-cell">4 × 8–10</td><td class="rest-cell">—</td>
-              <td><span class="badge badge-purple">Superset</span></td>
-            </tr>
-            <tr onclick="openModal('triPushdown')">
-              <td><div class="ex-num-cell">1B</div></td>
-              <td><div class="ex-name-main"><span class="superset-label">SS</span>לחיצת טריצפס חבל</div><div class="ex-name-en">Rope Pushdown</div><div class="ex-why">Antagonist superset = pump מקסימלי</div></td>
-              <td><span class="muscle-tag">טריצפס</span></td>
-              <td class="sets-cell">4 × 10–12</td><td class="rest-cell">75 שנ׳</td>
-              <td><span class="badge badge-purple">Superset</span></td>
+              <td>
+                <div class="ex-name-main"><span class="superset-label">SS</span>כפיפות מוט EZ</div>
+                <div class="ex-name-en">EZ Bar Curl</div>
+                <div class="ex-why">נפח כללי — Short Head בדגש</div>
+              </td>
+              <td><span class="muscle-tag">Short Head</span><br><span class="part-tag">רוחב הזרוע</span></td>
+              <td class="sets-cell">3 × 8–10</td><td class="rest-cell">—</td>
+              <td><span class="badge badge-purple">SS</span></td>
             </tr>
             <tr onclick="openModal('inclineCurl')">
-              <td><div class="ex-num-cell">2A</div></td>
-              <td><div class="ex-name-main"><span class="superset-label">SS</span>כפיפות בנטייה</div><div class="ex-name-en">Incline Dumbbell Curl</div><div class="ex-why">מתיחה מלאה של בייסס — long head</div></td>
-              <td><span class="muscle-tag">בייסס long head</span></td>
-              <td class="sets-cell">3 × 10–12</td><td class="rest-cell">—</td>
-              <td><span class="badge badge-purple">Superset</span></td>
-            </tr>
-            <tr onclick="openModal('ohTricep')">
-              <td><div class="ex-num-cell">2B</div></td>
-              <td><div class="ex-name-main"><span class="superset-label">SS</span>טריצפס מעל הראש</div><div class="ex-name-en">Overhead Tricep Extension</div><div class="ex-why">long head בנמתיחה מלאה = נפח מקסימלי</div></td>
-              <td><span class="muscle-tag">טריצפס long head</span></td>
+              <td><div class="ex-num-cell">1B</div></td>
+              <td>
+                <div class="ex-name-main"><span class="superset-label">SS</span>כפיפות בנטייה</div>
+                <div class="ex-name-en">Incline Dumbbell Curl</div>
+                <div class="ex-why">מתיחה מלאה → Long Head</div>
+              </td>
+              <td><span class="muscle-tag">Long Head</span><br><span class="part-tag">פיק — גובה הבייסס</span></td>
               <td class="sets-cell">3 × 10–12</td><td class="rest-cell">75 שנ׳</td>
-              <td><span class="badge badge-purple">Superset</span></td>
+              <td><span class="badge badge-purple">SS</span></td>
             </tr>
             <tr onclick="openModal('hammerCurl')">
-              <td><div class="ex-num-cell">3</div></td>
-              <td><div class="ex-name-main">פטיש — כבל</div><div class="ex-name-en">Cable Hammer Curl</div><div class="ex-why">Brachialis = שריר מתחת לבייסס שמרים אותו</div></td>
-              <td><span class="muscle-tag">Brachialis</span></td>
+              <td><div class="ex-num-cell">2</div></td>
+              <td>
+                <div class="ex-name-main">פטיש בכבל</div>
+                <div class="ex-name-en">Cable Hammer Curl</div>
+                <div class="ex-why">Brachialis = מה שמרים את הבייסס למעלה ויזואלית</div>
+              </td>
+              <td><span class="muscle-tag">Brachialis</span><br><span class="part-tag">עובי מתחת לבייסס</span></td>
               <td class="sets-cell">3 × 12–15</td><td class="rest-cell">60 שנ׳</td>
               <td><span class="badge badge-green">בידוד</span></td>
             </tr>
-            <tr onclick="openModal('arnoldPress')">
-              <td><div class="ex-num-cell">4</div></td>
-              <td><div class="ex-name-main">Arnold Press ישיבה</div><div class="ex-name-en">Seated Arnold Press</div><div class="ex-why">כל 3 חלקי כתף בתרגיל אחד — יום ידיים = הזדמנות</div></td>
-              <td><span class="muscle-tag">כל הכתף</span></td>
+
+            <!-- TRICEPS SECTION -->
+            <tr style="background:rgba(168,85,247,.04);">
+              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--purple);letter-spacing:1px;text-transform:uppercase;">── טריצפס ──</td>
+            </tr>
+            <tr onclick="openModal('skullCrusher')">
+              <td><div class="ex-num-cell">3A</div></td>
+              <td>
+                <div class="ex-name-main"><span class="superset-label">SS</span>Skull Crushers</div>
+                <div class="ex-name-en">EZ Bar Skull Crusher</div>
+                <div class="ex-why">Long Head — 60% מגודל הטריצפס!</div>
+              </td>
+              <td><span class="muscle-tag">Long Head</span><br><span class="part-tag">נפח עיקרי הזרוע</span></td>
+              <td class="sets-cell">3 × 8–10</td><td class="rest-cell">—</td>
+              <td><span class="badge badge-purple">SS</span></td>
+            </tr>
+            <tr onclick="openModal('triPushdown')">
+              <td><div class="ex-num-cell">3B</div></td>
+              <td>
+                <div class="ex-name-main"><span class="superset-label">SS</span>לחיצת חבל</div>
+                <div class="ex-name-en">Rope Pushdown</div>
+                <div class="ex-why">Lateral Head — הפרסה הנראית</div>
+              </td>
+              <td><span class="muscle-tag">Lateral Head</span><br><span class="part-tag">פרסה צדדית</span></td>
               <td class="sets-cell">3 × 12</td><td class="rest-cell">75 שנ׳</td>
-              <td><span class="badge badge-yellow">בינוני</span></td>
+              <td><span class="badge badge-purple">SS</span></td>
+            </tr>
+            <tr onclick="openModal('ohTricep')">
+              <td><div class="ex-num-cell">4</div></td>
+              <td>
+                <div class="ex-name-main">טריצפס מעל הראש</div>
+                <div class="ex-name-en">Overhead Cable Extension</div>
+                <div class="ex-why">Long Head במתיחה מקסימלית = יותר גדילה</div>
+              </td>
+              <td><span class="muscle-tag">Long Head</span><br><span class="part-tag">מתיחה מלאה</span></td>
+              <td class="sets-cell">3 × 10–12</td><td class="rest-cell">75 שנ׳</td>
+              <td><span class="badge badge-green">בידוד</span></td>
+            </tr>
+
+            <!-- SHOULDERS SECTION -->
+            <tr style="background:rgba(245,158,11,.04);">
+              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--yellow);letter-spacing:1px;text-transform:uppercase;">── כתפיים (סיום) ──</td>
+            </tr>
+            <tr onclick="openModal('facePull')">
+              <td><div class="ex-num-cell">5</div></td>
+              <td>
+                <div class="ex-name-main">Face Pull</div>
+                <div class="ex-name-en">Cable Face Pull</div>
+                <div class="ex-why">כתף אחורית + בריאות Rotator Cuff — חובה!</div>
+              </td>
+              <td><span class="muscle-tag">Rear Delt</span><br><span class="part-tag">כתף אחורית</span></td>
+              <td class="sets-cell">3 × 15–20</td><td class="rest-cell">45 שנ׳</td>
+              <td><span class="badge badge-green">בריאות</span></td>
             </tr>
             <tr onclick="openModal('lateralRaise')">
-              <td><div class="ex-num-cell">5</div></td>
-              <td><div class="ex-name-main">הרמות צד — Drop Set</div><div class="ex-name-en">Lateral Raise Drop Set</div><div class="ex-why">Drop Set: 3 משקלים ירד ב-20% כל פעם ללא מנוחה</div></td>
-              <td><span class="muscle-tag">כתף אמצעית</span></td>
+              <td><div class="ex-num-cell">6</div></td>
+              <td>
+                <div class="ex-name-main">הרמות צד Drop Set</div>
+                <div class="ex-name-en">Lateral Raise — Drop Set</div>
+                <div class="ex-why">3 משקלים ברצף ↓20% כל פעם. כתף אמצעית = רוחב כתפיים</div>
+              </td>
+              <td><span class="muscle-tag">Medial Delt</span><br><span class="part-tag">רוחב כתפיים</span></td>
               <td class="sets-cell">3 × Drop</td><td class="rest-cell">75 שנ׳</td>
-              <td><span class="badge badge-red">מתקדם</span></td>
+              <td><span class="badge badge-red">Drop Set</span></td>
             </tr>
+
           </tbody>
         </table>
+
+        <div style="margin-top:16px;background:var(--bg3);border-radius:10px;padding:14px;font-size:.82rem;color:var(--muted2);line-height:1.8;">
+          <strong style="color:var(--text);">⏱ זמן משוער:</strong> ~75 דק׳ &nbsp;|&nbsp;
+          <strong style="color:var(--text);">סטים לבייסס:</strong> 9 &nbsp;|&nbsp;
+          <strong style="color:var(--text);">סטים לטריצפס:</strong> 9 &nbsp;|&nbsp;
+          <strong style="color:var(--text);">כתפיים:</strong> 6
+        </div>
       </div>
     </div>
   </div>
@@ -1120,11 +1324,24 @@ function showPanel(name,btn){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');
   document.getElementById('page-title').textContent=TITLES[name]||name;
-  if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');
+  if(window.innerWidth<=768) closeSidebar();
   window.scrollTo(0,0);
 }
 function goDay(name){showPanel(name);}
-function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
+function openSidebar(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+  document.body.style.overflow='';
+}
+function toggleSidebar(){
+  const open = document.getElementById('sidebar').classList.contains('open');
+  open ? closeSidebar() : openSidebar();
+}
 
 // ── URL PARAMS: open panel from shortcut ──
 (function(){
