@@ -2,8 +2,27 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>ProFit — Push/Pull/Legs/Arms</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>ProFit — תוכנית אימונים אישית</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#e63946"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="ProFit"/>
+
+<!-- SEO / Share -->
+<meta name="description" content="תוכנית Push/Pull/Legs/Arms אישית עם תזונה מותאמת לכולסטרול"/>
+<meta property="og:title" content="ProFit — תוכנית אימונים אישית"/>
+<meta property="og:description" content="תוכנית כושר ותזונה מותאמת אישית"/>
+<meta property="og:type" content="website"/>
+
+<!-- Icons for iOS/Android -->
+<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png"/>
+<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"/>
 <style>
 :root{
   --red:#e63946;--red-glow:rgba(230,57,70,0.25);
@@ -1106,6 +1125,54 @@ function showPanel(name,btn){
 }
 function goDay(name){showPanel(name);}
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
+
+// ── URL PARAMS: open panel from shortcut ──
+(function(){
+  const p = new URLSearchParams(location.search).get('panel');
+  if(p) showPanel(p);
+})();
+
+// ── SERVICE WORKER ──
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('ProFit SW registered'))
+      .catch(e => console.log('SW error', e));
+  });
+}
+
+// ── INSTALL PROMPT ──
+let deferredPrompt;
+const installBtn = document.getElementById('install-btn');
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  if(installBtn) {
+    installBtn.style.display = 'flex';
+    installBtn.onclick = async () => {
+      deferredPrompt.prompt();
+      const {outcome} = await deferredPrompt.userChoice;
+      if(outcome === 'accepted') installBtn.style.display = 'none';
+      deferredPrompt = null;
+    };
+  }
+});
+
+window.addEventListener('appinstalled', () => {
+  if(installBtn) installBtn.style.display = 'none';
+});
 </script>
+
+<!-- INSTALL BUTTON -->
+<div id="install-btn" style="display:none;position:fixed;bottom:24px;left:24px;z-index:300;
+  background:linear-gradient(135deg,#e63946,#9333ea);color:#fff;border:none;
+  border-radius:999px;padding:12px 20px;cursor:pointer;font-family:'Segoe UI',sans-serif;
+  font-size:.9rem;font-weight:700;align-items:center;gap:10px;
+  box-shadow:0 4px 24px rgba(230,57,70,0.5);direction:rtl;">
+  <span style="font-size:1.2rem;">📲</span>
+  <span>התקן אפליקציה</span>
+</div>
+
 </body>
 </html>

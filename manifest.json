@@ -1,0 +1,33 @@
+{
+  "name": "ProFit — תוכנית אימונים אישית",
+  "short_name": "ProFit",
+  "description": "תוכנית Push/Pull/Legs/Arms אישית עם תזונה לכולסטרול",
+  "start_url": "/fitness_app/",
+  "scope": "/fitness_app/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0c10",
+  "theme_color": "#e63946",
+  "lang": "he",
+  "dir": "rtl",
+  "icons": [
+    { "src": "icons/icon-72.png",  "sizes": "72x72",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "screenshots": [
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "narrow" }
+  ],
+  "categories": ["health", "fitness", "sports"],
+  "shortcuts": [
+    { "name": "PUSH Day", "short_name": "PUSH", "description": "יום ראשון — חזה וכתפיים", "url": "/fitness_app/?panel=push", "icons": [{"src": "icons/icon-96.png", "sizes": "96x96"}] },
+    { "name": "PULL Day", "short_name": "PULL", "description": "יום שני — גב ובייסס",     "url": "/fitness_app/?panel=pull", "icons": [{"src": "icons/icon-96.png", "sizes": "96x96"}] },
+    { "name": "LEGS Day", "short_name": "LEGS", "description": "יום רביעי — רגליים",     "url": "/fitness_app/?panel=legs", "icons": [{"src": "icons/icon-96.png", "sizes": "96x96"}] },
+    { "name": "ARMS Day", "short_name": "ARMS", "description": "יום חמישי — ידיים",      "url": "/fitness_app/?panel=arms", "icons": [{"src": "icons/icon-96.png", "sizes": "96x96"}] }
+  ]
+}

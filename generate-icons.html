@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Icon Generator</title></head>
+<body>
+<canvas id="c"></canvas>
+<div id="log" style="font-family:monospace;margin-top:10px;"></div>
+<script>
+const sizes = [72,96,128,144,152,192,384,512];
+const log = document.getElementById('log');
+
+function drawIcon(size) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const ctx = c.getContext('2d');
+
+  // Background gradient
+  const bg = ctx.createLinearGradient(0, 0, size, size);
+  bg.addColorStop(0, '#1a0a12');
+  bg.addColorStop(1, '#0a0c10');
+  ctx.fillStyle = bg;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, size, size, size * 0.22);
+  ctx.fill();
+
+  // Red glow circle
+  const glow = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+  glow.addColorStop(0, 'rgba(230,57,70,0.25)');
+  glow.addColorStop(1, 'rgba(230,57,70,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, size, size);
+
+  // Letter P (ProFit) - bold
+  const fs = size * 0.58;
+  ctx.font = `900 ${fs}px 'Arial Black', Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  // Gradient text
+  const tg = ctx.createLinearGradient(size*0.1, size*0.2, size*0.9, size*0.8);
+  tg.addColorStop(0, '#e63946');
+  tg.addColorStop(1, '#9333ea');
+  ctx.fillStyle = tg;
+  ctx.fillText('P', size / 2, size / 2 + size * 0.03);
+
+  // Small "F" subscript
+  const sf = size * 0.2;
+  ctx.font = `700 ${sf}px Arial, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.fillText('FIT', size / 2, size * 0.82);
+
+  return c.toDataURL('image/png');
+}
+
+async function generate() {
+  // Create icons folder via download
+  for (const size of sizes) {
+    const dataUrl = drawIcon(size);
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = `icon-${size}.png`;
+    a.click();
+    log.innerHTML += `✅ icon-${size}.png created<br>`;
+    await new Promise(r => setTimeout(r, 200));
+  }
+  log.innerHTML += '<br><strong style="color:green">✅ All icons generated! Move them to fitness_app/icons/ folder</strong>';
+}
+
+generate();
+</script>
+</body>
+</html>
