@@ -207,8 +207,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .today-hero-rest:hover{transform:none;}
 
 /* ══ REST TIMER ══ */
-.timer-float{position:fixed;bottom:24px;right:24px;z-index:290;display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
-.timer-presets{display:none;flex-direction:column;gap:4px;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:8px;box-shadow:0 8px 32px rgba(0,0,0,.5);}
+.timer-float{position:fixed;bottom:24px;left:24px;z-index:290;display:flex;flex-direction:column;align-items:flex-start;gap:8px;}
+.timer-presets{display:none;flex-direction:column;gap:4px;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:8px;box-shadow:0 8px 32px rgba(0,0,0,.5);min-width:90px;}
 .timer-presets.show{display:flex;}
 .timer-presets button{background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:8px;padding:7px 16px;cursor:pointer;font-family:var(--font);font-size:.82rem;white-space:nowrap;}
 .timer-presets button:hover{border-color:var(--red);color:var(--red);}
@@ -295,6 +295,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .wlog-del:hover{color:var(--red);}
 
 @media(max-width:768px){
+  .today-hero{padding:16px;}
+  .today-hero-info .today-hero-title{font-size:1.15rem;}
+  .today-hero-emoji{font-size:2rem;}
   .sidebar{transform:translateX(100%);width:78vw;max-width:280px;}
   .sidebar.open{transform:translateX(0);}
   .sidebar-close{display:flex;}
@@ -416,11 +419,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="stat-box red"><div class="val" id="dash-cals">2,750</div><div class="lbl">קלוריות יומיות</div></div>
           <div class="stat-box blue"><div class="val" id="dash-protein">150g</div><div class="lbl">חלבון יומי</div></div>
           <div class="stat-box yellow"><div class="val">340g</div><div class="lbl">פחמימות יומיות</div></div>
-          <div class="streak-box stat-box" style="text-align:center;" onclick="showPanel('progress')">
-            <div class="val streak-box" id="streak-num" style="color:var(--yellow);">0</div>
-            <div class="lbl">ימי רצף 🔥</div>
-            <div class="streak-msg" id="streak-msg">מתחילים!</div>
+          <div class="stat-box green"><div class="val">80g</div><div class="lbl">שומן יומי</div></div>
+        </div>
+        <!-- STREAK ROW -->
+        <div class="streak-row" onclick="showPanel('progress')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(230,57,70,.07));border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:10px 16px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:1.5rem;">🔥</span>
+            <div><div style="font-weight:800;font-size:1.1rem;color:var(--yellow);" id="streak-num">0</div><div style="font-size:.72rem;color:var(--muted);margin-top:1px;">ימי אימון ברצף</div></div>
           </div>
+          <div style="text-align:left;"><div class="streak-msg" id="streak-msg" style="font-size:.82rem;color:var(--yellow);font-weight:700;">מתחילים! 🌱</div><div style="font-size:.72rem;color:var(--muted);margin-top:2px;">לחץ לגרף התקדמות ←</div></div>
         </div>
         <div class="pbar"><div class="pbar-top"><span>BMR</span><span style="color:var(--cyan)">1,512 קל׳</span></div><div class="pbar-track"><div class="pbar-fill" style="width:55%;background:var(--cyan)"></div></div></div>
         <div class="pbar"><div class="pbar-top"><span>TDEE (×1.55)</span><span style="color:var(--blue)">2,344 קל׳</span></div><div class="pbar-track"><div class="pbar-fill" style="width:85%;background:var(--blue)"></div></div></div>
@@ -1689,7 +1696,7 @@ function savePRFromModal(){
 const LOG_KEY='proFit_log';
 function getLog(){ try{return JSON.parse(localStorage.getItem(LOG_KEY)||'{}')}catch(e){return{};} }
 function saveLog(log){ localStorage.setItem(LOG_KEY,JSON.stringify(log)); }
-function todayStr(){ return new Date().toISOString().slice(0,10); }
+function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 
 function initCheckboxes(){
   const today=todayStr(); const log=getLog();
