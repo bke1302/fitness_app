@@ -730,7 +730,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
     <!-- INSTALL BANNER -->
     <div class="install-banner" id="install-banner" style="display:none;">
-      <div class="install-banner-text"><strong>📲 התקן כאפליקציה</strong><br>גישה מהירה מהמסך הראשי — ללא דפדפן</div>
+      <div class="install-banner-text"><strong>התקן כאפליקציה</strong><br>גישה מהירה מהמסך הראשי — ללא דפדפן</div>
       <div class="install-banner-actions">
         <button class="install-banner-btn" id="install-banner-btn">התקן</button>
         <button class="install-banner-dismiss" onclick="dismissInstallBanner()">✕</button>
@@ -743,7 +743,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="today-hero-day">טוען...</div>
         <div class="today-hero-title">ProFit</div>
       </div>
-      <div class="today-hero-emoji">💪</div>
+      <div class="today-hero-emoji" style="font-family:var(--font-d);font-size:2.8rem;font-weight:900;color:rgba(255,255,255,.25);letter-spacing:-2px;">PRO</div>
     </div>
 
     <div class="trainer-note" style="padding:20px 22px;">
@@ -1744,7 +1744,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
             </div>
           </div>
           <div class="bmr-display" id="bmr-preview">
-            ✏️ הזן נתונים לחישוב BMR ו-TDEE
+            הזן נתונים לחישוב BMR ו-TDEE
           </div>
           <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
             <label class="settings-label" for="sf-calories">יעד קלוריות יומי</label>
@@ -1783,7 +1783,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="m-section">טיפים לביצוע</div>
     <ul class="tips-list" id="m-tips"></ul>
     <div class="pr-section">
-      <div class="pr-title">🏆 שיא אישי (PR)</div>
+      <div class="pr-title">שיא אישי (PR)</div>
       <div class="pr-inputs">
         <input type="number" id="pr-kg" class="pr-input" placeholder="ק״ג" min="0" step="0.5"/>
         <span class="pr-x">×</span>
@@ -1921,7 +1921,7 @@ function openModal(key){
   const dispEl = document.getElementById('pr-display');
   if(kgEl) kgEl.value = pr ? pr.kg : '';
   if(repsEl) repsEl.value = pr ? pr.reps : '';
-  if(dispEl) dispEl.textContent = pr ? `📅 שיא נוכחי: ${pr.kg}ק"ג × ${pr.reps} (${pr.date})` : '';
+  if(dispEl) dispEl.textContent = pr ? `שיא נוכחי: ${pr.kg}ק"ג × ${pr.reps} (${pr.date})` : '';
   if(dispEl) dispEl.style.color = 'var(--cyan)';
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
@@ -2020,7 +2020,7 @@ function updateBMRPreview(){
   const h=parseFloat(document.getElementById('sf-height')?.value)||0;
   const a=parseInt(document.getElementById('sf-age')?.value)||0;
   const prev=document.getElementById('bmr-preview');
-  if(!prev||!w||!h||!a){if(prev)prev.innerHTML='✏️ הזן נתונים לחישוב BMR ו-TDEE';return;}
+  if(!prev||!w||!h||!a){if(prev)prev.innerHTML='הזן נתונים לחישוב BMR ו-TDEE';return;}
   const bmr=Math.round(10*w+6.25*h-5*a+5);
   const tdee=Math.round(bmr*1.55);
   const lean=tdee+400;
@@ -2039,7 +2039,7 @@ function saveSettingsForm(){
   const apiKey=(document.getElementById('sf-apikey')?.value||'').trim();
   if(apiKey) localStorage.setItem('proFit_apiKey',apiKey);
   const btn=document.querySelector('#settings-form .settings-save');
-  if(btn){const o=btn.textContent;btn.textContent='✅ נשמר!';setTimeout(()=>btn.textContent=o,2000);}
+  if(btn){const o=btn.textContent;btn.textContent='נשמר!';setTimeout(()=>btn.textContent=o,2000);}
 }
 
 // ═══════════════════════════════════════════════════
@@ -2058,7 +2058,7 @@ function savePRFromModal(){
   prs[key]={kg,reps,date:new Date().toISOString().slice(0,10)};
   localStorage.setItem(PR_KEY,JSON.stringify(prs));
   if(disp){
-    disp.textContent=isNew?'🏆 שיא חדש! '+kg+'ק"ג × '+reps:'✅ נשמר: '+kg+'ק"ג × '+reps;
+    disp.textContent=isNew?'שיא חדש! '+kg+'ק"ג × '+reps:'נשמר: '+kg+'ק"ג × '+reps;
     disp.style.color=isNew?'var(--yellow)':'var(--cyan)';
   }
   if(isNew&&navigator.vibrate) navigator.vibrate([200,100,200,100,400]);
@@ -2139,7 +2139,7 @@ function checkPanelDone(panel){
   // confetti-ish message
   const ct=document.getElementById('celebrate-text');
   const day=panel.id.replace('panel-','').toUpperCase();
-  if(ct) ct.innerHTML=`כל הכבוד! סיימת את יום ה-${day}! 🔥<br>הגוף שלך מתחזק מאימון לאימון.`;
+  if(ct) ct.innerHTML=`כל הכבוד! סיימת את יום ה-${day}.<br>הגוף שלך מתחזק מאימון לאימון.`;
   document.getElementById('celebrate-overlay').classList.add('show');
   document.body.style.overflow='hidden';
 }
@@ -2173,7 +2173,7 @@ function computeStreak(){
 function updateStreak(){
   const n=computeStreak();
   ['streak-num','streak-num2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
-  const msgs=[[0,0,'מתחילים! 🌱'],[1,3,'התחלה טובה! 💪'],[4,7,'אחלה קצב! 🔥'],[8,14,'מכונה! 🚀'],[15,999,'אגדה! 👑']];
+  const msgs=[[0,0,'מתחילים'],[1,3,'התחלה טובה'],[4,7,'אחלה קצב'],[8,14,'מכונה'],[15,999,'אגדה']];
   const msg=(msgs.find(([lo,hi])=>n>=lo&&n<=hi)||msgs[0])[2];
   ['streak-msg','streak-msg2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=msg;});
 }
@@ -2181,11 +2181,12 @@ function updateStreak(){
 // ═══════════════════════════════════════════════════
 // TODAY HERO BANNER
 // ═══════════════════════════════════════════════════
+/* Per-workout label badge — shown instead of emoji */
 const DAY_CFG={
-  0:{panel:'push',icon:'💥',label:'PUSH DAY',sub:'חזה · כתפיים · טריצפס',grad:'linear-gradient(135deg,#e63946,#9333ea)'},
-  1:{panel:'pull',icon:'🔄',label:'PULL DAY',sub:'גב · בייסס · כתף אחורית',grad:'linear-gradient(135deg,#3b82f6,#06b6d4)'},
-  3:{panel:'legs',icon:'🦵',label:'LEGS DAY',sub:'ירכיים · ירך אחורי · שוק',grad:'linear-gradient(135deg,#a855f7,#3b82f6)'},
-  4:{panel:'arms',icon:'💪',label:'ARMS DAY',sub:'בייסס · טריצפס · כתף',grad:'linear-gradient(135deg,#f59e0b,#e63946)'}
+  0:{panel:'push',badge:'PUSH',color:'#FF375F',label:'PUSH DAY',sub:'חזה · כתפיים · טריצפס',grad:'linear-gradient(135deg,#FF375F,#BF5AF2)'},
+  1:{panel:'pull',badge:'PULL',color:'#5AC8FA',label:'PULL DAY',sub:'גב · בייסס · כתף אחורית',grad:'linear-gradient(135deg,#0A84FF,#5AC8FA)'},
+  3:{panel:'legs',badge:'LEGS',color:'#BF5AF2',label:'LEGS DAY',sub:'ירכיים · ירך אחורי · שוק',grad:'linear-gradient(135deg,#BF5AF2,#0A84FF)'},
+  4:{panel:'arms',badge:'ARMS',color:'#FFD60A',label:'ARMS DAY',sub:'בייסס · טריצפס · כתף',grad:'linear-gradient(135deg,#FFD60A,#FF375F)'}
 };
 const HEB_DAYS3=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 
@@ -2196,33 +2197,35 @@ function initTodayHero(){
   const cfg=DAY_CFG[d];
   const log=getLog(); const today=todayStr();
   const done=log[today]?.__complete;
+  const badgeHtml=cfg?`<div style="display:inline-block;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:4px 12px;font-family:var(--font-d);font-size:.82rem;font-weight:800;letter-spacing:1.5px;color:#fff;margin-bottom:10px;">${cfg.badge}</div>`:'';
   if(cfg){
     hero.style.background=cfg.grad;
     hero.style.cursor='pointer';
     hero.innerHTML=`
       <div class="today-hero-info">
-        <div class="today-hero-day">📅 היום — יום ${HEB_DAYS3[d]}</div>
-        <div class="today-hero-title">${cfg.icon} ${cfg.label}${done?' ✅':''}</div>
+        ${badgeHtml}
+        <div class="today-hero-day">היום — יום ${HEB_DAYS3[d]}</div>
+        <div class="today-hero-title">${cfg.label}${done?' — הושלם':''}</div>
         <div class="today-hero-sub">${cfg.sub}</div>
-        <div class="today-hero-hint">${done?'הושלם היום! כל הכבוד 💪':'לחץ לפתיחת האימון ←'}</div>
+        <div class="today-hero-hint">${done?'הושלם היום! כל הכבוד':'לחץ לפתיחת האימון ←'}</div>
       </div>
-      <div class="today-hero-emoji">${done?'✅':cfg.icon}</div>`;
+      <div class="today-hero-emoji" style="font-family:var(--font-d);font-size:2.8rem;font-weight:900;color:rgba(255,255,255,.25);letter-spacing:-2px;">${cfg.badge}</div>`;
     hero.onclick=()=>{
       document.querySelectorAll('.nav-btn').forEach(b=>{
         if(b.getAttribute('onclick')?.includes("'"+cfg.panel+"'")) b.click();
       });
     };
   } else {
-    hero.style.background='linear-gradient(135deg,rgba(34,197,94,.2),rgba(6,182,212,.15))';
-    hero.style.border='1px solid rgba(34,197,94,.3)';
+    hero.style.background='linear-gradient(135deg,rgba(48,209,88,.2),rgba(90,200,250,.15))';
+    hero.style.border='1px solid rgba(48,209,88,.3)';
     hero.style.cursor='default';
     hero.innerHTML=`
       <div class="today-hero-info">
-        <div class="today-hero-day">📅 היום — יום ${HEB_DAYS3[d]}</div>
-        <div class="today-hero-title" style="color:#fff">😴 יום מנוחה</div>
+        <div class="today-hero-day">היום — יום ${HEB_DAYS3[d]}</div>
+        <div class="today-hero-title" style="color:#fff">יום מנוחה</div>
         <div class="today-hero-sub" style="color:rgba(255,255,255,.8)">שיקום, שינה, תזונה. הגוף גדל כשאתה נח.</div>
       </div>
-      <div class="today-hero-emoji">💚</div>`;
+      <div class="today-hero-emoji" style="font-family:var(--font-d);font-size:2.2rem;font-weight:900;color:rgba(255,255,255,.25)">REST</div>`;
   }
   // Highlight today in week bars
   document.querySelectorAll('.week-bar .day-cell').forEach((c,i)=>{
@@ -2851,10 +2854,10 @@ window.addEventListener('load',()=>{
 <!-- CELEBRATION MODAL -->
 <div class="celebrate-overlay" id="celebrate-overlay">
   <div class="celebrate-box">
-    <div class="celebrate-emoji">💪</div>
+    <div class="celebrate-emoji" style="font-family:var(--font-d);font-size:3rem;font-weight:900;color:var(--green);letter-spacing:-2px;">DONE</div>
     <div class="celebrate-title">אימון הושלם!</div>
-    <div class="celebrate-sub" id="celebrate-text">כל הכבוד! סיימת את האימון של היום.<br>הגוף שלך מתחזק מאימון לאימון. 🔥</div>
-    <button class="celebrate-close" onclick="closeCelebration()">👍 תודה!</button>
+    <div class="celebrate-sub" id="celebrate-text">כל הכבוד! סיימת את האימון של היום.<br>הגוף שלך מתחזק מאימון לאימון.</div>
+    <button class="celebrate-close" onclick="closeCelebration()">סגור</button>
   </div>
 </div>
 
