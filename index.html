@@ -1951,6 +1951,10 @@ function showPanel(name,btn){
   document.getElementById('page-title').textContent=TITLES[name]||name;
   if(window.innerWidth<=768) closeSidebar();
   window.scrollTo(0,0);
+  // Lazy-render panels that build their UI dynamically
+  if(name==='elog') setTimeout(renderElogPanel,0);
+  if(name==='food') setTimeout(renderFoodPanel,0);
+  if(name==='chat') setTimeout(renderChatPanel,0);
 }
 function goDay(name){showPanel(name);}
 function openSidebar(){
@@ -2551,15 +2555,6 @@ function injectLastLogChips(elog){
       nameCell.after(chip);
     }
   });
-}
-
-// Hook showPanel to render elog on open
-const _origShowPanel=showPanel;
-function showPanel(name,btn){
-  _origShowPanel(name,btn);
-  if(name==='elog') setTimeout(renderElogPanel,0);
-  if(name==='food') setTimeout(renderFoodPanel,0);
-  if(name==='chat') setTimeout(renderChatPanel,0);
 }
 
 // ═══════════════════════════════════════════════════
