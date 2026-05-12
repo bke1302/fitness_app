@@ -63,11 +63,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 /* ─── SIDEBAR ─── */
 .sidebar{
   position:fixed;top:0;right:0;height:100vh;width:248px;
-  background:rgba(8,8,8,.92);
+  background:rgba(12,12,12,.97);
   backdrop-filter:blur(24px) saturate(180%);
   -webkit-backdrop-filter:blur(24px) saturate(180%);
   border-left:1px solid var(--border);
-  display:flex;flex-direction:column;z-index:100;transition:transform .35s var(--ease-out);
+  display:flex;flex-direction:column;z-index:200;
+  transition:transform .35s var(--ease-out);
+  pointer-events:auto;
+  isolation:isolate;
 }
 .logo{padding:28px 20px 18px;border-bottom:1px solid var(--border);}
 .logo h1{
@@ -102,8 +105,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   font-family:var(--font);font-size:.87rem;
   text-align:right;
   transition:background .18s,color .18s;
+  position:relative;
+  pointer-events:auto;
   /* NO overflow:hidden — causes click issues on iOS/Safari */
-  position:static;
+  z-index:1;
 }
 .nav-btn:hover{background:rgba(255,255,255,.06);color:var(--text);}
 .nav-btn.active{
@@ -156,10 +161,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 /* ─── GLASS CARDS ─── */
 .card{
-  background:var(--glass);
+  background:rgba(255,255,255,.05);
   border:1px solid var(--glass-b);
-  border-radius:var(--r);margin-bottom:20px;overflow:hidden;
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border-radius:var(--r);margin-bottom:20px;
+  /* NO backdrop-filter — creates stacking contexts that block sidebar pointer events in WebKit */
+  /* NO overflow:hidden — clips the interactive hit area of card children */
   transition:border-color .25s,box-shadow .25s;
 }
 .card:hover{border-color:var(--border2);box-shadow:0 8px 40px rgba(0,0,0,.5);}
@@ -272,7 +278,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .superset-label{font-size:.67rem;padding:2px 8px;border-radius:999px;background:rgba(191,90,242,.12);color:var(--purple);border:1px solid rgba(191,90,242,.28);margin-right:6px;}
 
 /* ─── MODAL ─── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:300;display:none;align-items:center;justify-content:center;padding:20px;}
 .modal-overlay.open{display:flex;animation:fadeOverlay .2s ease;}
 @keyframes fadeOverlay{from{opacity:0}to{opacity:1}}
 .modal{
@@ -337,8 +343,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .hamburger:hover{background:var(--glass-h);}
 
 /* ─── SIDEBAR OVERLAY ─── */
-.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;backdrop-filter:blur(4px);}
-.sidebar-overlay.show{display:block;}
+/* NO backdrop-filter — in WebKit, filter on overlay can intercept events from z-index:100 sidebar */
+.sidebar-overlay{
+  visibility:hidden;pointer-events:none;
+  position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99;
+  opacity:0;transition:opacity .3s,visibility .3s;
+}
+.sidebar-overlay.show{visibility:visible;pointer-events:auto;opacity:1;}
 
 /* ─── SIDEBAR CLOSE (mobile) ─── */
 .sidebar-close{display:none;position:absolute;top:16px;left:16px;background:var(--glass);border:1px solid var(--border2);color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:.9rem;align-items:center;justify-content:center;}
@@ -554,14 +565,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .wlog-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;padding:2px 6px;border-radius:4px;transition:color .15s;}
 .wlog-del:hover{color:var(--red);}
 
-/* ─── PANEL ENTRANCE (single, no delay, no opacity:0 blocking) ─── */
-@keyframes cardDrop{
-  from{opacity:0;transform:translateY(10px)}
+/* ─── PANEL ENTRANCE ─── */
+@keyframes cardFade{
+  from{opacity:0;transform:translateY(8px)}
   to{opacity:1;transform:translateY(0)}
 }
-.panel.active .card{animation:cardDrop .3s var(--ease-out);}
-.today-hero{animation:cardDrop .3s var(--ease-out);}
-.install-banner{animation:cardDrop .3s var(--ease-out);}
+/* Only animate panel itself, NOT cards — card animations create stacking contexts that can block sidebar */
+.panel.active{animation:cardFade .3s var(--ease-out);}
+.today-hero{animation:cardFade .25s var(--ease-out);}
+.install-banner{animation:cardFade .25s var(--ease-out);}
 
 /* ─── REDUCED MOTION ─── */
 @media(prefers-reduced-motion:reduce){
