@@ -255,6 +255,83 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .install-banner-btn{background:linear-gradient(135deg,var(--red),#9333ea);color:#fff;border:none;border-radius:999px;padding:8px 18px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap;}
 .install-banner-dismiss{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:4px 8px;}
 
+/* ══ EMOJI REMOVAL — professional look ══ */
+.nav-icon{display:none;}
+.day-cell .dc-icon{display:none;}
+.card-head h2 .emoji-prefix{display:none;}
+
+/* ══ FOOD TRACKER ══ */
+.food-macro-bars{margin-bottom:20px;}
+.fmb-row{margin-bottom:12px;}
+.fmb-top{display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:5px;}
+.fmb-label{font-weight:700;}
+.fmb-vals{color:var(--muted);}
+.fmb-track{height:10px;background:var(--bg4);border-radius:999px;overflow:hidden;}
+.fmb-fill{height:100%;border-radius:999px;transition:width .4s ease;}
+.fmb-over{background:var(--red)!important;}
+.food-search-wrap{position:relative;margin-bottom:12px;}
+.food-search{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;color:var(--text);font-family:var(--font);font-size:.9rem;}
+.food-search:focus{outline:none;border-color:var(--blue);}
+.food-dropdown{position:absolute;top:100%;right:0;left:0;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;z-index:50;max-height:220px;overflow-y:auto;display:none;box-shadow:0 8px 32px rgba(0,0,0,.5);}
+.food-dropdown.show{display:block;}
+.food-option{padding:10px 14px;cursor:pointer;font-size:.87rem;border-bottom:1px solid var(--border);}
+.food-option:last-child{border-bottom:none;}
+.food-option:hover{background:var(--bg3);}
+.food-option .fo-macros{font-size:.72rem;color:var(--muted);margin-top:2px;}
+.food-log-entry{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;margin-bottom:8px;gap:10px;}
+.fle-name{font-weight:600;font-size:.88rem;flex:1;}
+.fle-amount{font-size:.78rem;color:var(--muted);margin-top:2px;}
+.fle-macros{font-size:.75rem;color:var(--muted2);display:flex;gap:8px;flex-shrink:0;}
+.fle-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;padding:2px 6px;border-radius:4px;flex-shrink:0;}
+.fle-del:hover{color:var(--red);}
+.food-qty-wrap{display:flex;gap:8px;align-items:center;margin-bottom:12px;}
+.food-qty-input{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;color:var(--text);font-family:var(--font);font-size:.88rem;width:90px;text-align:center;}
+.food-qty-input:focus{outline:none;border-color:var(--blue);}
+.food-add-btn{background:var(--blue);border:none;color:#fff;border-radius:8px;padding:8px 16px;cursor:pointer;font-family:var(--font);font-size:.85rem;font-weight:700;white-space:nowrap;}
+.custom-food-form{background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:14px;margin-top:12px;display:none;}
+.custom-food-form.show{display:block;}
+.cfg-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
+.cfg-input{background:var(--bg4);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-family:var(--font);font-size:.82rem;width:100%;text-align:center;}
+.cfg-input:focus{outline:none;border-color:var(--blue);}
+
+/* ══ AI CHAT ══ */
+.chat-wrap{display:flex;flex-direction:column;height:60vh;min-height:400px;}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--bg3);border-radius:12px;margin-bottom:12px;}
+.chat-bubble{max-width:85%;padding:10px 14px;border-radius:12px;font-size:.87rem;line-height:1.7;}
+.chat-bubble.user{align-self:flex-start;background:var(--bg4);border:1px solid var(--border2);}
+.chat-bubble.ai{align-self:flex-end;background:linear-gradient(135deg,rgba(230,57,70,.12),rgba(147,51,234,.1));border:1px solid rgba(147,51,234,.25);}
+.chat-bubble.typing{align-self:flex-end;color:var(--muted);font-style:italic;}
+.chat-input-wrap{display:flex;gap:8px;}
+.chat-input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;color:var(--text);font-family:var(--font);font-size:.88rem;resize:none;}
+.chat-input:focus{outline:none;border-color:var(--blue);}
+.chat-send{background:linear-gradient(135deg,var(--red),#9333ea);border:none;color:#fff;border-radius:10px;padding:10px 20px;cursor:pointer;font-family:var(--font);font-size:.88rem;font-weight:700;white-space:nowrap;}
+.chat-send:disabled{opacity:.5;cursor:default;}
+.api-key-notice{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:12px 14px;font-size:.83rem;color:var(--muted2);margin-bottom:12px;line-height:1.7;}
+.api-key-notice a{color:var(--cyan);}
+
+/* ══ TRAINING LOG (יומן) ══ */
+.elog-section{margin-bottom:24px;}
+.elog-section-title{font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:8px 12px;border-radius:8px;margin-bottom:8px;}
+.elog-row{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;margin-bottom:8px;flex-wrap:wrap;transition:border-color .2s;}
+.elog-row:hover{border-color:var(--border2);}
+.elog-ex-info{flex:1;min-width:140px;}
+.elog-ex-name{font-weight:700;font-size:.9rem;}
+.elog-ex-en{font-size:.72rem;color:var(--muted);margin-top:1px;}
+.elog-history{font-size:.75rem;color:var(--muted2);margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+.elog-hist-chip{background:var(--bg4);border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:.72rem;white-space:nowrap;}
+.elog-hist-chip.latest{border-color:var(--cyan);color:var(--cyan);}
+.elog-inputs{display:flex;gap:6px;align-items:center;flex-shrink:0;}
+.elog-input{background:var(--bg4);border:1px solid var(--border2);border-radius:8px;padding:6px 8px;color:var(--text);font-family:var(--font);font-size:.88rem;width:68px;text-align:center;}
+.elog-input:focus{outline:none;border-color:var(--blue);}
+.elog-x{color:var(--muted);font-size:.8rem;}
+.elog-save{background:var(--blue);border:none;color:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;font-family:var(--font);font-size:.8rem;font-weight:700;white-space:nowrap;}
+.elog-save:active{transform:scale(.95);}
+.elog-inc-btn{background:var(--bg4);border:1px solid var(--border2);color:var(--text);border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:.9rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.elog-inc-btn:hover{border-color:var(--blue);color:var(--blue);}
+/* Inline last-log chip in workout table */
+.ex-last-log{font-size:.7rem;color:var(--cyan);margin-top:3px;display:inline-flex;align-items:center;gap:4px;}
+.ex-last-log span{background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25);border-radius:999px;padding:1px 7px;}
+
 /* ══ PR SECTION (modal) ══ */
 .pr-section{background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:14px;margin-top:16px;}
 .pr-title{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
@@ -355,9 +432,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="nav-group-title">מידע</div>
     <button class="nav-btn" onclick="showPanel('tips',this)"><span class="nav-icon">💡</span> טיפים מהמאמן</button>
     <button class="nav-btn" onclick="showPanel('timeline',this)"><span class="nav-icon">📈</span> ציר זמן</button>
-    <div class="nav-group-title">אישי</div>
-    <button class="nav-btn" onclick="showPanel('progress',this)"><span class="nav-icon">📊</span> התקדמות משקל</button>
-    <button class="nav-btn" onclick="showPanel('settings',this)"><span class="nav-icon">⚙️</span> הגדרות</button>
+    <div class="nav-group-title">מעקב אישי</div>
+    <button class="nav-btn" onclick="showPanel('elog',this)"><span class="nav-icon"></span> יומן משקלים</button>
+    <button class="nav-btn" onclick="showPanel('food',this)"><span class="nav-icon"></span> מעקב תזונה</button>
+    <button class="nav-btn" onclick="showPanel('chat',this)"><span class="nav-icon"></span> יועץ תזונה AI</button>
+    <button class="nav-btn" onclick="showPanel('progress',this)"><span class="nav-icon"></span> גרף משקל גוף</button>
+    <button class="nav-btn" onclick="showPanel('settings',this)"><span class="nav-icon"></span> הגדרות</button>
   </nav>
   <div class="sidebar-footer">
     <div class="user-chip">
@@ -407,9 +487,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="today-hero-emoji">💪</div>
     </div>
 
-    <div class="trainer-note">
-      <strong>💬 מדוע Push/Pull/Legs/Arms לימים שלך?</strong><br>
-      א׳+ב׳ הם יומיים רצופים — Push ואז Pull מושלם כי שרירי הדחיפה (חזה, כתפיים, טריצפס) לא נוגעים בשרירי המשיכה (גב, בייסס). ג׳ מנוחה. ד׳+ה׳ — רגליים ואז ידיים — שוב אין חפיפה. <strong>כל שריר מקבל 48–72 שעות שיקום מלא.</strong> זה הפיצול שהשתמשתי בו עם הספורטאים הטובים ביותר שעבדתי איתם.
+    <div class="trainer-note" style="padding:20px 22px;">
+      <div style="font-size:.82rem;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">הגיון הפיצול</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:.85rem;line-height:1.7;">
+        <div><strong style="color:var(--text);">ראשון + שני — רצופים</strong><br><span style="color:var(--muted2);">Push ואז Pull — אין חפיפת שרירים. שרירי הדחיפה לא נוגעים בשרירי המשיכה.</span></div>
+        <div><strong style="color:var(--text);">רביעי + חמישי — רצופים</strong><br><span style="color:var(--muted2);">רגליים ואז ידיים — שוב אין חפיפה. כל שריר מקבל 48–72 שעות שיקום.</span></div>
+      </div>
     </div>
 
     <div class="card">
@@ -1305,6 +1388,29 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   </div>
 
   <!-- ══════════════════════════════════
+       TRAINING LOG PANEL (יומן משקלים)
+  ══════════════════════════════════ -->
+  <div class="panel" id="panel-elog">
+    <div class="trainer-note">
+      <strong>📝 יומן משקלים אישי</strong><br>
+      רשום כאן את המשקל שאתה עושה בכל תרגיל. זה הכלי הכי חשוב ל-Progressive Overload — אם לא כתבת, לא גדלת.
+    </div>
+    <div id="elog-content">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <!-- FOOD TRACKER -->
+  <div class="panel" id="panel-food">
+    <div id="food-content"></div>
+  </div>
+
+  <!-- AI NUTRITION CHAT -->
+  <div class="panel" id="panel-chat">
+    <div id="chat-content"></div>
+  </div>
+
+  <!-- ══════════════════════════════════
        PROGRESS PANEL
   ══════════════════════════════════ -->
   <div class="panel" id="panel-progress">
@@ -1384,8 +1490,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
             <input id="sf-calories" class="settings-input" type="number" min="1500" max="5000" placeholder="קלוריות יומי" />
             <div style="font-size:.78rem;color:var(--muted);margin-top:6px;">* ממולץ: TDEE + 400 ל-Lean Bulk</div>
           </div>
+          <div class="settings-field" style="margin-top:8px;">
+            <label class="settings-label" for="sf-apikey">מפתח API — Claude AI (Anthropic)</label>
+            <input id="sf-apikey" class="settings-input" type="password" placeholder="sk-ant-..." autocomplete="off"/>
+            <div style="font-size:.75rem;color:var(--muted);margin-top:5px;">נדרש לפיצ׳ר יועץ התזונה AI. נשמר רק במכשיר שלך.</div>
+          </div>
           <div style="margin-top:20px;">
-            <button class="settings-save" onclick="saveSettingsForm()">💾 שמור הגדרות</button>
+            <button class="settings-save" onclick="saveSettingsForm()">שמור הגדרות</button>
           </div>
         </form>
       </div>
@@ -1558,7 +1669,7 @@ function closeModal(){document.getElementById('modal-overlay').classList.remove(
 function closeModalBg(ev){if(ev.target.id==='modal-overlay')closeModal();}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
-const TITLES={dashboard:'לוח בקרה',schedule:'לוח שבועי',push:'ראשון — PUSH DAY',pull:'שני — PULL DAY',legs:'רביעי — LEGS DAY',arms:'חמישי — ARMS DAY',nutrition:'תוכנית תזונה',supplements:'תוספי תזונה',tips:'טיפים מהמאמן',timeline:'ציר זמן',progress:'התקדמות משקל',settings:'הגדרות אישיות'};
+const TITLES={dashboard:'לוח בקרה',schedule:'לוח שבועי',push:'ראשון — PUSH DAY',pull:'שני — PULL DAY',legs:'רביעי — LEGS DAY',arms:'חמישי — ARMS DAY',nutrition:'תוכנית תזונה',supplements:'תוספי תזונה',tips:'טיפים מהמאמן',timeline:'ציר זמן',elog:'יומן משקלים',food:'מעקב תזונה יומי',chat:'יועץ תזונה AI',progress:'גרף משקל גוף',settings:'הגדרות אישיות'};
 function showPanel(name,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
@@ -1664,6 +1775,8 @@ function saveSettingsForm(){
   const age=parseInt(document.getElementById('sf-age')?.value)||31;
   const calories=parseInt(document.getElementById('sf-calories')?.value)||2750;
   saveSettings({name,weight,height,age,calories});
+  const apiKey=(document.getElementById('sf-apikey')?.value||'').trim();
+  if(apiKey) localStorage.setItem('proFit_apiKey',apiKey);
   const btn=document.querySelector('#settings-form .settings-save');
   if(btn){const o=btn.textContent;btn.textContent='✅ נשמר!';setTimeout(()=>btn.textContent=o,2000);}
 }
@@ -1998,6 +2111,7 @@ window.addEventListener('load',()=>{
   const sh=document.getElementById('sf-height'); if(sh) sh.value=s.height;
   const sa=document.getElementById('sf-age'); if(sa) sa.value=s.age;
   const sc2=document.getElementById('sf-calories'); if(sc2) sc2.value=s.calories;
+  const sk=document.getElementById('sf-apikey'); if(sk) sk.value=localStorage.getItem('proFit_apiKey')||'';
   // Set today's date in weight log form
   const dEl=document.getElementById('wl-date');
   if(dEl) dEl.value=todayStr();
@@ -2016,6 +2130,441 @@ window.addEventListener('load',()=>{
 // Close timer presets if clicking elsewhere
 document.addEventListener('click',e=>{
   if(!e.target.closest('.timer-float')) document.getElementById('timer-presets')?.classList.remove('show');
+  if(!e.target.closest('.food-search-wrap')) document.querySelectorAll('.food-dropdown').forEach(d=>d.classList.remove('show'));
+});
+
+// ═══════════════════════════════════════════════════
+// EMOJI REMOVAL — professional look
+// ═══════════════════════════════════════════════════
+function cleanEmojis(){
+  const rx=/[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}✅⭐]/gu;
+  // Card headers h2 — remove emoji from text nodes only
+  document.querySelectorAll('.card-head h2').forEach(h2=>{
+    h2.childNodes.forEach(n=>{if(n.nodeType===3) n.textContent=n.textContent.replace(rx,'').trimStart();});
+  });
+  // Trainer notes strong
+  document.querySelectorAll('.trainer-note strong').forEach(el=>{
+    el.childNodes.forEach(n=>{if(n.nodeType===3) n.textContent=n.textContent.replace(rx,'').trimStart();});
+  });
+  // Page title in topbar
+  const pt=document.getElementById('page-title');
+  if(pt) pt.textContent=pt.textContent.replace(rx,'').trimStart();
+  // Today hero — handled by initTodayHero (uses cfg.icon only for rest days)
+  // Week bar day types
+  document.querySelectorAll('.dc-type,.dc-name').forEach(el=>{
+    el.textContent=el.textContent.replace(rx,'').trimStart();
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// TRAINING LOG (יומן משקלים)
+// ═══════════════════════════════════════════════════
+const ELOG_KEY='proFit_elog';
+function getElog(){ try{return JSON.parse(localStorage.getItem(ELOG_KEY)||'{}')}catch(e){return{};} }
+function saveElogEntry(key,kg,reps){
+  const log=getElog();
+  if(!log[key]) log[key]=[];
+  const today=todayStr();
+  // Remove existing entry for today if any
+  const idx=log[key].findIndex(e=>e.date===today);
+  if(idx>=0) log[key][idx]={date:today,kg,reps};
+  else log[key].unshift({date:today,kg,reps});
+  // Keep last 15 entries
+  log[key]=log[key].slice(0,15);
+  localStorage.setItem(ELOG_KEY,JSON.stringify(log));
+}
+
+const WORKOUT_ORDER=[
+  {id:'push',label:'PUSH — ראשון',color:'var(--red)'},
+  {id:'pull',label:'PULL — שני',color:'var(--blue)'},
+  {id:'legs',label:'LEGS — רביעי',color:'var(--purple)'},
+  {id:'arms',label:'ARMS — חמישי',color:'var(--yellow)'}
+];
+
+function renderElogPanel(){
+  const wrap=document.getElementById('elog-content');
+  if(!wrap) return;
+  const elog=getElog();
+  let html='';
+  WORKOUT_ORDER.forEach(w=>{
+    const panel=document.getElementById('panel-'+w.id);
+    if(!panel) return;
+    const rows=[...panel.querySelectorAll('.ex-table tbody tr[onclick]')];
+    if(!rows.length) return;
+    html+=`<div class="elog-section">
+      <div class="elog-section-title" style="background:rgba(255,255,255,.04);color:${w.color};border-right:3px solid ${w.color};">${w.label}</div>`;
+    rows.forEach(tr=>{
+      const m=tr.getAttribute('onclick').match(/openModal\('(\w+)'\)/);
+      if(!m) return;
+      const key=m[1]; const ex=EX[key]; if(!ex) return;
+      const hist=elog[key]||[];
+      const last=hist[0];
+      // History chips (last 3 excluding today)
+      const today=todayStr();
+      const chips=hist.filter(e=>e.date!==today).slice(0,3)
+        .map(e=>`<span class="elog-hist-chip">${e.date.slice(5)} — ${e.kg}ק"ג×${e.reps}</span>`).join('');
+      const todayEntry=hist.find(e=>e.date===today);
+      html+=`<div class="elog-row" id="elog-row-${key}">
+        <div class="elog-ex-info">
+          <div class="elog-ex-name">${ex.name}</div>
+          <div class="elog-ex-en" style="font-size:.72rem;color:var(--muted);margin-top:1px;">${ex.en}</div>
+          <div class="elog-history">
+            ${todayEntry?`<span class="elog-hist-chip latest">היום: ${todayEntry.kg}ק"ג×${todayEntry.reps}</span>`:''}
+            ${chips}
+            ${!chips&&!todayEntry?'<span style="color:var(--muted);font-size:.72rem;">אין היסטוריה עדיין</span>':''}
+          </div>
+        </div>
+        <div class="elog-inputs">
+          <button class="elog-inc-btn" onclick="elogAdjust('${key}',-2.5)">−</button>
+          <input class="elog-input" id="elog-kg-${key}" type="number" min="0" step="0.5" placeholder="ק״ג" value="${todayEntry?todayEntry.kg:last?last.kg:''}" style="width:62px;"/>
+          <span class="elog-x">×</span>
+          <input class="elog-input" id="elog-reps-${key}" type="number" min="1" max="50" placeholder="חזרות" value="${todayEntry?todayEntry.reps:last?last.reps:''}" style="width:62px;"/>
+          <button class="elog-inc-btn" onclick="elogAdjust('${key}',2.5)">+</button>
+          <button class="elog-save" onclick="elogSave('${key}')">שמור</button>
+        </div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  wrap.innerHTML=html;
+  // Add last-log chips inline in workout tables
+  injectLastLogChips(elog);
+}
+
+function elogAdjust(key,delta){
+  const el=document.getElementById('elog-kg-'+key);
+  if(!el) return;
+  const cur=parseFloat(el.value)||0;
+  el.value=Math.max(0,(cur+delta)).toFixed(1).replace('.0','');
+}
+
+function elogSave(key){
+  const kg=parseFloat(document.getElementById('elog-kg-'+key)?.value);
+  const reps=parseInt(document.getElementById('elog-reps-'+key)?.value);
+  if(isNaN(kg)||isNaN(reps)||kg<=0||reps<=0) return;
+  saveElogEntry(key,kg,reps);
+  if(navigator.vibrate) navigator.vibrate(30);
+  const btn=document.querySelector(`#elog-row-${key} .elog-save`);
+  if(btn){btn.textContent='נשמר!';btn.style.background='var(--green)';setTimeout(()=>{btn.textContent='שמור';btn.style.background='';},1800);}
+  // Re-render to update history + chips
+  renderElogPanel();
+  // Also update PR if new best
+  const prs=getPRs(); const prev=prs[key];
+  if(!prev||kg>prev.kg||(kg===prev.kg&&reps>prev.reps)){
+    prs[key]={kg,reps,date:todayStr()};
+    localStorage.setItem(PR_KEY,JSON.stringify(prs));
+  }
+}
+
+function injectLastLogChips(elog){
+  const today=todayStr();
+  document.querySelectorAll('.ex-table tbody tr[onclick]').forEach(tr=>{
+    const m=tr.getAttribute('onclick').match(/openModal\('(\w+)'\)/);
+    if(!m) return;
+    const key=m[1];
+    const hist=(elog[key]||[]).filter(e=>e.date!==today);
+    const nameCell=tr.querySelector('.ex-name-main');
+    if(!nameCell) return;
+    // Remove existing chip
+    nameCell.parentElement.querySelector('.ex-last-log')?.remove();
+    if(hist.length){
+      const chip=document.createElement('div');
+      chip.className='ex-last-log';
+      const e=hist[0];
+      chip.innerHTML=`<span>פעם קודמת: ${e.kg}ק"ג × ${e.reps} (${e.date.slice(5)})</span>`;
+      nameCell.after(chip);
+    }
+  });
+}
+
+// Hook showPanel to render elog on open
+const _origShowPanel=showPanel;
+function showPanel(name,btn){
+  _origShowPanel(name,btn);
+  if(name==='elog') setTimeout(renderElogPanel,0);
+  if(name==='food') setTimeout(renderFoodPanel,0);
+  if(name==='chat') setTimeout(renderChatPanel,0);
+}
+
+// ═══════════════════════════════════════════════════
+// FOOD TRACKER
+// ═══════════════════════════════════════════════════
+const FOOD_KEY='proFit_food';
+const FOODS=[
+  {name:'חזה עוף (100g)',cal:165,p:31,c:0,f:3.5},
+  {name:'סלמון (100g)',cal:208,p:20,c:0,f:13},
+  {name:'טונה בקופסה (120g)',cal:130,p:28,c:0,f:1},
+  {name:'ביצה שלמה',cal:70,p:6,c:0,f:5},
+  {name:'חלבון ביצה',cal:17,p:3.6,c:0,f:0},
+  {name:'Whey Isolate (מנה 30g)',cal:115,p:25,c:2,f:0.5},
+  {name:'שיבולת שועל (100g יבש)',cal:389,p:17,c:66,f:7},
+  {name:'אורז לבן מבושל (100g)',cal:130,p:2.7,c:28,f:0.3},
+  {name:'אורז מלא מבושל (100g)',cal:112,p:2.6,c:24,f:1},
+  {name:'בטטה מבושלת (100g)',cal:86,p:1.6,c:20,f:0.1},
+  {name:'לחם שיפון (פרוסה 30g)',cal:75,p:2.8,c:14,f:0.7},
+  {name:'יוגורט יווני 0% (100g)',cal:59,p:10,c:3.6,f:0.4},
+  {name:'קוטג׳ 1% (100g)',cal:72,p:11,c:3,f:1},
+  {name:'גבינה לבנה 1% (100g)',cal:67,p:7,c:4,f:1.5},
+  {name:'חלב 1% (200ml)',cal:86,p:6.8,c:9.8,f:2},
+  {name:'אבוקדו (חצי)',cal:120,p:1.5,c:6,f:11},
+  {name:'אגוזי מלך (30g)',cal:196,p:4.6,c:4,f:20},
+  {name:'שקדים (30g)',cal:174,p:6,c:6,f:15},
+  {name:'בננה',cal:89,p:1.1,c:23,f:0.3},
+  {name:'תפוח',cal:52,p:0.3,c:14,f:0.2},
+  {name:'שמן זית (כפית 5ml)',cal:44,p:0,c:0,f:5},
+  {name:'קרם חלב שיבולת שועל (200ml)',cal:80,p:0.8,c:16,f:1.6},
+  {name:'חומוס מבושל (100g)',cal:164,p:9,c:27,f:2.6},
+  {name:'עדשים מבושלות (100g)',cal:116,p:9,c:20,f:0.4},
+  {name:'קינואה מבושלת (100g)',cal:120,p:4.4,c:21,f:1.9},
+];
+
+let _selectedFood=null;
+
+function getFoodLog(){ try{const d=localStorage.getItem(FOOD_KEY+'_'+todayStr());return d?JSON.parse(d):[]}catch(e){return[];} }
+function saveFoodLog(log){ localStorage.setItem(FOOD_KEY+'_'+todayStr(),JSON.stringify(log)); }
+
+function renderFoodPanel(){
+  const wrap=document.getElementById('food-content'); if(!wrap) return;
+  const s=getSettings();
+  const log=getFoodLog();
+  const totals=log.reduce((acc,e)=>({cal:acc.cal+e.cal,p:acc.p+e.p,c:acc.c+e.c,f:acc.f+e.f}),{cal:0,p:0,c:0,f:0});
+  const pct=(v,g)=>Math.min(100,(v/g)*100);
+  const pGoal=Math.round(s.weight*2.5); const cGoal=Math.round((s.calories-pGoal*4-70*9)/4); const fGoal=70;
+
+  wrap.innerHTML=`
+  <div class="card">
+    <div class="card-head"><h2>מעקב תזונה יומי — ${todayStr().split('-').reverse().join('/')}</h2></div>
+    <div class="card-body">
+      <div class="food-macro-bars">
+        ${macroBar('קלוריות','kcal',totals.cal,s.calories,'linear-gradient(90deg,var(--red),#9333ea)')}
+        ${macroBar('חלבון','g',totals.p,pGoal,'var(--blue)')}
+        ${macroBar('פחמימות','g',totals.c,cGoal,'var(--yellow)')}
+        ${macroBar('שומן','g',totals.f,fGoal,'var(--green)')}
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><h2>הוסף מזון</h2></div>
+    <div class="card-body">
+      <div class="food-search-wrap">
+        <input class="food-search" id="food-search" type="text" placeholder="חפש מזון... (לדוג׳ עוף, אורז, ביצה)" oninput="foodSearch(this.value)" autocomplete="off"/>
+        <div class="food-dropdown" id="food-dropdown"></div>
+      </div>
+      <div id="food-selected-wrap" style="display:none;">
+        <div style="font-size:.85rem;font-weight:700;margin-bottom:8px;" id="food-selected-name"></div>
+        <div class="food-qty-wrap">
+          <input class="food-qty-input" id="food-qty" type="number" min="0.5" step="0.5" value="1" placeholder="כמות"/>
+          <span style="font-size:.82rem;color:var(--muted);" id="food-qty-label">מנות</span>
+          <button class="food-add-btn" onclick="addFoodEntry()">הוסף</button>
+        </div>
+        <div id="food-preview" style="font-size:.78rem;color:var(--muted2);margin-top:4px;"></div>
+      </div>
+      <div style="margin-top:12px;">
+        <button style="background:none;border:1px solid var(--border2);color:var(--muted);border-radius:8px;padding:6px 14px;cursor:pointer;font-family:var(--font);font-size:.8rem;" onclick="document.getElementById('custom-food-form').classList.toggle('show')">+ מזון מותאם אישית</button>
+      </div>
+      <div class="custom-food-form" id="custom-food-form">
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:8px;">ערכים ל-100g / למנה</div>
+        <input class="wl-input" id="cf-name" type="text" placeholder="שם המזון" style="width:100%;margin-bottom:8px;"/>
+        <div class="cfg-grid">
+          <input class="cfg-input" id="cf-cal" type="number" placeholder="קלוריות"/>
+          <input class="cfg-input" id="cf-p" type="number" placeholder="חלבון g"/>
+          <input class="cfg-input" id="cf-c" type="number" placeholder="פחמימות g"/>
+          <input class="cfg-input" id="cf-f" type="number" placeholder="שומן g"/>
+        </div>
+        <button class="food-add-btn" onclick="addCustomFood()">הוסף מזון</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><h2>מה אכלתי היום</h2>${log.length?`<span class="badge badge-blue">${log.length} רשומות</span>`:''}</div>
+    <div class="card-body" id="food-log-list">
+      ${log.length?log.map((e,i)=>`<div class="food-log-entry">
+        <div style="flex:1"><div class="fle-name">${e.name}${e.qty!==1?` ×${e.qty}`:''}${e.unit?' '+e.unit:''}</div>
+        <div class="fle-amount">${Math.round(e.cal)} קל׳ | <span style="color:var(--blue)">${Math.round(e.p)}g P</span> · <span style="color:var(--yellow)">${Math.round(e.c)}g C</span> · <span style="color:var(--green)">${Math.round(e.f)}g F</span></div></div>
+        <button class="fle-del" onclick="deleteFoodEntry(${i})">✕</button>
+      </div>`).join(''):'<div style="color:var(--muted);font-size:.85rem;padding:6px 0;">לא נוסף עדיין מזון להיום</div>'}
+    </div>
+  </div>`;
+}
+
+function macroBar(label,unit,cur,goal,color){
+  const pct=Math.min(100,(cur/goal)*100);
+  const over=cur>goal;
+  return `<div class="fmb-row">
+    <div class="fmb-top"><span class="fmb-label">${label}</span><span class="fmb-vals">${Math.round(cur)} / ${goal} ${unit} ${over?'<span style="color:var(--red);font-weight:700;">✓ חרגת</span>':''}</span></div>
+    <div class="fmb-track"><div class="fmb-fill${over?' fmb-over':''}" style="width:${pct}%;background:${color};"></div></div>
+  </div>`;
+}
+
+function foodSearch(q){
+  const dd=document.getElementById('food-dropdown');
+  if(!q||q.length<1){dd.classList.remove('show');return;}
+  const matches=FOODS.filter(f=>f.name.includes(q)||f.name.toLowerCase().includes(q.toLowerCase())).slice(0,8);
+  if(!matches.length){dd.classList.remove('show');return;}
+  dd.innerHTML=matches.map((f,i)=>`<div class="food-option" onclick="selectFood(${FOODS.indexOf(f)})">
+    ${f.name}<div class="fo-macros">${f.cal} קל׳ · P${f.p}g · C${f.c}g · F${f.f}g</div></div>`).join('');
+  dd.classList.add('show');
+}
+
+function selectFood(idx){
+  _selectedFood=FOODS[idx];
+  document.getElementById('food-search').value=_selectedFood.name;
+  document.getElementById('food-dropdown').classList.remove('show');
+  document.getElementById('food-selected-name').textContent=_selectedFood.name;
+  document.getElementById('food-selected-wrap').style.display='block';
+  document.getElementById('food-qty-label').textContent='מנות';
+  updateFoodPreview();
+}
+
+function updateFoodPreview(){
+  if(!_selectedFood) return;
+  const qty=parseFloat(document.getElementById('food-qty')?.value)||1;
+  const pr=document.getElementById('food-preview');
+  if(pr) pr.textContent=`${Math.round(_selectedFood.cal*qty)} קל׳ · חלבון ${Math.round(_selectedFood.p*qty)}g · פחמימות ${Math.round(_selectedFood.c*qty)}g · שומן ${Math.round(_selectedFood.f*qty)}g`;
+}
+document.addEventListener('input',e=>{if(e.target.id==='food-qty') updateFoodPreview();});
+
+function addFoodEntry(){
+  if(!_selectedFood) return;
+  const qty=parseFloat(document.getElementById('food-qty')?.value)||1;
+  const log=getFoodLog();
+  log.push({name:_selectedFood.name,qty,cal:_selectedFood.cal*qty,p:_selectedFood.p*qty,c:_selectedFood.c*qty,f:_selectedFood.f*qty});
+  saveFoodLog(log);
+  _selectedFood=null;
+  document.getElementById('food-search').value='';
+  document.getElementById('food-selected-wrap').style.display='none';
+  document.getElementById('food-qty').value='1';
+  renderFoodPanel();
+}
+
+function addCustomFood(){
+  const name=(document.getElementById('cf-name')?.value||'').trim();
+  const cal=parseFloat(document.getElementById('cf-cal')?.value)||0;
+  const p=parseFloat(document.getElementById('cf-p')?.value)||0;
+  const c=parseFloat(document.getElementById('cf-c')?.value)||0;
+  const f=parseFloat(document.getElementById('cf-f')?.value)||0;
+  if(!name||!cal) return;
+  const log=getFoodLog();
+  log.push({name,qty:1,cal,p,c,f});
+  saveFoodLog(log);
+  renderFoodPanel();
+}
+
+function deleteFoodEntry(idx){
+  const log=getFoodLog(); log.splice(idx,1); saveFoodLog(log); renderFoodPanel();
+}
+
+// ═══════════════════════════════════════════════════
+// AI NUTRITION CHAT
+// ═══════════════════════════════════════════════════
+let _chatHistory=[];
+let _chatRendered=false;
+
+function renderChatPanel(){
+  const wrap=document.getElementById('chat-content'); if(!wrap) return;
+  const s=getSettings();
+  const apiKey=localStorage.getItem('proFit_apiKey')||'';
+  const foodLog=getFoodLog();
+  const totals=foodLog.reduce((a,e)=>({cal:a.cal+e.cal,p:a.p+e.p}),{cal:0,p:0});
+
+  wrap.innerHTML=`
+  <div class="card">
+    <div class="card-head"><h2>יועץ תזונה AI — Claude</h2><span class="badge badge-purple">Powered by Claude</span></div>
+    <div class="card-body">
+      ${!apiKey?`<div class="api-key-notice">
+        כדי להשתמש ביועץ AI, הכנס את מפתח ה-API שלך מ-<a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> בהגדרות.<br>
+        <button style="margin-top:8px;background:var(--blue);border:none;color:#fff;border-radius:8px;padding:7px 16px;cursor:pointer;font-family:var(--font);font-size:.83rem;font-weight:700;" onclick="showPanel('settings')">פתח הגדרות</button>
+      </div>`:''}
+      <div class="chat-wrap">
+        <div class="chat-msgs" id="chat-msgs">
+          ${_chatHistory.length?'':renderWelcomeMsg(s,totals)}
+          ${_chatHistory.map(m=>`<div class="chat-bubble ${m.role==='user'?'user':'ai'}">${m.content.replace(/\n/g,'<br>')}</div>`).join('')}
+        </div>
+        <div class="chat-input-wrap">
+          <textarea class="chat-input" id="chat-input" rows="2" placeholder="שאל על תזונה, ארוחות, מה לאכול אחרי אימון..."></textarea>
+          <button class="chat-send" id="chat-send-btn" onclick="sendChat()" ${!apiKey?'disabled':''}>שלח</button>
+        </div>
+      </div>
+      <div style="margin-top:10px;font-size:.75rem;color:var(--muted);">AI יודע את תוכנית התזונה שלך ומה אכלת היום — תוצאות אישיות לחלוטין.</div>
+    </div>
+  </div>`;
+  // Scroll to bottom
+  const msgs=document.getElementById('chat-msgs');
+  if(msgs) setTimeout(()=>msgs.scrollTop=msgs.scrollHeight,50);
+
+  // Enter key to send
+  const inp=document.getElementById('chat-input');
+  if(inp) inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
+}
+
+function renderWelcomeMsg(s,totals){
+  return `<div class="chat-bubble ai">שלום! אני יועץ התזונה שלך. אני מכיר את:
+    <br>• יעד קלוריות: ${s.calories} קל׳ ביום
+    <br>• יעד חלבון: ${Math.round(s.weight*2.5)}g ביום
+    <br>• מגבלה: שומן רווי נמוך (כולסטרול)
+    <br>• היום אכלת: ${Math.round(totals.cal)} קל׳ · ${Math.round(totals.p)}g חלבון
+    <br><br>שאל אותי כל שאלה על תזונה!</div>`;
+}
+
+async function sendChat(){
+  const apiKey=localStorage.getItem('proFit_apiKey')||'';
+  if(!apiKey){showPanel('settings');return;}
+  const inp=document.getElementById('chat-input');
+  const msg=(inp?.value||'').trim();
+  if(!msg) return;
+  inp.value='';
+  const s=getSettings();
+  const foodLog=getFoodLog();
+  const totals=foodLog.reduce((a,e)=>({cal:a.cal+e.cal,p:a.p+e.p,c:a.c+e.c,f:a.f+e.f}),{cal:0,p:0,c:0,f:0});
+  _chatHistory.push({role:'user',content:msg});
+  renderChatPanel();
+  // Show typing
+  const msgs=document.getElementById('chat-msgs');
+  if(msgs){const t=document.createElement('div');t.className='chat-bubble typing';t.id='typing-ind';t.textContent='מקליד...';msgs.appendChild(t);msgs.scrollTop=msgs.scrollHeight;}
+  const btn=document.getElementById('chat-send-btn');
+  if(btn) btn.disabled=true;
+  const systemPrompt=`אתה יועץ תזונה מקצועי לספורטאים. המשתמש:
+- גיל: ${s.age} | משקל: ${s.weight}ק"ג | גובה: ${s.height}ס"מ
+- יעד: עליית מסת שריר (Lean Bulk)
+- יעד קלוריות: ${s.calories} קל׳ ביום
+- יעד חלבון: ${Math.round(s.weight*2.5)}g ביום | פחמימות: ${Math.round((s.calories-Math.round(s.weight*2.5)*4-70*9)/4)}g | שומן: ~70g
+- בעיית כולסטרול: הימנע משומן רווי. מקורות שומן רק מבלתי רווי (זית, אבוקדו, אגוזים, דגים שמנים)
+- תוכנית אימונים: Push/Pull/Legs/Arms 4 ימים בשבוע
+- היום אכל: ${foodLog.map(e=>e.name+(e.qty>1?'×'+e.qty:'')).join(', ')||'כלום עדיין'} (סה"כ ${Math.round(totals.cal)} קל׳, ${Math.round(totals.p)}g חלבון, ${Math.round(totals.c)}g פחמימות, ${Math.round(totals.f)}g שומן)
+ענה בעברית. תשובות קצרות ומעשיות. אם מציע להחליף מזון — תמיד בדוק שזה ידידותי לכולסטרול.`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'x-api-key':apiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true',
+        'content-type':'application/json'
+      },
+      body:JSON.stringify({
+        model:'claude-haiku-4-5-20251001',
+        max_tokens:600,
+        system:systemPrompt,
+        messages:_chatHistory.map(m=>({role:m.role,content:m.content}))
+      })
+    });
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||'מצטער, לא הצלחתי לקבל תשובה.';
+    _chatHistory.push({role:'assistant',content:reply});
+  }catch(err){
+    _chatHistory.push({role:'assistant',content:'שגיאת חיבור. בדוק את מפתח ה-API בהגדרות.'});
+  }
+  renderChatPanel();
+}
+
+// ═══════════════════════════════════════════════════
+// EXTENDED INIT — add to existing load handler
+// ═══════════════════════════════════════════════════
+window.addEventListener('load',()=>{
+  cleanEmojis();
+  renderElogPanel();
+  // Pre-render elog chips in workout tables
+  injectLastLogChips(getElog());
 });
 </script>
 
