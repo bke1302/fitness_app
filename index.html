@@ -2204,6 +2204,69 @@ function toggleSidebar(){
   open ? closeSidebar() : openSidebar();
 }
 
+// ── SWIPE GESTURE — right edge → open sidebar, swipe out → close ──
+(function(){
+  const EDGE_ZONE = 32;   // px from right edge that triggers open
+  const THRESHOLD = 55;   // px swipe needed to commit open/close
+  let startX=0, startY=0, tracking=false, didDecide=false;
+
+  function isMobile(){ return window.innerWidth <= 768; }
+
+  document.addEventListener('touchstart', e=>{
+    if(!isMobile()) return;
+    const t=e.touches[0];
+    startX=t.clientX; startY=t.clientY;
+    const sb=document.getElementById('sidebar');
+    const isOpen=sb.classList.contains('open');
+    const fromEdge = startX > window.innerWidth - EDGE_ZONE;
+    tracking = fromEdge || isOpen;
+    didDecide = false;
+    if(tracking && isOpen){
+      // Remove transition for live drag
+      sb.style.transition='none';
+    }
+  }, {passive:true});
+
+  document.addEventListener('touchmove', e=>{
+    if(!tracking || !isMobile()) return;
+    const t=e.touches[0];
+    const dx=t.clientX - startX;
+    const dy=t.clientY - startY;
+    // Decide axis on first significant move
+    if(!didDecide && Math.max(Math.abs(dx),Math.abs(dy)) > 6){
+      if(Math.abs(dy) > Math.abs(dx)){ tracking=false; return; } // vertical scroll
+      didDecide=true;
+    }
+    if(!didDecide) return;
+    const sb=document.getElementById('sidebar');
+    const isOpen=sb.classList.contains('open');
+    if(isOpen && dx > 0){
+      // Dragging open sidebar to the right (closing direction)
+      sb.style.transform=`translateX(${Math.min(dx, sb.offsetWidth)}px)`;
+    } else if(!isOpen && dx < 0){
+      // Dragging from edge to the left (opening direction)
+      const progress=Math.min(-dx, sb.offsetWidth);
+      sb.style.transform=`translateX(${sb.offsetWidth - progress}px)`;
+    }
+  }, {passive:true});
+
+  document.addEventListener('touchend', e=>{
+    if(!tracking || !isMobile()) return;
+    const dx=e.changedTouches[0].clientX - startX;
+    const sb=document.getElementById('sidebar');
+    // Restore transition
+    sb.style.transition='';
+    sb.style.transform='';
+    const isOpen=sb.classList.contains('open');
+    if(!isOpen && dx < -THRESHOLD){
+      openSidebar();
+    } else if(isOpen && dx > THRESHOLD){
+      closeSidebar();
+    }
+    tracking=false;
+  }, {passive:true});
+})();
+
 // ── URL PARAMS: open panel from shortcut ──
 (function(){
   const p = new URLSearchParams(location.search).get('panel');
