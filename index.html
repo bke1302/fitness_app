@@ -728,6 +728,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .orm-box{background:rgba(10,132,255,.06);border:1px solid rgba(10,132,255,.2);border-radius:10px;padding:10px 14px;margin-top:10px;font-size:.82rem;display:none;}
 .orm-box.show{display:block;}
 .orm-box strong{color:var(--blue);font-family:var(--font-d);font-size:1rem;}
+
+/* ─── VIDEO DEMO CARD ─── */
+.demo-wrap{margin-bottom:16px;}
+.demo-card{display:block;text-decoration:none;border-radius:14px;overflow:hidden;border:1px solid rgba(255,0,0,.22);transition:border-color .25s,transform .2s;-webkit-tap-highlight-color:transparent;}
+.demo-card:hover{border-color:rgba(255,0,0,.5);}
+.demo-card:active{transform:scale(.98);}
+.demo-thumb{position:relative;height:118px;background:linear-gradient(135deg,#1c0505 0%,#160820 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.demo-bg-emoji{position:absolute;font-size:5.5rem;opacity:.13;user-select:none;pointer-events:none;filter:blur(1px);}
+.demo-play-ring{width:58px;height:42px;background:#FF0000;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 28px rgba(255,0,0,.45);}
+.demo-play-ring svg{width:20px;height:20px;}
+.demo-ex-tag{position:absolute;bottom:9px;left:12px;font-family:var(--font-d);font-size:.72rem;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.8px;text-transform:uppercase;}
+.demo-bar{background:rgba(255,255,255,.035);padding:9px 14px;display:flex;align-items:center;gap:10px;border-top:1px solid rgba(255,255,255,.06);}
+.demo-bar-text{font-size:.8rem;color:var(--muted2);flex:1;}
+.demo-yt-pill{background:#FF0000;color:#fff;font-size:.6rem;font-weight:900;letter-spacing:.8px;padding:3px 9px;border-radius:999px;flex-shrink:0;font-family:var(--font-d);}
 </style>
 </head>
 <body>
@@ -2018,6 +2032,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
     <div class="modal-hero" id="m-emoji"></div>
     <div class="info-row" id="m-info"></div>
+    <div class="demo-wrap" id="m-demo"></div>
     <div class="m-section">תיאור</div>
     <div class="m-text" id="m-desc"></div>
     <div class="m-section">שרירים מעורבים</div>
@@ -2145,6 +2160,34 @@ const EX = {
     tips:['ידיים צמודות — אצבעות נוגעות','גוף ישר לחלוטין','מרפקים כלפי מאחור בירידה','עד כישלון מוחלט']}
 };
 
+const EX_YT={
+  benchPress:'bench press proper form tutorial',
+  inclineBench:'incline bench press form tutorial',
+  cableFlye:'cable chest fly exercise tutorial form',
+  ohp:'overhead press military press form tutorial',
+  lateralRaise:'lateral raise shoulder exercise tutorial',
+  triPushdown:'tricep pushdown cable exercise form',
+  skullCrusher:'skull crusher EZ bar tricep tutorial',
+  pullup:'pull up chin up proper form tutorial',
+  bentRow:'barbell bent over row form tutorial',
+  cableRow:'seated cable row exercise tutorial',
+  facePull:'face pull cable rear delt exercise tutorial',
+  rdl:'romanian deadlift RDL proper form tutorial',
+  bbCurl:'barbell curl bicep exercise form tutorial',
+  hammerCurl:'hammer curl dumbbell exercise tutorial',
+  squat:'barbell squat proper form tutorial',
+  legPress:'leg press machine proper form tutorial',
+  legExt:'leg extension machine quad exercise tutorial',
+  legCurl:'lying leg curl hamstring exercise tutorial',
+  lunges:'bulgarian split squat form tutorial',
+  calfRaise:'standing calf raise exercise form tutorial',
+  inclineCurl:'incline dumbbell curl bicep tutorial',
+  ohTricep:'overhead tricep extension cable long head tutorial',
+  arnoldPress:'arnold press shoulder exercise tutorial',
+  frontRaise:'front raise shoulder exercise tutorial',
+  diamondPushup:'diamond push ups tricep exercise form',
+};
+
 let _currentExKey = null;
 function openModal(key){
   const e=EX[key]; if(!e)return;
@@ -2159,6 +2202,23 @@ function openModal(key){
      <div class="info-pill">מנוחה: <strong>${e.rest}</strong></div>
      <div class="info-pill">עצימות: <strong>${e.lvl}</strong></div>`;
   document.getElementById('m-tips').innerHTML=e.tips.map(t=>`<li><span>✅</span><span>${t}</span></li>`).join('');
+  // Demo video card
+  const demoEl=document.getElementById('m-demo');
+  if(demoEl){
+    const q=EX_YT[key]||(e.en+' exercise tutorial form');
+    const ytUrl='https://www.youtube.com/results?search_query='+encodeURIComponent(q);
+    demoEl.innerHTML=`<a class="demo-card" href="${ytUrl}" target="_blank" rel="noopener noreferrer">
+      <div class="demo-thumb">
+        <span class="demo-bg-emoji">${e.e}</span>
+        <div class="demo-play-ring"><svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="demo-ex-tag">${e.en}</span>
+      </div>
+      <div class="demo-bar">
+        <span class="demo-bar-text">הדגמת ביצוע נכון — לחץ לצפייה</span>
+        <span class="demo-yt-pill">YouTube</span>
+      </div>
+    </a>`;
+  }
   // Load PR
   const prs = getPRs();
   const pr = prs[key];
