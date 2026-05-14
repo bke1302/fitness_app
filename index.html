@@ -590,7 +590,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   .sidebar.open{transform:translateX(0);}
   .sidebar-close{display:flex;}
   .main{margin-right:0;}
-  .topbar{padding:12px 16px;}
+  .topbar{padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));}
   .content{padding:14px;}
   .grid-4{grid-template-columns:repeat(2,1fr);}
   .grid-3{grid-template-columns:1fr;}
