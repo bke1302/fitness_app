@@ -729,6 +729,59 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .orm-box.show{display:block;}
 .orm-box strong{color:var(--blue);font-family:var(--font-d);font-size:1rem;}
 
+/* ─── LIGHT THEME ─── */
+[data-theme="light"]{
+  --bg:#f2f2f7;--bg2:#ffffff;--bg3:#f5f5fa;--bg4:#ebebf0;--bg5:#e5e5ea;
+  --border:rgba(0,0,0,.09);--border2:rgba(0,0,0,.15);
+  --text:#1c1c1e;--muted:rgba(0,0,0,.4);--muted2:rgba(0,0,0,.6);
+  --glass:rgba(0,0,0,.03);--glass-b:rgba(0,0,0,.08);--glass-h:rgba(0,0,0,.06);
+}
+[data-theme="light"] .sidebar{background:rgba(245,245,250,.98);}
+[data-theme="light"] .topbar{background:rgba(242,242,247,.9);}
+[data-theme="light"] .card{background:var(--bg2);}
+
+/* ─── THEME TOGGLE ─── */
+.theme-btn{background:none;border:1px solid var(--border2);border-radius:999px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);transition:all .2s;flex-shrink:0;font-size:.95rem;}
+.theme-btn:hover{border-color:var(--yellow);color:var(--yellow);}
+
+/* ─── CONFETTI ─── */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999;display:none;}
+
+/* ─── PROGRESSIVE OVERLOAD BADGE ─── */
+.overload-badge{font-size:.68rem;font-weight:900;font-family:var(--font-d);padding:1px 6px;border-radius:5px;margin-right:5px;vertical-align:middle;display:inline-block;}
+.overload-up{color:var(--green);background:rgba(48,209,88,.15);}
+.overload-down{color:var(--red);background:rgba(255,55,95,.15);}
+.overload-eq{color:var(--muted);background:rgba(255,255,255,.06);}
+
+/* ─── BODY MEASUREMENTS ─── */
+.meas-form{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.meas-input{background:var(--glass);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;color:var(--text);font-family:var(--font);font-size:.85rem;width:calc(50% - 4px);box-sizing:border-box;}
+.meas-input:focus{outline:none;border-color:var(--purple);}
+.meas-input::placeholder{color:var(--muted);}
+.meas-save-btn{background:var(--purple);border:none;color:#fff;border-radius:10px;padding:9px 18px;cursor:pointer;font-family:var(--font-d);font-weight:700;font-size:.85rem;width:100%;margin-top:2px;}
+.meas-row{display:flex;align-items:flex-start;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:.83rem;gap:8px;}
+.meas-row:last-child{border:none;}
+.meas-date{color:var(--muted);font-size:.73rem;flex-shrink:0;}
+.meas-vals{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+.meas-val span{color:var(--purple);font-weight:700;font-family:var(--font-d);}
+
+/* ─── RPE TRACKER ─── */
+.rpe-wrap{padding:14px 20px;background:rgba(255,255,255,.03);border-top:1px solid var(--border);flex-shrink:0;}
+.rpe-label{font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.rpe-btns{display:flex;gap:5px;}
+.rpe-btn{background:rgba(255,255,255,.05);border:1px solid var(--border2);color:var(--muted2);border-radius:8px;flex:1;height:36px;cursor:pointer;font-family:var(--font-d);font-weight:800;font-size:.85rem;transition:all .18s;}
+.rpe-btn.sel{color:#fff;border-color:transparent;}
+.rpe-btn[data-v="1"].sel,.rpe-btn[data-v="2"].sel,.rpe-btn[data-v="3"].sel{background:var(--green);}
+.rpe-btn[data-v="4"].sel,.rpe-btn[data-v="5"].sel,.rpe-btn[data-v="6"].sel{background:var(--yellow);color:#000;}
+.rpe-btn[data-v="7"].sel,.rpe-btn[data-v="8"].sel{background:var(--orange);}
+.rpe-btn[data-v="9"].sel,.rpe-btn[data-v="10"].sel{background:var(--red);}
+
+/* ─── NOTIFICATIONS ─── */
+.notif-card{background:rgba(10,132,255,.05);border:1px solid rgba(10,132,255,.2);border-radius:14px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+.notif-card-text{flex:1;font-size:.83rem;color:var(--muted2);}
+.notif-card-text strong{color:var(--blue);display:block;margin-bottom:2px;}
+.notif-btn{background:var(--blue);border:none;color:#fff;border-radius:8px;padding:8px 14px;cursor:pointer;font-family:var(--font-d);font-weight:700;font-size:.78rem;flex-shrink:0;}
+
 /* ─── VIDEO DEMO CARD ─── */
 .demo-wrap{margin-bottom:16px;}
 .demo-card{display:block;text-decoration:none;border-radius:14px;overflow:hidden;border:1px solid rgba(255,0,0,.22);transition:border-color .25s,transform .2s;-webkit-tap-highlight-color:transparent;}
@@ -868,6 +921,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <button class="topbar-icon-btn" id="share-topbar-btn" onclick="openShareModal()" title="שתף סטטיסטיקות">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
       </button>
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="מצב יום/לילה">🌙</button>
       <button class="voice-btn" id="voice-btn" onclick="toggleVoice()" title="שליטה קולית">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
       </button>
@@ -897,6 +951,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="today-hero-title">ProFit</div>
       </div>
       <div class="today-hero-emoji" style="font-family:var(--font-d);font-size:2.8rem;font-weight:900;color:rgba(255,255,255,.25);letter-spacing:-2px;">PRO</div>
+    </div>
+
+    <div class="notif-card" id="notif-card">
+      <div class="notif-card-text"><strong>תזכורות אימון</strong>קבל התראה ביום אימון בשעה שתבחר</div>
+      <button class="notif-btn" id="notif-btn" onclick="requestWorkoutNotif()">הפעל</button>
     </div>
 
     <div class="trainer-note" style="padding:20px 22px;">
@@ -1973,6 +2032,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
   </div>
 
+  <div class="card">
+    <div class="card-head"><h2>מדדי גוף</h2><span class="badge badge-purple">מעקב</span></div>
+    <div class="card-body">
+      <div class="meas-form">
+        <input class="meas-input" id="meas-chest" type="number" placeholder="חזה (ס״מ)" min="50" max="200" step="0.5"/>
+        <input class="meas-input" id="meas-waist" type="number" placeholder="מותן (ס״מ)" min="40" max="200" step="0.5"/>
+        <input class="meas-input" id="meas-arm" type="number" placeholder="זרוע (ס״מ)" min="20" max="80" step="0.5"/>
+        <input class="meas-input" id="meas-hip" type="number" placeholder="ירך (ס״מ)" min="50" max="200" step="0.5"/>
+        <button class="meas-save-btn" onclick="saveMeasurement()">שמור מדידה</button>
+      </div>
+      <div id="meas-list"><div style="color:var(--muted);font-size:.85rem;">אין מדידות עדיין</div></div>
+    </div>
+  </div>
+
   <!-- ══════════════════════════════════
        SETTINGS PANEL
   ══════════════════════════════════ -->
@@ -2518,6 +2591,7 @@ function checkPanelDone(panel){
   if(ct) ct.innerHTML=`כל הכבוד! סיימת את יום ה-${day}.<br>הגוף שלך מתחזק מאימון לאימון.`;
   document.getElementById('celebrate-overlay').classList.add('show');
   document.body.style.overflow='hidden';
+  setTimeout(fireConfetti,200);
 }
 
 function closeCelebration(){
@@ -3779,7 +3853,176 @@ window.addEventListener('load',()=>{
       },1000/fps);
     });
   },200);
+  // new feature inits
+  initTheme();
+  initNotifCard();
+  renderMeasurements();
+  setTimeout(injectOverloadBadges, 300);
 });
+
+// ═══════════════════════════════════════════════════
+// LIGHT / DARK THEME
+// ═══════════════════════════════════════════════════
+function initTheme(){
+  const t=localStorage.getItem('pf_theme')||'dark';
+  applyTheme(t);
+}
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t==='light'?'light':'');
+  const btn=document.getElementById('theme-btn');
+  if(btn) btn.textContent=t==='light'?'🌙':'☀️';
+  localStorage.setItem('pf_theme',t);
+}
+function toggleTheme(){
+  const cur=localStorage.getItem('pf_theme')||'dark';
+  applyTheme(cur==='dark'?'light':'dark');
+}
+
+// ═══════════════════════════════════════════════════
+// CONFETTI
+// ═══════════════════════════════════════════════════
+function fireConfetti(){
+  const canvas=document.getElementById('confetti-canvas');
+  if(!canvas) return;
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  canvas.style.display='block';
+  const ctx=canvas.getContext('2d');
+  const colors=['#FF375F','#30D158','#FFD60A','#BF5AF2','#5AC8FA','#FF9F0A','#fff'];
+  const ps=Array.from({length:160},()=>({
+    x:Math.random()*canvas.width, y:-10-Math.random()*300,
+    w:7+Math.random()*9, h:3+Math.random()*5,
+    c:colors[Math.floor(Math.random()*colors.length)],
+    vx:(Math.random()-.5)*4, vy:2+Math.random()*5,
+    rot:Math.random()*360, vr:(Math.random()-.5)*10,
+    a:1
+  }));
+  let raf;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive=false;
+    ps.forEach(p=>{
+      if(p.y<canvas.height+20){
+        alive=true; p.x+=p.vx; p.y+=p.vy; p.vy+=0.07; p.rot+=p.vr;
+        if(p.y>canvas.height*.65) p.a=Math.max(0,p.a-.025);
+        ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+        ctx.globalAlpha=p.a; ctx.fillStyle=p.c;
+        ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+        ctx.restore();
+      }
+    });
+    if(alive) raf=requestAnimationFrame(draw);
+    else{ canvas.style.display='none'; cancelAnimationFrame(raf); }
+  }
+  draw();
+  setTimeout(()=>{ canvas.style.display='none'; cancelAnimationFrame(raf); },4500);
+}
+
+// ═══════════════════════════════════════════════════
+// PROGRESSIVE OVERLOAD BADGES
+// ═══════════════════════════════════════════════════
+function _weekMon(dateStr){
+  const d=new Date(dateStr); const day=d.getDay();
+  const diff=d.getDate()-(day===0?6:day-1);
+  const m=new Date(d); m.setDate(diff); return m.toISOString().slice(0,10);
+}
+function injectOverloadBadges(){
+  const elog=getElog();
+  const today=new Date();
+  const thisW=_weekMon(today.toISOString().slice(0,10));
+  const lastWDate=new Date(today); lastWDate.setDate(today.getDate()-7);
+  const lastW=_weekMon(lastWDate.toISOString().slice(0,10));
+  document.querySelectorAll('.ex-table tbody tr[onclick]').forEach(tr=>{
+    const m=tr.getAttribute('onclick').match(/openModal\('(\w+)'\)/);
+    if(!m) return;
+    const entries=elog[m[1]]||[];
+    const tw=entries.find(e=>_weekMon(e.date)===thisW);
+    const lw=entries.find(e=>_weekMon(e.date)===lastW);
+    tr.querySelector('.overload-badge')?.remove();
+    if(!tw||!lw) return;
+    const d=(tw.kg*tw.reps)-(lw.kg*lw.reps);
+    const badge=document.createElement('span');
+    badge.className='overload-badge '+(d>0?'overload-up':d<0?'overload-down':'overload-eq');
+    badge.textContent=d>0?'↑ '+d>0?'↑':'↓':'=';
+    badge.textContent=d>0?'↑':d<0?'↓':'=';
+    const cell=tr.querySelector('.ex-name-main');
+    if(cell) cell.insertAdjacentElement('afterend',badge);
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// BODY MEASUREMENTS
+// ═══════════════════════════════════════════════════
+const MEAS_KEY='pf_meas';
+function getMeasurements(){ try{return JSON.parse(localStorage.getItem(MEAS_KEY)||'[]')}catch(e){return[];} }
+function saveMeasurement(){
+  const chest=parseFloat(document.getElementById('meas-chest')?.value)||null;
+  const waist=parseFloat(document.getElementById('meas-waist')?.value)||null;
+  const arm=parseFloat(document.getElementById('meas-arm')?.value)||null;
+  const hip=parseFloat(document.getElementById('meas-hip')?.value)||null;
+  if(!chest&&!waist&&!arm&&!hip) return;
+  const arr=getMeasurements();
+  arr.unshift({date:todayStr(),chest,waist,arm,hip});
+  localStorage.setItem(MEAS_KEY,JSON.stringify(arr.slice(0,50)));
+  ['meas-chest','meas-waist','meas-arm','meas-hip'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  renderMeasurements();
+  if(navigator.vibrate) navigator.vibrate(30);
+}
+function renderMeasurements(){
+  const list=document.getElementById('meas-list'); if(!list) return;
+  const arr=getMeasurements();
+  if(!arr.length){ list.innerHTML='<div style="color:var(--muted);font-size:.85rem;">אין מדידות עדיין</div>'; return; }
+  list.innerHTML=arr.slice(0,8).map(m=>`<div class="meas-row">
+    <span class="meas-date">${m.date}</span>
+    <div class="meas-vals">
+      ${m.chest?`<span class="meas-val">חזה <span>${m.chest}</span></span>`:''}
+      ${m.waist?`<span class="meas-val">מותן <span>${m.waist}</span></span>`:''}
+      ${m.arm?`<span class="meas-val">זרוע <span>${m.arm}</span></span>`:''}
+      ${m.hip?`<span class="meas-val">ירך <span>${m.hip}</span></span>`:''}
+    </div>
+  </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// RPE TRACKER
+// ═══════════════════════════════════════════════════
+const RPE_KEY='pf_rpe';
+function setRPE(v){
+  document.querySelectorAll('.rpe-btn').forEach(b=>b.classList.toggle('sel',+b.dataset.v===v));
+  const today=todayStr();
+  const rpe=JSON.parse(localStorage.getItem(RPE_KEY)||'{}');
+  if(!rpe[today]) rpe[today]=[];
+  rpe[today].push({t:new Date().toTimeString().slice(0,5),v});
+  localStorage.setItem(RPE_KEY,JSON.stringify(rpe));
+}
+
+// ═══════════════════════════════════════════════════
+// PUSH NOTIFICATIONS
+// ═══════════════════════════════════════════════════
+function initNotifCard(){
+  const card=document.getElementById('notif-card');
+  const btn=document.getElementById('notif-btn');
+  if(!card||!btn) return;
+  if(!('Notification' in window)){ card.style.display='none'; return; }
+  if(Notification.permission==='granted'){ btn.textContent='פעיל ✓'; btn.disabled=true; }
+  else if(Notification.permission==='denied'){ card.style.display='none'; }
+}
+async function requestWorkoutNotif(){
+  if(!('Notification' in window)) return;
+  const perm=await Notification.requestPermission();
+  const btn=document.getElementById('notif-btn');
+  if(perm==='granted'){
+    if(btn){btn.textContent='פעיל ✓';btn.disabled=true;}
+    const days={0:'ראשון',1:'שני',3:'רביעי',4:'חמישי'};
+    const today=new Date().getDay();
+    if(days[today]) new Notification('ProFit — יום אימון!',{
+      body:`היום יום ${days[today]} — זמן אימון. בוא נתחיל!`,
+      icon:'/fitness_app/icons/icon-192.png',
+      badge:'/fitness_app/icons/icon-72.png'
+    });
+  } else if(perm==='denied'){
+    document.getElementById('notif-card')?.classList.add('display:none');
+  }
+}
 </script>
 
 <!-- CELEBRATION MODAL -->
@@ -3802,6 +4045,21 @@ window.addEventListener('load',()=>{
   <div class="gym-body" id="gym-body">
     <!-- Filled by JS -->
   </div>
+  <div class="rpe-wrap" id="rpe-wrap">
+    <div class="rpe-label">עצימות סט (RPE 1–10)</div>
+    <div class="rpe-btns" id="rpe-btns">
+      <button class="rpe-btn" data-v="1" onclick="setRPE(1)">1</button>
+      <button class="rpe-btn" data-v="2" onclick="setRPE(2)">2</button>
+      <button class="rpe-btn" data-v="3" onclick="setRPE(3)">3</button>
+      <button class="rpe-btn" data-v="4" onclick="setRPE(4)">4</button>
+      <button class="rpe-btn" data-v="5" onclick="setRPE(5)">5</button>
+      <button class="rpe-btn" data-v="6" onclick="setRPE(6)">6</button>
+      <button class="rpe-btn" data-v="7" onclick="setRPE(7)">7</button>
+      <button class="rpe-btn" data-v="8" onclick="setRPE(8)">8</button>
+      <button class="rpe-btn" data-v="9" onclick="setRPE(9)">9</button>
+      <button class="rpe-btn" data-v="10" onclick="setRPE(10)">10</button>
+    </div>
+  </div>
   <div class="gym-footer">
     <button class="gym-nav-btn" id="gym-prev" onclick="gymPrev()" disabled>הקודם</button>
     <button class="gym-nav-btn next" id="gym-next" onclick="gymNext()">הבא</button>
@@ -3821,6 +4079,9 @@ window.addEventListener('load',()=>{
     </div>
   </div>
 </div>
+
+<!-- CONFETTI -->
+<canvas id="confetti-canvas"></canvas>
 
 <!-- LEVEL-UP TOAST -->
 <div class="levelup-toast" id="levelup-toast">עלית לרמה!</div>
