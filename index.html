@@ -408,24 +408,37 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .tips-list li:last-child{border-bottom:none;}
 
 /* ─── NUTRITION ─── */
-.meal-row{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;padding:16px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;}
-.meal-row:hover{border-color:var(--blue);box-shadow:0 0 0 1px rgba(10,132,255,.15);}
+.meal-row{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;position:relative;overflow:hidden;}
+.meal-row:hover{border-color:rgba(10,132,255,.35);box-shadow:0 4px 24px rgba(10,132,255,.08);}
 .meal-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:10px;}
-.meal-name{font-weight:700;font-size:.95rem;}
-.meal-time{font-size:.7rem;color:var(--muted);margin-top:2px;}
-.meal-cals{font-size:.8rem;color:var(--muted);white-space:nowrap;}
-.meal-foods{font-size:.83rem;color:var(--muted2);line-height:1.75;margin-bottom:10px;}
+.meal-name{font-weight:800;font-size:1rem;}
+.meal-time{font-size:.68rem;color:var(--muted);margin-top:3px;letter-spacing:.3px;}
+.meal-cals{
+  font-family:var(--font-d);font-size:1.4rem;font-weight:900;
+  color:var(--red);letter-spacing:-.5px;white-space:nowrap;line-height:1;
+}
+.meal-cals-unit{font-size:.62rem;color:var(--muted);font-weight:500;font-family:var(--font);letter-spacing:0;margin-top:2px;text-align:left;}
+.meal-foods{font-size:.82rem;color:var(--muted2);line-height:1.8;margin-bottom:12px;}
 .meal-macros{display:flex;gap:8px;flex-wrap:wrap;}
-.mp{font-size:.75rem;padding:3px 10px;border-radius:999px;}
-.mp-p{background:rgba(10,132,255,.1);color:var(--blue);}
-.mp-c{background:rgba(255,214,10,.1);color:var(--yellow);}
-.mp-f{background:rgba(48,209,88,.1);color:var(--green);}
+.mp{font-size:.73rem;padding:3px 10px;border-radius:999px;font-weight:600;}
+.mp-p{background:rgba(10,132,255,.1);color:var(--blue);border:1px solid rgba(10,132,255,.18);}
+.mp-c{background:rgba(255,214,10,.08);color:var(--yellow);border:1px solid rgba(255,214,10,.18);}
+.mp-f{background:rgba(48,209,88,.08);color:var(--green);border:1px solid rgba(48,209,88,.18);}
 
 /* ─── PROGRESS BARS ─── */
-.pbar{margin-bottom:14px;}
-.pbar-top{display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:6px;}
-.pbar-track{height:6px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;}
-.pbar-fill{height:100%;border-radius:999px;transition:width .6s var(--ease-out);}
+.pbar{margin-bottom:16px;}
+.pbar-top{display:flex;justify-content:space-between;align-items:baseline;font-size:.8rem;margin-bottom:7px;}
+.pbar-top span:first-child{color:var(--muted2);font-weight:500;}
+.pbar-track{height:8px;background:var(--bg4);border-radius:999px;overflow:hidden;position:relative;}
+.pbar-fill{
+  height:100%;border-radius:999px;
+  transition:width .8s var(--ease-out);
+  position:relative;
+}
+.pbar-fill::after{
+  content:'';position:absolute;inset:0;border-radius:999px;
+  background:linear-gradient(90deg,rgba(255,255,255,.15),transparent);
+}
 
 /* ─── TIP CARDS ─── */
 .tip-card{display:flex;gap:14px;background:var(--glass);border-right:3px solid var(--blue);border-radius:12px;padding:14px 16px;margin-bottom:10px;font-size:.87rem;line-height:1.65;}
@@ -747,14 +760,36 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .cals-hero-unit{font-size:.85rem;color:var(--muted2);font-weight:600;padding-bottom:6px;}
 
 /* ─── XP / LEVEL WIDGET ─── */
-.level-widget{display:flex;align-items:center;gap:12px;background:rgba(255,214,10,.05);border:1px solid rgba(255,214,10,.18);border-radius:14px;padding:12px 16px;margin-bottom:14px;cursor:default;}
-.level-badge-chip{font-family:var(--font-d);font-size:.62rem;font-weight:900;letter-spacing:2px;padding:4px 12px;border-radius:999px;background:linear-gradient(135deg,var(--yellow),var(--orange));color:#000;flex-shrink:0;white-space:nowrap;}
+.level-widget{
+  display:flex;align-items:center;gap:16px;
+  background:linear-gradient(135deg,rgba(255,214,10,.07),rgba(255,159,10,.04));
+  border:1px solid rgba(255,214,10,.2);border-radius:18px;
+  padding:16px 20px;margin-bottom:14px;cursor:default;
+  position:relative;overflow:hidden;
+}
+.level-widget::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 0% 50%,rgba(255,214,10,.08),transparent 60%);
+}
+.level-badge-chip{
+  font-family:var(--font-d);font-size:1rem;font-weight:900;letter-spacing:1px;
+  width:52px;height:52px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--yellow),var(--orange));
+  color:#000;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(255,214,10,.3);
+}
 .xp-info{flex:1;min-width:0;}
-.xp-name-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
-.xp-name{font-size:.82rem;font-weight:700;color:var(--yellow);}
-.xp-nums{font-size:.7rem;color:var(--muted);}
-.xp-track{height:5px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;}
-.xp-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--yellow),var(--orange));transition:width .8s var(--ease-out);}
+.xp-name-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+.xp-name{font-family:var(--font-d);font-size:1rem;font-weight:800;color:var(--yellow);letter-spacing:-.2px;}
+.xp-nums{font-size:.72rem;color:var(--muted);font-weight:500;}
+.xp-track{height:7px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;}
+.xp-fill{
+  height:100%;border-radius:999px;
+  background:linear-gradient(90deg,var(--yellow),var(--orange));
+  transition:width .8s var(--ease-out);
+  position:relative;
+}
+.xp-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.2),transparent);border-radius:999px;}
 
 /* ─── LEVEL-UP TOAST ─── */
 .levelup-toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:linear-gradient(135deg,var(--yellow),var(--orange));color:#000;font-family:var(--font-d);font-weight:900;font-size:1rem;letter-spacing:.5px;padding:12px 28px;border-radius:999px;z-index:600;opacity:0;transition:all .4s var(--ease-spring);pointer-events:none;white-space:nowrap;}
@@ -1224,7 +1259,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
 
     <div class="card">
-      <div class="card-head"><h2>השבוע שלך</h2></div>
+      <div class="card-head"><h2>השבוע שלך</h2><div id="week-counter" style="font-family:var(--font-d);font-size:.88rem;font-weight:800;color:var(--muted);"></div></div>
       <div class="card-body">
         <div class="week-bar">
           <div class="day-cell" data-type="push" onclick="goDay('push')">
@@ -2853,29 +2888,32 @@ function initTodayHero(){
       </div>
       <div class="today-hero-emoji">REST</div>`;
   }
-  // Highlight today + mark completed days this week
+  // Highlight today + mark completed days this week + count
   const log=getLog();
-  // Map day index → panel key (JS day: 0=Sun)
   const DAY_PANEL={0:'push',1:'pull',3:'legs',4:'arms'};
-  // Get Mon of current week
   const now=new Date();
   const mon=new Date(now);mon.setDate(now.getDate()-((now.getDay()+6)%7));
+  let weekDone=0;
   document.querySelectorAll('.week-bar .day-cell').forEach((c,i)=>{
     c.classList.toggle('active-day',i===d);
     const panel=DAY_PANEL[i];
     if(panel){
-      // Check any day this week with this panel marked complete
       for(let j=0;j<7;j++){
         const dt=new Date(mon);dt.setDate(mon.getDate()+j);
         const key=dt.toISOString().slice(0,10);
         if(log[key]?.__complete){
-          // Map log date back to day-of-week to match correct cell
           const dow=dt.getDay();
-          if(dow===i){c.classList.add('done-day');break;}
+          if(dow===i){c.classList.add('done-day');weekDone++;break;}
         }
       }
     }
   });
+  // Update week counter
+  const wc=document.getElementById('week-counter');
+  if(wc){
+    const color=weekDone===4?'var(--green)':weekDone>=2?'var(--yellow)':'var(--muted)';
+    wc.innerHTML=`<span style="color:${color}">${weekDone}</span><span style="color:var(--muted);font-size:.72rem;font-weight:600;"> / 4 אימונים</span>`;
+  }
 }
 
 // ═══════════════════════════════════════════════════
