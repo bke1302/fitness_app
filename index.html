@@ -107,30 +107,31 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 /* ─── Nav buttons — NO pseudo-element tricks, direct styles only ─── */
 .nav-btn{
   display:flex;align-items:center;gap:10px;width:100%;
-  padding:9px 10px;margin-bottom:1px;
-  background:transparent;border:none;border-radius:10px;
+  padding:10px 12px;margin-bottom:2px;
+  background:transparent;border:none;border-radius:12px;
   color:var(--muted2);cursor:pointer;
-  font-family:var(--font);font-size:.87rem;
+  font-family:var(--font);font-size:.86rem;font-weight:500;
   text-align:right;
-  transition:background .18s,color .18s;
+  transition:background .18s,color .18s,transform .15s;
   position:relative;
   pointer-events:auto;
   /* NO overflow:hidden — causes click issues on iOS/Safari */
   z-index:1;
 }
-.nav-btn:hover{background:rgba(255,255,255,.06);color:var(--text);}
+.nav-btn:hover{background:rgba(255,255,255,.05);color:var(--text);}
+.nav-btn:active{transform:scale(.97);}
 .nav-btn.active{
-  background:rgba(255,55,95,.1);
-  color:var(--text);
-  border-right:3px solid var(--red);
-  padding-right:7px;
+  background:rgba(255,55,95,.13);
+  color:#fff;
+  font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(255,55,95,.25);
 }
 .nav-btn .nav-icon{
-  width:20px;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;opacity:.6;
+  width:22px;height:22px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;opacity:.55;border-radius:6px;transition:opacity .18s;
 }
-.nav-btn.active .nav-icon{opacity:1;}
-.nav-btn:hover .nav-icon{opacity:.85;}
+.nav-btn.active .nav-icon{opacity:1;color:var(--red);}
+.nav-btn:hover .nav-icon{opacity:.8;}
 .sidebar-footer{padding:14px;border-top:1px solid var(--border);}
 .user-chip{display:flex;align-items:center;gap:10px;background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:10px 12px;}
 .user-avatar{
@@ -495,7 +496,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   background:radial-gradient(ellipse at 90% 30%,rgba(255,255,255,.18),transparent 55%),
              radial-gradient(ellipse at 20% 100%,rgba(0,0,0,.22),transparent 50%);
 }
-.today-hero:hover{transform:translateY(-4px);box-shadow:0 24px 64px rgba(255,55,95,.35);}
+.today-hero:hover{transform:translateY(-4px);box-shadow:0 24px 64px var(--hero-glow,rgba(255,55,95,.35));}
 .today-hero-info{position:relative;z-index:1;}
 .today-hero-info .today-hero-day{font-size:.72rem;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:2px;}
 .today-hero-info .today-hero-title{font-family:var(--font-d);font-size:3.2rem;font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:.95;text-shadow:0 2px 16px rgba(0,0,0,.3);}
@@ -796,19 +797,48 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .levelup-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* ─── BOSS CHALLENGE ─── */
-.boss-card{background:linear-gradient(135deg,rgba(255,159,10,.06),rgba(191,90,242,.05));border:1px solid rgba(255,159,10,.22);border-radius:16px;padding:18px;margin-bottom:20px;}
-.boss-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;}
-.boss-week-tag{font-size:.58rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:rgba(255,159,10,.12);color:var(--orange);margin-bottom:4px;display:inline-block;}
-.boss-title{font-family:var(--font-d);font-size:1.05rem;font-weight:800;letter-spacing:-.2px;margin-bottom:3px;}
+.boss-card{
+  background:var(--bg2);border:1px solid rgba(255,159,10,.28);
+  border-radius:20px;padding:0;margin-bottom:24px;overflow:hidden;
+  position:relative;
+}
+.boss-card-top{
+  background:linear-gradient(135deg,rgba(255,159,10,.14) 0%,rgba(255,159,10,.04) 100%);
+  padding:20px 20px 16px;border-bottom:1px solid rgba(255,159,10,.15);
+  position:relative;overflow:hidden;
+}
+.boss-card-top::before{
+  content:'⚡';position:absolute;left:-8px;top:50%;transform:translateY(-50%);
+  font-size:6rem;opacity:.06;pointer-events:none;line-height:1;
+}
+.boss-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:0;}
+.boss-week-tag{
+  font-size:.6rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;
+  padding:3px 10px;border-radius:999px;
+  background:rgba(255,159,10,.15);color:var(--orange);
+  margin-bottom:6px;display:inline-block;border:1px solid rgba(255,159,10,.25);
+}
+.boss-title{font-family:var(--font-d);font-size:1.2rem;font-weight:900;letter-spacing:-.4px;margin-bottom:3px;line-height:1.1;}
 .boss-desc{font-size:.78rem;color:var(--muted2);}
-.boss-icon{font-size:1.6rem;flex-shrink:0;}
-.boss-progress-row{display:flex;align-items:center;gap:10px;}
-.boss-track{flex:1;height:10px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;}
-.boss-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--orange),var(--yellow));transition:width .6s var(--ease-out);}
-.boss-vals{font-family:var(--font-d);font-size:.88rem;font-weight:800;color:var(--orange);white-space:nowrap;}
-.boss-add-btn{background:rgba(255,159,10,.1);border:1px solid rgba(255,159,10,.3);color:var(--orange);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:.78rem;font-weight:700;font-family:var(--font-d);margin-top:10px;transition:all .18s;}
-.boss-add-btn:hover{background:rgba(255,159,10,.18);}
-.boss-done-banner{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.25);border-radius:10px;font-size:.8rem;color:var(--green);font-weight:700;margin-top:8px;}
+.boss-icon{font-size:2.2rem;flex-shrink:0;line-height:1;}
+.boss-card-bottom{padding:16px 20px;}
+.boss-progress-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.boss-track{flex:1;height:10px;background:var(--bg4);border-radius:999px;overflow:hidden;}
+.boss-fill{
+  height:100%;border-radius:999px;
+  background:linear-gradient(90deg,var(--orange),var(--yellow));
+  transition:width .7s var(--ease-out);position:relative;
+}
+.boss-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.2),transparent);border-radius:999px;}
+.boss-vals{font-family:var(--font-d);font-size:1rem;font-weight:900;color:var(--orange);white-space:nowrap;}
+.boss-add-btn{
+  background:rgba(255,159,10,.1);border:1px solid rgba(255,159,10,.28);
+  color:var(--orange);border-radius:10px;padding:8px 16px;cursor:pointer;
+  font-size:.8rem;font-weight:700;font-family:var(--font-d);
+  transition:all .18s;width:100%;
+}
+.boss-add-btn:hover{background:rgba(255,159,10,.2);transform:translateY(-1px);}
+.boss-done-banner{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.25);border-radius:10px;font-size:.8rem;color:var(--green);font-weight:700;margin-bottom:10px;}
 
 /* ─── DELOAD BANNER ─── */
 .deload-banner{background:linear-gradient(135deg,rgba(255,159,10,.08),rgba(255,55,95,.05));border:1px solid rgba(255,159,10,.3);border-radius:14px;padding:14px 16px;margin-bottom:20px;display:none;align-items:center;gap:12px;}
@@ -1203,23 +1233,27 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
     <!-- BOSS CHALLENGE -->
     <div class="boss-card" id="boss-card">
-      <div class="boss-header">
-        <div style="flex:1">
-          <div class="boss-week-tag" id="boss-week-tag">אתגר השבוע</div>
-          <div class="boss-title" id="boss-title">טוען...</div>
-          <div class="boss-desc" id="boss-desc"></div>
+      <div class="boss-card-top">
+        <div class="boss-header">
+          <div style="flex:1">
+            <div class="boss-week-tag" id="boss-week-tag">אתגר השבוע</div>
+            <div class="boss-title" id="boss-title">טוען...</div>
+            <div class="boss-desc" id="boss-desc"></div>
+          </div>
+          <div class="boss-icon" id="boss-icon">⚡</div>
         </div>
-        <div class="boss-icon" id="boss-icon">⚡</div>
       </div>
-      <div class="boss-progress-row">
-        <div class="boss-track"><div class="boss-fill" id="boss-fill" style="width:0%"></div></div>
-        <div class="boss-vals" id="boss-vals">0 / 0</div>
+      <div class="boss-card-bottom">
+        <div id="boss-done-banner" class="boss-done-banner" style="display:none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--green)" stroke="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          אתגר השבוע הושלם! +75 XP
+        </div>
+        <div class="boss-progress-row">
+          <div class="boss-track"><div class="boss-fill" id="boss-fill" style="width:0%"></div></div>
+          <div class="boss-vals" id="boss-vals">0 / 0</div>
+        </div>
+        <button class="boss-add-btn" id="boss-add-btn" onclick="bossAddProgress()">+ הוסף התקדמות</button>
       </div>
-      <div id="boss-done-banner" class="boss-done-banner" style="display:none">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--green)" stroke="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        אתגר השבוע הושלם! +75 XP
-      </div>
-      <button class="boss-add-btn" id="boss-add-btn" onclick="bossAddProgress()">+ הוסף התקדמות</button>
     </div>
 
     <!-- BODY HEATMAP -->
@@ -2862,6 +2896,7 @@ function initTodayHero(){
   if(cfg){
     hero.style.background=cfg.grad;
     hero.style.cursor='pointer';
+    hero.style.setProperty('--hero-glow', cfg.color+'55');
     hero.innerHTML=`
       <div class="today-hero-info">
         ${badgeHtml}
@@ -2889,7 +2924,7 @@ function initTodayHero(){
       <div class="today-hero-emoji">REST</div>`;
   }
   // Highlight today + mark completed days this week + count
-  const log=getLog();
+  const fullLog=getLog();
   const DAY_PANEL={0:'push',1:'pull',3:'legs',4:'arms'};
   const now=new Date();
   const mon=new Date(now);mon.setDate(now.getDate()-((now.getDay()+6)%7));
@@ -2901,7 +2936,7 @@ function initTodayHero(){
       for(let j=0;j<7;j++){
         const dt=new Date(mon);dt.setDate(mon.getDate()+j);
         const key=dt.toISOString().slice(0,10);
-        if(log[key]?.__complete){
+        if(fullLog[key]?.__complete){
           const dow=dt.getDay();
           if(dow===i){c.classList.add('done-day');weekDone++;break;}
         }
