@@ -705,10 +705,122 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   from{opacity:0;transform:translateY(8px)}
   to{opacity:1;transform:translateY(0)}
 }
-/* Only animate panel itself, NOT cards — card animations create stacking contexts that can block sidebar */
-.panel.active{animation:cardFade .3s var(--ease-out);}
-.today-hero{animation:cardFade .25s var(--ease-out);}
-.install-banner{animation:cardFade .25s var(--ease-out);}
+/* Panel itself — no animation (children handle it) */
+.panel.active{animation:cardFade .25s var(--ease-out);}
+
+/* ─── STAGGERED CARD ENTRANCE ─── */
+/* opacity+translateY only — no position/backdrop-filter (WebKit sidebar bug) */
+@keyframes cardStagger{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.panel.active>.card,
+.panel.active>.trainer-note,
+.panel.active>.today-hero,
+.panel.active>.boss-card,
+.panel.active>.install-banner,
+.panel.active>.notif-card,
+.panel.active>.deload-banner{
+  opacity:0;animation:cardStagger .38s var(--ease-out) both;
+}
+.panel.active>*:nth-child(1){animation-delay:.04s;}
+.panel.active>*:nth-child(2){animation-delay:.09s;}
+.panel.active>*:nth-child(3){animation-delay:.14s;}
+.panel.active>*:nth-child(4){animation-delay:.19s;}
+.panel.active>*:nth-child(5){animation-delay:.24s;}
+.panel.active>*:nth-child(n+6){animation-delay:.29s;}
+
+/* ─── UNIVERSAL BUTTON PRESS ─── */
+.food-add-btn:active,.pr-save-btn:active,.settings-save:active,
+.weight-add-btn:active,.meas-save-btn:active,.chat-send:active,
+.boss-add-btn:active,.notif-btn:active,.gym-nav-btn:active,
+.install-banner-btn:active,.elog-empty-cta:active{
+  transform:scale(.96);transition-duration:.08s;
+}
+
+/* ─── SET CHECKBOX SPRING POP ─── */
+.set-check.done{animation:setCheckPop .45s var(--ease-spring) both;will-change:transform;}
+@keyframes setCheckPop{
+  0%{transform:scale(1)}
+  40%{transform:scale(1.35);box-shadow:0 0 18px var(--green-glow),0 0 0 4px rgba(48,209,88,.18)}
+  70%{transform:scale(.92)}
+  100%{transform:scale(1);box-shadow:0 0 8px var(--green-glow)}
+}
+.gym-check.done{animation:gymCheckPop .45s var(--ease-spring) both;will-change:transform;}
+@keyframes gymCheckPop{
+  0%{transform:scale(1)}
+  40%{transform:scale(1.22);box-shadow:0 0 32px rgba(48,209,88,.45)}
+  70%{transform:scale(.94)}
+  100%{transform:scale(1);box-shadow:0 0 24px rgba(48,209,88,.35)}
+}
+
+/* ─── CHAT TYPING DOTS ─── */
+.typing-dots{display:inline-flex;align-items:center;gap:4px;padding:4px 0;}
+.typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--muted2);
+  animation:typingBounce .9s var(--ease-out) infinite;}
+.typing-dots span:nth-child(2){animation-delay:.15s;}
+.typing-dots span:nth-child(3){animation-delay:.30s;}
+@keyframes typingBounce{
+  0%,80%,100%{transform:translateY(0);opacity:.4}
+  40%{transform:translateY(-6px);opacity:1}
+}
+
+/* ─── UNIVERSAL INPUT FOCUS GLOW ─── */
+.elog-input:focus,.food-qty-input:focus,.pr-input:focus,.cfg-input:focus,.wl-input:focus{
+  outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-glow);
+  transition:border-color .18s,box-shadow .18s;
+}
+
+/* ─── PR SAVE ANIMATION ─── */
+@keyframes prSaveFlash{
+  0%{transform:scale(1)}
+  30%{transform:scale(1.08);box-shadow:0 0 24px rgba(255,214,10,.5)}
+  60%{transform:scale(.96)}
+  100%{transform:scale(1)}
+}
+.pr-display.saved-flash{animation:prDisplayPop .4s var(--ease-spring) both;}
+@keyframes prDisplayPop{from{transform:scale(.95);opacity:.4}to{transform:scale(1);opacity:1}}
+
+/* ─── PANEL TITLE FADE ─── */
+.page-title{transition:opacity .18s,transform .18s var(--ease-out);}
+.page-title.switching{opacity:0;transform:translateY(-5px);}
+
+/* ─── FOOD DROPDOWN SLIDE ─── */
+.food-dropdown{
+  display:block!important;visibility:hidden;opacity:0;
+  transform:translateY(-6px) scaleY(.97);transform-origin:top center;
+  transition:opacity .18s var(--ease-out),transform .22s var(--ease-spring),visibility 0s .2s;
+  pointer-events:none;
+}
+.food-dropdown.show{
+  visibility:visible;opacity:1;transform:none;
+  transition:opacity .18s var(--ease-out),transform .22s var(--ease-spring),visibility 0s 0s;
+  pointer-events:auto;
+}
+
+/* ─── SETTINGS SAVE PULSE ─── */
+@keyframes settingsSavePulse{
+  0%{transform:scale(1)}
+  35%{transform:scale(1.06);box-shadow:0 0 24px rgba(255,55,95,.4)}
+  65%{transform:scale(.97)}
+  100%{transform:scale(1)}
+}
+
+/* ─── WILL-CHANGE HINTS ─── */
+.xp-fill{will-change:width;}
+.boss-fill{will-change:width;}
+.set-check{will-change:transform,box-shadow;}
+.gym-check{will-change:transform,box-shadow;}
+.today-hero{will-change:transform;}
+.stat-box{will-change:transform;}
+.levelup-toast{will-change:transform,opacity;}
+
+/* ─── ELOG EMPTY STATE ─── */
+.elog-empty-state{display:flex;flex-direction:column;align-items:center;text-align:center;padding:60px 24px;animation:cardStagger .4s var(--ease-out) both;}
+.elog-empty-icon{font-size:3.5rem;margin-bottom:16px;}
+.elog-empty-title{font-family:var(--font-d);font-size:1.4rem;font-weight:900;letter-spacing:-.4px;margin-bottom:8px;}
+.elog-empty-sub{font-size:.86rem;color:var(--muted2);line-height:1.85;max-width:280px;margin-bottom:28px;}
+.elog-empty-cta{background:linear-gradient(135deg,var(--red),var(--purple));color:#fff;border:none;border-radius:999px;padding:12px 28px;cursor:pointer;font-family:var(--font-d);font-size:.95rem;font-weight:700;letter-spacing:.3px;transition:transform .18s var(--ease-spring),opacity .18s;}
+.elog-empty-cta:hover{opacity:.9;transform:translateY(-2px);}
+
+/* ─── 375px MOBILE BREAKPOINT ─── */
 
 /* ─── REDUCED MOTION ─── */
 @media(prefers-reduced-motion:reduce){
@@ -744,6 +856,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   .grid-4{grid-template-columns:repeat(2,1fr);}
   .grid-2{grid-template-columns:1fr;}
   .ex-table th:nth-child(3),.ex-table td:nth-child(3){display:none;}
+}
+@media(max-width:375px){
+  .week-bar{gap:3px;}
+  .day-cell{padding:8px 2px 6px;border-radius:10px;}
+  .day-cell .dc-name{font-size:.52rem;}
+  .day-cell .dc-type{font-size:.6rem;}
+  .ex-table th:nth-child(4),.ex-table td:nth-child(4){display:none;}
+  .elog-input{width:52px;font-size:.82rem;padding:5px 6px;}
+  .elog-save{width:100%;margin-top:4px;}
+  .card-body{padding:10px;}
+  .card-head{padding:12px 14px;}
+  .stat-box .val{font-size:2rem;}
+  .cals-hero-num{font-size:3.2rem;}
+  .page-title{font-size:1.1rem;max-width:55vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .grid-2{grid-template-columns:1fr;}
 }
 
 /* ─── HERO CALORIES BOX ─── */
@@ -1959,7 +2086,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="meal-row">
           <div class="meal-top">
             <div><div class="meal-name">🌅 ארוחה 1 — בוקר</div><div class="meal-time">07:00</div></div>
-            <div class="meal-cals">~620 קל׳</div>
+            <div style="text-align:left;"><div class="meal-cals">620</div><div class="meal-cals-unit">קל׳</div></div>
           </div>
           <div class="meal-foods">
             🥚 2 ביצים שלמות + 4 חלבונים (מפחית כולסטרול מחלמונים) ·
@@ -1974,7 +2101,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="meal-row">
           <div class="meal-top">
             <div><div class="meal-name">🍎 ארוחה 2 — ביניים</div><div class="meal-time">10:30</div></div>
-            <div class="meal-cals">~360 קל׳</div>
+            <div style="text-align:left;"><div class="meal-cals">360</div><div class="meal-cals-unit">קל׳</div></div>
           </div>
           <div class="meal-foods">
             🥛 200g יוגורט יווני 0% (דל שומן) ·
@@ -1990,7 +2117,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="meal-row">
           <div class="meal-top">
             <div><div class="meal-name">🌞 ארוחה 3 — צהריים ⭐</div><div class="meal-time">13:00</div></div>
-            <div class="meal-cals">~700 קל׳</div>
+            <div style="text-align:left;"><div class="meal-cals">700</div><div class="meal-cals-unit">קל׳</div></div>
           </div>
           <div class="meal-foods">
             🐟 200g סלמון בגריל / מוגרי / טונה (3–4 פעמים בשבוע, ימים אחרים: 200g חזה עוף) ·
@@ -2006,7 +2133,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="meal-row">
           <div class="meal-top">
             <div><div class="meal-name">🏋️ ארוחה 4 — לפני אימון</div><div class="meal-time">16:30 (60–90 דק׳ לפני)</div></div>
-            <div class="meal-cals">~430 קל׳</div>
+            <div style="text-align:left;"><div class="meal-cals">430</div><div class="meal-cals-unit">קל׳</div></div>
           </div>
           <div class="meal-foods">
             🍞 2 פרוסות לחם שיפון מלא ·
@@ -2022,7 +2149,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="meal-row" style="border-color:rgba(230,57,70,.4);">
           <div class="meal-top">
             <div><div class="meal-name">⚡ ארוחה 5 — אחרי אימון ⭐⭐</div><div class="meal-time" style="color:var(--red)">תוך 30–45 דק׳ מסיום</div></div>
-            <div class="meal-cals">~310 קל׳</div>
+            <div style="text-align:left;"><div class="meal-cals">310</div><div class="meal-cals-unit">קל׳</div></div>
           </div>
           <div class="meal-foods">
             💪 1 מנת Whey Isolate (דל שומן רווי יותר מ-Concentrate) ·
@@ -2038,7 +2165,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="meal-row">
           <div class="meal-top">
             <div><div class="meal-name">🌙 ארוחה 6 — ערב</div><div class="meal-time">20:30</div></div>
-            <div class="meal-cals">~680 קל׳</div>
+            <div style="text-align:left;"><div class="meal-cals">680</div><div class="meal-cals-unit">קל׳</div></div>
           </div>
           <div class="meal-foods">
             🐟 200g דג לבן (בורי, מוסר, דניס) / הודו / עוף — <span style="color:var(--red);font-size:.8rem;">⚠️ בשר אדום מקסימום פעם בשבוע</span> ·
@@ -2054,7 +2181,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="meal-row">
           <div class="meal-top">
             <div><div class="meal-name">💤 לפני שינה — אופציונלי</div><div class="meal-time">22:00</div></div>
-            <div class="meal-cals">~180 קל׳</div>
+            <div style="text-align:left;"><div class="meal-cals">180</div><div class="meal-cals-unit">קל׳</div></div>
           </div>
           <div class="meal-foods">
             🥛 200g קוטג׳ 1% (החלפנו מ-5% — פחות שומן רווי) ·
@@ -2560,7 +2687,9 @@ function showPanel(name,btn){
   document.getElementById('panel-'+name).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');
-  document.getElementById('page-title').textContent=TITLES[name]||name;
+  const pt=document.getElementById('page-title');
+  if(pt){pt.classList.add('switching');setTimeout(()=>{pt.textContent=TITLES[name]||name;pt.classList.remove('switching');},100);}
+  else{document.getElementById('page-title').textContent=TITLES[name]||name;}
   if(window.innerWidth<=768) closeSidebar();
   window.scrollTo(0,0);
   // Lazy-render panels that build their UI dynamically
@@ -2730,7 +2859,11 @@ function saveSettingsForm(){
   const apiKey=(document.getElementById('sf-apikey')?.value||'').trim();
   if(apiKey) localStorage.setItem('proFit_apiKey',apiKey);
   const btn=document.querySelector('#settings-form .settings-save');
-  if(btn){const o=btn.textContent;btn.textContent='נשמר!';setTimeout(()=>btn.textContent=o,2000);}
+  if(btn){
+    const o=btn.textContent;btn.textContent='נשמר!';
+    btn.style.animation='none';btn.offsetHeight;btn.style.animation='settingsSavePulse .5s var(--ease-spring) both';
+    setTimeout(()=>{btn.textContent=o;btn.style.animation='';},2000);
+  }
 }
 
 // ═══════════════════════════════════════════════════
@@ -2751,8 +2884,13 @@ function savePRFromModal(){
   if(disp){
     disp.textContent=isNew?'שיא חדש! '+kg+'ק"ג × '+reps:'נשמר: '+kg+'ק"ג × '+reps;
     disp.style.color=isNew?'var(--yellow)':'var(--cyan)';
+    disp.classList.remove('saved-flash');disp.offsetHeight;disp.classList.add('saved-flash');
+    setTimeout(()=>disp.classList.remove('saved-flash'),450);
   }
+  const saveBtn=document.querySelector('.pr-save-btn');
+  if(saveBtn){saveBtn.style.animation='none';saveBtn.offsetHeight;saveBtn.style.animation='prSaveFlash .5s var(--ease-spring) both';setTimeout(()=>{saveBtn.style.animation='';},550);}
   if(isNew&&navigator.vibrate) navigator.vibrate([200,100,200,100,400]);
+  if(isNew) showToast('שיא אישי חדש! '+kg+'ק"ג × '+reps+' 🏆');
   if(typeof addXP==='function') addXP(isNew?25:0);
   if(typeof updateORMDisplay==='function') updateORMDisplay(kg,reps);
 }
@@ -2785,6 +2923,8 @@ function initCheckboxes(){
       box.addEventListener('click',function(e){
         e.stopPropagation();
         const done=!box.classList.contains('done');
+        // Force spring animation re-trigger
+        if(done){box.style.animation='none';box.offsetHeight;box.style.animation='';}
         box.classList.toggle('done',done);
         box.textContent=done?'✓':'';
         const l=getLog();
@@ -3225,6 +3365,17 @@ function renderElogPanel(){
   const wrap=document.getElementById('elog-content');
   if(!wrap) return;
   const elog=getElog();
+  // Empty state
+  const hasData=Object.values(elog).some(week=>Object.values(week).some(ex=>Object.keys(ex).length>0));
+  if(!hasData){
+    wrap.innerHTML=`<div class="elog-empty-state">
+      <div class="elog-empty-icon">📒</div>
+      <div class="elog-empty-title">יומן המשקלים שלך ריק</div>
+      <div class="elog-empty-sub">כאן תרשום את המשקל שאתה מרים בכל תרגיל.<br>הנתונים נשמרים מקומית — רק אצלך.</div>
+      <button class="elog-empty-cta" onclick="showPanel('push')">← פתח אימון והתחל לרשום</button>
+    </div>`;
+    return;
+  }
   let html='';
   WORKOUT_ORDER.forEach(w=>{
     const panel=document.getElementById('panel-'+w.id);
@@ -3551,7 +3702,7 @@ async function sendChat(){
   renderChatPanel();
   // Show typing
   const msgs=document.getElementById('chat-msgs');
-  if(msgs){const t=document.createElement('div');t.className='chat-bubble typing';t.id='typing-ind';t.textContent='מקליד...';msgs.appendChild(t);msgs.scrollTop=msgs.scrollHeight;}
+  if(msgs){const t=document.createElement('div');t.className='chat-bubble typing';t.id='typing-ind';t.innerHTML='<span class="typing-dots"><span></span><span></span><span></span></span>';msgs.appendChild(t);msgs.scrollTop=msgs.scrollHeight;}
   const btn=document.getElementById('chat-send-btn');
   if(btn) btn.disabled=true;
   const systemPrompt=`אתה יועץ תזונה מקצועי לספורטאים. המשתמש:
@@ -3822,7 +3973,6 @@ function updateNutritionTiming(){
   localStorage.setItem('pf_workoutTime',val);
   const [h,m]=val.split(':').map(Number);
   const base=h*60+m;
-  const fmt=mins=>{const hh=Math.floor(Math.abs(mins)/60)%24;const mm=Math.abs(mins)%60;return (base+mins<0?new Date(new Date().setHours(0,0,0,0)):new Date(new Date().setHours(0,0,0,0)),String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0'));};
   // Simple time arithmetic
   const addMins=(t,add)=>{let tot=(h*60+m+add+1440)%1440;return String(Math.floor(tot/60)).padStart(2,'0')+':'+String(tot%60).padStart(2,'0');};
   const rows=[
@@ -4079,7 +4229,12 @@ function toggleVoice(){
     const cmd=VOICE_CMDS.find(c=>c.k.some(k=>text.includes(k.toLowerCase())));
     if(cmd) cmd.fn(); else { speak('לא הבנתי. אמור: פוש, פול, לגס, ארמס, תזונה, סטריק, מנוחה'); }
   };
-  _recognition.onerror=()=>{ _voiceActive=false; document.getElementById('voice-btn')?.classList.remove('listening'); };
+  _recognition.onerror=(ev)=>{
+    _voiceActive=false;
+    document.getElementById('voice-btn')?.classList.remove('listening');
+    const msgs={'not-allowed':'גישה למיקרופון נדחתה — אשר הרשאה בדפדפן','no-speech':'לא זוהתה דיבור — נסה שוב','network':'שגיאת רשת — בדוק חיבור'};
+    showVoiceToast(msgs[ev.error]||'שגיאת קול: '+ev.error);
+  };
   _recognition.start();
 }
 function stopVoice(){
@@ -4214,7 +4369,6 @@ function injectOverloadBadges(){
     const d=(tw.kg*tw.reps)-(lw.kg*lw.reps);
     const badge=document.createElement('span');
     badge.className='overload-badge '+(d>0?'overload-up':d<0?'overload-down':'overload-eq');
-    badge.textContent=d>0?'↑ '+d>0?'↑':'↓':'=';
     badge.textContent=d>0?'↑':d<0?'↓':'=';
     const cell=tr.querySelector('.ex-name-main');
     if(cell) cell.insertAdjacentElement('afterend',badge);
