@@ -358,8 +358,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .modal{
   background:var(--bg2);border:1px solid var(--border2);border-radius:24px;
   width:100%;max-width:500px;max-height:88vh;overflow-y:auto;padding:0;
-  animation:modalIn .3s var(--ease-spring);overflow:hidden;
+  animation:modalIn .3s var(--ease-spring);
 }
+/* Hero clips to border-radius without overflow:hidden on whole modal */
+.modal-hero{border-radius:24px 24px 0 0;}
 @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(12px)}to{opacity:1;transform:none}}
 /* cinematic modal hero banner */
 .modal-hero{
@@ -1121,6 +1123,58 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .demo-bar{background:rgba(255,255,255,.035);padding:9px 14px;display:flex;align-items:center;gap:10px;border-top:1px solid rgba(255,255,255,.06);}
 .demo-bar-text{font-size:.8rem;color:var(--muted2);flex:1;}
 .demo-yt-pill{background:#FF0000;color:#fff;font-size:.6rem;font-weight:900;letter-spacing:.8px;padding:3px 9px;border-radius:999px;flex-shrink:0;font-family:var(--font-d);}
+
+/* ─── ONBOARDING WIZARD ─── */
+.onboard-overlay{position:fixed;inset:0;background:#000;z-index:600;display:flex;align-items:center;justify-content:center;padding:20px;}
+.onboard-box{width:100%;max-width:420px;background:var(--bg2);border:1px solid var(--border2);border-radius:28px;overflow:hidden;animation:modalIn .4s var(--ease-spring);}
+.onboard-header{background:linear-gradient(135deg,rgba(255,55,95,.22),rgba(191,90,242,.12));padding:32px 28px 24px;text-align:center;border-bottom:1px solid var(--border);}
+.onboard-logo{font-family:var(--font-d);font-size:2.2rem;font-weight:900;color:var(--red);letter-spacing:-1px;margin-bottom:4px;}
+.onboard-sub{font-size:.85rem;color:var(--muted2);}
+.onboard-step{display:none;padding:28px;}
+.onboard-step.active{display:block;animation:cardStagger .3s var(--ease-out) both;}
+.onboard-step-title{font-family:var(--font-d);font-size:1.3rem;font-weight:900;margin-bottom:20px;color:var(--text);}
+.onboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.onboard-field label{display:block;font-size:.72rem;color:var(--muted);margin-bottom:5px;letter-spacing:.3px;}
+.onboard-field input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border2);border-radius:10px;padding:11px 14px;color:var(--text);font-family:var(--font);font-size:.95rem;text-align:center;}
+.onboard-field input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-glow);}
+.onboard-goal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
+.goal-btn{background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;transition:all .18s var(--ease-spring);color:var(--muted2);}
+.goal-btn:active{transform:scale(.96);}
+.goal-btn.sel{border-color:var(--red);background:rgba(255,55,95,.1);color:var(--text);}
+.goal-btn .goal-icon{font-size:1.8rem;margin-bottom:6px;}
+.goal-btn .goal-name{font-family:var(--font-d);font-size:.95rem;font-weight:700;}
+.goal-btn .goal-desc{font-size:.7rem;color:var(--muted);margin-top:3px;}
+.activity-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:4px;}
+.act-btn{background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:12px;padding:13px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .18s;color:var(--muted2);}
+.act-btn:active{transform:scale(.98);}
+.act-btn.sel{border-color:var(--blue);background:rgba(10,132,255,.1);color:var(--text);}
+.act-btn .act-icon{font-size:1.3rem;width:28px;text-align:center;}
+.act-btn .act-info{text-align:right;}
+.act-btn .act-name{font-family:var(--font-d);font-size:.92rem;font-weight:700;}
+.act-btn .act-desc{font-size:.7rem;color:var(--muted);}
+.onboard-footer{padding:0 28px 28px;display:flex;gap:10px;}
+.onboard-next{flex:1;background:linear-gradient(135deg,var(--red),#9333ea);color:#fff;border:none;border-radius:999px;padding:14px;cursor:pointer;font-family:var(--font-d);font-size:1rem;font-weight:700;transition:transform .18s var(--ease-spring),opacity .18s;}
+.onboard-next:active{transform:scale(.96);}
+.onboard-back{background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:999px;padding:14px 18px;cursor:pointer;color:var(--muted2);font-size:.85rem;transition:all .18s;}
+.onboard-dots{display:flex;justify-content:center;gap:6px;padding:0 28px 20px;}
+.onboard-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:all .25s;}
+.onboard-dot.active{width:20px;border-radius:3px;background:var(--red);}
+
+/* ─── USER SWITCHER ─── */
+.user-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.user-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;transition:all .18s;}
+.user-item.active{border-color:var(--red);background:rgba(255,55,95,.08);}
+.user-item:active{transform:scale(.98);}
+.user-avatar-sm{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--red),#9333ea);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:900;font-size:1rem;color:#fff;flex-shrink:0;}
+.user-item-info{flex:1;text-align:right;}
+.user-item-name{font-weight:600;font-size:.9rem;}
+.user-item-sub{font-size:.72rem;color:var(--muted);margin-top:1px;}
+.user-item-active-badge{font-size:.65rem;background:var(--red);color:#fff;padding:2px 8px;border-radius:999px;font-weight:700;}
+.user-add-btn{width:100%;background:rgba(255,255,255,.04);border:1px dashed var(--border2);border-radius:12px;padding:12px;cursor:pointer;color:var(--muted2);font-size:.85rem;transition:all .18s;}
+.user-add-btn:hover{border-color:var(--blue);color:var(--text);}
+
+/* ─── DYNAMIC MACRO STATS ─── */
+#macro-stats-grid .stat-box .val{font-size:1.6rem;}
 </style>
 </head>
 <body>
@@ -2062,136 +2116,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-head"><h2>🎯 יעדי מאקרו יומיים</h2><span class="badge badge-green">ידידותי לכולסטרול</span></div>
+    <div class="card" id="macro-stats-card">
+      <div class="card-head"><h2>🎯 יעדי מאקרו יומיים</h2><span class="badge badge-green" id="macro-goal-badge">Lean Bulk</span></div>
       <div class="card-body">
-        <div class="grid-4">
-          <div class="stat-box red"><div class="val">2,750</div><div class="lbl">קלוריות</div></div>
-          <div class="stat-box blue"><div class="val">150g</div><div class="lbl">חלבון (2.5g/kg)</div></div>
-          <div class="stat-box yellow"><div class="val">350g</div><div class="lbl">פחמימות</div></div>
-          <div class="stat-box green"><div class="val">65g</div><div class="lbl">שומן (בריא בלבד)</div></div>
-        </div>
-        <div style="margin-top:14px;font-size:.82rem;color:var(--muted);line-height:1.8;">
-          🔴 <strong style="color:var(--text)">שומן רווי:</strong> מתחת ל-15g ביום &nbsp;|&nbsp;
-          🟢 <strong style="color:var(--text)">שומן בלתי רווי:</strong> עיקר השומן — אבוקדו, שמן זית, אגוזים, דגים שמנים
-        </div>
+        <div class="grid-4" id="macro-stats-grid"><!-- filled by JS --></div>
+        <div style="margin-top:14px;font-size:.82rem;color:var(--muted);line-height:1.8;" id="macro-fat-note"><!-- filled by JS --></div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-head"><h2>🍽️ 6 ארוחות ביום</h2></div>
-      <div class="card-body">
-
-        <!-- ארוחה 1 -->
-        <div class="meal-row">
-          <div class="meal-top">
-            <div><div class="meal-name">🌅 ארוחה 1 — בוקר</div><div class="meal-time">07:00</div></div>
-            <div style="text-align:left;"><div class="meal-cals">620</div><div class="meal-cals-unit">קל׳</div></div>
-          </div>
-          <div class="meal-foods">
-            🥚 2 ביצים שלמות + 4 חלבונים (מפחית כולסטרול מחלמונים) ·
-            🥣 100g שיבולת שועל עם מים/חלב דל שומן (Beta-Glucan מוריד כולסטרול!) ·
-            🫐 קומץ אוכמניות · 🥑 ¼ אבוקדו
-          </div>
-          <div style="font-size:.75rem;color:var(--green);margin-bottom:8px;">✅ Beta-Glucan בשיבולת שועל הוכח קלינית להורדת LDL</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 38g</span><span class="mp mp-c">פחמימות 70g</span><span class="mp mp-f">שומן 16g</span></div>
-        </div>
-
-        <!-- ארוחה 2 -->
-        <div class="meal-row">
-          <div class="meal-top">
-            <div><div class="meal-name">🍎 ארוחה 2 — ביניים</div><div class="meal-time">10:30</div></div>
-            <div style="text-align:left;"><div class="meal-cals">360</div><div class="meal-cals-unit">קל׳</div></div>
-          </div>
-          <div class="meal-foods">
-            🥛 200g יוגורט יווני 0% (דל שומן) ·
-            🥜 25g אגוזי מלך (אומגה 3!) ·
-            🍓 קומץ פירות יער ·
-            🍯 כפית דבש
-          </div>
-          <div style="font-size:.75rem;color:var(--green);margin-bottom:8px;">✅ אגוזי מלך — הכי עשיר בALA (אומגה 3 צמחי) מבין כל האגוזים</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 22g</span><span class="mp mp-c">פחמימות 22g</span><span class="mp mp-f">שומן 18g</span></div>
-        </div>
-
-        <!-- ארוחה 3 -->
-        <div class="meal-row">
-          <div class="meal-top">
-            <div><div class="meal-name">🌞 ארוחה 3 — צהריים ⭐</div><div class="meal-time">13:00</div></div>
-            <div style="text-align:left;"><div class="meal-cals">700</div><div class="meal-cals-unit">קל׳</div></div>
-          </div>
-          <div class="meal-foods">
-            🐟 200g סלמון בגריל / מוגרי / טונה (3–4 פעמים בשבוע, ימים אחרים: 200g חזה עוף) ·
-            🍚 150g אורז מלא ·
-            🥦 ירקות מוקפצים בשמן זית ·
-            🍋 לימון ועשבי תיבול
-          </div>
-          <div style="font-size:.75rem;color:var(--green);margin-bottom:8px;">✅ סלמון — EPA+DHA מורידים טריגליצרידים ומעלים HDL (כולסטרול טוב)</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 48g</span><span class="mp mp-c">פחמימות 55g</span><span class="mp mp-f">שומן 14g</span></div>
-        </div>
-
-        <!-- ארוחה 4 -->
-        <div class="meal-row">
-          <div class="meal-top">
-            <div><div class="meal-name">🏋️ ארוחה 4 — לפני אימון</div><div class="meal-time">16:30 (60–90 דק׳ לפני)</div></div>
-            <div style="text-align:left;"><div class="meal-cals">430</div><div class="meal-cals-unit">קל׳</div></div>
-          </div>
-          <div class="meal-foods">
-            🍞 2 פרוסות לחם שיפון מלא ·
-            🧀 100g גבינה לבנה 1% (דל שומן) ·
-            🍌 בננה ·
-            ☕ קפה שחור
-          </div>
-          <div style="font-size:.75rem;color:var(--yellow);margin-bottom:8px;">⚠️ החלפנו גבינה 5% ב-1% — חוסך 4g שומן רווי ביום</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 22g</span><span class="mp mp-c">פחמימות 68g</span><span class="mp mp-f">שומן 4g</span></div>
-        </div>
-
-        <!-- ארוחה 5 -->
-        <div class="meal-row" style="border-color:rgba(230,57,70,.4);">
-          <div class="meal-top">
-            <div><div class="meal-name">⚡ ארוחה 5 — אחרי אימון ⭐⭐</div><div class="meal-time" style="color:var(--red)">תוך 30–45 דק׳ מסיום</div></div>
-            <div style="text-align:left;"><div class="meal-cals">310</div><div class="meal-cals-unit">קל׳</div></div>
-          </div>
-          <div class="meal-foods">
-            💪 1 מנת Whey Isolate (דל שומן רווי יותר מ-Concentrate) ·
-            🍌 בננה ·
-            🥛 200ml חלב שיבולת שועל / חלב 1% ·
-            🍯 כף דבש
-          </div>
-          <div style="font-size:.75rem;color:var(--green);margin-bottom:8px;">✅ Whey Isolate עדיף לכולסטרול — פחות שומן רווי מ-Concentrate</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 30g</span><span class="mp mp-c">פחמימות 50g</span><span class="mp mp-f">שומן 3g</span></div>
-        </div>
-
-        <!-- ארוחה 6 -->
-        <div class="meal-row">
-          <div class="meal-top">
-            <div><div class="meal-name">🌙 ארוחה 6 — ערב</div><div class="meal-time">20:30</div></div>
-            <div style="text-align:left;"><div class="meal-cals">680</div><div class="meal-cals-unit">קל׳</div></div>
-          </div>
-          <div class="meal-foods">
-            🐟 200g דג לבן (בורי, מוסר, דניס) / הודו / עוף — <span style="color:var(--red);font-size:.8rem;">⚠️ בשר אדום מקסימום פעם בשבוע</span> ·
-            🍠 200g בטטה ·
-            🥗 סלט ירקות גדול עם 1 כף שמן זית + לימון ·
-            🥑 ½ אבוקדו
-          </div>
-          <div style="font-size:.75rem;color:var(--green);margin-bottom:8px;">✅ אבוקדו — עשיר בשומן חד-בלתי-רווי שמוריד LDL ומעלה HDL</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 44g</span><span class="mp mp-c">פחמימות 55g</span><span class="mp mp-f">שומן 16g</span></div>
-        </div>
-
-        <!-- לפני שינה -->
-        <div class="meal-row">
-          <div class="meal-top">
-            <div><div class="meal-name">💤 לפני שינה — אופציונלי</div><div class="meal-time">22:00</div></div>
-            <div style="text-align:left;"><div class="meal-cals">180</div><div class="meal-cals-unit">קל׳</div></div>
-          </div>
-          <div class="meal-foods">
-            🥛 200g קוטג׳ 1% (החלפנו מ-5% — פחות שומן רווי) ·
-            קקאו טבעי + סטיביה · קינמון
-          </div>
-          <div style="font-size:.75rem;color:var(--green);margin-bottom:8px;">✅ קזאין איטי לשיקום שריר בשינה, עם מינימום שומן רווי</div>
-          <div class="meal-macros"><span class="mp mp-p">חלבון 22g</span><span class="mp mp-c">פחמימות 6g</span><span class="mp mp-f">שומן 2g</span></div>
-        </div>
-
-      </div>
+      <div class="card-head"><h2>🍽️ תוכנית ארוחות</h2><span class="badge" id="meal-count-badge" style="background:rgba(255,255,255,.06);color:var(--muted2);">5 ארוחות</span></div>
+      <div class="card-body" id="meals-container"><!-- filled by JS --></div>
     </div>
 
     <!-- CHOLESTEROL DO/DON'T -->
@@ -2403,8 +2338,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
        SETTINGS PANEL
   ══════════════════════════════════ -->
   <div class="panel" id="panel-settings">
+
+    <!-- USER SWITCHER CARD -->
     <div class="card">
-      <div class="card-head"><h2>⚙️ הגדרות אישיות</h2></div>
+      <div class="card-head"><h2>👥 משתמשים</h2></div>
+      <div class="card-body">
+        <div class="user-list" id="user-list-ui"><!-- filled by JS --></div>
+        <button class="user-add-btn" onclick="showOnboardingForNew()">+ הוסף משתמש</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>⚙️ עריכת פרופיל</h2></div>
       <div class="card-body">
         <form id="settings-form" onsubmit="return false;">
           <div class="grid-2">
@@ -2858,12 +2803,329 @@ function saveSettingsForm(){
   saveSettings({name,weight,height,age,calories});
   const apiKey=(document.getElementById('sf-apikey')?.value||'').trim();
   if(apiKey) localStorage.setItem('proFit_apiKey',apiKey);
+  // Sync active user record
+  const users=getUsers(); const aid=getActiveUserId();
+  const idx=users.findIndex(u=>u.id===aid);
+  if(idx>=0){
+    users[idx]={...users[idx],name,weight,height,age,calories};
+    saveUsers(users);
+    renderUserList();
+    renderNutritionPanel();
+  }
   const btn=document.querySelector('#settings-form .settings-save');
   if(btn){
     const o=btn.textContent;btn.textContent='נשמר!';
     btn.style.animation='none';btn.offsetHeight;btn.style.animation='settingsSavePulse .5s var(--ease-spring) both';
     setTimeout(()=>{btn.textContent=o;btn.style.animation='';},2000);
   }
+}
+
+// ═══════════════════════════════════════════════════
+// MULTI-USER SYSTEM
+// ═══════════════════════════════════════════════════
+const USERS_KEY = 'pf_users';
+const ACTIVE_USER_KEY = 'pf_active_user_id';
+
+function getUsers(){ try{return JSON.parse(localStorage.getItem(USERS_KEY)||'[]')}catch(e){return[];} }
+function saveUsers(u){ localStorage.setItem(USERS_KEY,JSON.stringify(u)); }
+function getActiveUserId(){ return localStorage.getItem(ACTIVE_USER_KEY)||null; }
+function setActiveUserId(id){ localStorage.setItem(ACTIVE_USER_KEY,id); }
+function getActiveUser(){
+  const users=getUsers(); const id=getActiveUserId();
+  return users.find(u=>u.id===id)||users[0]||null;
+}
+
+function calcNutrition(u){
+  const sex=(u.gender||'m')==='f'?-161:5;
+  const bmr=Math.round(10*(u.weight||75)+6.25*(u.height||175)-5*(u.age||30)+sex);
+  const tdee=Math.round(bmr*(u.activity||1.55));
+  const surplusMap={lean_bulk:350,bulk:600,cut:-400,maintain:0};
+  const surplus=surplusMap[u.goal||'lean_bulk']??350;
+  const target=u.calories||Math.round(tdee+surplus);
+  const protein=Math.round((u.weight||75)*2.5);
+  const fat=Math.round(target*0.27/9);
+  const carbs=Math.round((target-protein*4-fat*9)/4);
+  return{bmr,tdee,target,protein,fat,carbs};
+}
+
+const GOAL_LABELS={lean_bulk:'Lean Bulk',bulk:'מסה מקסימלית',cut:'הורדת שומן',maintain:'שמירה'};
+
+// Meal templates per goal: [name, time, kcal%, protein%, carb%, fat%, foods[], tip]
+function getMealPlan(u,n){
+  const g=u.goal||'lean_bulk';
+  const w=u.weight||75;
+  const templates={
+    lean_bulk:[
+      ['🌅 בוקר','07:30',0.25,0.27,0.30,0.25,
+        ['🥣 100g שיבולת שועל','🥚 ביצה שלמה + 2 חלבונים','🥛 200g קוטג׳ 1%','🫐 קומץ אוכמניות'],
+        'Beta-Glucan בשיבולת שועל הוכח קלינית להורדת LDL 📉'],
+      ['🌞 צהריים','13:00',0.31,0.34,0.31,0.28,
+        ['🐟 200g סלמון / 200g חזה עוף','🍚 150g אורז מלא','🥦 ירקות מוקפצים','🫒 כף שמן זית'],
+        'EPA+DHA בסלמון מורידים טריגליצרידים ומעלים HDL ✅'],
+      ['🏋️ לפני אימון','16:30 (60–90 דק׳ לפני)',0.16,0.15,0.22,0.08,
+        ['🍞 2 פרוסות לחם שיפון','🧀 75g גבינה לבנה 1%','🍌 בננה','☕ קפה שחור'],
+        'פחמימות פשוטות + מורכבות = אנרגיה מיטבית לאימון ⚡'],
+      ['⚡ אחרי אימון','תוך 30–45 דק׳',0.19,0.27,0.24,0.06,
+        ['💪 1 מנת Whey Isolate','🍌 בננה','🍠 100g בטטה מבושלת'],
+        'Whey Isolate — ספיגה מהירה + פחות שומן רווי מ-Concentrate 🏆','red'],
+      ['🌙 ערב','21:00',0.09,0.13,0.07,0.16,
+        ['🐟 150g דג לבן / הודו','🥗 סלט ירקות + לימון','🥑 ¼ אבוקדו'],
+        'אבוקדו — שומן חד-בלתי-רווי מוריד LDL 💚'],
+    ],
+    bulk:[
+      ['🌅 בוקר','07:30',0.26,0.26,0.31,0.26,
+        ['🥣 150g שיבולת שועל','🥚 3 ביצים שלמות','🍌 בננה','🥛 200ml חלב 3%'],
+        'ארוחת בוקר כבדה = דלק להיום כולו 🔥'],
+      ['🌞 צהריים','13:00',0.32,0.35,0.32,0.28,
+        ['🍗 300g חזה עוף / בשר רזה','🍚 200g אורז לבן','🥦 ירקות','🫒 כף שמן זית'],
+        'הארוחה הכי חשובה ביום — אל תדלג! ⭐'],
+      ['🏋️ לפני אימון','16:30',0.16,0.14,0.23,0.08,
+        ['🍞 3 פרוסות לחם','🥚 3 ביצים קשות','🍎 תפוח'],
+        'פחמימות מהירות ומורכבות לאנרגיה מקסימלית ⚡'],
+      ['⚡ אחרי אימון','תוך 30 דק׳',0.17,0.25,0.21,0.06,
+        ['💪 Whey + 200ml חלב','🍠 150g בטטה','🍯 כף דבש'],
+        'חלון האנאבוליזם — ספיגה מיידית חיונית! 🏆','red'],
+      ['🌙 ערב','21:00',0.09,0.13,0.07,0.16,
+        ['🥩 200g הודו / דג','🍚 100g אורז','🥗 סלט'],
+        'ארוחת ערב — חלבון בטרם שינה = שיקום שריר 💪'],
+    ],
+    cut:[
+      ['🌅 בוקר','07:30',0.25,0.30,0.26,0.20,
+        ['🥚 3 ביצים שלמות + 2 חלבונים','🥣 60g שיבולת שועל','🥦 ירקות'],
+        'חלבון גבוה בבוקר = פחות רעב לאורך היום 💡'],
+      ['🌞 צהריים','13:00',0.34,0.38,0.32,0.26,
+        ['🍗 220g חזה עוף','🥗 סלט ירקות גדול','🫒 1.5 כף שמן זית','🍋 לימון'],
+        'הארוחה הגדולה ביום — סלט גדול = נפח בלי קלוריות 🥗'],
+      ['🏋️ לפני אימון','16:30',0.14,0.15,0.18,0.08,
+        ['🍎 תפוח','🥚 2 ביצים קשות','☕ קפה שחור'],
+        'קפה לפני אימון = שריפת שומן משופרת ☕🔥'],
+      ['⚡ אחרי אימון','תוך 30 דק׳',0.17,0.27,0.20,0.06,
+        ['💪 Whey Isolate + מים','🍌 בננה קטנה'],
+        'Whey Isolate + פירות = שיקום מינימלי קלורי ✅','red'],
+      ['🌙 ערב','21:00',0.10,0.18,0.04,0.12,
+        ['🥛 200g קוטג׳ 1%','🥒 ירקות חתוכים','🧄 עשבי תיבול'],
+        'קוטג׳ לפני שינה = קזאין איטי + שובע גבוה 💤'],
+    ],
+    maintain:[
+      ['🌅 בוקר','07:30',0.25,0.28,0.29,0.24,
+        ['🥣 80g שיבולת שועל','🥚 2 ביצים שלמות','🥛 150g קוטג׳','🍓 פירות'],
+        'ארוחת בוקר מאוזנת = אנרגיה יציבה ✅'],
+      ['🌞 צהריים','13:00',0.32,0.34,0.32,0.27,
+        ['🐟 180g סלמון / עוף','🍚 130g אורז מלא','🥦 ירקות','🫒 שמן זית'],
+        'ארוחת הצהריים הכי חשובה — חלבון + פחמימות ⭐'],
+      ['🏋️ לפני אימון','16:30',0.15,0.15,0.20,0.08,
+        ['🍞 2 פרוסות לחם','🧀 גבינה לבנה','🍌 בננה'],
+        'ארוחה קלה 60–90 דק׳ לפני = ביצועים טובים יותר ⚡'],
+      ['⚡ אחרי אימון','תוך 45 דק׳',0.18,0.26,0.22,0.06,
+        ['💪 Whey + מים','🍠 100g בטטה'],
+        'חלבון אחרי אימון = שמירה על מסת שריר 💪','red'],
+      ['🌙 ערב','21:00',0.10,0.14,0.07,0.14,
+        ['🍗 130g הודו / דג','🥗 סלט + לימון'],
+        'ארוחת ערב קלה = שינה טובה יותר 🌙'],
+    ],
+  };
+  return(templates[g]||templates['lean_bulk']).map(t=>({
+    name:t[0],time:t[1],pct:t[2],pRat:t[3],cRat:t[4],fRat:t[5],foods:t[6],tip:t[7],accent:t[8]
+  }));
+}
+
+function renderNutritionPanel(){
+  const u=getActiveUser(); if(!u) return;
+  const n=calcNutrition(u);
+  const g=u.goal||'lean_bulk';
+
+  // Macro stats
+  const grid=document.getElementById('macro-stats-grid');
+  const badge=document.getElementById('macro-goal-badge');
+  const fatNote=document.getElementById('macro-fat-note');
+  if(grid){
+    grid.innerHTML=`
+      <div class="stat-box red"><div class="val">${n.target.toLocaleString('he-IL')}</div><div class="lbl">קלוריות</div></div>
+      <div class="stat-box blue"><div class="val">${n.protein}g</div><div class="lbl">חלבון (${(n.protein/u.weight).toFixed(1)}g/kg)</div></div>
+      <div class="stat-box yellow"><div class="val">${n.carbs}g</div><div class="lbl">פחמימות</div></div>
+      <div class="stat-box green"><div class="val">${n.fat}g</div><div class="lbl">שומן בריא</div></div>`;
+  }
+  if(badge) badge.textContent=GOAL_LABELS[g]||g;
+  if(fatNote) fatNote.innerHTML=`BMR: <strong>${n.bmr.toLocaleString()}</strong> קל׳ &nbsp;|&nbsp; TDEE: <strong>${n.tdee.toLocaleString()}</strong> קל׳ &nbsp;|&nbsp; יעד: <strong style="color:var(--red)">${n.target.toLocaleString()}</strong> קל׳`;
+
+  // Meal badge
+  const mealBadge=document.getElementById('meal-count-badge');
+  if(mealBadge) mealBadge.textContent='5 ארוחות';
+
+  // Meals
+  const meals=getMealPlan(u,n);
+  const cont=document.getElementById('meals-container');
+  if(!cont) return;
+  cont.innerHTML=meals.map(m=>{
+    const kcal=Math.round(n.target*m.pct);
+    const p=Math.round(n.protein*m.pRat);
+    const c=Math.round(n.carbs*m.cRat);
+    const f=Math.round(n.fat*m.fRat);
+    const border=m.accent==='red'?'style="border-color:rgba(255,55,95,.35);"':'';
+    const timeColor=m.accent==='red'?`style="color:var(--red)"`:'' ;
+    const tipColor=m.tip.includes('❤')||m.tip.includes('✅')||m.tip.includes('💚')?'var(--green)':m.tip.includes('⚠')?'var(--yellow)':'var(--muted2)';
+    return `<div class="meal-row" ${border}>
+      <div class="meal-top">
+        <div><div class="meal-name">${m.name}</div><div class="meal-time" ${timeColor}>${m.time}</div></div>
+        <div style="text-align:left;"><div class="meal-cals">${kcal}</div><div class="meal-cals-unit">קל׳</div></div>
+      </div>
+      <div class="meal-foods">${m.foods.join(' · ')}</div>
+      <div style="font-size:.75rem;color:${tipColor};margin-bottom:8px;">${m.tip}</div>
+      <div class="meal-macros"><span class="mp mp-p">חלבון ${p}g</span><span class="mp mp-c">פחמימות ${c}g</span><span class="mp mp-f">שומן ${f}g</span></div>
+    </div>`;
+  }).join('');
+
+  // Also update topbar chips
+  applySettings({...getSettings(),calories:n.target,weight:u.weight});
+}
+
+function renderUserList(){
+  const users=getUsers();
+  const activeId=getActiveUserId();
+  const ul=document.getElementById('user-list-ui');
+  if(!ul) return;
+  ul.innerHTML=users.map(u=>{
+    const n=calcNutrition(u);
+    const isActive=u.id===activeId;
+    return `<div class="user-item${isActive?' active':''}" onclick="switchUser('${u.id}')">
+      <div class="user-avatar-sm">${(u.name||'?').charAt(0)}</div>
+      <div class="user-item-info">
+        <div class="user-item-name">${u.name}</div>
+        <div class="user-item-sub">${u.weight}ק"ג · ${u.height}ס"מ · ${GOAL_LABELS[u.goal]||u.goal} · ${n.target.toLocaleString()} קל׳</div>
+      </div>
+      ${isActive?'<div class="user-item-active-badge">פעיל</div>':''}
+    </div>`;
+  }).join('');
+}
+
+function switchUser(id){
+  setActiveUserId(id);
+  const u=getUsers().find(x=>x.id===id);
+  if(!u) return;
+  // Sync settings form and settings key
+  const n=calcNutrition(u);
+  saveSettings({name:u.name,weight:u.weight,height:u.height,age:u.age,calories:n.target});
+  if(u.apiKey) localStorage.setItem('proFit_apiKey',u.apiKey);
+  renderUserList();
+  renderNutritionPanel();
+  applySettings(getSettings());
+  prefillSettingsForm();
+  showToast('עברת ל-'+u.name+' 👤');
+}
+
+function prefillSettingsForm(){
+  const s=getSettings();
+  const sf=document.getElementById('sf-name'); if(sf) sf.value=s.name;
+  const sw=document.getElementById('sf-weight'); if(sw) sw.value=s.weight;
+  const sh=document.getElementById('sf-height'); if(sh) sh.value=s.height;
+  const sa=document.getElementById('sf-age'); if(sa) sa.value=s.age;
+  const sc2=document.getElementById('sf-calories'); if(sc2) sc2.value=s.calories;
+  const sk=document.getElementById('sf-apikey'); if(sk) sk.value=localStorage.getItem('proFit_apiKey')||'';
+}
+
+// ─── Onboarding Wizard ───
+let _obStep=1;
+let _obGoal=null;
+let _obActivity=null;
+let _isNewUserFlow=false;
+
+function showOnboarding(){
+  _obStep=1;_obGoal=null;_obActivity=null;
+  document.querySelectorAll('.onboard-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('ob-step-1')?.classList.add('active');
+  document.querySelectorAll('.onboard-dot').forEach((d,i)=>{d.classList.toggle('active',i===0);});
+  document.getElementById('ob-back').style.display='none';
+  document.getElementById('ob-next').textContent='הבא →';
+  document.getElementById('onboard-overlay').style.display='flex';
+}
+function showOnboardingForNew(){
+  _isNewUserFlow=true;
+  // Clear onboarding inputs
+  ['ob-name','ob-age','ob-weight','ob-height'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('ob-gender').value='m';
+  document.querySelectorAll('.goal-btn,.act-btn').forEach(b=>b.classList.remove('sel'));
+  showOnboarding();
+}
+function selectGoal(btn){
+  document.querySelectorAll('.goal-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  _obGoal=btn.dataset.goal;
+}
+function selectActivity(btn){
+  document.querySelectorAll('.act-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  _obActivity=parseFloat(btn.dataset.act);
+}
+function obNext(){
+  if(_obStep===1){
+    const name=(document.getElementById('ob-name')?.value||'').trim();
+    const age=parseInt(document.getElementById('ob-age')?.value)||0;
+    const weight=parseFloat(document.getElementById('ob-weight')?.value)||0;
+    const height=parseFloat(document.getElementById('ob-height')?.value)||0;
+    if(!name||!age||!weight||!height){showToast('מלא את כל השדות');return;}
+    _obStep=2;
+  } else if(_obStep===2){
+    if(!_obGoal){showToast('בחר מטרה');return;}
+    _obStep=3;
+  } else if(_obStep===3){
+    if(!_obActivity){showToast('בחר רמת פעילות');return;}
+    obFinish();
+    return;
+  }
+  document.querySelectorAll('.onboard-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('ob-step-'+_obStep)?.classList.add('active');
+  document.querySelectorAll('.onboard-dot').forEach((d,i)=>{d.classList.toggle('active',i===_obStep-1);});
+  document.getElementById('ob-back').style.display='block';
+  document.getElementById('ob-next').textContent=_obStep===3?'צור פרופיל ✓':'הבא →';
+}
+function obBack(){
+  if(_obStep<=1) return;
+  _obStep--;
+  document.querySelectorAll('.onboard-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('ob-step-'+_obStep)?.classList.add('active');
+  document.querySelectorAll('.onboard-dot').forEach((d,i)=>{d.classList.toggle('active',i===_obStep-1);});
+  document.getElementById('ob-back').style.display=_obStep===1?'none':'block';
+  document.getElementById('ob-next').textContent='הבא →';
+}
+function obFinish(){
+  const name=(document.getElementById('ob-name')?.value||'').trim();
+  const age=parseInt(document.getElementById('ob-age')?.value)||30;
+  const weight=parseFloat(document.getElementById('ob-weight')?.value)||75;
+  const height=parseFloat(document.getElementById('ob-height')?.value)||175;
+  const gender=document.getElementById('ob-gender')?.value||'m';
+  const user={
+    id:'u_'+Date.now(),
+    name,age,weight,height,gender,
+    goal:_obGoal,activity:_obActivity,
+  };
+  const n=calcNutrition(user);
+  user.calories=n.target;
+  const users=getUsers();
+  users.push(user);
+  saveUsers(users);
+  setActiveUserId(user.id);
+  saveSettings({name,weight,height,age,calories:n.target});
+  document.getElementById('onboard-overlay').style.display='none';
+  renderUserList();
+  renderNutritionPanel();
+  applySettings(getSettings());
+  prefillSettingsForm();
+  // Run full init if this was the first user
+  if(!_isNewUserFlow){
+    const dEl=document.getElementById('wl-date');
+    if(dEl) dEl.value=todayStr();
+    initTodayHero();
+    initCheckboxes();
+    updateStreak();
+    animateStats();
+    renderWLog();
+    renderWChart();
+    if(localStorage.getItem('pf_installDismissed')){
+      const b=document.getElementById('install-banner'); if(b) b.style.display='none';
+    }
+  }
+  _isNewUserFlow=false;
+  showToast('ברוך הבא, '+name+'! 🎉');
 }
 
 // ═══════════════════════════════════════════════════
@@ -3283,15 +3545,32 @@ function dismissInstallBanner(){
 // INIT
 // ═══════════════════════════════════════════════════
 window.addEventListener('load',()=>{
+  // ── Migrate old single-user settings → multi-user ──
+  if(!localStorage.getItem(USERS_KEY)){
+    const old=localStorage.getItem(SETTINGS_KEY);
+    if(old){
+      try{
+        const s=JSON.parse(old);
+        const migrated={id:'u_0',name:s.name||'המשתמש שלי',age:s.age||31,weight:s.weight||60,height:s.height||170,gender:'m',goal:'lean_bulk',activity:1.55,calories:s.calories||2750};
+        const apiKey=localStorage.getItem('proFit_apiKey');
+        if(apiKey) migrated.apiKey=apiKey;
+        saveUsers([migrated]);
+        setActiveUserId('u_0');
+      }catch(e){}
+    }
+  }
+  // ── Show onboarding if no users ──
+  if(getUsers().length===0){
+    showOnboarding();
+    return; // defer rest of init until onboarding complete
+  }
+
   const s=getSettings();
   applySettings(s);
+  renderNutritionPanel();
+  renderUserList();
   // Pre-fill settings form
-  const sf=document.getElementById('sf-name'); if(sf) sf.value=s.name;
-  const sw=document.getElementById('sf-weight'); if(sw) sw.value=s.weight;
-  const sh=document.getElementById('sf-height'); if(sh) sh.value=s.height;
-  const sa=document.getElementById('sf-age'); if(sa) sa.value=s.age;
-  const sc2=document.getElementById('sf-calories'); if(sc2) sc2.value=s.calories;
-  const sk=document.getElementById('sf-apikey'); if(sk) sk.value=localStorage.getItem('proFit_apiKey')||'';
+  prefillSettingsForm();
   // Set today's date in weight log form
   const dEl=document.getElementById('wl-date');
   if(dEl) dEl.value=todayStr();
@@ -4502,6 +4781,102 @@ async function requestWorkoutNotif(){
       <button class="share-dl-btn" onclick="downloadShareCard()">שמור תמונה</button>
       <button class="share-dl-btn" id="share-native-btn" style="display:none" onclick="nativeShare()">שתף</button>
       <button class="share-close-btn" onclick="closeShareModal()">סגור</button>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING WIZARD -->
+<div class="onboard-overlay" id="onboard-overlay" style="display:none;">
+  <div class="onboard-box">
+    <div class="onboard-header">
+      <div class="onboard-logo">ProFit</div>
+      <div class="onboard-sub">תוכנית אימונים ותזונה אישית</div>
+    </div>
+    <!-- Step 1: Personal Data -->
+    <div class="onboard-step active" id="ob-step-1">
+      <div class="onboard-step-title">מי אתה? 👋</div>
+      <div class="onboard-field" style="margin-bottom:14px;">
+        <label>שם</label>
+        <input id="ob-name" type="text" placeholder="השם שלך" style="text-align:right;"/>
+      </div>
+      <div class="onboard-grid">
+        <div class="onboard-field">
+          <label>גיל</label>
+          <input id="ob-age" type="number" min="16" max="80" placeholder="30"/>
+        </div>
+        <div class="onboard-field">
+          <label>משקל (ק״ג)</label>
+          <input id="ob-weight" type="number" min="30" max="250" step="0.1" placeholder="75"/>
+        </div>
+        <div class="onboard-field">
+          <label>גובה (ס״מ)</label>
+          <input id="ob-height" type="number" min="100" max="230" placeholder="175"/>
+        </div>
+        <div class="onboard-field">
+          <label>מין</label>
+          <select id="ob-gender" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border2);border-radius:10px;padding:11px 14px;color:var(--text);font-size:.95rem;">
+            <option value="m">זכר</option>
+            <option value="f">נקבה</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <!-- Step 2: Goal -->
+    <div class="onboard-step" id="ob-step-2">
+      <div class="onboard-step-title">מה המטרה שלך? 🎯</div>
+      <div class="onboard-goal-grid">
+        <button class="goal-btn" data-goal="lean_bulk" onclick="selectGoal(this)">
+          <div class="goal-icon">💪</div>
+          <div class="goal-name">Lean Bulk</div>
+          <div class="goal-desc">+350 קל׳ / בניית מסה נקייה</div>
+        </button>
+        <button class="goal-btn" data-goal="bulk" onclick="selectGoal(this)">
+          <div class="goal-icon">🏋️</div>
+          <div class="goal-name">מסה מקסימלית</div>
+          <div class="goal-desc">+600 קל׳ / גדילה מהירה</div>
+        </button>
+        <button class="goal-btn" data-goal="cut" onclick="selectGoal(this)">
+          <div class="goal-icon">🔥</div>
+          <div class="goal-name">הורדת שומן</div>
+          <div class="goal-desc">-400 קל׳ / שמירת שריר</div>
+        </button>
+        <button class="goal-btn" data-goal="maintain" onclick="selectGoal(this)">
+          <div class="goal-icon">⚖️</div>
+          <div class="goal-name">שמירה</div>
+          <div class="goal-desc">תחזוקה + בריאות</div>
+        </button>
+      </div>
+    </div>
+    <!-- Step 3: Activity -->
+    <div class="onboard-step" id="ob-step-3">
+      <div class="onboard-step-title">רמת פעילות 🏃</div>
+      <div class="activity-grid">
+        <button class="act-btn" data-act="1.2" onclick="selectActivity(this)">
+          <div class="act-icon">🛋️</div>
+          <div class="act-info"><div class="act-name">יושבני</div><div class="act-desc">עבודת משרד, ללא ספורט</div></div>
+        </button>
+        <button class="act-btn" data-act="1.375" onclick="selectActivity(this)">
+          <div class="act-icon">🚶</div>
+          <div class="act-info"><div class="act-name">קל</div><div class="act-desc">ספורט 1–3 פעמים בשבוע</div></div>
+        </button>
+        <button class="act-btn" data-act="1.55" onclick="selectActivity(this)">
+          <div class="act-icon">💪</div>
+          <div class="act-info"><div class="act-name">מתון-גבוה</div><div class="act-desc">אימון 4–5 פעמים בשבוע</div></div>
+        </button>
+        <button class="act-btn" data-act="1.725" onclick="selectActivity(this)">
+          <div class="act-icon">⚡</div>
+          <div class="act-info"><div class="act-name">אינטנסיבי</div><div class="act-desc">אימון יומי + עבודה פיזית</div></div>
+        </button>
+      </div>
+    </div>
+    <div class="onboard-dots">
+      <div class="onboard-dot active" id="od-1"></div>
+      <div class="onboard-dot" id="od-2"></div>
+      <div class="onboard-dot" id="od-3"></div>
+    </div>
+    <div class="onboard-footer">
+      <button class="onboard-back" id="ob-back" onclick="obBack()" style="display:none;">חזור</button>
+      <button class="onboard-next" id="ob-next" onclick="obNext()">הבא →</button>
     </div>
   </div>
 </div>
