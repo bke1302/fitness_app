@@ -231,21 +231,41 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 /* ─── WEEK BAR ─── */
 .week-bar{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:20px;}
 .day-cell{
-  border-radius:14px;padding:14px 6px;text-align:center;cursor:pointer;
+  border-radius:16px;padding:16px 6px 12px;text-align:center;cursor:pointer;
   border:1px solid var(--border);transition:all .25s var(--ease-out);
-  background:var(--glass);
+  background:var(--bg3);position:relative;overflow:hidden;
 }
-.day-cell:not(.rest-day):hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 8px 24px rgba(0,0,0,.5);}
+.day-cell::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--day-accent,rgba(255,255,255,.1));border-radius:16px 16px 0 0;
+  opacity:.7;
+}
+.day-cell[data-type="push"]{--day-accent:var(--push-c);}
+.day-cell[data-type="pull"]{--day-accent:var(--pull-c);}
+.day-cell[data-type="legs"]{--day-accent:var(--legs-c);}
+.day-cell[data-type="arms"]{--day-accent:var(--arms-c);}
+.day-cell:not(.rest-day):hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 8px 28px rgba(0,0,0,.5);}
 .day-cell.active-day{
   border-color:var(--red);
-  background:linear-gradient(160deg,rgba(255,55,95,.14),rgba(191,90,242,.08));
-  box-shadow:0 0 20px var(--red-glow),inset 0 1px 0 rgba(255,55,95,.2);
+  background:linear-gradient(160deg,rgba(255,55,95,.12),rgba(255,55,95,.04));
+  box-shadow:0 0 20px rgba(255,55,95,.15);
 }
-.day-cell.rest-day{opacity:.45;cursor:default;}
-.day-cell .dc-name{font-size:.65rem;color:var(--muted);margin-bottom:6px;font-weight:600;letter-spacing:.5px;}
-.day-cell .dc-icon{font-size:1.3rem;margin-bottom:4px;}
-.day-cell .dc-type{font-family:var(--font-d);font-size:.7rem;font-weight:800;letter-spacing:.5px;}
-.day-cell .dc-label{font-size:.64rem;color:var(--muted2);margin-top:3px;}
+.day-cell.done-day{
+  border-color:rgba(48,209,88,.35);
+  background:linear-gradient(160deg,rgba(48,209,88,.08),var(--bg3));
+}
+.day-cell.done-day::after{
+  content:'✓';position:absolute;top:6px;left:6px;
+  font-size:.6rem;font-weight:900;color:var(--green);
+  background:rgba(48,209,88,.15);border-radius:50%;
+  width:14px;height:14px;display:flex;align-items:center;justify-content:center;
+  line-height:14px;
+}
+.day-cell.rest-day{opacity:.4;cursor:default;}
+.day-cell .dc-name{font-size:.62rem;color:var(--muted);margin-bottom:8px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;}
+.day-cell .dc-icon{font-size:1.4rem;margin-bottom:6px;}
+.day-cell .dc-type{font-family:var(--font-d);font-size:.72rem;font-weight:900;letter-spacing:.5px;}
+.day-cell .dc-label{font-size:.6rem;color:var(--muted2);margin-top:4px;line-height:1.3;}
 
 /* ─── SPLIT LEGEND ─── */
 .split-legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
@@ -661,6 +681,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   .ex-table th:nth-child(3),.ex-table td:nth-child(3){display:none;}
 }
 
+/* ─── HERO CALORIES BOX ─── */
+.cals-hero{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  background:linear-gradient(135deg,rgba(255,55,95,.1),rgba(255,55,95,.04));
+  border:1px solid rgba(255,55,95,.22);border-radius:18px;
+  padding:22px 24px;
+}
+.cals-hero-main{display:flex;align-items:baseline;gap:10px;}
+.cals-hero-num{
+  font-family:var(--font-d);font-size:4.5rem;font-weight:900;
+  color:var(--red);letter-spacing:-3px;line-height:1;
+}
+.cals-hero-unit{font-size:.85rem;color:var(--muted2);font-weight:600;padding-bottom:6px;}
+
 /* ─── XP / LEVEL WIDGET ─── */
 .level-widget{display:flex;align-items:center;gap:12px;background:rgba(255,214,10,.05);border:1px solid rgba(255,214,10,.18);border-radius:14px;padding:12px 16px;margin-bottom:14px;cursor:default;}
 .level-badge-chip{font-family:var(--font-d);font-size:.62rem;font-weight:900;letter-spacing:2px;padding:4px 12px;border-radius:999px;background:linear-gradient(135deg,var(--yellow),var(--orange));color:#000;flex-shrink:0;white-space:nowrap;}
@@ -1007,22 +1041,39 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <button class="notif-btn" id="notif-btn" onclick="requestWorkoutNotif()">הפעל</button>
     </div>
 
-    <div class="trainer-note" style="padding:20px 22px;">
-      <div style="font-size:.82rem;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">הגיון הפיצול</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:.85rem;line-height:1.7;">
-        <div><strong style="color:var(--text);">ראשון + שני — רצופים</strong><br><span style="color:var(--muted2);">Push ואז Pull — אין חפיפת שרירים. שרירי הדחיפה לא נוגעים בשרירי המשיכה.</span></div>
-        <div><strong style="color:var(--text);">רביעי + חמישי — רצופים</strong><br><span style="color:var(--muted2);">רגליים ואז ידיים — שוב אין חפיפה. כל שריר מקבל 48–72 שעות שיקום.</span></div>
+    <div class="trainer-note" style="padding:0;cursor:pointer;" onclick="this.classList.toggle('tn-open')">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;">
+        <div style="font-size:.8rem;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:1.5px;">הגיון הפיצול</div>
+        <div class="tn-arrow" style="color:var(--muted);font-size:.8rem;transition:transform .3s;">▾</div>
+      </div>
+      <div class="tn-body" style="padding:0 20px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease-out),padding .3s;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:.84rem;line-height:1.75;padding-bottom:16px;">
+          <div><strong style="color:var(--text);">ראשון + שני — רצופים</strong><br><span style="color:var(--muted2);">Push ואז Pull — אין חפיפת שרירים. שרירי הדחיפה לא נוגעים בשרירי המשיכה.</span></div>
+          <div><strong style="color:var(--text);">רביעי + חמישי — רצופים</strong><br><span style="color:var(--muted2);">רגליים ואז ידיים — שוב אין חפיפה. כל שריר מקבל 48–72 שעות שיקום.</span></div>
+        </div>
       </div>
     </div>
+    <style>
+      .tn-open .tn-body{max-height:200px!important;padding:0 20px!important;}
+      .tn-open .tn-arrow{transform:rotate(180deg);}
+    </style>
 
     <div class="card">
-      <div class="card-head"><h2>הנתונים שלך</h2><span class="badge badge-green">Lean Bulk</span></div>
+      <div class="card-head"><h2>הנתונים שלך</h2></div>
       <div class="card-body">
-        <div class="grid-4" style="margin-bottom:14px;">
-          <div class="stat-box red"><div class="val" id="dash-cals">2,750</div><div class="lbl">קלוריות יומיות</div></div>
-          <div class="stat-box blue"><div class="val" id="dash-protein">150g</div><div class="lbl">חלבון יומי</div></div>
-          <div class="stat-box yellow"><div class="val">340g</div><div class="lbl">פחמימות יומיות</div></div>
-          <div class="stat-box green"><div class="val">80g</div><div class="lbl">שומן יומי</div></div>
+        <!-- HERO CALORIE STAT -->
+        <div class="cals-hero" style="margin-bottom:14px;">
+          <div class="cals-hero-main">
+            <div class="cals-hero-num" id="dash-cals">2,750</div>
+            <div class="cals-hero-unit">קל׳ / יום</div>
+          </div>
+          <span class="badge badge-red" style="align-self:center;">Lean Bulk</span>
+        </div>
+        <!-- SUB MACROS -->
+        <div class="grid-3" style="margin-bottom:14px;">
+          <div class="stat-box blue"><div class="val" id="dash-protein">150g</div><div class="lbl">חלבון</div></div>
+          <div class="stat-box yellow"><div class="val">340g</div><div class="lbl">פחמימות</div></div>
+          <div class="stat-box green"><div class="val">80g</div><div class="lbl">שומן</div></div>
         </div>
         <!-- LEVEL / XP WIDGET -->
         <div class="level-widget" id="level-widget">
@@ -1119,14 +1170,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="card-head"><h2>השבוע שלך</h2></div>
       <div class="card-body">
         <div class="week-bar">
-          <div class="day-cell" onclick="goDay('push')">
+          <div class="day-cell" data-type="push" onclick="goDay('push')">
             <div class="dc-name">ראשון</div><div class="dc-icon">💥</div>
-            <div class="dc-type" style="color:var(--red)">PUSH</div>
+            <div class="dc-type" style="color:var(--push-c)">PUSH</div>
             <div class="dc-label">חזה · כתף · טרי</div>
           </div>
-          <div class="day-cell" onclick="goDay('pull')">
+          <div class="day-cell" data-type="pull" onclick="goDay('pull')">
             <div class="dc-name">שני</div><div class="dc-icon">🔄</div>
-            <div class="dc-type" style="color:var(--blue)">PULL</div>
+            <div class="dc-type" style="color:var(--pull-c)">PULL</div>
             <div class="dc-label">גב · בייסס</div>
           </div>
           <div class="day-cell rest-day">
@@ -1134,14 +1185,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
             <div class="dc-type" style="color:var(--green)">מנוחה</div>
             <div class="dc-label">שיקום שריר</div>
           </div>
-          <div class="day-cell" onclick="goDay('legs')">
+          <div class="day-cell" data-type="legs" onclick="goDay('legs')">
             <div class="dc-name">רביעי</div><div class="dc-icon">🦵</div>
-            <div class="dc-type" style="color:var(--purple)">LEGS</div>
+            <div class="dc-type" style="color:var(--legs-c)">LEGS</div>
             <div class="dc-label">ירכיים · ישבן</div>
           </div>
-          <div class="day-cell" onclick="goDay('arms')">
+          <div class="day-cell" data-type="arms" onclick="goDay('arms')">
             <div class="dc-name">חמישי</div><div class="dc-icon">💪</div>
-            <div class="dc-type" style="color:var(--yellow)">ARMS</div>
+            <div class="dc-type" style="color:var(--arms-c)">ARMS</div>
             <div class="dc-label">בייסס · טרי · כתף</div>
           </div>
           <div class="day-cell rest-day">
@@ -2726,9 +2777,28 @@ function initTodayHero(){
       </div>
       <div class="today-hero-emoji">REST</div>`;
   }
-  // Highlight today in week bars
+  // Highlight today + mark completed days this week
+  const log=getLog();
+  // Map day index → panel key (JS day: 0=Sun)
+  const DAY_PANEL={0:'push',1:'pull',3:'legs',4:'arms'};
+  // Get Mon of current week
+  const now=new Date();
+  const mon=new Date(now);mon.setDate(now.getDate()-((now.getDay()+6)%7));
   document.querySelectorAll('.week-bar .day-cell').forEach((c,i)=>{
     c.classList.toggle('active-day',i===d);
+    const panel=DAY_PANEL[i];
+    if(panel){
+      // Check any day this week with this panel marked complete
+      for(let j=0;j<7;j++){
+        const dt=new Date(mon);dt.setDate(mon.getDate()+j);
+        const key=dt.toISOString().slice(0,10);
+        if(log[key]?.__complete){
+          // Map log date back to day-of-week to match correct cell
+          const dow=dt.getDay();
+          if(dow===i){c.classList.add('done-day');break;}
+        }
+      }
+    }
   });
 }
 
@@ -2736,7 +2806,11 @@ function initTodayHero(){
 // ANIMATED STATS
 // ═══════════════════════════════════════════════════
 function animateStats(){
-  document.querySelectorAll('#panel-dashboard .stat-box .val').forEach(el=>{
+  const targets=[
+    ...document.querySelectorAll('#panel-dashboard .stat-box .val'),
+    ...document.querySelectorAll('.cals-hero-num')
+  ];
+  targets.forEach(el=>{
     const raw=el.textContent.replace(/,/g,'');
     const num=parseFloat(raw);
     if(isNaN(num)) return;
