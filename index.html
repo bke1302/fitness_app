@@ -1186,6 +1186,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 @keyframes splashPop{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:scale(1)}}
 @keyframes splashFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
+/* ─── MEAL COUNT SELECTOR ─── */
+.meal-count-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;}
+.mc-btn{background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:12px;padding:12px 8px;cursor:pointer;text-align:center;transition:all .18s var(--ease-spring);color:var(--muted2);}
+.mc-btn:active{transform:scale(.95);}
+.mc-btn.sel{border-color:var(--blue);background:rgba(10,132,255,.12);color:var(--text);}
+.mc-btn .mc-num{font-family:var(--font-d);font-size:1.5rem;font-weight:900;line-height:1;}
+.mc-btn .mc-lbl{font-size:.62rem;color:var(--muted);margin-top:4px;}
+
 /* ─── HEALTH TOGGLE ─── */
 .health-toggle{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.03);cursor:pointer;margin-top:14px;transition:border-color .18s;}
 .health-toggle:hover{border-color:var(--border2);}
@@ -2877,82 +2885,59 @@ function calcNutrition(u){
 
 const GOAL_LABELS={lean_bulk:'Lean Bulk',bulk:'מסה מקסימלית',cut:'הורדת שומן',maintain:'שמירה'};
 
-// Meal templates per goal: [name, time, kcal%, protein%, carb%, fat%, foods[], tip]
+// 6 possible meal slots per goal (index 0-5)
+// slot: [name, time, basePct, pRat, cRat, fRat, foods[], tip, ?accent]
+const MEAL_SLOT_POOL = {
+  lean_bulk:[
+    ['🌅 בוקר','07:30',0.22,0.24,0.27,0.22,['🥣 100g שיבולת שועל','🥚 ביצה + 2 חלבונים','🥛 200g קוטג׳ 1%','🫐 אוכמניות'],'Beta-Glucan בשיבולת שועל מוריד LDL 📉'],
+    ['🍎 ביניים','10:30',0.10,0.12,0.10,0.14,['🥛 200g יוגורט יווני 0%','🥜 20g אגוזי מלך','🍓 פירות יער'],'ביניים קל — מונע אכילת יתר בצהריים 💡'],
+    ['🌞 צהריים','13:00',0.28,0.30,0.28,0.26,['🐟 200g סלמון / עוף','🍚 150g אורז מלא','🥦 ירקות','🫒 כף שמן זית'],'EPA+DHA בסלמון מעלים HDL ✅'],
+    ['🏋️ לפני אימון','(60–90 דק׳ לפני)',0.14,0.13,0.19,0.07,['🍞 2 פרוסות לחם שיפון','🧀 75g גבינה 1%','🍌 בננה','☕ קפה שחור'],'פחמימות מהירות + מורכבות לאנרגיה מיטבית ⚡'],
+    ['⚡ אחרי אימון','תוך 30–45 דק׳',0.17,0.24,0.20,0.05,['💪 Whey Isolate','🍌 בננה','🍠 100g בטטה'],'Whey Isolate — ספיגה מהירה לחלון האנאבוליזם 🏆','red'],
+    ['🌙 ערב','21:00',0.09,0.11,0.06,0.14,['🐟 150g דג לבן / הודו','🥗 סלט ירקות + לימון','🥑 ¼ אבוקדו'],'אבוקדו — שומן חד-בלתי-רווי מוריד LDL 💚'],
+  ],
+  bulk:[
+    ['🌅 בוקר','07:30',0.24,0.23,0.28,0.24,['🥣 150g שיבולת שועל','🥚 3 ביצים שלמות','🍌 בננה','🥛 200ml חלב 3%'],'ארוחת בוקר כבדה = דלק להיום כולו 🔥'],
+    ['🍎 ביניים','10:30',0.10,0.11,0.12,0.10,['🧀 200g קוטג׳','🍯 דבש','🥜 25g בוטנים'],'ביניים — קלוריות קלות לשמירה על עודף ⚡'],
+    ['🌞 צהריים','13:00',0.30,0.32,0.29,0.27,['🍗 300g חזה עוף / בשר רזה','🍚 200g אורז לבן','🥦 ירקות','🫒 כף שמן זית'],'הארוחה הכי חשובה ביום — אל תדלג! ⭐'],
+    ['🏋️ לפני אימון','(60–90 דק׳ לפני)',0.14,0.13,0.21,0.07,['🍞 3 פרוסות לחם','🥚 3 ביצים קשות','🍎 תפוח'],'פחמימות מקסימליות לאנרגיה 💪'],
+    ['⚡ אחרי אימון','תוך 30 דק׳',0.15,0.22,0.18,0.05,['💪 Whey + 200ml חלב','🍠 150g בטטה','🍯 כף דבש'],'חלון האנאבוליזם — ספיגה מיידית 🏆','red'],
+    ['🌙 ערב','21:00',0.07,0.10,0.06,0.13,['🥩 200g הודו / דג','🍚 80g אורז','🥗 סלט'],'ערב — חלבון + פחמימות לשיקום שריר 💪'],
+  ],
+  cut:[
+    ['🌅 בוקר','07:30',0.24,0.28,0.24,0.18,['🥚 3 ביצים שלמות + 2 חלבונים','🥣 60g שיבולת שועל','🥦 ירקות'],'חלבון גבוה בבוקר = פחות רעב לאורך היום 💡'],
+    ['🍎 ביניים','10:30',0.10,0.14,0.06,0.08,['🥛 150g קוטג׳ 0%','🥒 ירקות חיים'],'ביניים חלבוני — שומר על מסת שריר תוך גירעון 🔒'],
+    ['🌞 צהריים','13:00',0.33,0.36,0.30,0.24,['🍗 220g חזה עוף','🥗 סלט ירקות גדול','🫒 1.5 כף שמן זית','🍋 לימון'],'הארוחה הגדולה ביום — נפח מסלט מונע רעב 🥗'],
+    ['🏋️ לפני אימון','(60–90 דק׳ לפני)',0.12,0.13,0.16,0.07,['🍎 תפוח','🥚 2 ביצים קשות','☕ קפה שחור'],'קפה לפני אימון = שריפת שומן משופרת ☕🔥'],
+    ['⚡ אחרי אימון','תוך 30 דק׳',0.14,0.24,0.18,0.05,['💪 Whey Isolate + מים','🍌 בננה קטנה'],'Whey Isolate = שיקום מינימלי קלורי ✅','red'],
+    ['🌙 ערב','21:00',0.07,0.15,0.03,0.10,['🥛 200g קוטג׳ 1%','🥒 ירקות חתוכים'],'קוטג׳ = קזאין איטי + שובע גבוה 💤'],
+  ],
+  maintain:[
+    ['🌅 בוקר','07:30',0.24,0.26,0.27,0.22,['🥣 80g שיבולת שועל','🥚 2 ביצים שלמות','🥛 150g קוטג׳','🍓 פירות'],'ארוחת בוקר מאוזנת = אנרגיה יציבה ✅'],
+    ['🍎 ביניים','10:30',0.10,0.12,0.10,0.12,['🥛 180g יוגורט יווני','🍓 פרי','🥜 15g שקדים'],'ביניים — מונע אכילת יתר בצהריים 💡'],
+    ['🌞 צהריים','13:00',0.30,0.31,0.30,0.25,['🐟 180g סלמון / עוף','🍚 130g אורז מלא','🥦 ירקות','🫒 שמן זית'],'הארוחה הכי חשובה — חלבון + פחמימות ⭐'],
+    ['🏋️ לפני אימון','(60–90 דק׳ לפני)',0.13,0.13,0.18,0.07,['🍞 2 פרוסות לחם','🧀 גבינה לבנה','🍌 בננה'],'ארוחה קלה לפני = ביצועים טובים יותר ⚡'],
+    ['⚡ אחרי אימון','תוך 45 דק׳',0.15,0.22,0.20,0.05,['💪 Whey + מים','🍠 100g בטטה'],'חלבון אחרי אימון = שמירה על מסת שריר 💪','red'],
+    ['🌙 ערב','21:00',0.08,0.12,0.06,0.13,['🍗 130g הודו / דג','🥗 סלט + לימון'],'ערב קל = שינה טובה יותר 🌙'],
+  ],
+};
+
+// Which slots to use per meal count
+const MEAL_SLOTS_BY_COUNT = {3:[0,2,5], 4:[0,2,4,5], 5:[0,2,3,4,5], 6:[0,1,2,3,4,5]};
+
 function getMealPlan(u,n){
   const g=u.goal||'lean_bulk';
-  const w=u.weight||75;
-  const templates={
-    lean_bulk:[
-      ['🌅 בוקר','07:30',0.25,0.27,0.30,0.25,
-        ['🥣 100g שיבולת שועל','🥚 ביצה שלמה + 2 חלבונים','🥛 200g קוטג׳ 1%','🫐 קומץ אוכמניות'],
-        'Beta-Glucan בשיבולת שועל הוכח קלינית להורדת LDL 📉'],
-      ['🌞 צהריים','13:00',0.31,0.34,0.31,0.28,
-        ['🐟 200g סלמון / 200g חזה עוף','🍚 150g אורז מלא','🥦 ירקות מוקפצים','🫒 כף שמן זית'],
-        'EPA+DHA בסלמון מורידים טריגליצרידים ומעלים HDL ✅'],
-      ['🏋️ לפני אימון','16:30 (60–90 דק׳ לפני)',0.16,0.15,0.22,0.08,
-        ['🍞 2 פרוסות לחם שיפון','🧀 75g גבינה לבנה 1%','🍌 בננה','☕ קפה שחור'],
-        'פחמימות פשוטות + מורכבות = אנרגיה מיטבית לאימון ⚡'],
-      ['⚡ אחרי אימון','תוך 30–45 דק׳',0.19,0.27,0.24,0.06,
-        ['💪 1 מנת Whey Isolate','🍌 בננה','🍠 100g בטטה מבושלת'],
-        'Whey Isolate — ספיגה מהירה + פחות שומן רווי מ-Concentrate 🏆','red'],
-      ['🌙 ערב','21:00',0.09,0.13,0.07,0.16,
-        ['🐟 150g דג לבן / הודו','🥗 סלט ירקות + לימון','🥑 ¼ אבוקדו'],
-        'אבוקדו — שומן חד-בלתי-רווי מוריד LDL 💚'],
-    ],
-    bulk:[
-      ['🌅 בוקר','07:30',0.26,0.26,0.31,0.26,
-        ['🥣 150g שיבולת שועל','🥚 3 ביצים שלמות','🍌 בננה','🥛 200ml חלב 3%'],
-        'ארוחת בוקר כבדה = דלק להיום כולו 🔥'],
-      ['🌞 צהריים','13:00',0.32,0.35,0.32,0.28,
-        ['🍗 300g חזה עוף / בשר רזה','🍚 200g אורז לבן','🥦 ירקות','🫒 כף שמן זית'],
-        'הארוחה הכי חשובה ביום — אל תדלג! ⭐'],
-      ['🏋️ לפני אימון','16:30',0.16,0.14,0.23,0.08,
-        ['🍞 3 פרוסות לחם','🥚 3 ביצים קשות','🍎 תפוח'],
-        'פחמימות מהירות ומורכבות לאנרגיה מקסימלית ⚡'],
-      ['⚡ אחרי אימון','תוך 30 דק׳',0.17,0.25,0.21,0.06,
-        ['💪 Whey + 200ml חלב','🍠 150g בטטה','🍯 כף דבש'],
-        'חלון האנאבוליזם — ספיגה מיידית חיונית! 🏆','red'],
-      ['🌙 ערב','21:00',0.09,0.13,0.07,0.16,
-        ['🥩 200g הודו / דג','🍚 100g אורז','🥗 סלט'],
-        'ארוחת ערב — חלבון בטרם שינה = שיקום שריר 💪'],
-    ],
-    cut:[
-      ['🌅 בוקר','07:30',0.25,0.30,0.26,0.20,
-        ['🥚 3 ביצים שלמות + 2 חלבונים','🥣 60g שיבולת שועל','🥦 ירקות'],
-        'חלבון גבוה בבוקר = פחות רעב לאורך היום 💡'],
-      ['🌞 צהריים','13:00',0.34,0.38,0.32,0.26,
-        ['🍗 220g חזה עוף','🥗 סלט ירקות גדול','🫒 1.5 כף שמן זית','🍋 לימון'],
-        'הארוחה הגדולה ביום — סלט גדול = נפח בלי קלוריות 🥗'],
-      ['🏋️ לפני אימון','16:30',0.14,0.15,0.18,0.08,
-        ['🍎 תפוח','🥚 2 ביצים קשות','☕ קפה שחור'],
-        'קפה לפני אימון = שריפת שומן משופרת ☕🔥'],
-      ['⚡ אחרי אימון','תוך 30 דק׳',0.17,0.27,0.20,0.06,
-        ['💪 Whey Isolate + מים','🍌 בננה קטנה'],
-        'Whey Isolate + פירות = שיקום מינימלי קלורי ✅','red'],
-      ['🌙 ערב','21:00',0.10,0.18,0.04,0.12,
-        ['🥛 200g קוטג׳ 1%','🥒 ירקות חתוכים','🧄 עשבי תיבול'],
-        'קוטג׳ לפני שינה = קזאין איטי + שובע גבוה 💤'],
-    ],
-    maintain:[
-      ['🌅 בוקר','07:30',0.25,0.28,0.29,0.24,
-        ['🥣 80g שיבולת שועל','🥚 2 ביצים שלמות','🥛 150g קוטג׳','🍓 פירות'],
-        'ארוחת בוקר מאוזנת = אנרגיה יציבה ✅'],
-      ['🌞 צהריים','13:00',0.32,0.34,0.32,0.27,
-        ['🐟 180g סלמון / עוף','🍚 130g אורז מלא','🥦 ירקות','🫒 שמן זית'],
-        'ארוחת הצהריים הכי חשובה — חלבון + פחמימות ⭐'],
-      ['🏋️ לפני אימון','16:30',0.15,0.15,0.20,0.08,
-        ['🍞 2 פרוסות לחם','🧀 גבינה לבנה','🍌 בננה'],
-        'ארוחה קלה 60–90 דק׳ לפני = ביצועים טובים יותר ⚡'],
-      ['⚡ אחרי אימון','תוך 45 דק׳',0.18,0.26,0.22,0.06,
-        ['💪 Whey + מים','🍠 100g בטטה'],
-        'חלבון אחרי אימון = שמירה על מסת שריר 💪','red'],
-      ['🌙 ערב','21:00',0.10,0.14,0.07,0.14,
-        ['🍗 130g הודו / דג','🥗 סלט + לימון'],
-        'ארוחת ערב קלה = שינה טובה יותר 🌙'],
-    ],
-  };
-  return(templates[g]||templates['lean_bulk']).map(t=>({
-    name:t[0],time:t[1],pct:t[2],pRat:t[3],cRat:t[4],fRat:t[5],foods:t[6],tip:t[7],accent:t[8]
+  const count=u.meal_count||5;
+  const pool=MEAL_SLOT_POOL[g]||MEAL_SLOT_POOL['lean_bulk'];
+  const indices=MEAL_SLOTS_BY_COUNT[count]||MEAL_SLOTS_BY_COUNT[5];
+  const selected=indices.map(i=>pool[i]);
+  // Renormalize percentages to sum 1.0
+  const totalPct=selected.reduce((s,t)=>s+t[2],0);
+  return selected.map(t=>({
+    name:t[0],time:t[1],
+    pct:t[2]/totalPct,
+    pRat:t[3],cRat:t[4],fRat:t[5],
+    foods:t[6],tip:t[7],accent:t[8]
   }));
 }
 
@@ -2977,7 +2962,7 @@ function renderNutritionPanel(){
 
   // Meal badge
   const mealBadge=document.getElementById('meal-count-badge');
-  if(mealBadge) mealBadge.textContent='5 ארוחות';
+  if(mealBadge) mealBadge.textContent=(u.meal_count||5)+' ארוחות';
 
   // Meals
   const meals=getMealPlan(u,n);
@@ -3083,6 +3068,7 @@ let _obStep=1;
 let _obGoal=null;
 let _obActivity=null;
 let _obCholesterol=false;
+let _obMealCount=5;
 let _isNewUserFlow=false;
 
 function showOnboarding(){
@@ -3096,16 +3082,25 @@ function showOnboarding(){
 }
 function showOnboardingForNew(){
   _isNewUserFlow=true;
-  // Clear onboarding inputs
+  _obMealCount=5; _obCholesterol=false;
   ['ob-name','ob-age','ob-weight','ob-height'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('ob-gender').value='m';
+  document.getElementById('ob-workout-time').value='18:00';
   document.querySelectorAll('.goal-btn,.act-btn').forEach(b=>b.classList.remove('sel'));
+  // Reset meal count buttons
+  document.querySelectorAll('.mc-btn').forEach(b=>b.classList.toggle('sel',b.dataset.mc==='5'));
+  document.getElementById('ob-chol-pill')?.classList.remove('on');
   showOnboarding();
 }
 function selectGoal(btn){
   document.querySelectorAll('.goal-btn').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');
   _obGoal=btn.dataset.goal;
+}
+function selectMealCount(btn){
+  document.querySelectorAll('.mc-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  _obMealCount=parseInt(btn.dataset.mc);
 }
 function toggleChol(row){
   _obCholesterol=!_obCholesterol;
@@ -3160,6 +3155,7 @@ function obFinish(){
     goal:_obGoal,activity:_obActivity,
     cholesterol:_obCholesterol,
     workout_time,
+    meal_count:_obMealCount||5,
   };
   const n=calcNutrition(user);
   user.calories=n.target;
@@ -4923,6 +4919,15 @@ async function requestWorkoutNotif(){
           <div class="goal-name">שמירה</div>
           <div class="goal-desc">תחזוקה + בריאות</div>
         </button>
+      </div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:8px;">כמה ארוחות ביום?</div>
+        <div class="meal-count-grid">
+          <button class="mc-btn" data-mc="3" onclick="selectMealCount(this)"><div class="mc-num">3</div><div class="mc-lbl">ארוחות</div></button>
+          <button class="mc-btn" data-mc="4" onclick="selectMealCount(this)"><div class="mc-num">4</div><div class="mc-lbl">ארוחות</div></button>
+          <button class="mc-btn sel" data-mc="5" onclick="selectMealCount(this)"><div class="mc-num">5</div><div class="mc-lbl">ארוחות</div></button>
+          <button class="mc-btn" data-mc="6" onclick="selectMealCount(this)"><div class="mc-num">6</div><div class="mc-lbl">ארוחות</div></button>
+        </div>
       </div>
       <div class="health-toggle" onclick="toggleChol(this)">
         <span class="health-toggle-label">❤️ יש לי בעיות כולסטרול / שומנים בדם</span>
