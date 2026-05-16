@@ -2408,15 +2408,56 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="bmr-display" id="bmr-preview">
             הזן נתונים לחישוב BMR ו-TDEE
           </div>
-          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
-            <label class="settings-label" for="sf-calories">יעד קלוריות יומי</label>
+
+          <!-- Goal + Activity -->
+          <div class="grid-2" style="margin-top:14px;">
+            <div class="settings-field">
+              <label class="settings-label" for="sf-goal">מטרה</label>
+              <select id="sf-goal" class="settings-input" style="cursor:pointer;" onchange="updateBMRPreview()">
+                <option value="lean_bulk">Lean Bulk (+350 קל׳)</option>
+                <option value="bulk">מסה מקסימלית (+600 קל׳)</option>
+                <option value="cut">הורדת שומן (−400 קל׳)</option>
+                <option value="maintain">שמירה</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label class="settings-label" for="sf-activity">רמת פעילות</label>
+              <select id="sf-activity" class="settings-input" style="cursor:pointer;" onchange="updateBMRPreview()">
+                <option value="1.2">יושבני (×1.2)</option>
+                <option value="1.375">קל — 1-3/שבוע (×1.375)</option>
+                <option value="1.55">מתון — 4-5/שבוע (×1.55)</option>
+                <option value="1.725">אינטנסיבי (×1.725)</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label class="settings-label" for="sf-workout-time">שעת אימון</label>
+              <input id="sf-workout-time" class="settings-input" type="time" style="color-scheme:dark;"/>
+            </div>
+            <div class="settings-field">
+              <label class="settings-label">ארוחות ביום</label>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:2px;">
+                <button class="mc-btn" data-smc="3" onclick="selectSettingsMC(this)"><div class="mc-num">3</div></button>
+                <button class="mc-btn" data-smc="4" onclick="selectSettingsMC(this)"><div class="mc-num">4</div></button>
+                <button class="mc-btn sel" data-smc="5" onclick="selectSettingsMC(this)"><div class="mc-num">5</div></button>
+                <button class="mc-btn" data-smc="6" onclick="selectSettingsMC(this)"><div class="mc-num">6</div></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cholesterol toggle -->
+          <div class="health-toggle" id="sf-chol-row" onclick="toggleSettingsChol()">
+            <span class="health-toggle-label">❤️ יש לי בעיות כולסטרול / שומנים בדם</span>
+            <div class="toggle-pill" id="sf-chol-pill"></div>
+          </div>
+
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+            <label class="settings-label" for="sf-calories">יעד קלוריות יומי (מחושב אוטומטי)</label>
             <input id="sf-calories" class="settings-input" type="number" min="1500" max="5000" placeholder="קלוריות יומי" />
-            <div style="font-size:.78rem;color:var(--muted);margin-top:6px;">* ממולץ: TDEE + 400 ל-Lean Bulk</div>
           </div>
           <div class="settings-field" style="margin-top:8px;">
-            <label class="settings-label" for="sf-apikey">מפתח API — Claude AI (Anthropic)</label>
+            <label class="settings-label" for="sf-apikey">מפתח API — Claude AI</label>
             <input id="sf-apikey" class="settings-input" type="password" placeholder="sk-ant-..." autocomplete="off"/>
-            <div style="font-size:.75rem;color:var(--muted);margin-top:5px;">נדרש לפיצ׳ר יועץ התזונה AI. נשמר רק במכשיר שלך.</div>
+            <div style="font-size:.75rem;color:var(--muted);margin-top:5px;">נשמר רק במכשיר שלך.</div>
           </div>
           <div style="margin-top:20px;">
             <button class="settings-save" onclick="saveSettingsForm()">שמור הגדרות</button>
@@ -2822,12 +2863,15 @@ function updateBMRPreview(){
   const prev=document.getElementById('bmr-preview');
   if(!prev||!w||!h||!a){if(prev)prev.innerHTML='הזן נתונים לחישוב BMR ו-TDEE';return;}
   const bmr=Math.round(10*w+6.25*h-5*a+5);
-  const tdee=Math.round(bmr*1.55);
-  const lean=tdee+400;
-  prev.innerHTML=`<strong>BMR:</strong> ${bmr.toLocaleString()} קל׳ &nbsp;|&nbsp; <strong>TDEE (×1.55):</strong> ${tdee.toLocaleString()} קל׳ &nbsp;|&nbsp; <strong>Lean Bulk (+400):</strong> ${lean.toLocaleString()} קל׳`;
-  // Auto-fill calories
+  const actVal=parseFloat(document.getElementById('sf-activity')?.value)||1.55;
+  const tdee=Math.round(bmr*actVal);
+  const goalVal=document.getElementById('sf-goal')?.value||'lean_bulk';
+  const surp={lean_bulk:350,bulk:600,cut:-400,maintain:0}[goalVal]??350;
+  const target=tdee+surp;
+  const surpLabel=surp>0?'+'+surp:String(surp);
+  prev.innerHTML=`BMR: <strong>${bmr.toLocaleString()}</strong> &nbsp;|&nbsp; TDEE: <strong>${tdee.toLocaleString()}</strong> &nbsp;|&nbsp; יעד (<strong>${surpLabel}</strong>): <strong style="color:var(--red)">${target.toLocaleString()}</strong> קל׳`;
   const calIn=document.getElementById('sf-calories');
-  if(calIn && !calIn.dataset.touched) calIn.value = lean;
+  if(calIn && !calIn.dataset.touched) calIn.value = target;
 }
 function saveSettingsForm(){
   const name=(document.getElementById('sf-name')?.value||'').trim()||'המשתמש שלי';
@@ -2838,14 +2882,21 @@ function saveSettingsForm(){
   saveSettings({name,weight,height,age,calories});
   const apiKey=(document.getElementById('sf-apikey')?.value||'').trim();
   if(apiKey) localStorage.setItem('proFit_apiKey',apiKey);
+  // Read new profile fields
+  const goal=document.getElementById('sf-goal')?.value||'lean_bulk';
+  const activity=parseFloat(document.getElementById('sf-activity')?.value)||1.55;
+  const workout_time=document.getElementById('sf-workout-time')?.value||'18:00';
+  const meal_count=_sfMealCount||5;
+  const cholesterol=_sfCholesterol;
   // Sync active user record
   const users=getUsers(); const aid=getActiveUserId();
   const idx=users.findIndex(u=>u.id===aid);
   if(idx>=0){
-    users[idx]={...users[idx],name,weight,height,age,calories};
+    users[idx]={...users[idx],name,weight,height,age,calories,goal,activity,workout_time,meal_count,cholesterol};
     saveUsers(users);
     renderUserList();
     renderNutritionPanel();
+    applyUserConditions(users[idx]);
   }
   const btn=document.querySelector('#settings-form .settings-save');
   if(btn){
@@ -3026,14 +3077,35 @@ function switchUser(id){
   showToast('עברת ל-'+u.name+' 👤');
 }
 
+let _sfCholesterol=false;
+let _sfMealCount=5;
+
+function selectSettingsMC(btn){
+  document.querySelectorAll('[data-smc]').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  _sfMealCount=parseInt(btn.dataset.smc);
+}
+function toggleSettingsChol(){
+  _sfCholesterol=!_sfCholesterol;
+  document.getElementById('sf-chol-pill')?.classList.toggle('on',_sfCholesterol);
+}
+
 function prefillSettingsForm(){
   const s=getSettings();
+  const u=getActiveUser()||{};
   const sf=document.getElementById('sf-name'); if(sf) sf.value=s.name;
   const sw=document.getElementById('sf-weight'); if(sw) sw.value=s.weight;
   const sh=document.getElementById('sf-height'); if(sh) sh.value=s.height;
   const sa=document.getElementById('sf-age'); if(sa) sa.value=s.age;
   const sc2=document.getElementById('sf-calories'); if(sc2) sc2.value=s.calories;
   const sk=document.getElementById('sf-apikey'); if(sk) sk.value=localStorage.getItem('proFit_apiKey')||'';
+  // New fields from user record
+  const sg=document.getElementById('sf-goal'); if(sg) sg.value=u.goal||'lean_bulk';
+  const act=document.getElementById('sf-activity'); if(act) act.value=String(u.activity||1.55);
+  const wt=document.getElementById('sf-workout-time'); if(wt) wt.value=u.workout_time||'18:00';
+  _sfMealCount=u.meal_count||5; _sfCholesterol=!!u.cholesterol;
+  document.querySelectorAll('[data-smc]').forEach(b=>b.classList.toggle('sel',b.dataset.smc===String(_sfMealCount)));
+  document.getElementById('sf-chol-pill')?.classList.toggle('on',_sfCholesterol);
 }
 
 // ─── Apply user-specific content visibility ───
@@ -4054,15 +4126,18 @@ async function sendChat(){
   if(msgs){const t=document.createElement('div');t.className='chat-bubble typing';t.id='typing-ind';t.innerHTML='<span class="typing-dots"><span></span><span></span><span></span></span>';msgs.appendChild(t);msgs.scrollTop=msgs.scrollHeight;}
   const btn=document.getElementById('chat-send-btn');
   if(btn) btn.disabled=true;
+  const u=getActiveUser()||{};
+  const n=calcNutrition(u);
+  const GOAL_HE={lean_bulk:'Lean Bulk — עליית מסה נקייה',bulk:'מסה מקסימלית',cut:'הורדת שומן עם שמירת שריר',maintain:'שמירה על המשקל הנוכחי'};
+  const cholNote=u.cholesterol?'\n- ⚠️ בעיית כולסטרול: הימנע משומן רווי. מקורות שומן רק מבלתי רווי (זית, אבוקדו, אגוזים, דגים שמנים). כשמציע מזון — בדוק שידידותי לכולסטרול.':'';
   const systemPrompt=`אתה יועץ תזונה מקצועי לספורטאים. המשתמש:
-- גיל: ${s.age} | משקל: ${s.weight}ק"ג | גובה: ${s.height}ס"מ
-- יעד: עליית מסת שריר (Lean Bulk)
-- יעד קלוריות: ${s.calories} קל׳ ביום
-- יעד חלבון: ${Math.round(s.weight*2.5)}g ביום | פחמימות: ${Math.round((s.calories-Math.round(s.weight*2.5)*4-70*9)/4)}g | שומן: ~70g
-- בעיית כולסטרול: הימנע משומן רווי. מקורות שומן רק מבלתי רווי (זית, אבוקדו, אגוזים, דגים שמנים)
+- שם: ${u.name||s.name} | גיל: ${u.age||s.age} | משקל: ${u.weight||s.weight}ק"ג | גובה: ${u.height||s.height}ס"מ
+- מטרה: ${GOAL_HE[u.goal||'lean_bulk']}
+- יעד קלוריות: ${n.target} קל׳ ביום | חלבון: ${n.protein}g | פחמימות: ${n.carbs}g | שומן: ${n.fat}g
+- ארוחות ביום: ${u.meal_count||5}${cholNote}
 - תוכנית אימונים: Push/Pull/Legs/Arms 4 ימים בשבוע
-- היום אכל: ${foodLog.map(e=>e.name+(e.qty>1?'×'+e.qty:'')).join(', ')||'כלום עדיין'} (סה"כ ${Math.round(totals.cal)} קל׳, ${Math.round(totals.p)}g חלבון, ${Math.round(totals.c)}g פחמימות, ${Math.round(totals.f)}g שומן)
-ענה בעברית. תשובות קצרות ומעשיות. אם מציע להחליף מזון — תמיד בדוק שזה ידידותי לכולסטרול.`;
+- היום אכל: ${foodLog.map(e=>e.name+(e.qty>1?'×'+e.qty:'')).join(', ')||'כלום עדיין'} (סה"כ ${Math.round(totals.cal)} קל׳, ${Math.round(totals.p)}g חלבון)
+ענה בעברית. תשובות קצרות ומעשיות.`;
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
