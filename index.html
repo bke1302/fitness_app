@@ -1175,9 +1175,37 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 /* ─── DYNAMIC MACRO STATS ─── */
 #macro-stats-grid .stat-box .val{font-size:1.6rem;}
+
+/* ─── SPLASH SCREEN ─── */
+.splash{position:fixed;inset:0;background:#000;z-index:700;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;transition:opacity .5s ease,transform .5s ease;}
+.splash.out{opacity:0;transform:scale(1.04);pointer-events:none;}
+.splash-mark{width:96px;height:96px;background:#06060d;border-radius:22px;border:1px solid rgba(255,55,95,.18);display:flex;align-items:center;justify-content:center;box-shadow:0 0 50px rgba(255,55,95,.2),0 0 120px rgba(255,55,95,.07);animation:splashPop .6s var(--ease-spring);}
+.splash-letter{font-family:'Georgia','Times New Roman',serif;font-size:56px;font-weight:900;background:linear-gradient(135deg,#FF375F,#BF5AF2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-top:4px;}
+.splash-name{font-family:var(--font-d);font-size:1.9rem;font-weight:900;color:#fff;letter-spacing:-1px;animation:splashFade .5s var(--ease-out) .15s both;}
+.splash-tagline{font-size:.65rem;color:rgba(255,255,255,.22);letter-spacing:4px;text-transform:uppercase;animation:splashFade .4s var(--ease-out) .3s both;}
+@keyframes splashPop{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:scale(1)}}
+@keyframes splashFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ─── HEALTH TOGGLE ─── */
+.health-toggle{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.03);cursor:pointer;margin-top:14px;transition:border-color .18s;}
+.health-toggle:hover{border-color:var(--border2);}
+.health-toggle-label{font-size:.85rem;color:var(--muted2);}
+.toggle-pill{width:44px;height:24px;border-radius:999px;background:var(--border2);transition:background .25s;position:relative;flex-shrink:0;}
+.toggle-pill.on{background:var(--red);}
+.toggle-pill::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .25s var(--ease-spring);}
+.toggle-pill.on::after{transform:translateX(20px);}
 </style>
 </head>
 <body>
+
+<!-- SPLASH SCREEN -->
+<div class="splash" id="splash">
+  <div class="splash-mark">
+    <div class="splash-letter">P</div>
+  </div>
+  <div class="splash-name">ProFit</div>
+  <div class="splash-tagline">Push · Pull · Legs · Arms</div>
+</div>
 
 <!-- SIDEBAR OVERLAY (closes on tap outside) -->
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
@@ -2107,7 +2135,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
 
     <!-- CHOLESTEROL ALERT -->
-    <div style="background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(34,197,94,.08));border:1px solid rgba(245,158,11,.35);border-radius:14px;padding:18px 20px;margin-bottom:20px;">
+    <div id="cholesterol-banner" style="background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(34,197,94,.08));border:1px solid rgba(245,158,11,.35);border-radius:14px;padding:18px 20px;margin-bottom:20px;">
       <div style="font-weight:700;font-size:1rem;margin-bottom:10px;color:var(--yellow);">❤️ תוכנית תזונה מותאמת לכולסטרול</div>
       <div style="font-size:.87rem;color:var(--muted2);line-height:1.9;">
         <strong style="color:var(--green);">✅ מה מורידים:</strong> שומן רווי (בשר אדום, חלמון ביצה מרובה, חלב שומני)<br>
@@ -2130,7 +2158,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
 
     <!-- CHOLESTEROL DO/DON'T -->
-    <div class="card">
+    <div class="card" id="cholesterol-dont-card">
       <div class="card-head"><h2>❤️ מה לאכול ומה להימנע — כולסטרול</h2></div>
       <div class="card-body">
         <div class="grid-2">
@@ -2186,9 +2214,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
             <div style="font-size:1.2rem;margin-bottom:8px;">☀️ ויטמין D3 + K2</div>
             <div style="font-size:.84rem;color:var(--muted2);line-height:1.8;">מינון: 2,000–4,000 IU D3 + 100mcg K2<br>K2 מכוון את הסידן לעצמות<br><span style="color:var(--green);">✅ חשוב לטסטוסטרון</span></div>
           </div>
-          <div style="background:var(--bg3);border-radius:12px;padding:18px;border:1px solid rgba(34,197,94,.4);">
-            <div style="font-size:1.2rem;margin-bottom:8px;">🐟 אומגה 3 — חובה לכולסטרול!</div>
-            <div style="font-size:.84rem;color:var(--muted2);line-height:1.8;">מינון: <strong style="color:var(--green);">3–4g EPA+DHA ביום</strong><br>מפחית טריגליצרידים עד 30%<br>מעלה HDL (כולסטרול טוב)<br><span style="color:var(--green);">⭐ הכי חשוב עבורך</span></div>
+          <div id="omega3-card" style="background:var(--bg3);border-radius:12px;padding:18px;border:1px solid var(--border2);">
+            <div style="font-size:1.2rem;margin-bottom:8px;">🐟 אומגה 3</div>
+            <div style="font-size:.84rem;color:var(--muted2);line-height:1.8;" id="omega3-text">מינון: <strong style="color:var(--green);">1–2g EPA+DHA ביום</strong><br>תומך בלב, מוח וירידת דלקת<br><span style="color:var(--green);">✅ מומלץ לכולם</span></div>
           </div>
         </div>
       </div>
@@ -3007,6 +3035,7 @@ function switchUser(id){
   if(u.apiKey) localStorage.setItem('proFit_apiKey',u.apiKey);
   renderUserList();
   renderNutritionPanel();
+  applyUserConditions(u);
   applySettings(getSettings());
   prefillSettingsForm();
   showToast('עברת ל-'+u.name+' 👤');
@@ -3022,10 +3051,38 @@ function prefillSettingsForm(){
   const sk=document.getElementById('sf-apikey'); if(sk) sk.value=localStorage.getItem('proFit_apiKey')||'';
 }
 
+// ─── Apply user-specific content visibility ───
+function applyUserConditions(u){
+  if(!u) return;
+  const chol=!!u.cholesterol;
+  // Cholesterol sections
+  ['cholesterol-banner','cholesterol-dont-card'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display=chol?'':'none';
+  });
+  // Omega-3 supplement — adjust text based on cholesterol
+  const o3=document.getElementById('omega3-text');
+  const o3card=document.getElementById('omega3-card');
+  if(o3){
+    if(chol){
+      o3.innerHTML='מינון: <strong style="color:var(--green);">3–4g EPA+DHA ביום</strong><br>מפחית טריגליצרידים עד 30%<br>מעלה HDL (כולסטרול טוב)<br><span style="color:var(--green);">⭐ חשוב במיוחד עבורך</span>';
+      if(o3card) o3card.style.borderColor='rgba(34,197,94,.4)';
+      if(o3card) o3card.querySelector('div').textContent='🐟 אומגה 3 — עדיפות גבוהה!';
+    } else {
+      o3.innerHTML='מינון: <strong style="color:var(--green);">1–2g EPA+DHA ביום</strong><br>תומך בלב, מוח וירידת דלקת<br><span style="color:var(--green);">✅ מומלץ לכולם</span>';
+      if(o3card) o3card.style.borderColor='';
+    }
+  }
+  // Workout time sync
+  const wt=document.getElementById('workout-time-input');
+  if(wt && u.workout_time) wt.value=u.workout_time;
+}
+
 // ─── Onboarding Wizard ───
 let _obStep=1;
 let _obGoal=null;
 let _obActivity=null;
+let _obCholesterol=false;
 let _isNewUserFlow=false;
 
 function showOnboarding(){
@@ -3049,6 +3106,10 @@ function selectGoal(btn){
   document.querySelectorAll('.goal-btn').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');
   _obGoal=btn.dataset.goal;
+}
+function toggleChol(row){
+  _obCholesterol=!_obCholesterol;
+  document.getElementById('ob-chol-pill')?.classList.toggle('on',_obCholesterol);
 }
 function selectActivity(btn){
   document.querySelectorAll('.act-btn').forEach(b=>b.classList.remove('sel'));
@@ -3092,10 +3153,13 @@ function obFinish(){
   const weight=parseFloat(document.getElementById('ob-weight')?.value)||75;
   const height=parseFloat(document.getElementById('ob-height')?.value)||175;
   const gender=document.getElementById('ob-gender')?.value||'m';
+  const workout_time=document.getElementById('ob-workout-time')?.value||'18:00';
   const user={
     id:'u_'+Date.now(),
     name,age,weight,height,gender,
     goal:_obGoal,activity:_obActivity,
+    cholesterol:_obCholesterol,
+    workout_time,
   };
   const n=calcNutrition(user);
   user.calories=n.target;
@@ -3107,6 +3171,7 @@ function obFinish(){
   document.getElementById('onboard-overlay').style.display='none';
   renderUserList();
   renderNutritionPanel();
+  applyUserConditions(user);
   applySettings(getSettings());
   prefillSettingsForm();
   // Run full init if this was the first user
@@ -3560,6 +3625,10 @@ window.addEventListener('load',()=>{
   }
   // ── Show onboarding if no users ──
   if(getUsers().length===0){
+    setTimeout(()=>{
+      const sp=document.getElementById('splash');
+      if(sp){sp.classList.add('out');setTimeout(()=>sp.remove(),600);}
+    },1300);
     showOnboarding();
     return; // defer rest of init until onboarding complete
   }
@@ -3568,6 +3637,7 @@ window.addEventListener('load',()=>{
   applySettings(s);
   renderNutritionPanel();
   renderUserList();
+  applyUserConditions(getActiveUser());
   // Pre-fill settings form
   prefillSettingsForm();
   // Set today's date in weight log form
@@ -3583,6 +3653,11 @@ window.addEventListener('load',()=>{
   if(localStorage.getItem('pf_installDismissed')){
     const b=document.getElementById('install-banner'); if(b) b.style.display='none';
   }
+  // Splash fade-out
+  setTimeout(()=>{
+    const sp=document.getElementById('splash');
+    if(sp){sp.classList.add('out');setTimeout(()=>sp.remove(),600);}
+  },1300);
 });
 
 // Close timer presets if clicking elsewhere
@@ -4818,6 +4893,10 @@ async function requestWorkoutNotif(){
             <option value="f">נקבה</option>
           </select>
         </div>
+        <div class="onboard-field">
+          <label>שעת אימון (בד"כ)</label>
+          <input id="ob-workout-time" type="time" value="18:00" style="color-scheme:dark;"/>
+        </div>
       </div>
     </div>
     <!-- Step 2: Goal -->
@@ -4844,6 +4923,10 @@ async function requestWorkoutNotif(){
           <div class="goal-name">שמירה</div>
           <div class="goal-desc">תחזוקה + בריאות</div>
         </button>
+      </div>
+      <div class="health-toggle" onclick="toggleChol(this)">
+        <span class="health-toggle-label">❤️ יש לי בעיות כולסטרול / שומנים בדם</span>
+        <div class="toggle-pill" id="ob-chol-pill"></div>
       </div>
     </div>
     <!-- Step 3: Activity -->
