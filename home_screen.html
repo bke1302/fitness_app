@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>ProFit — מסך הבית</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0D0E11;
+    --surface:  #1E2026;
+    --surface2: #272A32;
+    --lime:     #D4FF1A;
+    --lime-dim: rgba(212,255,26,.12);
+    --coral:    #FF6B6B;
+    --coral-dim:rgba(255,107,107,.12);
+    --muted:    #8F94A3;
+    --muted2:   #4A4F5E;
+    --white:    #FFFFFF;
+    --font-he:  'Assistant', sans-serif;
+    --font-en:  'Inter', sans-serif;
+    --radius:   20px;
+    --radius-sm:12px;
+    --ease-spring: cubic-bezier(.34,1.56,.64,1);
+    --ease-out:    cubic-bezier(.16,1,.3,1);
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font-he);
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100dvh;
+  }
+
+  .screen {
+    width: 100%;
+    max-width: 430px;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 96px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* ────────────────────────────────
+     HEADER
+  ──────────────────────────────── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 56px 24px 20px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--lime);
+    background: linear-gradient(135deg, #2A2D38, #1E2026);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-en);
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--lime);
+    flex-shrink: 0;
+    box-shadow: 0 0 14px rgba(212,255,26,.25);
+  }
+
+  .header-text {}
+  .header-greeting {
+    font-size: .8rem;
+    color: var(--muted);
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+  .header-name {
+    font-size: 1.15rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -.3px;
+  }
+
+  .bell-btn {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: var(--surface);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform .18s var(--ease-spring), background .18s;
+  }
+  .bell-btn:active { transform: scale(.92); }
+  .bell-btn svg { width: 20px; height: 20px; stroke: var(--muted); fill: none; }
+
+  .bell-badge {
+    position: absolute;
+    top: 7px;
+    left: 8px;
+    width: 8px;
+    height: 8px;
+    background: var(--coral);
+    border-radius: 50%;
+    border: 2px solid var(--bg);
+  }
+
+  /* ────────────────────────────────
+     SCROLL CONTENT
+  ──────────────────────────────── */
+  .scroll-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 0 20px;
+  }
+
+  /* section labels */
+  .section-label {
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  /* ────────────────────────────────
+     DAILY SUMMARY CARD
+  ──────────────────────────────── */
+  .summary-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .summary-card::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(212,255,26,.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* SVG Rings */
+  .rings-wrap {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+  }
+
+  .rings-svg {
+    width: 120px;
+    height: 120px;
+    transform: rotate(-90deg);
+  }
+
+  /* outer ring — lime — calories 72% */
+  .ring-outer {
+    cx: 60; cy: 60; r: 52;
+    fill: none;
+    stroke: var(--muted2);
+    stroke-width: 7;
+  }
+  .ring-outer-fill {
+    cx: 60; cy: 60; r: 52;
+    fill: none;
+    stroke: var(--lime);
+    stroke-width: 7;
+    stroke-linecap: round;
+    stroke-dasharray: 326.7;
+    stroke-dashoffset: 91.5; /* 326.7*(1-0.72) */
+    filter: drop-shadow(0 0 6px rgba(212,255,26,.5));
+    transition: stroke-dashoffset .8s var(--ease-out);
+  }
+
+  /* inner ring — coral — protein 58% */
+  .ring-inner {
+    cx: 60; cy: 60; r: 39;
+    fill: none;
+    stroke: var(--muted2);
+    stroke-width: 7;
+  }
+  .ring-inner-fill {
+    cx: 60; cy: 60; r: 39;
+    fill: none;
+    stroke: var(--coral);
+    stroke-width: 7;
+    stroke-linecap: round;
+    stroke-dasharray: 245.04;
+    stroke-dashoffset: 102.9; /* 245.04*(1-0.58) */
+    filter: drop-shadow(0 0 6px rgba(255,107,107,.5));
+    transition: stroke-dashoffset .8s var(--ease-out) .1s;
+  }
+
+  .rings-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+  }
+  .rings-center-num {
+    font-family: var(--font-en);
+    font-size: 1.55rem;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1;
+  }
+  .rings-center-label {
+    font-size: .6rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  /* metrics rows */
+  .summary-metrics {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .metric-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .metric-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .metric-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-lime { background: var(--lime); box-shadow: 0 0 6px rgba(212,255,26,.6); }
+  .dot-coral { background: var(--coral); box-shadow: 0 0 6px rgba(255,107,107,.6); }
+  .dot-blue { background: #5AC8FA; box-shadow: 0 0 6px rgba(90,200,250,.5); }
+
+  .metric-label {
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .metric-val {
+    font-family: var(--font-en);
+    font-size: .85rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .metric-sub {
+    font-size: .7rem;
+    color: var(--muted);
+    font-family: var(--font-he);
+    font-weight: 400;
+  }
+
+  /* ────────────────────────────────
+     WORKOUT CARD
+  ──────────────────────────────── */
+  .workout-card {
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    height: 200px;
+    cursor: pointer;
+    transition: transform .22s var(--ease-spring);
+  }
+  .workout-card:active { transform: scale(.98); }
+
+  .workout-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #1a1c22 0%, #252830 100%);
+  }
+
+  /* grid pattern overlay */
+  .workout-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(212,255,26,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,255,26,.04) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  /* dark gradient overlay */
+  .workout-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(13,14,17,.15) 0%,
+      rgba(13,14,17,.6) 100%
+    );
+  }
+
+  /* glowing corner accent */
+  .workout-glow {
+    position: absolute;
+    top: -40px;
+    left: -40px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(212,255,26,.12) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .workout-content {
+    position: relative;
+    z-index: 2;
+    padding: 22px 22px 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .workout-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .workout-badge {
+    background: var(--lime);
+    color: #000;
+    font-family: var(--font-en);
+    font-size: .65rem;
+    font-weight: 900;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  .play-btn {
+    width: 46px;
+    height: 46px;
+    background: var(--lime);
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform .18s var(--ease-spring), box-shadow .18s;
+    box-shadow: 0 0 20px rgba(212,255,26,.4);
+  }
+  .play-btn:active { transform: scale(.9); }
+  .play-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: #000;
+    margin-right: -2px; /* optical center for play triangle */
+  }
+
+  .workout-bottom {}
+  .workout-title {
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: -.4px;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+
+  .workout-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .meta-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: .75rem;
+    font-weight: 600;
+    color: rgba(255,255,255,.7);
+  }
+  .meta-chip svg {
+    width: 14px;
+    height: 14px;
+    stroke: rgba(255,255,255,.5);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ────────────────────────────────
+     MEALS SECTION
+  ──────────────────────────────── */
+  .meals-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .meal-card {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 18px 16px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .18s var(--ease-spring);
+  }
+  .meal-card:active { transform: scale(.97); }
+
+  .meal-card.done {
+    opacity: .65;
+  }
+
+  .meal-card.upcoming {
+    border: 1.5px solid rgba(255,107,107,.35);
+    background: linear-gradient(135deg, var(--surface) 60%, rgba(255,107,107,.06) 100%);
+  }
+
+  .meal-card.done::after {
+    content: '✓';
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 22px;
+    height: 22px;
+    background: rgba(48,209,88,.18);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .65rem;
+    font-weight: 900;
+    color: #30D158;
+    line-height: 22px;
+    text-align: center;
+  }
+
+  .meal-time {
+    font-family: var(--font-en);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .meal-name {
+    font-size: .9rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .meal-macros {
+    display: flex;
+    gap: 8px;
+  }
+
+  .macro-pill {
+    font-family: var(--font-en);
+    font-size: .65rem;
+    font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: var(--surface2);
+    color: var(--muted);
+  }
+  .macro-pill.lime { background: var(--lime-dim); color: var(--lime); }
+  .macro-pill.coral { background: var(--coral-dim); color: var(--coral); }
+
+  .meal-upcoming-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: .62rem;
+    font-weight: 700;
+    color: var(--coral);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .meal-upcoming-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--coral);
+    animation: pulseDot 1.4s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%,100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: .6; }
+  }
+
+  /* ────────────────────────────────
+     QUICK STATS ROW
+  ──────────────────────────────── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .stat-mini {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+  }
+
+  .stat-mini-icon {
+    font-size: 1.3rem;
+    margin-bottom: 2px;
+  }
+
+  .stat-mini-val {
+    font-family: var(--font-en);
+    font-size: 1.3rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--white);
+  }
+
+  .stat-mini-label {
+    font-size: .65rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: .04em;
+  }
+
+  .stat-mini.accent-lime .stat-mini-val { color: var(--lime); }
+  .stat-mini.accent-coral .stat-mini-val { color: var(--coral); }
+
+  /* ────────────────────────────────
+     BOTTOM NAV (Glassmorphism)
+  ──────────────────────────────── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 430px;
+    height: 82px;
+    background: rgba(30, 32, 38, 0.72);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-top: 1px solid rgba(255,255,255,.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 8px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    z-index: 100;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 16px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: transform .18s var(--ease-spring), background .18s;
+    border: none;
+    background: transparent;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-item:active { transform: scale(.9); }
+
+  .nav-item.active {
+    background: var(--lime-dim);
+  }
+
+  .nav-icon {
+    width: 24px;
+    height: 24px;
+    stroke: var(--muted);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke .18s;
+  }
+  .nav-item.active .nav-icon { stroke: var(--lime); }
+
+  .nav-label {
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: var(--muted);
+    transition: color .18s;
+  }
+  .nav-item.active .nav-label { color: var(--lime); }
+
+  /* ────────────────────────────────
+     ENTRANCE ANIMATIONS
+  ──────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .header       { animation: fadeUp .45s var(--ease-out) .05s both; }
+  .summary-card { animation: fadeUp .45s var(--ease-out) .12s both; }
+  .workout-card { animation: fadeUp .45s var(--ease-out) .2s  both; }
+  .meals-row    { animation: fadeUp .45s var(--ease-out) .28s both; }
+  .stats-row    { animation: fadeUp .45s var(--ease-out) .36s both; }
+  .bottom-nav   { animation: fadeUp .45s var(--ease-out) .44s both; }
+
+  /* ────────────────────────────────
+     SCROLLBAR HIDE
+  ──────────────────────────────── */
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; }
+</style>
+</head>
+<body>
+<div class="screen">
+
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <div class="header-right">
+      <div class="avatar">ב</div>
+      <div class="header-text">
+        <div class="header-greeting">שלום,</div>
+        <div class="header-name">ברק 💪</div>
+      </div>
+    </div>
+    <button class="bell-btn" aria-label="התראות">
+      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+      <span class="bell-badge"></span>
+    </button>
+  </header>
+
+  <!-- ── SCROLL CONTENT ── -->
+  <div class="scroll-content">
+
+    <!-- DAILY SUMMARY -->
+    <div>
+      <div class="section-label">סיכום יומי</div>
+      <div class="summary-card">
+
+        <!-- SVG Rings -->
+        <div class="rings-wrap">
+          <svg class="rings-svg" viewBox="0 0 120 120">
+            <!-- outer track -->
+            <circle class="ring-outer"/>
+            <!-- outer fill (lime, calories) -->
+            <circle class="ring-outer-fill"/>
+            <!-- inner track -->
+            <circle class="ring-inner"/>
+            <!-- inner fill (coral, protein) -->
+            <circle class="ring-inner-fill"/>
+          </svg>
+          <div class="rings-center">
+            <span class="rings-center-num">1,834</span>
+            <span class="rings-center-label">קלוריות</span>
+          </div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="summary-metrics">
+          <div class="metric-row">
+            <div class="metric-left">
+              <span class="metric-dot dot-lime"></span>
+              <span class="metric-label">קלוריות</span>
+            </div>
+            <div style="text-align:left;">
+              <div class="metric-val">1,834 <span class="metric-sub">/ 2,550</span></div>
+            </div>
+          </div>
+          <div class="metric-row">
+            <div class="metric-left">
+              <span class="metric-dot dot-coral"></span>
+              <span class="metric-label">חלבון</span>
+            </div>
+            <div style="text-align:left;">
+              <div class="metric-val">87g <span class="metric-sub">/ 150g</span></div>
+            </div>
+          </div>
+          <div class="metric-row">
+            <div class="metric-left">
+              <span class="metric-dot dot-blue"></span>
+              <span class="metric-label">פחמימות</span>
+            </div>
+            <div style="text-align:left;">
+              <div class="metric-val">210g <span class="metric-sub">/ 300g</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- WORKOUT CARD -->
+    <div>
+      <div class="section-label">אימון להיום</div>
+      <div class="workout-card" onclick="this.style.transform='scale(.98)'; setTimeout(()=>this.style.transform='',200);">
+        <div class="workout-bg"></div>
+        <div class="workout-grid"></div>
+        <div class="workout-overlay"></div>
+        <div class="workout-glow"></div>
+        <div class="workout-content">
+          <div class="workout-top">
+            <span class="workout-badge">Push Day A</span>
+            <button class="play-btn" aria-label="התחל אימון">
+              <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            </button>
+          </div>
+          <div class="workout-bottom">
+            <div class="workout-title">חזה · כתפיים · טריצפס</div>
+            <div class="workout-meta">
+              <div class="meta-chip">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                55 דק׳
+              </div>
+              <div class="meta-chip">
+                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                7 תרגילים
+              </div>
+              <div class="meta-chip">
+                <svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                Push
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEALS -->
+    <div>
+      <div class="section-label">ארוחות</div>
+      <div class="meals-row">
+
+        <!-- Completed meal -->
+        <div class="meal-card done">
+          <div class="meal-time">08:30</div>
+          <div class="meal-name">ארוחת בוקר</div>
+          <div class="meal-macros">
+            <span class="macro-pill lime">635 קל׳</span>
+            <span class="macro-pill">37g חל׳</span>
+          </div>
+        </div>
+
+        <!-- Upcoming meal -->
+        <div class="meal-card upcoming">
+          <div class="meal-upcoming-label">
+            <span class="meal-upcoming-dot"></span>
+            הבא
+          </div>
+          <div class="meal-time">13:00</div>
+          <div class="meal-name">ארוחת צהריים</div>
+          <div class="meal-macros">
+            <span class="macro-pill coral">816 קל׳</span>
+            <span class="macro-pill">48g חל׳</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- QUICK STATS -->
+    <div>
+      <div class="section-label">סטטיסטיקה</div>
+      <div class="stats-row">
+        <div class="stat-mini accent-lime">
+          <div class="stat-mini-icon">🔥</div>
+          <div class="stat-mini-val">12</div>
+          <div class="stat-mini-label">סטריק</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-icon">💪</div>
+          <div class="stat-mini-val">4</div>
+          <div class="stat-mini-label">אימונים שבוע</div>
+        </div>
+        <div class="stat-mini accent-coral">
+          <div class="stat-mini-icon">⚡</div>
+          <div class="stat-mini-val">850</div>
+          <div class="stat-mini-label">XP</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /scroll-content -->
+
+</div><!-- /screen -->
+
+<!-- ── BOTTOM NAV (Glassmorphism) ── -->
+<nav class="bottom-nav">
+
+  <!-- Home (active) -->
+  <button class="nav-item active" aria-label="בית">
+    <svg class="nav-icon" viewBox="0 0 24 24">
+      <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+      <polyline points="9,21 9,12 15,12 15,21"/>
+    </svg>
+    <span class="nav-label">בית</span>
+  </button>
+
+  <!-- Workout -->
+  <button class="nav-item" aria-label="אימון">
+    <svg class="nav-icon" viewBox="0 0 24 24">
+      <line x1="6" y1="12" x2="18" y2="12"/>
+      <rect x="2" y="9.5" width="3" height="5" rx="1"/>
+      <rect x="19" y="9.5" width="3" height="5" rx="1"/>
+      <rect x="5" y="10.5" width="2" height="3" rx=".5"/>
+      <rect x="17" y="10.5" width="2" height="3" rx=".5"/>
+    </svg>
+    <span class="nav-label">אימון</span>
+  </button>
+
+  <!-- Nutrition -->
+  <button class="nav-item" aria-label="תזונה">
+    <svg class="nav-icon" viewBox="0 0 24 24">
+      <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+      <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+      <line x1="6" y1="1" x2="6" y2="4"/>
+      <line x1="10" y1="1" x2="10" y2="4"/>
+      <line x1="14" y1="1" x2="14" y2="4"/>
+    </svg>
+    <span class="nav-label">תזונה</span>
+  </button>
+
+  <!-- Progress -->
+  <button class="nav-item" aria-label="התקדמות">
+    <svg class="nav-icon" viewBox="0 0 24 24">
+      <line x1="18" y1="20" x2="18" y2="10"/>
+      <line x1="12" y1="20" x2="12" y2="4"/>
+      <line x1="6" y1="20" x2="6" y2="14"/>
+    </svg>
+    <span class="nav-label">התקדמות</span>
+  </button>
+
+</nav>
+
+<script>
+  // Nav item switching
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Rings animate on load
+  window.addEventListener('load', () => {
+    // already animated via CSS transition on SVG stroke-dashoffset
+    // trigger reflow for the animation to kick in
+    document.querySelectorAll('.ring-outer-fill, .ring-inner-fill').forEach(el => {
+      const final = el.style.strokeDashoffset || el.getAttribute('stroke-dashoffset');
+      el.style.strokeDashoffset = el.getAttribute('stroke-dasharray'); // start at 0%
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          el.style.strokeDashoffset = final;
+        });
+      });
+    });
+  });
+</script>
+</body>
+</html>
