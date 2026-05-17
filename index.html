@@ -25,7 +25,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 :root{
   /* ── Premium Dark Foundation ── */
@@ -54,8 +54,8 @@
   --glass:rgba(255,255,255,.04);--glass-b:rgba(255,255,255,.09);--glass-h:rgba(255,255,255,.07);
   /* ── Tokens ── */
   --r:16px;--r-sm:10px;
-  --font:'Barlow','Segoe UI',system-ui,sans-serif;
-  --font-d:'Barlow Condensed','Segoe UI',system-ui,sans-serif;
+  --font:'Assistant',sans-serif;
+  --font-d:'Inter',sans-serif;
   /* ── Motion ── */
   --ease-out:cubic-bezier(.16,1,.3,1);
   --ease-spring:cubic-bezier(.34,1.56,.64,1);
@@ -843,8 +843,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   .mobile-bottom-nav{
     display:flex;
     position:fixed;bottom:0;left:0;right:0;
-    height:76px;
-    background:rgba(20,22,28,.82);
+    height:80px;
+    background:rgba(20,22,28,.78);
     backdrop-filter:blur(28px) saturate(200%);
     -webkit-backdrop-filter:blur(28px) saturate(200%);
     border-top:1px solid rgba(255,255,255,.08);
@@ -863,7 +863,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 }
 .mbn-item:active{transform:scale(.88);}
 .mbn-item.active{background:var(--lime-dim);}
-.mbn-icon{width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke .18s;display:block;}
+.mbn-icon{width:24px;height:24px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke .18s;display:block;}
 .mbn-item.active .mbn-icon{stroke:var(--lime);}
 .mbn-label{font-size:.55rem;font-weight:700;color:var(--muted);transition:color .18s;letter-spacing:.03em;white-space:nowrap;}
 .mbn-item.active .mbn-label{color:var(--lime);}
@@ -873,8 +873,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .dash-week-scroll::-webkit-scrollbar{display:none;}
 .dash-day-chip{
   display:flex;flex-direction:column;align-items:center;gap:4px;
-  padding:10px 8px;border-radius:14px;border:1px solid var(--border);background:var(--bg3);
-  cursor:pointer;flex-shrink:0;width:52px;transition:all .2s var(--ease-spring);
+  padding:10px 8px;border-radius:16px;border:1px solid var(--border);background:var(--bg3);
+  cursor:pointer;flex-shrink:0;width:54px;transition:all .2s var(--ease-spring);
   position:relative;
 }
 .dash-day-chip:active{transform:scale(.93);}
@@ -887,6 +887,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .ddc-active .ddc-type{color:var(--lime);}
 .ddc-done .ddc-type{color:var(--green);}
 .ddc-rest .ddc-type,.ddc-default .ddc-type{color:var(--muted2);}
+.ddc-dot{position:absolute;top:7px;width:5px;height:5px;border-radius:50%;background:var(--lime);}
+
+/* ─── TIPS CARD ─── */
+.tips-card{background:linear-gradient(135deg,rgba(255,214,10,.06),rgba(255,214,10,.03));border:1px solid rgba(255,214,10,.28);border-radius:var(--r);padding:16px;display:flex;align-items:flex-start;gap:12px;position:relative;overflow:hidden;}
+.tips-card::before{content:'';position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle at top right,rgba(255,214,10,.1),transparent 65%);pointer-events:none;}
+.tips-icon-wrap{width:36px;height:36px;background:rgba(255,214,10,.12);border:1px solid rgba(255,214,10,.25);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.tips-body{flex:1;min-width:0;}
+.tips-label{font-size:.65rem;font-weight:800;color:rgba(255,214,10,.8);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+.tips-text{font-size:.82rem;color:rgba(255,255,255,.8);line-height:1.65;font-weight:500;}
+.tips-text strong{color:var(--yellow);font-weight:800;}
+.tips-dismiss{background:none;border:none;color:var(--muted2);font-size:.85rem;cursor:pointer;padding:0;line-height:1;flex-shrink:0;transition:color .2s;}
+.tips-dismiss:hover{color:var(--muted);}
 
 /* ─── DASH MEAL PREVIEW ─── */
 .dash-meals-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -1525,36 +1537,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       </div>
     </div>
 
-    <!-- TODAY HERO -->
-    <div class="today-hero" id="today-hero">
-      <div class="today-hero-info">
-        <div class="today-hero-day">טוען...</div>
-        <div class="today-hero-title">ProFit</div>
-      </div>
-      <div class="today-hero-emoji">PRO</div>
-    </div>
-
     <div class="notif-card" id="notif-card">
       <div class="notif-card-text"><strong>תזכורות אימון</strong>קבל התראה ביום אימון בשעה שתבחר</div>
       <button class="notif-btn" id="notif-btn" onclick="requestWorkoutNotif()">הפעל</button>
     </div>
-
-    <div class="trainer-note" style="padding:0;cursor:pointer;" onclick="this.classList.toggle('tn-open')">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;">
-        <div style="font-size:.8rem;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:1.5px;">הגיון הפיצול</div>
-        <div class="tn-arrow" style="color:var(--muted);font-size:.8rem;transition:transform .3s;">▾</div>
-      </div>
-      <div class="tn-body" style="padding:0 20px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease-out),padding .3s;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:.84rem;line-height:1.75;padding-bottom:16px;">
-          <div><strong style="color:var(--text);">ראשון + שני — רצופים</strong><br><span style="color:var(--muted2);">Push ואז Pull — אין חפיפת שרירים. שרירי הדחיפה לא נוגעים בשרירי המשיכה.</span></div>
-          <div><strong style="color:var(--text);">רביעי + חמישי — רצופים</strong><br><span style="color:var(--muted2);">רגליים ואז ידיים — שוב אין חפיפה. כל שריר מקבל 48–72 שעות שיקום.</span></div>
-        </div>
-      </div>
-    </div>
-    <style>
-      .tn-open .tn-body{max-height:200px!important;padding:0 20px!important;}
-      .tn-open .tn-arrow{transform:rotate(180deg);}
-    </style>
 
     <!-- PREMIUM RINGS SUMMARY -->
     <div class="card" style="background:var(--bg3);">
@@ -1593,6 +1579,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="card-body" style="padding:14px 16px 16px;">
         <div class="dash-week-scroll" id="dash-week-row">
           <div class="dash-day-chip ddc-active" onclick="showPanel('push')">
+            <span class="ddc-dot"></span>
             <span class="ddc-emoji">💥</span>
             <span class="ddc-name">ראשון</span>
             <span class="ddc-type">PUSH</span>
@@ -1631,6 +1618,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       </div>
     </div>
 
+    <!-- TODAY HERO -->
+    <div class="today-hero" id="today-hero">
+      <div class="today-hero-info">
+        <div class="today-hero-day">טוען...</div>
+        <div class="today-hero-title">ProFit</div>
+      </div>
+      <div class="today-hero-emoji">PRO</div>
+    </div>
+
     <!-- NUTRITION PREVIEW -->
     <div class="card" style="background:var(--bg3);" id="dash-nutrition-preview">
       <div class="card-head" style="padding:14px 18px;">
@@ -1660,6 +1656,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- TRAINER TIPS -->
+    <div class="tips-card" id="dash-trainer-tip">
+      <div class="tips-icon-wrap">💡</div>
+      <div class="tips-body">
+        <div class="tips-label">טיפים מהמאמן</div>
+        <div class="tips-text">
+          <strong>הגיון הפיצול:</strong> Push ואז Pull — אין חפיפת שרירים. כל שריר מקבל 48–72 שעות שיקום בין ימי אימון.
+        </div>
+      </div>
+      <button class="tips-dismiss" onclick="document.getElementById('dash-trainer-tip').style.display='none'" aria-label="סגור">✕</button>
     </div>
 
     <div class="card">
@@ -3961,7 +3969,13 @@ function initTodayHero(){
   const dashChips=document.querySelectorAll('#dash-week-row .dash-day-chip');
   dashChips.forEach((c,i)=>{
     c.classList.remove('ddc-active','ddc-done');
-    if(i===d) c.classList.add('ddc-active');
+    c.querySelector('.ddc-dot')?.remove();
+    if(i===d){
+      c.classList.add('ddc-active');
+      const dot=document.createElement('span');
+      dot.className='ddc-dot';
+      c.prepend(dot);
+    }
   });
   // mark done days in dash carousel too
   document.querySelectorAll('.week-bar .day-cell.done-day').forEach((c,i)=>{
