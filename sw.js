@@ -1,4 +1,4 @@
-const CACHE = 'proFit-v12';
+const CACHE = 'proFit-v13';
 const ASSETS = [
   '/fitness_app/',
   '/fitness_app/index.html',

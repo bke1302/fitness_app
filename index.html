@@ -1209,7 +1209,24 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 <!-- SPLASH SCREEN -->
 <div class="splash" id="splash">
   <div class="splash-mark">
-    <div class="splash-letter">P</div>
+    <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7">
+      <defs>
+        <linearGradient id="dbell-grad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#FF375F"/>
+          <stop offset="100%" stop-color="#BF5AF2"/>
+        </linearGradient>
+      </defs>
+      <!-- bar -->
+      <line x1="7.5" y1="12" x2="16.5" y2="12" stroke="url(#dbell-grad)"/>
+      <!-- left outer plate -->
+      <rect x="1.5" y="8.5" width="3" height="7" rx="1.2" stroke="url(#dbell-grad)" fill="none"/>
+      <!-- left inner plate -->
+      <rect x="4.5" y="9.8" width="2" height="4.4" rx=".7" stroke="url(#dbell-grad)" fill="none"/>
+      <!-- right inner plate -->
+      <rect x="17.5" y="9.8" width="2" height="4.4" rx=".7" stroke="url(#dbell-grad)" fill="none"/>
+      <!-- right outer plate -->
+      <rect x="19.5" y="8.5" width="3" height="7" rx="1.2" stroke="url(#dbell-grad)" fill="none"/>
+    </svg>
   </div>
   <div class="splash-name">ProFit</div>
   <div class="splash-tagline">Push · Pull · Legs · Arms</div>
@@ -1406,13 +1423,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
             <div class="cals-hero-num" id="dash-cals">2,750</div>
             <div class="cals-hero-unit">קל׳ / יום</div>
           </div>
-          <span class="badge badge-red" style="align-self:center;">Lean Bulk</span>
+          <span class="badge badge-red" id="dash-goal-badge" style="align-self:center;">Lean Bulk</span>
         </div>
         <!-- SUB MACROS -->
         <div class="grid-3" style="margin-bottom:14px;">
           <div class="stat-box blue"><div class="val" id="dash-protein">150g</div><div class="lbl">חלבון</div></div>
-          <div class="stat-box yellow"><div class="val">340g</div><div class="lbl">פחמימות</div></div>
-          <div class="stat-box green"><div class="val">80g</div><div class="lbl">שומן</div></div>
+          <div class="stat-box yellow"><div class="val" id="dash-carbs">340g</div><div class="lbl">פחמימות</div></div>
+          <div class="stat-box green"><div class="val" id="dash-fat">80g</div><div class="lbl">שומן</div></div>
         </div>
         <!-- LEVEL / XP WIDGET -->
         <div class="level-widget" id="level-widget">
@@ -1435,9 +1452,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           </div>
           <div style="text-align:left;"><div class="streak-msg" id="streak-msg" style="font-size:.8rem;color:var(--yellow);font-weight:700;">מתחילים</div><div style="font-size:.68rem;color:var(--muted);margin-top:2px;">לחץ לגרף התקדמות</div></div>
         </div>
-        <div class="pbar"><div class="pbar-top"><span>BMR</span><span style="color:var(--cyan)">1,512 קל׳</span></div><div class="pbar-track"><div class="pbar-fill" style="width:55%;background:var(--cyan)"></div></div></div>
-        <div class="pbar"><div class="pbar-top"><span>TDEE (×1.55)</span><span style="color:var(--blue)">2,344 קל׳</span></div><div class="pbar-track"><div class="pbar-fill" style="width:85%;background:var(--blue)"></div></div></div>
-        <div class="pbar"><div class="pbar-top"><span>יעד Lean Bulk (+400)</span><span style="color:var(--red)">2,750 קל׳</span></div><div class="pbar-track"><div class="pbar-fill" style="width:100%;background:linear-gradient(90deg,var(--red),#9333ea)"></div></div></div>
+        <div class="pbar" id="dash-bmr-row"><div class="pbar-top"><span>BMR</span><span id="dash-bmr-val" style="color:var(--cyan)">1,512 קל׳</span></div><div class="pbar-track"><div class="pbar-fill" id="dash-bmr-bar" style="width:55%;background:var(--cyan)"></div></div></div>
+        <div class="pbar" id="dash-tdee-row"><div class="pbar-top"><span id="dash-tdee-lbl">TDEE (×1.55)</span><span id="dash-tdee-val" style="color:var(--blue)">2,344 קל׳</span></div><div class="pbar-track"><div class="pbar-fill" id="dash-tdee-bar" style="width:85%;background:var(--blue)"></div></div></div>
+        <div class="pbar" id="dash-target-row"><div class="pbar-top"><span id="dash-target-lbl">יעד Lean Bulk (+400)</span><span id="dash-target-val" style="color:var(--red)">2,750 קל׳</span></div><div class="pbar-track"><div class="pbar-fill" style="width:100%;background:linear-gradient(90deg,var(--red),#9333ea)"></div></div></div>
       </div>
     </div>
 
@@ -2267,11 +2284,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         </div>
         <div class="tl-item"><div class="tl-dot" style="background:var(--yellow);"></div>
           <div><div style="font-weight:700;margin-bottom:4px;">חודש 5–8</div>
-          <div style="font-size:.87rem;color:var(--muted2);line-height:1.7;">שינוי דרמטי. <strong>+4–6 ק"ג שריר נטו.</strong> כוח גבוה. גוף מוצק. 63–66 ק"ג.</div></div>
+          <div id="tl-m5" style="font-size:.87rem;color:var(--muted2);line-height:1.7;">שינוי דרמטי. <strong>+4–6 ק"ג שריר נטו.</strong> כוח גבוה. גוף מוצק.</div></div>
         </div>
         <div class="tl-item" style="margin-bottom:0;"><div class="tl-dot" style="background:var(--red);"></div>
           <div><div style="font-weight:700;margin-bottom:4px;">חודש 9–12</div>
-          <div style="font-size:.87rem;color:var(--muted2);line-height:1.7;"><strong>+6–9 ק"ג שריר נטו</strong> — גוף שנבנה מחדש. שקול לעבור ל-Cut לחצי שנה לחשוף את השריר.</div></div>
+          <div id="tl-m9" style="font-size:.87rem;color:var(--muted2);line-height:1.7;"><strong>+6–9 ק"ג שריר נטו</strong> — גוף שנבנה מחדש. שקול לעבור ל-Cut לחצי שנה לחשוף את השריר.</div></div>
         </div>
       </div>
     </div>
@@ -2855,6 +2872,8 @@ function applySettings(s){
   const nm=document.querySelector('.user-name'); if(nm&&nm.id!=='footer-name') nm.textContent=s.name;
   const av=document.querySelector('.user-avatar'); if(av) av.textContent=(s.name||'מ').charAt(0);
   const calEl=document.getElementById('dash-cals'); if(calEl) calEl.textContent=s.calories.toLocaleString('he-IL');
+  // Update full dashboard stats from active user
+  const _au=getActiveUser&&getActiveUser(); if(_au) renderDashboardStats(_au);
 }
 function updateBMRPreview(){
   const w=parseFloat(document.getElementById('sf-weight')?.value)||0;
@@ -2897,6 +2916,7 @@ function saveSettingsForm(){
     renderUserList();
     renderNutritionPanel();
     applyUserConditions(users[idx]);
+    renderDashboardStats(users[idx]);
   }
   const btn=document.querySelector('#settings-form .settings-save');
   if(btn){
@@ -2935,6 +2955,57 @@ function calcNutrition(u){
 }
 
 const GOAL_LABELS={lean_bulk:'Lean Bulk',bulk:'מסה מקסימלית',cut:'הורדת שומן',maintain:'שמירה'};
+
+function renderDashboardStats(u){
+  if(!u) return;
+  const n=calcNutrition(u);
+  const w=u.weight||75;
+  const g=u.goal||'lean_bulk';
+  const act=u.activity||1.55;
+  const surplusMap={lean_bulk:350,bulk:600,cut:-400,maintain:0};
+  const surplus=surplusMap[g]??350;
+  const surpLabel=surplus>0?'(+'+surplus+')':surplus<0?'('+surplus+')':'';
+  const goalHe={lean_bulk:'Lean Bulk',bulk:'מסה',cut:'הורדת שומן',maintain:'שמירה'};
+
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  const setW=(id,w)=>{const el=document.getElementById(id);if(el)el.style.width=w;};
+
+  // goal badge color
+  const badge=document.getElementById('dash-goal-badge');
+  if(badge){
+    badge.textContent=GOAL_LABELS[g]||g;
+    const cls={lean_bulk:'badge-red',bulk:'badge-purple',cut:'badge-blue',maintain:'badge-green'};
+    badge.className='badge '+(cls[g]||'badge-red');
+  }
+
+  // calories hero
+  set('dash-cals', n.target.toLocaleString('he-IL'));
+
+  // macros
+  set('dash-protein', n.protein+'g');
+  set('dash-carbs',   n.carbs+'g');
+  set('dash-fat',     n.fat+'g');
+
+  // BMR bar (BMR / target)
+  set('dash-bmr-val', n.bmr.toLocaleString('he-IL')+' קל׳');
+  setW('dash-bmr-bar', Math.min(100,Math.round(n.bmr/n.target*100))+'%');
+
+  // TDEE bar
+  set('dash-tdee-lbl', 'TDEE (×'+act+')');
+  set('dash-tdee-val', n.tdee.toLocaleString('he-IL')+' קל׳');
+  setW('dash-tdee-bar', Math.min(100,Math.round(n.tdee/n.target*100))+'%');
+
+  // Target label
+  set('dash-target-lbl', 'יעד '+goalHe[g]+' '+surpLabel);
+  set('dash-target-val', n.target.toLocaleString('he-IL')+' קל׳');
+
+  // Timeline — strength goals based on bodyweight
+  const bench=Math.round(w*1.3), squat=Math.round(w*1.6), dead=Math.round(w*2);
+  const m5=document.getElementById('tl-m5');
+  if(m5) m5.innerHTML=`שינוי דרמטי. <strong>+${Math.round(w*0.06)}–${Math.round(w*0.1)} ק"ג שריר נטו.</strong> Bench ${bench}ק"ג, Squat ${squat}ק"ג. גוף מוצק.`;
+  const m9=document.getElementById('tl-m9');
+  if(m9) m9.innerHTML=`<strong>+${Math.round(w*0.1)}–${Math.round(w*0.15)} ק"ג שריר נטו</strong> — Deadlift ${dead}ק"ג. גוף שנבנה מחדש. שקול לעבור ל-Cut.`;
+}
 
 // 6 possible meal slots per goal (index 0-5)
 // slot: [name, time, basePct, pRat, cRat, fRat, foods[], tip, ?accent]
@@ -3241,6 +3312,7 @@ function obFinish(){
   renderNutritionPanel();
   applyUserConditions(user);
   applySettings(getSettings());
+  renderDashboardStats(user);
   prefillSettingsForm();
   // Run full init if this was the first user
   if(!_isNewUserFlow){
