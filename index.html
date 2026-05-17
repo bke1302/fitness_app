@@ -482,15 +482,39 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 /* ─── MUSCLE TAG ─── */
 .part-tag{font-size:.67rem;padding:2px 7px;border-radius:999px;background:rgba(90,200,250,.1);color:var(--cyan);border:1px solid rgba(90,200,250,.22);white-space:nowrap;margin-top:3px;display:inline-block;}
 
-/* ─── TODAY HERO BANNER ─── */
+/* ─── TODAY HERO BANNER — Premium Workout Card ─── */
 .today-hero{
-  border-radius:24px;padding:36px 32px;margin-bottom:28px;
-  display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+  border-radius:24px;padding:22px 22px 20px;margin-bottom:28px;
+  display:flex;flex-direction:column;justify-content:space-between;gap:0;
   cursor:pointer;transition:transform .3s var(--ease-spring),box-shadow .35s;
-  background:linear-gradient(135deg,#b8dc00 0%,var(--lime) 42%,#ff8c42 78%,var(--coral) 120%);
+  background:linear-gradient(180deg,rgba(13,14,17,.15) 0%,rgba(13,14,17,.72) 100%),
+    repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(212,255,26,.032) 27px,rgba(212,255,26,.032) 28px),
+    repeating-linear-gradient(90deg,transparent,transparent 27px,rgba(212,255,26,.032) 27px,rgba(212,255,26,.032) 28px),
+    linear-gradient(135deg,#1a1d24 0%,#242830 50%,#1a1d24 100%);
   position:relative;overflow:hidden;
-  min-height:180px;
+  min-height:200px;
 }
+/* hero top row: badge + play */
+.hero-top-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:auto;}
+.hero-badge{
+  background:var(--lime);color:#000;
+  font-family:var(--font-d);font-size:.62rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 10px;border-radius:999px;
+  display:inline-flex;align-items:center;gap:4px;
+}
+.hero-play{
+  width:46px;height:46px;background:var(--lime);border-radius:50%;border:none;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 0 22px var(--lime-glow);
+  transition:transform .2s var(--ease-spring),box-shadow .2s;flex-shrink:0;
+}
+.hero-play:active{transform:scale(.88);}
+.hero-play svg{width:18px;height:18px;fill:#000;margin-right:-2px;}
+/* hero bottom: muscles + meta */
+.hero-bottom{position:relative;z-index:2;}
+.hero-wk-meta{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap;}
+.hero-meta-chip{display:flex;align-items:center;gap:4px;font-size:.72rem;font-weight:600;color:rgba(255,255,255,.6);}
+.hero-meta-chip svg{width:13px;height:13px;stroke:rgba(255,255,255,.45);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 /* grain texture overlay */
 .today-hero::after{
   content:'';position:absolute;inset:0;pointer-events:none;
@@ -504,16 +528,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 }
 .today-hero:hover{transform:translateY(-4px);box-shadow:0 24px 64px var(--hero-glow,rgba(255,55,95,.35));}
 .today-hero-info{position:relative;z-index:1;}
-.today-hero-info .today-hero-day{font-size:.72rem;color:rgba(0,0,0,.55);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:2px;}
-.today-hero-info .today-hero-title{font-family:var(--font-d);font-size:3.2rem;font-weight:900;color:#111;letter-spacing:-1.5px;line-height:.95;text-shadow:none;}
-.today-hero-info .today-hero-sub{font-size:.9rem;color:rgba(0,0,0,.6);margin-top:10px;font-weight:500;}
-.today-hero-hint{margin-top:14px;font-size:.75rem;color:rgba(0,0,0,.45);display:flex;align-items:center;gap:5px;}
-.today-hero-emoji{
-  font-family:var(--font-d);font-size:6rem;font-weight:900;
-  color:rgba(0,0,0,.08);letter-spacing:-4px;line-height:1;
-  position:absolute;left:24px;top:50%;transform:translateY(-50%);
-  pointer-events:none;z-index:0;user-select:none;
-}
+.today-hero-info .today-hero-day{font-size:.68rem;color:rgba(255,255,255,.5);font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:2px;}
+.today-hero-info .today-hero-title{font-family:var(--font-d);font-size:1.55rem;font-weight:900;color:#fff;letter-spacing:-.4px;line-height:1.1;text-shadow:none;}
+.today-hero-info .today-hero-sub{font-size:.84rem;color:rgba(255,255,255,.65);margin-top:4px;font-weight:500;}
+.today-hero-hint{margin-top:10px;font-size:.72rem;color:var(--lime);display:flex;align-items:center;gap:5px;font-weight:600;}
+.today-hero-emoji{display:none;} /* replaced by premium layout */
 .today-hero-rest{
   background:linear-gradient(135deg,rgba(48,209,88,.28),rgba(0,0,0,.4) 100%)!important;
   border:1px solid rgba(48,209,88,.35)!important;cursor:default;min-height:140px;
@@ -817,6 +836,79 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .today-hero{will-change:transform;}
 .stat-box{will-change:transform;}
 .levelup-toast{will-change:transform,opacity;}
+
+/* ─── MOBILE BOTTOM NAV ─── */
+.mobile-bottom-nav{display:none;}
+@media(max-width:768px){
+  .mobile-bottom-nav{
+    display:flex;
+    position:fixed;bottom:0;left:0;right:0;
+    height:76px;
+    background:rgba(20,22,28,.82);
+    backdrop-filter:blur(28px) saturate(200%);
+    -webkit-backdrop-filter:blur(28px) saturate(200%);
+    border-top:1px solid rgba(255,255,255,.08);
+    align-items:center;justify-content:space-around;
+    padding:0 4px;
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    z-index:150;
+  }
+  .content{padding-bottom:96px!important;}
+}
+.mbn-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 10px;border-radius:14px;cursor:pointer;border:none;background:transparent;
+  -webkit-tap-highlight-color:transparent;transition:transform .18s var(--ease-spring),background .18s;
+  min-width:52px;
+}
+.mbn-item:active{transform:scale(.88);}
+.mbn-item.active{background:var(--lime-dim);}
+.mbn-icon{width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke .18s;display:block;}
+.mbn-item.active .mbn-icon{stroke:var(--lime);}
+.mbn-label{font-size:.55rem;font-weight:700;color:var(--muted);transition:color .18s;letter-spacing:.03em;white-space:nowrap;}
+.mbn-item.active .mbn-label{color:var(--lime);}
+
+/* ─── DASH WEEK CAROUSEL ─── */
+.dash-week-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.dash-week-scroll::-webkit-scrollbar{display:none;}
+.dash-day-chip{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:10px 8px;border-radius:14px;border:1px solid var(--border);background:var(--bg3);
+  cursor:pointer;flex-shrink:0;width:52px;transition:all .2s var(--ease-spring);
+  position:relative;
+}
+.dash-day-chip:active{transform:scale(.93);}
+.dash-day-chip.ddc-active{background:var(--lime-dim);border-color:rgba(212,255,26,.32);box-shadow:0 0 14px var(--lime-glow);}
+.dash-day-chip.ddc-done{border-color:rgba(48,209,88,.35);background:rgba(48,209,88,.06);}
+.dash-day-chip.ddc-rest{opacity:.45;}
+.ddc-emoji{font-size:1rem;line-height:1;}
+.ddc-name{font-size:.5rem;font-weight:800;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;}
+.ddc-type{font-size:.56rem;font-weight:700;line-height:1;}
+.ddc-active .ddc-type{color:var(--lime);}
+.ddc-done .ddc-type{color:var(--green);}
+.ddc-rest .ddc-type,.ddc-default .ddc-type{color:var(--muted2);}
+
+/* ─── DASH MEAL PREVIEW ─── */
+.dash-meals-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.dash-meal-card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:16px;
+  padding:14px 13px;cursor:pointer;transition:transform .18s var(--ease-spring),border-color .18s;
+}
+.dash-meal-card:active{transform:scale(.97);}
+.dash-meal-card.dmc-done{opacity:.6;border-color:rgba(48,209,88,.2);}
+.dash-meal-card.dmc-next{border-color:rgba(255,107,107,.3);background:linear-gradient(145deg,var(--bg3),rgba(255,107,107,.04));}
+.dmc-status{display:flex;align-items:center;gap:5px;margin-bottom:7px;font-size:.62rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;}
+.dmc-done-mark{color:var(--green);}
+.dmc-next-dot{width:5px;height:5px;border-radius:50%;background:var(--coral);animation:pulseDot 1.5s ease-in-out infinite;}
+.dmc-next-lbl{color:var(--coral);}
+.dmc-time{font-size:.64rem;font-weight:700;color:var(--muted);margin-bottom:4px;}
+.dmc-name{font-size:.82rem;font-weight:800;line-height:1.2;margin-bottom:8px;}
+.dmc-macros{display:flex;gap:5px;flex-wrap:wrap;}
+.dmc-pill{font-size:.58rem;font-weight:700;padding:2px 6px;border-radius:999px;}
+.dmc-pill.lime{background:var(--lime-dim);color:var(--lime);}
+.dmc-pill.coral{background:var(--coral-dim);color:var(--coral);}
+.dmc-pill.muted{background:rgba(255,255,255,.06);color:var(--muted);}
+@keyframes pulseDot{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.4);opacity:.6;}}
 
 /* ─── CONCENTRIC RINGS ─── */
 .ring-row{display:flex;align-items:center;gap:8px;}
@@ -1488,6 +1580,84 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="ring-row"><span class="rdot coral-dot"></span><span class="rlbl">חלבון</span><span class="rval" id="ring-protein-val">150g</span></div>
           <div class="ring-row"><span class="rdot" style="background:var(--cyan);box-shadow:0 0 5px var(--cyan-glow);"></span><span class="rlbl">פחמימות</span><span class="rval" id="ring-carbs-val">300g</span></div>
           <div class="ring-row"><span class="rdot" style="background:var(--yellow);box-shadow:0 0 5px var(--yellow-glow);"></span><span class="rlbl">שומן</span><span class="rval" id="ring-fat-val">72g</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEK CAROUSEL -->
+    <div class="card" style="background:var(--bg3);">
+      <div class="card-head" style="padding:14px 18px;">
+        <h2 style="font-size:1rem;">השבוע שלך</h2>
+        <span class="badge badge-green" style="font-size:.62rem;">4 ימי אימון</span>
+      </div>
+      <div class="card-body" style="padding:14px 16px 16px;">
+        <div class="dash-week-scroll" id="dash-week-row">
+          <div class="dash-day-chip ddc-active" onclick="showPanel('push')">
+            <span class="ddc-emoji">💥</span>
+            <span class="ddc-name">ראשון</span>
+            <span class="ddc-type">PUSH</span>
+          </div>
+          <div class="dash-day-chip" onclick="showPanel('pull')">
+            <span class="ddc-emoji">🔄</span>
+            <span class="ddc-name">שני</span>
+            <span class="ddc-type">PULL</span>
+          </div>
+          <div class="dash-day-chip ddc-rest">
+            <span class="ddc-emoji">😴</span>
+            <span class="ddc-name">שלישי</span>
+            <span class="ddc-type">מנוחה</span>
+          </div>
+          <div class="dash-day-chip" onclick="showPanel('legs')">
+            <span class="ddc-emoji">🦵</span>
+            <span class="ddc-name">רביעי</span>
+            <span class="ddc-type">LEGS</span>
+          </div>
+          <div class="dash-day-chip" onclick="showPanel('arms')">
+            <span class="ddc-emoji">💪</span>
+            <span class="ddc-name">חמישי</span>
+            <span class="ddc-type">ARMS</span>
+          </div>
+          <div class="dash-day-chip ddc-rest">
+            <span class="ddc-emoji">🚶</span>
+            <span class="ddc-name">שישי</span>
+            <span class="ddc-type">אקטיב</span>
+          </div>
+          <div class="dash-day-chip ddc-rest">
+            <span class="ddc-emoji">😴</span>
+            <span class="ddc-name">שבת</span>
+            <span class="ddc-type">מנוחה</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NUTRITION PREVIEW -->
+    <div class="card" style="background:var(--bg3);" id="dash-nutrition-preview">
+      <div class="card-head" style="padding:14px 18px;">
+        <h2 style="font-size:1rem;">ארוחות היום</h2>
+        <button class="badge badge-coral" style="background:var(--coral-dim);color:var(--coral);border:1px solid rgba(255,107,107,.25);cursor:pointer;font-size:.62rem;" onclick="showPanel('nutrition')">הצג הכל</button>
+      </div>
+      <div class="card-body" style="padding:12px 16px 16px;">
+        <div class="dash-meals-row" id="dash-meals-preview">
+          <!-- filled by renderDashNutritionPreview() -->
+          <div class="dash-meal-card dmc-done">
+            <div class="dmc-status"><span class="dmc-done-mark">✓</span><span style="color:var(--green);">הושלם</span></div>
+            <div class="dmc-time">08:00 — בוקר</div>
+            <div class="dmc-name">חזה עוף, אורז וברוקולי</div>
+            <div class="dmc-macros">
+              <span class="dmc-pill lime">45g חלבון</span>
+              <span class="dmc-pill muted">610 קל׳</span>
+            </div>
+          </div>
+          <div class="dash-meal-card dmc-next">
+            <div class="dmc-status"><span class="dmc-next-dot"></span><span class="dmc-next-lbl">הבא</span></div>
+            <div class="dmc-time">12:00 — צהריים</div>
+            <div class="dmc-name">שקשוקה חלבונים ולחם קל</div>
+            <div class="dmc-macros">
+              <span class="dmc-pill coral">35g חלבון</span>
+              <span class="dmc-pill muted">480 קל׳</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -3707,10 +3877,10 @@ function updateStreak(){
 // ═══════════════════════════════════════════════════
 /* Per-workout label badge — shown instead of emoji */
 const DAY_CFG={
-  0:{panel:'push',badge:'PUSH',color:'#FF375F',label:'PUSH DAY',sub:'חזה · כתפיים · טריצפס',grad:'linear-gradient(135deg,#FF375F,#BF5AF2)'},
-  1:{panel:'pull',badge:'PULL',color:'#5AC8FA',label:'PULL DAY',sub:'גב · בייסס · כתף אחורית',grad:'linear-gradient(135deg,#0A84FF,#5AC8FA)'},
-  3:{panel:'legs',badge:'LEGS',color:'#BF5AF2',label:'LEGS DAY',sub:'ירכיים · ירך אחורי · שוק',grad:'linear-gradient(135deg,#BF5AF2,#0A84FF)'},
-  4:{panel:'arms',badge:'ARMS',color:'#FFD60A',label:'ARMS DAY',sub:'בייסס · טריצפס · כתף',grad:'linear-gradient(135deg,#FFD60A,#FF375F)'}
+  0:{panel:'push',badge:'💥 PUSH',color:'#FF6B6B',label:'חזה · כתפיים · טריצפס',sub:'PUSH DAY A',meta:'~55 דק׳ · 7 תרגילים'},
+  1:{panel:'pull',badge:'🔄 PULL',color:'#5AC8FA',label:'גב · בייסס · כתף אחורית',sub:'PULL DAY B',meta:'~55 דק׳ · 7 תרגילים'},
+  3:{panel:'legs',badge:'🦵 LEGS',color:'#BF5AF2',label:'ירכיים · ירך אחורי · שוק',sub:'LEGS DAY C',meta:'~65 דק׳ · 7 תרגילים'},
+  4:{panel:'arms',badge:'💪 ARMS',color:'#FFD60A',label:'בייסס · טריצפס · כתפיים',sub:'ARMS DAY D',meta:'~50 דק׳ · 7 תרגילים'}
 };
 const HEB_DAYS3=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 
@@ -3721,36 +3891,51 @@ function initTodayHero(){
   const cfg=DAY_CFG[d];
   const log=getLog(); const today=todayStr();
   const done=log[today]?.__complete;
-  const badgeHtml=cfg?`<div style="display:inline-block;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:4px 12px;font-family:var(--font-d);font-size:.82rem;font-weight:800;letter-spacing:1.5px;color:#fff;margin-bottom:10px;">${cfg.badge}</div>`:'';
   if(cfg){
-    hero.style.background=cfg.grad;
-    hero.style.cursor='pointer';
+    hero.style.cssText='';
     hero.style.setProperty('--hero-glow', cfg.color+'55');
+    hero.style.cursor='pointer';
+    const timeSvg=`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+    const exSvg=`<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
     hero.innerHTML=`
-      <div class="today-hero-info">
-        ${badgeHtml}
-        <div class="today-hero-day">היום — יום ${HEB_DAYS3[d]}</div>
-        <div class="today-hero-title">${cfg.label}${done?' — הושלם':''}</div>
-        <div class="today-hero-sub">${cfg.sub}</div>
-        <div class="today-hero-hint">${done?'הושלם היום! כל הכבוד':'לחץ לפתיחת האימון ←'}</div>
+      <div class="hero-top-row">
+        <span class="hero-badge">${cfg.badge}${done?' ✓':''}</span>
+        <button class="hero-play" onclick="event.stopPropagation();document.querySelectorAll('.nav-btn').forEach(b=>{if(b.getAttribute('onclick')?.includes('${cfg.panel}'))b.click();});">
+          <svg viewBox="0 0 24 24" fill="#000"><polygon points="5,3 19,12 5,21"/></svg>
+        </button>
       </div>
-      <div class="today-hero-emoji">${cfg.badge}</div>`;
+      <div class="hero-bottom">
+        <div class="today-hero-info">
+          <div class="today-hero-day">יום ${HEB_DAYS3[d]} — ${cfg.sub}</div>
+          <div class="today-hero-title">${cfg.label}</div>
+        </div>
+        <div class="hero-wk-meta">
+          <span class="hero-meta-chip">${timeSvg}${cfg.meta.split(' · ')[0]}</span>
+          <span class="hero-meta-chip">${exSvg}${cfg.meta.split(' · ')[1]}</span>
+          ${done?'<span class="today-hero-hint">✓ הושלם היום!</span>':''}
+        </div>
+      </div>`;
     hero.onclick=()=>{
       document.querySelectorAll('.nav-btn').forEach(b=>{
         if(b.getAttribute('onclick')?.includes("'"+cfg.panel+"'")) b.click();
       });
     };
   } else {
-    hero.style.background='linear-gradient(135deg,rgba(48,209,88,.2),rgba(90,200,250,.15))';
-    hero.style.border='1px solid rgba(48,209,88,.3)';
+    hero.style.cssText='';
+    hero.style.background='linear-gradient(135deg,rgba(48,209,88,.12),rgba(48,209,88,.04))';
+    hero.style.border='1px solid rgba(48,209,88,.25)';
     hero.style.cursor='default';
     hero.innerHTML=`
-      <div class="today-hero-info">
-        <div class="today-hero-day">היום — יום ${HEB_DAYS3[d]}</div>
-        <div class="today-hero-title" style="color:#fff">יום מנוחה</div>
-        <div class="today-hero-sub" style="color:rgba(255,255,255,.8)">שיקום, שינה, תזונה. הגוף גדל כשאתה נח.</div>
+      <div class="hero-top-row">
+        <span class="hero-badge" style="background:rgba(48,209,88,.15);color:var(--green);">😴 יום מנוחה</span>
       </div>
-      <div class="today-hero-emoji">REST</div>`;
+      <div class="hero-bottom">
+        <div class="today-hero-info">
+          <div class="today-hero-day">יום ${HEB_DAYS3[d]}</div>
+          <div class="today-hero-title" style="color:#fff;">שיקום ושינה</div>
+          <div class="today-hero-sub">הגוף גדל כשאתה נח. תזונה, שינה, ריפוי.</div>
+        </div>
+      </div>`;
   }
   // Highlight today + mark completed days this week + count
   const fullLog=getLog();
@@ -3771,6 +3956,17 @@ function initTodayHero(){
         }
       }
     }
+  });
+  // Sync dash-week-row active state
+  const dashChips=document.querySelectorAll('#dash-week-row .dash-day-chip');
+  dashChips.forEach((c,i)=>{
+    c.classList.remove('ddc-active','ddc-done');
+    if(i===d) c.classList.add('ddc-active');
+  });
+  // mark done days in dash carousel too
+  document.querySelectorAll('.week-bar .day-cell.done-day').forEach((c,i)=>{
+    const idx=[...c.parentElement.children].indexOf(c);
+    if(dashChips[idx]) dashChips[idx].classList.add('ddc-done');
   });
   // Update week counter
   const wc=document.getElementById('week-counter');
@@ -5501,6 +5697,76 @@ async function requestWorkoutNotif(){
   </div>
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">⏱ מנוחה</button>
 </div>
+
+<!-- ══════════════════════════════════
+     MOBILE BOTTOM NAV (≤768px only)
+══════════════════════════════════ -->
+<nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+
+  <button class="mbn-item active" id="mbn-dashboard" onclick="showPanel('dashboard',null);setMobileNav('dashboard');" aria-label="לוח בקרה">
+    <svg class="mbn-icon" viewBox="0 0 24 24">
+      <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+      <polyline points="9,21 9,12 15,12 15,21"/>
+    </svg>
+    <span class="mbn-label">ראשי</span>
+  </button>
+
+  <button class="mbn-item" id="mbn-push" onclick="showPanel('push',null);setMobileNav('push');" aria-label="אימון">
+    <svg class="mbn-icon" viewBox="0 0 24 24">
+      <line x1="6" y1="12" x2="18" y2="12"/>
+      <rect x="2" y="9.5" width="3" height="5" rx="1"/>
+      <rect x="19" y="9.5" width="3" height="5" rx="1"/>
+      <rect x="5" y="10.8" width="2" height="2.4" rx=".5"/>
+      <rect x="17" y="10.8" width="2" height="2.4" rx=".5"/>
+    </svg>
+    <span class="mbn-label">אימון</span>
+  </button>
+
+  <button class="mbn-item" id="mbn-nutrition" onclick="showPanel('nutrition',null);setMobileNav('nutrition');" aria-label="תזונה">
+    <svg class="mbn-icon" viewBox="0 0 24 24">
+      <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+      <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+      <line x1="6" y1="1" x2="6" y2="4"/>
+      <line x1="10" y1="1" x2="10" y2="4"/>
+      <line x1="14" y1="1" x2="14" y2="4"/>
+    </svg>
+    <span class="mbn-label">תזונה</span>
+  </button>
+
+  <button class="mbn-item" id="mbn-progress" onclick="showPanel('progress',null);setMobileNav('progress');" aria-label="מעקב">
+    <svg class="mbn-icon" viewBox="0 0 24 24">
+      <line x1="18" y1="20" x2="18" y2="10"/>
+      <line x1="12" y1="20" x2="12" y2="4"/>
+      <line x1="6" y1="20" x2="6" y2="14"/>
+    </svg>
+    <span class="mbn-label">מעקב</span>
+  </button>
+
+  <button class="mbn-item" id="mbn-settings" onclick="showPanel('settings',null);setMobileNav('settings');" aria-label="הגדרות">
+    <svg class="mbn-icon" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+    <span class="mbn-label">הגדרות</span>
+  </button>
+
+</nav>
+
+<script>
+// Wire mobile bottom nav to showPanel
+function setMobileNav(name){
+  document.querySelectorAll('.mbn-item').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('mbn-'+name);
+  if(el) el.classList.add('active');
+  else document.getElementById('mbn-dashboard')?.classList.add('active');
+}
+// Intercept showPanel to also update mobile nav
+const _origShowPanel=showPanel;
+showPanel=function(name,btn){
+  _origShowPanel(name,btn);
+  setMobileNav(name);
+};
+</script>
 
 </body>
 </html>
