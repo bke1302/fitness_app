@@ -3,896 +3,1114 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>ProFit — מסך הבית</title>
+<title>ProFit — Home Screen</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ──────────────────────────────────────────
+   RESET & TOKENS
+────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:       #0D0E11;
+  --surface:  #1E2026;
+  --surface2: #272B34;
+  --surface3: #2F333E;
+  --lime:     #D4FF1A;
+  --lime-10:  rgba(212,255,26,.10);
+  --lime-18:  rgba(212,255,26,.18);
+  --lime-30:  rgba(212,255,26,.30);
+  --coral:    #FF6B6B;
+  --coral-10: rgba(255,107,107,.10);
+  --coral-20: rgba(255,107,107,.20);
+  --coral-35: rgba(255,107,107,.35);
+  --white:    #FFFFFF;
+  --muted:    #8F94A3;
+  --muted2:   #5A5F70;
+  --green:    #30D158;
+  --yellow:   #FFD60A;
+  --border:   rgba(255,255,255,.06);
+  --border2:  rgba(255,255,255,.10);
+  --r-lg:     24px;
+  --r-md:     16px;
+  --r-sm:     12px;
+  --font-he:  'Assistant', sans-serif;
+  --font-en:  'Inter', sans-serif;
+  --ease:     cubic-bezier(.16,1,.3,1);
+  --spring:   cubic-bezier(.34,1.56,.64,1);
+}
+html,body{
+  height:100%;
+  background:var(--bg);
+  color:var(--white);
+  font-family:var(--font-he);
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;
+}
+body{
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  min-height:100dvh;
+}
+::-webkit-scrollbar{display:none;}
+*{scrollbar-width:none;}
 
-  :root {
-    --bg:       #0D0E11;
-    --surface:  #1E2026;
-    --surface2: #272A32;
-    --lime:     #D4FF1A;
-    --lime-dim: rgba(212,255,26,.12);
-    --coral:    #FF6B6B;
-    --coral-dim:rgba(255,107,107,.12);
-    --muted:    #8F94A3;
-    --muted2:   #4A4F5E;
-    --white:    #FFFFFF;
-    --font-he:  'Assistant', sans-serif;
-    --font-en:  'Inter', sans-serif;
-    --radius:   20px;
-    --radius-sm:12px;
-    --ease-spring: cubic-bezier(.34,1.56,.64,1);
-    --ease-out:    cubic-bezier(.16,1,.3,1);
-  }
+/* ──────────────────────────────────────────
+   SCREEN WRAPPER
+────────────────────────────────────────── */
+.screen{
+  width:100%;
+  max-width:430px;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  padding-bottom:100px;
+  position:relative;
+  overflow-x:hidden;
+}
 
-  html, body {
-    height: 100%;
-    background: var(--bg);
-    color: var(--white);
-    font-family: var(--font-he);
-    -webkit-font-smoothing: antialiased;
-    overscroll-behavior: none;
-  }
+/* ──────────────────────────────────────────
+   SCROLL AREA
+────────────────────────────────────────── */
+.scroll-body{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+  padding:0 16px;
+  overflow-y:auto;
+}
 
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100dvh;
-  }
+/* ──────────────────────────────────────────
+   1. HEADER
+────────────────────────────────────────── */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:52px 20px 20px;
+  gap:12px;
+}
+.header-user{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex:1;
+  min-width:0;
+}
+.avatar-wrap{
+  position:relative;
+  flex-shrink:0;
+}
+.avatar{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  border:2px solid var(--lime);
+  background:linear-gradient(135deg,#2A2D38,#1E2026);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-en);
+  font-weight:800;
+  font-size:1.1rem;
+  color:var(--lime);
+  box-shadow:0 0 16px rgba(212,255,26,.22);
+}
+.avatar-status{
+  position:absolute;
+  bottom:1px;
+  left:1px;
+  width:11px;
+  height:11px;
+  background:var(--green);
+  border-radius:50%;
+  border:2px solid var(--bg);
+}
+.header-text{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  min-width:0;
+}
+.header-sub{
+  font-size:.75rem;
+  font-weight:600;
+  color:var(--muted);
+  line-height:1;
+}
+.header-title{
+  font-size:1.1rem;
+  font-weight:900;
+  line-height:1.15;
+  letter-spacing:-.25px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+}
+.level-badge{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:999px;
+  padding:6px 10px 6px 12px;
+}
+.level-badge-icon{
+  font-family:var(--font-en);
+  font-size:.7rem;
+  font-weight:900;
+  color:var(--lime);
+  letter-spacing:.03em;
+}
+.level-badge-xp{
+  font-size:.64rem;
+  font-weight:600;
+  color:var(--muted);
+}
+.notif-btn{
+  width:38px;
+  height:38px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  position:relative;
+  transition:transform .18s var(--spring);
+}
+.notif-btn:active{transform:scale(.9);}
+.notif-btn svg{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.notif-dot{
+  position:absolute;
+  top:7px;left:8px;
+  width:7px;height:7px;
+  background:var(--coral);
+  border-radius:50%;
+  border:2px solid var(--bg);
+  animation:pulseDot 2s ease-in-out infinite;
+}
+@keyframes pulseDot{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.3);opacity:.7;}}
 
-  .screen {
-    width: 100%;
-    max-width: 430px;
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    padding: 0 0 96px;
-    position: relative;
-    overflow-x: hidden;
-  }
+/* ──────────────────────────────────────────
+   SECTION HEADER
+────────────────────────────────────────── */
+.sec-header{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+.sec-title{
+  font-size:1.05rem;
+  font-weight:900;
+  letter-spacing:-.2px;
+}
+.sec-sub{
+  font-size:.72rem;
+  color:var(--muted);
+  font-weight:600;
+}
+.sec-action{
+  font-size:.72rem;
+  font-weight:700;
+  color:var(--lime);
+  cursor:pointer;
+  background:none;
+  border:none;
+  padding:0;
+  transition:opacity .15s;
+}
+.sec-action:hover{opacity:.75;}
 
-  /* ────────────────────────────────
-     HEADER
-  ──────────────────────────────── */
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 56px 24px 20px;
-  }
+/* ──────────────────────────────────────────
+   2. DAILY METRICS CARD
+────────────────────────────────────────── */
+.metrics-card{
+  background:var(--surface);
+  border-radius:var(--r-lg);
+  padding:20px;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  position:relative;
+  overflow:hidden;
+}
+.metrics-card::before{
+  content:'';
+  position:absolute;
+  top:-80px;right:-80px;
+  width:220px;height:220px;
+  background:radial-gradient(circle,rgba(212,255,26,.06),transparent 65%);
+  pointer-events:none;
+}
 
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
+/* Rings */
+.rings-wrap{
+  position:relative;
+  width:118px;height:118px;
+  flex-shrink:0;
+}
+.rings-svg{
+  width:118px;height:118px;
+  transform:rotate(-90deg);
+}
+/* outer track */
+.ro-track{cx:59;cy:59;r:51;fill:none;stroke:var(--surface3);stroke-width:8;}
+/* outer fill — lime */
+.ro-fill{
+  cx:59;cy:59;r:51;
+  fill:none;
+  stroke:var(--lime);
+  stroke-width:8;
+  stroke-linecap:round;
+  stroke-dasharray:320.44;
+  stroke-dashoffset:89.7; /* 72% */
+  filter:drop-shadow(0 0 7px rgba(212,255,26,.55));
+  transition:stroke-dashoffset .9s var(--ease);
+}
+/* inner track */
+.ri-track{cx:59;cy:59;r:37;fill:none;stroke:var(--surface3);stroke-width:8;}
+/* inner fill — coral */
+.ri-fill{
+  cx:59;cy:59;r:37;
+  fill:none;
+  stroke:var(--coral);
+  stroke-width:8;
+  stroke-linecap:round;
+  stroke-dasharray:232.48;
+  stroke-dashoffset:97.6; /* 58% */
+  filter:drop-shadow(0 0 7px rgba(255,107,107,.5));
+  transition:stroke-dashoffset .9s var(--ease) .12s;
+}
+.rings-center{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1px;
+  text-align:center;
+}
+.rings-pct{
+  font-family:var(--font-en);
+  font-size:1.5rem;
+  font-weight:900;
+  line-height:1;
+  color:var(--white);
+}
+.rings-lbl{
+  font-size:.54rem;
+  font-weight:700;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.07em;
+  line-height:1;
+}
 
-  .avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: 2px solid var(--lime);
-    background: linear-gradient(135deg, #2A2D38, #1E2026);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-en);
-    font-weight: 800;
-    font-size: 1rem;
-    color: var(--lime);
-    flex-shrink: 0;
-    box-shadow: 0 0 14px rgba(212,255,26,.25);
-  }
+/* Metrics list */
+.metrics-list{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  min-width:0;
+}
+.metric-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.metric-icon{font-size:1rem;flex-shrink:0;line-height:1;}
+.metric-body{flex:1;min-width:0;}
+.metric-main{
+  font-family:var(--font-en);
+  font-size:.84rem;
+  font-weight:700;
+  color:var(--white);
+  line-height:1.1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.metric-main span{font-family:var(--font-he);font-size:.7rem;font-weight:600;color:var(--muted);margin-right:3px;}
+.metric-sub{
+  font-size:.64rem;
+  color:var(--muted);
+  font-weight:500;
+  margin-top:1px;
+}
+.metric-bar{
+  margin-top:4px;
+  height:3px;
+  background:rgba(255,255,255,.07);
+  border-radius:999px;
+  overflow:hidden;
+}
+.metric-bar-fill{
+  height:100%;
+  border-radius:999px;
+  transition:width 1s var(--ease);
+}
+.mbar-coral{background:var(--coral);}
+.mbar-lime{background:var(--lime);}
+.mbar-blue{background:#5AC8FA;}
 
-  .header-text {}
-  .header-greeting {
-    font-size: .8rem;
-    color: var(--muted);
-    font-weight: 600;
-    line-height: 1;
-    margin-bottom: 3px;
-  }
-  .header-name {
-    font-size: 1.15rem;
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: -.3px;
-  }
+.metric-check{
+  width:18px;height:18px;
+  background:rgba(48,209,88,.15);
+  border-radius:50%;
+  border:1.5px solid rgba(48,209,88,.4);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  font-size:.65rem;
+}
 
-  .bell-btn {
-    position: relative;
-    width: 42px;
-    height: 42px;
-    border: none;
-    background: var(--surface);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform .18s var(--ease-spring), background .18s;
-  }
-  .bell-btn:active { transform: scale(.92); }
-  .bell-btn svg { width: 20px; height: 20px; stroke: var(--muted); fill: none; }
+/* ──────────────────────────────────────────
+   3. WEEKLY SCHEDULE CAROUSEL
+────────────────────────────────────────── */
+.week-scroll{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-bottom:4px;
+  scrollbar-width:none;
+}
+.week-scroll::-webkit-scrollbar{display:none;}
+.day-badge{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  padding:10px 8px;
+  border-radius:var(--r-md);
+  border:1px solid var(--border);
+  background:var(--surface);
+  cursor:pointer;
+  flex-shrink:0;
+  width:54px;
+  transition:all .2s var(--ease);
+  position:relative;
+}
+.day-badge:active{transform:scale(.95);}
+.day-badge.rest{opacity:.5;}
+.day-badge.active-day{
+  background:var(--lime-10);
+  border-color:rgba(212,255,26,.35);
+  box-shadow:0 0 16px rgba(212,255,26,.12);
+}
+.day-badge-dot{
+  position:absolute;
+  top:7px;
+  width:5px;height:5px;
+  border-radius:50%;
+}
+.day-badge.active-day .day-badge-dot{background:var(--lime);}
+.day-badge-emoji{font-size:1.1rem;line-height:1;}
+.day-badge-name{font-size:.55rem;font-weight:800;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;}
+.day-badge-type{font-size:.58rem;font-weight:700;line-height:1;}
+.day-badge.active-day .day-badge-type{color:var(--lime);}
+.day-badge:not(.active-day) .day-badge-type{color:var(--muted2);}
+.done-ring{
+  position:absolute;
+  inset:-1px;
+  border-radius:var(--r-md);
+  border:1.5px solid rgba(48,209,88,.45);
+  pointer-events:none;
+}
 
-  .bell-badge {
-    position: absolute;
-    top: 7px;
-    left: 8px;
-    width: 8px;
-    height: 8px;
-    background: var(--coral);
-    border-radius: 50%;
-    border: 2px solid var(--bg);
-  }
+/* ──────────────────────────────────────────
+   4. WORKOUT CARD
+────────────────────────────────────────── */
+.workout-card{
+  border-radius:var(--r-md);
+  overflow:hidden;
+  position:relative;
+  height:210px;
+  cursor:pointer;
+  transition:transform .22s var(--spring);
+}
+.workout-card:active{transform:scale(.985);}
+/* Dark gym background */
+.wk-bg{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(13,14,17,.2) 0%,rgba(13,14,17,.75) 100%),
+    /* grid pattern */
+    repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(212,255,26,.035) 27px,rgba(212,255,26,.035) 28px),
+    repeating-linear-gradient(90deg,transparent,transparent 27px,rgba(212,255,26,.035) 27px,rgba(212,255,26,.035) 28px),
+    linear-gradient(135deg,#1a1d24 0%,#242830 50%,#1a1d24 100%);
+}
+/* subtle corner glow */
+.wk-glow{
+  position:absolute;
+  top:-60px;right:-60px;
+  width:250px;height:250px;
+  background:radial-gradient(circle,rgba(212,255,26,.10),transparent 60%);
+  pointer-events:none;
+}
+.wk-content{
+  position:relative;z-index:2;
+  padding:18px 18px 16px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.wk-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+}
+.wk-badge{
+  background:var(--lime);
+  color:#000;
+  font-family:var(--font-en);
+  font-size:.62rem;
+  font-weight:900;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:4px 10px;
+  border-radius:999px;
+}
+.play-btn{
+  width:48px;height:48px;
+  background:var(--lime);
+  border-radius:50%;
+  border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  box-shadow:0 0 24px rgba(212,255,26,.45);
+  transition:transform .2s var(--spring),box-shadow .2s;
+  flex-shrink:0;
+}
+.play-btn:active{transform:scale(.88);box-shadow:0 0 10px rgba(212,255,26,.3);}
+.play-btn svg{width:20px;height:20px;fill:#000;margin-right:-2px;}
+.wk-bottom{}
+.wk-muscles{
+  font-family:var(--font-he);
+  font-size:1.35rem;
+  font-weight:900;
+  line-height:1.15;
+  margin-bottom:8px;
+  letter-spacing:-.2px;
+}
+.wk-meta{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.wk-chip{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  font-size:.72rem;
+  font-weight:600;
+  color:rgba(255,255,255,.65);
+}
+.wk-chip svg{width:13px;height:13px;stroke:rgba(255,255,255,.45);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 
-  /* ────────────────────────────────
-     SCROLL CONTENT
-  ──────────────────────────────── */
-  .scroll-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    padding: 0 20px;
-  }
+/* ──────────────────────────────────────────
+   5. NUTRITION CARDS
+────────────────────────────────────────── */
+.meals-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.meal-card{
+  background:var(--surface);
+  border-radius:var(--r-md);
+  padding:14px;
+  position:relative;
+  overflow:hidden;
+  transition:transform .18s var(--spring);
+  cursor:pointer;
+  border:1px solid transparent;
+}
+.meal-card:active{transform:scale(.97);}
+.meal-card.done{
+  opacity:.62;
+  border-color:rgba(48,209,88,.2);
+}
+.meal-card.next{
+  border-color:var(--coral-35);
+  background:linear-gradient(145deg,var(--surface),rgba(255,107,107,.05));
+}
+.meal-card.next::before{
+  content:'';
+  position:absolute;
+  top:0;right:0;
+  width:60px;height:60px;
+  background:radial-gradient(circle at top right,rgba(255,107,107,.12),transparent 70%);
+}
+.meal-status{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin-bottom:8px;
+}
+.meal-done-mark{
+  width:20px;height:20px;
+  background:rgba(48,209,88,.15);
+  border:1.5px solid rgba(48,209,88,.4);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.62rem;
+  color:var(--green);
+}
+.meal-next-label{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  font-size:.62rem;
+  font-weight:800;
+  color:var(--coral);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.pulse-dot{
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--coral);
+  animation:pulseDot 1.5s ease-in-out infinite;
+}
+.meal-time{
+  font-family:var(--font-en);
+  font-size:.66rem;
+  font-weight:700;
+  color:var(--muted);
+  letter-spacing:.04em;
+  margin-bottom:5px;
+}
+.meal-name{
+  font-size:.84rem;
+  font-weight:800;
+  line-height:1.25;
+  margin-bottom:8px;
+}
+.meal-macros{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.m-pill{
+  font-family:var(--font-en);
+  font-size:.6rem;
+  font-weight:700;
+  padding:2px 7px;
+  border-radius:999px;
+}
+.m-pill.coral{background:var(--coral-10);color:var(--coral);}
+.m-pill.lime{background:var(--lime-10);color:var(--lime);}
+.m-pill.muted{background:rgba(255,255,255,.06);color:var(--muted);}
+.meal-add-btn{
+  position:absolute;
+  bottom:12px;left:12px;
+  width:26px;height:26px;
+  background:var(--coral);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;
+  font-weight:700;
+  color:#fff;
+  line-height:1;
+  box-shadow:0 0 10px rgba(255,107,107,.35);
+  cursor:pointer;
+  transition:transform .18s var(--spring);
+}
+.meal-add-btn:active{transform:scale(.88);}
 
-  /* section labels */
-  .section-label {
-    font-size: .72rem;
-    font-weight: 800;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
+/* ──────────────────────────────────────────
+   6. TRAINER TIPS BANNER
+────────────────────────────────────────── */
+.tips-card{
+  background:linear-gradient(135deg,rgba(255,214,10,.06),rgba(255,214,10,.03));
+  border:1px solid rgba(255,214,10,.28);
+  border-radius:var(--r-md);
+  padding:16px 16px;
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  position:relative;
+  overflow:hidden;
+}
+.tips-card::before{
+  content:'';
+  position:absolute;
+  top:0;right:0;
+  width:80px;height:80px;
+  background:radial-gradient(circle at top right,rgba(255,214,10,.1),transparent 65%);
+  pointer-events:none;
+}
+.tips-icon-wrap{
+  width:36px;height:36px;
+  background:rgba(255,214,10,.12);
+  border:1px solid rgba(255,214,10,.25);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+  flex-shrink:0;
+}
+.tips-body{flex:1;min-width:0;}
+.tips-label{
+  font-size:.65rem;
+  font-weight:800;
+  color:rgba(255,214,10,.8);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-bottom:4px;
+}
+.tips-text{
+  font-size:.82rem;
+  color:rgba(255,255,255,.8);
+  line-height:1.65;
+  font-weight:500;
+}
+.tips-text strong{color:var(--yellow,#FFD60A);font-weight:800;}
+.tips-dismiss{
+  background:none;
+  border:none;
+  color:var(--muted2);
+  font-size:.85rem;
+  cursor:pointer;
+  padding:0;
+  line-height:1;
+  flex-shrink:0;
+  transition:color .15s;
+}
+.tips-dismiss:hover{color:var(--muted);}
 
-  /* ────────────────────────────────
-     DAILY SUMMARY CARD
-  ──────────────────────────────── */
-  .summary-card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 24px;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    position: relative;
-    overflow: hidden;
-  }
+/* ──────────────────────────────────────────
+   7. BOTTOM NAV
+────────────────────────────────────────── */
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:430px;
+  height:80px;
+  background:rgba(20,22,28,.78);
+  backdrop-filter:blur(28px) saturate(200%);
+  -webkit-backdrop-filter:blur(28px) saturate(200%);
+  border-top:1px solid rgba(255,255,255,.08);
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  padding:0 8px;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  z-index:100;
+}
+.nav-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  padding:8px 14px;
+  border-radius:14px;
+  cursor:pointer;
+  border:none;
+  background:transparent;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .18s var(--spring),background .18s;
+}
+.nav-item:active{transform:scale(.88);}
+.nav-item.active{background:var(--lime-10);}
+.nav-icon{
+  width:24px;height:24px;
+  stroke:var(--muted);
+  fill:none;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  transition:stroke .18s;
+}
+.nav-item.active .nav-icon{stroke:var(--lime);}
+.nav-label{
+  font-size:.56rem;
+  font-weight:700;
+  color:var(--muted);
+  letter-spacing:.04em;
+  transition:color .18s;
+  white-space:nowrap;
+}
+.nav-item.active .nav-label{color:var(--lime);}
 
-  .summary-card::before {
-    content: '';
-    position: absolute;
-    top: -60px;
-    right: -60px;
-    width: 180px;
-    height: 180px;
-    background: radial-gradient(circle, rgba(212,255,26,.07) 0%, transparent 70%);
-    pointer-events: none;
-  }
+/* ──────────────────────────────────────────
+   ENTRANCE ANIMATIONS
+────────────────────────────────────────── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.header        {animation:fadeUp .5s var(--ease) .05s both;}
+.section-0     {animation:fadeUp .5s var(--ease) .12s both;}
+.section-1     {animation:fadeUp .5s var(--ease) .20s both;}
+.section-2     {animation:fadeUp .5s var(--ease) .28s both;}
+.section-3     {animation:fadeUp .5s var(--ease) .36s both;}
+.section-4     {animation:fadeUp .5s var(--ease) .44s both;}
+.bottom-nav    {animation:fadeUp .5s var(--ease) .52s both;}
 
-  /* SVG Rings */
-  .rings-wrap {
-    position: relative;
-    width: 120px;
-    height: 120px;
-    flex-shrink: 0;
-  }
-
-  .rings-svg {
-    width: 120px;
-    height: 120px;
-    transform: rotate(-90deg);
-  }
-
-  /* outer ring — lime — calories 72% */
-  .ring-outer {
-    cx: 60; cy: 60; r: 52;
-    fill: none;
-    stroke: var(--muted2);
-    stroke-width: 7;
-  }
-  .ring-outer-fill {
-    cx: 60; cy: 60; r: 52;
-    fill: none;
-    stroke: var(--lime);
-    stroke-width: 7;
-    stroke-linecap: round;
-    stroke-dasharray: 326.7;
-    stroke-dashoffset: 91.5; /* 326.7*(1-0.72) */
-    filter: drop-shadow(0 0 6px rgba(212,255,26,.5));
-    transition: stroke-dashoffset .8s var(--ease-out);
-  }
-
-  /* inner ring — coral — protein 58% */
-  .ring-inner {
-    cx: 60; cy: 60; r: 39;
-    fill: none;
-    stroke: var(--muted2);
-    stroke-width: 7;
-  }
-  .ring-inner-fill {
-    cx: 60; cy: 60; r: 39;
-    fill: none;
-    stroke: var(--coral);
-    stroke-width: 7;
-    stroke-linecap: round;
-    stroke-dasharray: 245.04;
-    stroke-dashoffset: 102.9; /* 245.04*(1-0.58) */
-    filter: drop-shadow(0 0 6px rgba(255,107,107,.5));
-    transition: stroke-dashoffset .8s var(--ease-out) .1s;
-  }
-
-  .rings-center {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1px;
-  }
-  .rings-center-num {
-    font-family: var(--font-en);
-    font-size: 1.55rem;
-    font-weight: 900;
-    color: var(--white);
-    line-height: 1;
-  }
-  .rings-center-label {
-    font-size: .6rem;
-    font-weight: 700;
-    color: var(--muted);
-    letter-spacing: .06em;
-    text-transform: uppercase;
-  }
-
-  /* metrics rows */
-  .summary-metrics {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .metric-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .metric-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .metric-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .dot-lime { background: var(--lime); box-shadow: 0 0 6px rgba(212,255,26,.6); }
-  .dot-coral { background: var(--coral); box-shadow: 0 0 6px rgba(255,107,107,.6); }
-  .dot-blue { background: #5AC8FA; box-shadow: 0 0 6px rgba(90,200,250,.5); }
-
-  .metric-label {
-    font-size: .8rem;
-    font-weight: 600;
-    color: var(--muted);
-  }
-
-  .metric-val {
-    font-family: var(--font-en);
-    font-size: .85rem;
-    font-weight: 700;
-    color: var(--white);
-  }
-
-  .metric-sub {
-    font-size: .7rem;
-    color: var(--muted);
-    font-family: var(--font-he);
-    font-weight: 400;
-  }
-
-  /* ────────────────────────────────
-     WORKOUT CARD
-  ──────────────────────────────── */
-  .workout-card {
-    border-radius: var(--radius);
-    overflow: hidden;
-    position: relative;
-    height: 200px;
-    cursor: pointer;
-    transition: transform .22s var(--ease-spring);
-  }
-  .workout-card:active { transform: scale(.98); }
-
-  .workout-bg {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, #1a1c22 0%, #252830 100%);
-  }
-
-  /* grid pattern overlay */
-  .workout-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(212,255,26,.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(212,255,26,.04) 1px, transparent 1px);
-    background-size: 28px 28px;
-  }
-
-  /* dark gradient overlay */
-  .workout-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      135deg,
-      rgba(13,14,17,.15) 0%,
-      rgba(13,14,17,.6) 100%
-    );
-  }
-
-  /* glowing corner accent */
-  .workout-glow {
-    position: absolute;
-    top: -40px;
-    left: -40px;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(212,255,26,.12) 0%, transparent 65%);
-    pointer-events: none;
-  }
-
-  .workout-content {
-    position: relative;
-    z-index: 2;
-    padding: 22px 22px 20px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .workout-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
-
-  .workout-badge {
-    background: var(--lime);
-    color: #000;
-    font-family: var(--font-en);
-    font-size: .65rem;
-    font-weight: 900;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 999px;
-  }
-
-  .play-btn {
-    width: 46px;
-    height: 46px;
-    background: var(--lime);
-    border-radius: 50%;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform .18s var(--ease-spring), box-shadow .18s;
-    box-shadow: 0 0 20px rgba(212,255,26,.4);
-  }
-  .play-btn:active { transform: scale(.9); }
-  .play-btn svg {
-    width: 20px;
-    height: 20px;
-    fill: #000;
-    margin-right: -2px; /* optical center for play triangle */
-  }
-
-  .workout-bottom {}
-  .workout-title {
-    font-size: 1.6rem;
-    font-weight: 900;
-    letter-spacing: -.4px;
-    line-height: 1.1;
-    margin-bottom: 10px;
-  }
-
-  .workout-meta {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-  }
-
-  .meta-chip {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: .75rem;
-    font-weight: 600;
-    color: rgba(255,255,255,.7);
-  }
-  .meta-chip svg {
-    width: 14px;
-    height: 14px;
-    stroke: rgba(255,255,255,.5);
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  /* ────────────────────────────────
-     MEALS SECTION
-  ──────────────────────────────── */
-  .meals-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-
-  .meal-card {
-    background: var(--surface);
-    border-radius: var(--radius-sm);
-    padding: 18px 16px;
-    position: relative;
-    overflow: hidden;
-    transition: transform .18s var(--ease-spring);
-  }
-  .meal-card:active { transform: scale(.97); }
-
-  .meal-card.done {
-    opacity: .65;
-  }
-
-  .meal-card.upcoming {
-    border: 1.5px solid rgba(255,107,107,.35);
-    background: linear-gradient(135deg, var(--surface) 60%, rgba(255,107,107,.06) 100%);
-  }
-
-  .meal-card.done::after {
-    content: '✓';
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    width: 22px;
-    height: 22px;
-    background: rgba(48,209,88,.18);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: .65rem;
-    font-weight: 900;
-    color: #30D158;
-    line-height: 22px;
-    text-align: center;
-  }
-
-  .meal-time {
-    font-family: var(--font-en);
-    font-size: .68rem;
-    font-weight: 700;
-    letter-spacing: .06em;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-
-  .meal-name {
-    font-size: .9rem;
-    font-weight: 800;
-    margin-bottom: 10px;
-    line-height: 1.2;
-  }
-
-  .meal-macros {
-    display: flex;
-    gap: 8px;
-  }
-
-  .macro-pill {
-    font-family: var(--font-en);
-    font-size: .65rem;
-    font-weight: 700;
-    padding: 3px 7px;
-    border-radius: 999px;
-    background: var(--surface2);
-    color: var(--muted);
-  }
-  .macro-pill.lime { background: var(--lime-dim); color: var(--lime); }
-  .macro-pill.coral { background: var(--coral-dim); color: var(--coral); }
-
-  .meal-upcoming-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: .62rem;
-    font-weight: 700;
-    color: var(--coral);
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .meal-upcoming-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--coral);
-    animation: pulseDot 1.4s ease-in-out infinite;
-  }
-  @keyframes pulseDot {
-    0%,100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.4); opacity: .6; }
-  }
-
-  /* ────────────────────────────────
-     QUICK STATS ROW
-  ──────────────────────────────── */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
-  .stat-mini {
-    background: var(--surface);
-    border-radius: var(--radius-sm);
-    padding: 16px 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    text-align: center;
-  }
-
-  .stat-mini-icon {
-    font-size: 1.3rem;
-    margin-bottom: 2px;
-  }
-
-  .stat-mini-val {
-    font-family: var(--font-en);
-    font-size: 1.3rem;
-    font-weight: 900;
-    line-height: 1;
-    color: var(--white);
-  }
-
-  .stat-mini-label {
-    font-size: .65rem;
-    font-weight: 700;
-    color: var(--muted);
-    letter-spacing: .04em;
-  }
-
-  .stat-mini.accent-lime .stat-mini-val { color: var(--lime); }
-  .stat-mini.accent-coral .stat-mini-val { color: var(--coral); }
-
-  /* ────────────────────────────────
-     BOTTOM NAV (Glassmorphism)
-  ──────────────────────────────── */
-  .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 430px;
-    height: 82px;
-    background: rgba(30, 32, 38, 0.72);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border-top: 1px solid rgba(255,255,255,.06);
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding: 0 8px;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    z-index: 100;
-  }
-
-  .nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    padding: 10px 16px;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: transform .18s var(--ease-spring), background .18s;
-    border: none;
-    background: transparent;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .nav-item:active { transform: scale(.9); }
-
-  .nav-item.active {
-    background: var(--lime-dim);
-  }
-
-  .nav-icon {
-    width: 24px;
-    height: 24px;
-    stroke: var(--muted);
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    transition: stroke .18s;
-  }
-  .nav-item.active .nav-icon { stroke: var(--lime); }
-
-  .nav-label {
-    font-size: .62rem;
-    font-weight: 700;
-    letter-spacing: .04em;
-    color: var(--muted);
-    transition: color .18s;
-  }
-  .nav-item.active .nav-label { color: var(--lime); }
-
-  /* ────────────────────────────────
-     ENTRANCE ANIMATIONS
-  ──────────────────────────────── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .header       { animation: fadeUp .45s var(--ease-out) .05s both; }
-  .summary-card { animation: fadeUp .45s var(--ease-out) .12s both; }
-  .workout-card { animation: fadeUp .45s var(--ease-out) .2s  both; }
-  .meals-row    { animation: fadeUp .45s var(--ease-out) .28s both; }
-  .stats-row    { animation: fadeUp .45s var(--ease-out) .36s both; }
-  .bottom-nav   { animation: fadeUp .45s var(--ease-out) .44s both; }
-
-  /* ────────────────────────────────
-     SCROLLBAR HIDE
-  ──────────────────────────────── */
-  ::-webkit-scrollbar { display: none; }
-  * { scrollbar-width: none; }
+/* ──────────────────────────────────────────
+   UTILITIES
+────────────────────────────────────────── */
+.divider-line{height:1px;background:var(--border);border-radius:999px;}
 </style>
 </head>
 <body>
 <div class="screen">
 
-  <!-- ── HEADER ── -->
+  <!-- ════════════════════════════
+       1. HEADER
+  ════════════════════════════ -->
   <header class="header">
-    <div class="header-right">
-      <div class="avatar">ב</div>
+    <!-- Right: Avatar + Greeting (RTL = visually right) -->
+    <div class="header-user">
+      <div class="avatar-wrap">
+        <div class="avatar">ב</div>
+        <div class="avatar-status"></div>
+      </div>
       <div class="header-text">
-        <div class="header-greeting">שלום,</div>
-        <div class="header-name">ברק 💪</div>
+        <span class="header-sub">בוקר טוב, ברק 👋</span>
+        <span class="header-title">מוכן ליעד של היום?</span>
       </div>
     </div>
-    <button class="bell-btn" aria-label="התראות">
-      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-      </svg>
-      <span class="bell-badge"></span>
-    </button>
+    <!-- Left: Level Badge + Bell (RTL = visually left) -->
+    <div class="header-right">
+      <div class="level-badge">
+        <span class="level-badge-icon">LV 1 • מתחיל</span>
+        <span class="level-badge-xp">0/100</span>
+      </div>
+      <button class="notif-btn" aria-label="התראות">
+        <svg viewBox="0 0 24 24">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <span class="notif-dot"></span>
+      </button>
+    </div>
   </header>
 
-  <!-- ── SCROLL CONTENT ── -->
-  <div class="scroll-content">
+  <!-- ════════════════════════════
+       SCROLL BODY
+  ════════════════════════════ -->
+  <div class="scroll-body">
 
-    <!-- DAILY SUMMARY -->
-    <div>
-      <div class="section-label">סיכום יומי</div>
-      <div class="summary-card">
+    <!-- ════ 2. DAILY METRICS CARD ════ -->
+    <div class="section-0">
+      <div class="sec-header">
+        <span class="sec-title">לוח בקרה</span>
+        <span class="sec-sub">Lean Bulk • יעד +400 קל׳</span>
+      </div>
+      <div class="metrics-card">
 
-        <!-- SVG Rings -->
+        <!-- Concentric SVG Rings -->
         <div class="rings-wrap">
-          <svg class="rings-svg" viewBox="0 0 120 120">
+          <svg class="rings-svg" viewBox="0 0 118 118">
             <!-- outer track -->
-            <circle class="ring-outer"/>
-            <!-- outer fill (lime, calories) -->
-            <circle class="ring-outer-fill"/>
+            <circle class="ro-track"/>
+            <!-- outer fill: lime, 72% -->
+            <circle class="ro-fill" id="ro-fill"/>
             <!-- inner track -->
-            <circle class="ring-inner"/>
-            <!-- inner fill (coral, protein) -->
-            <circle class="ring-inner-fill"/>
+            <circle class="ri-track"/>
+            <!-- inner fill: coral, 58% -->
+            <circle class="ri-fill" id="ri-fill"/>
           </svg>
           <div class="rings-center">
-            <span class="rings-center-num">1,834</span>
-            <span class="rings-center-label">קלוריות</span>
+            <span class="rings-pct">72%</span>
+            <span class="rings-lbl">מקלוריות</span>
           </div>
         </div>
 
         <!-- Metrics -->
-        <div class="summary-metrics">
-          <div class="metric-row">
-            <div class="metric-left">
-              <span class="metric-dot dot-lime"></span>
-              <span class="metric-label">קלוריות</span>
-            </div>
-            <div style="text-align:left;">
-              <div class="metric-val">1,834 <span class="metric-sub">/ 2,550</span></div>
-            </div>
-          </div>
-          <div class="metric-row">
-            <div class="metric-left">
-              <span class="metric-dot dot-coral"></span>
-              <span class="metric-label">חלבון</span>
-            </div>
-            <div style="text-align:left;">
-              <div class="metric-val">87g <span class="metric-sub">/ 150g</span></div>
+        <div class="metrics-list">
+
+          <!-- Calories -->
+          <div class="metric-item">
+            <span class="metric-icon">🔥</span>
+            <div class="metric-body">
+              <div class="metric-main">1,850 / 2,750 <span>קק״ל</span></div>
+              <div class="metric-bar"><div class="metric-bar-fill mbar-coral" style="width:67%"></div></div>
+              <div class="metric-sub">BMR: 1,512 · TDEE: 2,344</div>
             </div>
           </div>
-          <div class="metric-row">
-            <div class="metric-left">
-              <span class="metric-dot dot-blue"></span>
-              <span class="metric-label">פחמימות</span>
+
+          <!-- Protein -->
+          <div class="metric-item">
+            <span class="metric-icon">🥩</span>
+            <div class="metric-body">
+              <div class="metric-main" style="color:var(--lime)">150g <span style="color:var(--muted)">חלבון</span></div>
+              <div class="metric-bar"><div class="metric-bar-fill mbar-lime" style="width:100%"></div></div>
             </div>
-            <div style="text-align:left;">
-              <div class="metric-val">210g <span class="metric-sub">/ 300g</span></div>
+            <div class="metric-check">✓</div>
+          </div>
+
+          <!-- Carbs + Fat -->
+          <div class="metric-item">
+            <span class="metric-icon">🌾</span>
+            <div class="metric-body">
+              <div class="metric-main" style="font-size:.78rem;">340g <span>פחמימות</span> · 80g <span>שומן</span></div>
+              <div class="metric-bar"><div class="metric-bar-fill mbar-blue" style="width:82%"></div></div>
             </div>
           </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ 3. WEEKLY SCHEDULE ════ -->
+    <div class="section-1">
+      <div class="sec-header">
+        <span class="sec-title">השבוע שלך</span>
+        <span class="sec-sub">4 ימי אימון</span>
+      </div>
+      <div class="week-scroll">
+
+        <!-- Sunday — TODAY (active) -->
+        <div class="day-badge active-day">
+          <span class="day-badge-dot"></span>
+          <span class="day-badge-emoji">💥</span>
+          <span class="day-badge-name">ראשון</span>
+          <span class="day-badge-type">PUSH</span>
+        </div>
+
+        <!-- Monday — done -->
+        <div class="day-badge" style="border-color:rgba(48,209,88,.3);">
+          <div class="done-ring"></div>
+          <span class="day-badge-emoji">🔄</span>
+          <span class="day-badge-name">שני</span>
+          <span class="day-badge-type" style="color:var(--green);">PULL</span>
+        </div>
+
+        <!-- Tuesday — rest -->
+        <div class="day-badge rest">
+          <span class="day-badge-emoji">😴</span>
+          <span class="day-badge-name">שלישי</span>
+          <span class="day-badge-type">מנוחה</span>
+        </div>
+
+        <!-- Wednesday -->
+        <div class="day-badge">
+          <span class="day-badge-emoji">🦵</span>
+          <span class="day-badge-name">רביעי</span>
+          <span class="day-badge-type">LEGS</span>
+        </div>
+
+        <!-- Thursday -->
+        <div class="day-badge">
+          <span class="day-badge-emoji">💪</span>
+          <span class="day-badge-name">חמישי</span>
+          <span class="day-badge-type">ARMS</span>
+        </div>
+
+        <!-- Friday — active light -->
+        <div class="day-badge rest" style="opacity:.6;">
+          <span class="day-badge-emoji">🚶</span>
+          <span class="day-badge-name">שישי</span>
+          <span class="day-badge-type">אקטיב</span>
+        </div>
+
+        <!-- Saturday — rest -->
+        <div class="day-badge rest">
+          <span class="day-badge-emoji">😴</span>
+          <span class="day-badge-name">שבת</span>
+          <span class="day-badge-type">מנוחה</span>
         </div>
 
       </div>
     </div>
 
-    <!-- WORKOUT CARD -->
-    <div>
-      <div class="section-label">אימון להיום</div>
-      <div class="workout-card" onclick="this.style.transform='scale(.98)'; setTimeout(()=>this.style.transform='',200);">
-        <div class="workout-bg"></div>
-        <div class="workout-grid"></div>
-        <div class="workout-overlay"></div>
-        <div class="workout-glow"></div>
-        <div class="workout-content">
-          <div class="workout-top">
-            <span class="workout-badge">Push Day A</span>
+    <!-- ════ 4. WORKOUT CARD ════ -->
+    <div class="section-2">
+      <div class="sec-header">
+        <span class="sec-title">התוכנית להיום</span>
+        <button class="sec-action">הצג תוכנית מלאה</button>
+      </div>
+      <div class="workout-card">
+        <div class="wk-bg"></div>
+        <div class="wk-glow"></div>
+        <div class="wk-content">
+
+          <!-- Top: badge + play button -->
+          <div class="wk-top">
+            <span class="wk-badge">💥 PUSH DAY A</span>
             <button class="play-btn" aria-label="התחל אימון">
               <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
             </button>
           </div>
-          <div class="workout-bottom">
-            <div class="workout-title">חזה · כתפיים · טריצפס</div>
-            <div class="workout-meta">
-              <div class="meta-chip">
+
+          <!-- Bottom: title + meta -->
+          <div class="wk-bottom">
+            <div class="wk-muscles">חזה · כתף · טריצפס</div>
+            <div class="wk-meta">
+              <div class="wk-chip">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                55 דק׳
+                ~70 דק׳
               </div>
-              <div class="meta-chip">
+              <div class="wk-chip">
                 <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 7 תרגילים
               </div>
-              <div class="meta-chip">
+              <div class="wk-chip">
                 <svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-                Push
+                Push Day
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
 
-    <!-- MEALS -->
-    <div>
-      <div class="section-label">ארוחות</div>
-      <div class="meals-row">
+    <!-- ════ 5. NUTRITION CARDS ════ -->
+    <div class="section-3">
+      <div class="sec-header">
+        <span class="sec-title">ארוחות מומלצות</span>
+        <span class="sec-sub">Lean Bulk</span>
+      </div>
+      <div class="meals-grid">
 
-        <!-- Completed meal -->
+        <!-- Card 1: Completed -->
         <div class="meal-card done">
-          <div class="meal-time">08:30</div>
-          <div class="meal-name">ארוחת בוקר</div>
+          <div class="meal-status">
+            <div class="meal-done-mark">✓</div>
+          </div>
+          <div class="meal-time">08:00 — בוקר</div>
+          <div class="meal-name">חזה עוף, אורז וברוקולי</div>
           <div class="meal-macros">
-            <span class="macro-pill lime">635 קל׳</span>
-            <span class="macro-pill">37g חל׳</span>
+            <span class="m-pill lime">45g חלבון</span>
+            <span class="m-pill muted">610 קל׳</span>
           </div>
         </div>
 
-        <!-- Upcoming meal -->
-        <div class="meal-card upcoming">
-          <div class="meal-upcoming-label">
-            <span class="meal-upcoming-dot"></span>
-            הבא
+        <!-- Card 2: Next Meal -->
+        <div class="meal-card next">
+          <div class="meal-status">
+            <div class="meal-next-label">
+              <span class="pulse-dot"></span>
+              הבא
+            </div>
           </div>
-          <div class="meal-time">13:00</div>
-          <div class="meal-name">ארוחת צהריים</div>
+          <div class="meal-time">12:00 — צהריים</div>
+          <div class="meal-name">שקשוקה חלבונים ולחם קל</div>
           <div class="meal-macros">
-            <span class="macro-pill coral">816 קל׳</span>
-            <span class="macro-pill">48g חל׳</span>
+            <span class="m-pill coral">35g חלבון</span>
+            <span class="m-pill muted">480 קל׳</span>
           </div>
+          <div class="meal-add-btn" title="הוסף ארוחה">+</div>
         </div>
 
       </div>
     </div>
 
-    <!-- QUICK STATS -->
-    <div>
-      <div class="section-label">סטטיסטיקה</div>
-      <div class="stats-row">
-        <div class="stat-mini accent-lime">
-          <div class="stat-mini-icon">🔥</div>
-          <div class="stat-mini-val">12</div>
-          <div class="stat-mini-label">סטריק</div>
+    <!-- ════ 6. TRAINER TIPS BANNER ════ -->
+    <div class="section-4">
+      <div class="tips-card">
+        <div class="tips-icon-wrap">💡</div>
+        <div class="tips-body">
+          <div class="tips-label">טיפים מהמאמן</div>
+          <div class="tips-text">
+            <strong>שבוע דה-לוד מומלץ</strong> לאחר 4 שבועות רצופים — הורד 40% מהמשקלים לחזרה חזקה יותר.
+          </div>
         </div>
-        <div class="stat-mini">
-          <div class="stat-mini-icon">💪</div>
-          <div class="stat-mini-val">4</div>
-          <div class="stat-mini-label">אימונים שבוע</div>
-        </div>
-        <div class="stat-mini accent-coral">
-          <div class="stat-mini-icon">⚡</div>
-          <div class="stat-mini-val">850</div>
-          <div class="stat-mini-label">XP</div>
-        </div>
+        <button class="tips-dismiss" aria-label="סגור">✕</button>
       </div>
     </div>
 
-  </div><!-- /scroll-content -->
+  </div><!-- /scroll-body -->
 
 </div><!-- /screen -->
 
-<!-- ── BOTTOM NAV (Glassmorphism) ── -->
+<!-- ════════════════════════════
+     7. BOTTOM NAV (Glassmorphism)
+════════════════════════════ -->
 <nav class="bottom-nav">
 
-  <!-- Home (active) -->
-  <button class="nav-item active" aria-label="בית">
+  <button class="nav-item active" aria-label="לוח בקרה">
     <svg class="nav-icon" viewBox="0 0 24 24">
       <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
       <polyline points="9,21 9,12 15,12 15,21"/>
     </svg>
-    <span class="nav-label">בית</span>
+    <span class="nav-label">לוח בקרה</span>
   </button>
 
-  <!-- Workout -->
-  <button class="nav-item" aria-label="אימון">
+  <button class="nav-item" aria-label="אימונים">
     <svg class="nav-icon" viewBox="0 0 24 24">
       <line x1="6" y1="12" x2="18" y2="12"/>
       <rect x="2" y="9.5" width="3" height="5" rx="1"/>
       <rect x="19" y="9.5" width="3" height="5" rx="1"/>
-      <rect x="5" y="10.5" width="2" height="3" rx=".5"/>
-      <rect x="17" y="10.5" width="2" height="3" rx=".5"/>
+      <rect x="5" y="10.8" width="2" height="2.4" rx=".5"/>
+      <rect x="17" y="10.8" width="2" height="2.4" rx=".5"/>
     </svg>
-    <span class="nav-label">אימון</span>
+    <span class="nav-label">אימונים</span>
   </button>
 
-  <!-- Nutrition -->
   <button class="nav-item" aria-label="תזונה">
     <svg class="nav-icon" viewBox="0 0 24 24">
-      <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
-      <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
-      <line x1="6" y1="1" x2="6" y2="4"/>
-      <line x1="10" y1="1" x2="10" y2="4"/>
-      <line x1="14" y1="1" x2="14" y2="4"/>
+      <path d="M12 2a7 7 0 0 1 7 7c0 4.56-3.13 7.95-7 9a13.2 13.2 0 0 1-7-9 7 7 0 0 1 7-7z"/>
+      <line x1="12" y1="2" x2="12" y2="5"/>
     </svg>
     <span class="nav-label">תזונה</span>
   </button>
 
-  <!-- Progress -->
-  <button class="nav-item" aria-label="התקדמות">
+  <button class="nav-item" aria-label="מעקב אישי">
     <svg class="nav-icon" viewBox="0 0 24 24">
       <line x1="18" y1="20" x2="18" y2="10"/>
       <line x1="12" y1="20" x2="12" y2="4"/>
       <line x1="6" y1="20" x2="6" y2="14"/>
     </svg>
-    <span class="nav-label">התקדמות</span>
+    <span class="nav-label">מעקב</span>
+  </button>
+
+  <button class="nav-item" aria-label="הגדרות">
+    <svg class="nav-icon" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+    <span class="nav-label">הגדרות</span>
   </button>
 
 </nav>
 
 <script>
-  // Nav item switching
+  // ── Rings entrance animation ──
+  window.addEventListener('load', () => {
+    const roFill = document.getElementById('ro-fill');
+    const riFill = document.getElementById('ri-fill');
+    // Start from full offset (empty), then animate to target
+    if (roFill) {
+      roFill.style.strokeDashoffset = '320.44';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        roFill.style.transition = 'stroke-dashoffset 1.1s cubic-bezier(.16,1,.3,1)';
+        roFill.style.strokeDashoffset = '89.7'; // 72%
+      }));
+    }
+    if (riFill) {
+      riFill.style.strokeDashoffset = '232.48';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        riFill.style.transition = 'stroke-dashoffset 1.1s cubic-bezier(.16,1,.3,1) .14s';
+        riFill.style.strokeDashoffset = '97.6'; // 58%
+      }));
+    }
+  });
+
+  // ── Nav switching ──
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
@@ -900,18 +1118,17 @@
     });
   });
 
-  // Rings animate on load
-  window.addEventListener('load', () => {
-    // already animated via CSS transition on SVG stroke-dashoffset
-    // trigger reflow for the animation to kick in
-    document.querySelectorAll('.ring-outer-fill, .ring-inner-fill').forEach(el => {
-      const final = el.style.strokeDashoffset || el.getAttribute('stroke-dashoffset');
-      el.style.strokeDashoffset = el.getAttribute('stroke-dasharray'); // start at 0%
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          el.style.strokeDashoffset = final;
-        });
-      });
+  // ── Dismiss tips ──
+  document.querySelector('.tips-dismiss')?.addEventListener('click', function() {
+    this.closest('.tips-card').style.cssText += 'opacity:0;transform:translateY(-8px);transition:all .3s;pointer-events:none;';
+    setTimeout(() => this.closest('.section-4').style.display = 'none', 310);
+  });
+
+  // ── Day badge click ──
+  document.querySelectorAll('.day-badge').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.day-badge').forEach(x => x.classList.remove('active-day'));
+      b.classList.add('active-day');
     });
   });
 </script>
