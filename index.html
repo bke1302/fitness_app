@@ -985,6 +985,33 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .hm-label{flex:1;color:var(--muted2);}
 .hm-status{font-size:.7rem;font-weight:700;white-space:nowrap;}
 
+/* ─── ABS CARD ─── */
+.abs-card{background:linear-gradient(135deg,rgba(48,209,88,.07),rgba(90,200,250,.05));border:1px solid rgba(48,209,88,.2);border-radius:14px;padding:16px 18px;margin-top:12px;}
+.abs-card-title{font-family:var(--font-d);font-size:.95rem;font-weight:800;color:var(--green);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.abs-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;}
+.abs-row:last-child{border-bottom:none;}
+.abs-row-name{color:var(--text);font-weight:600;}
+.abs-row-sets{color:var(--muted2);font-size:.78rem;}
+/* ─── EXERCISE ALTERNATIVES ─── */
+.alt-modal{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:450;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(10px);}
+.alt-modal.open{display:flex;}
+.alt-box{background:#111;border:1px solid var(--border2);border-radius:22px 22px 0 0;padding:24px;width:100%;max-width:480px;}
+.alt-title{font-family:var(--font-d);font-size:1rem;font-weight:800;margin-bottom:4px;}
+.alt-sub{font-size:.78rem;color:var(--muted);margin-bottom:16px;}
+.alt-item{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:opacity .15s;}
+.alt-item:last-child{border-bottom:none;}
+.alt-item:hover{opacity:.75;}
+.alt-item-name{font-weight:600;font-size:.9rem;}
+.alt-item-tag{font-size:.72rem;color:var(--muted2);margin-top:2px;}
+.alt-close-btn{width:100%;margin-top:14px;background:rgba(255,255,255,.06);border:1px solid var(--border2);color:var(--muted2);border-radius:12px;padding:12px;cursor:pointer;font-family:var(--font-d);font-size:.88rem;font-weight:700;}
+/* swap icon inside exercise rows */
+.ex-swap-btn{background:none;border:1px solid var(--border);border-radius:999px;color:var(--muted2);font-size:.65rem;padding:2px 8px;cursor:pointer;white-space:nowrap;transition:all .2s;margin-right:4px;}
+.ex-swap-btn:hover{border-color:var(--blue);color:var(--blue);}
+/* ─── WARMUP CARD ─── */
+.warmup-card{background:rgba(255,159,10,.06);border:1px solid rgba(255,159,10,.2);border-radius:14px;padding:14px 18px;margin-bottom:12px;}
+.warmup-title{font-family:var(--font-d);font-size:.88rem;font-weight:800;color:var(--orange);margin-bottom:8px;}
+.warmup-items{display:flex;flex-wrap:wrap;gap:6px;}
+.warmup-item{background:rgba(255,159,10,.1);border:1px solid rgba(255,159,10,.18);border-radius:999px;padding:4px 12px;font-size:.76rem;color:var(--orange);}
 /* ─── GYM MODE ─── */
 .gym-overlay{position:fixed;inset:0;background:#000;z-index:400;display:none;flex-direction:column;align-items:stretch;}
 .gym-overlay.open{display:flex;}
@@ -992,8 +1019,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .gym-badge{font-family:var(--font-d);font-size:.7rem;font-weight:900;letter-spacing:3px;text-transform:uppercase;padding:5px 14px;border-radius:999px;border:1.5px solid;}
 .gym-tempo-btn{background:rgba(255,255,255,.06);border:1px solid var(--border2);color:var(--muted2);border-radius:999px;padding:5px 12px;font-size:.72rem;cursor:pointer;font-family:var(--font-d);font-weight:700;letter-spacing:.5px;transition:all .2s;}
 .gym-tempo-btn.on{background:rgba(90,200,250,.1);border-color:var(--cyan);color:var(--cyan);}
-.gym-close{background:rgba(255,255,255,.06);border:1px solid var(--border2);color:var(--muted2);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .2s;}
-.gym-close:hover{color:var(--text);}
+.gym-close{background:rgba(255,55,95,.12);border:1.5px solid rgba(255,55,95,.4);color:var(--red);height:36px;border-radius:999px;cursor:pointer;font-size:.78rem;font-family:var(--font-d);font-weight:800;letter-spacing:.5px;padding:0 16px;display:flex;align-items:center;gap:5px;transition:all .2s;}
+.gym-close:hover{background:rgba(255,55,95,.22);border-color:var(--red);}
+/* gym stopwatch */
+.gym-stopwatch{font-family:var(--font-d);font-size:.82rem;font-weight:700;color:var(--muted2);letter-spacing:1px;}
+/* gym set input popup */
+.gym-set-popup{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid var(--border2);border-radius:22px 22px 0 0;padding:24px 24px 36px;z-index:410;transform:translateY(100%);transition:transform .3s var(--ease-out);}
+.gym-set-popup.show{transform:translateY(0);}
+.gym-set-popup-title{font-family:var(--font-d);font-size:1rem;font-weight:800;margin-bottom:16px;color:var(--text);}
+.gym-set-inputs{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.gym-set-input{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-size:1.1rem;font-weight:700;padding:12px;width:90px;text-align:center;}
+.gym-set-x{color:var(--muted2);font-size:1.2rem;font-weight:700;}
+.gym-set-save{background:linear-gradient(135deg,var(--red),var(--purple));color:#fff;border:none;border-radius:999px;padding:13px 32px;cursor:pointer;font-family:var(--font-d);font-size:1rem;font-weight:800;width:100%;transition:opacity .18s;}
+.gym-set-save:active{opacity:.8;}
 .gym-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 32px;text-align:center;}
 .gym-counter{font-size:.72rem;color:var(--muted);letter-spacing:2.5px;margin-bottom:18px;font-weight:700;text-transform:uppercase;}
 .gym-name{font-family:var(--font-d);font-size:clamp(2rem,8vw,4rem);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:8px;}
@@ -1655,6 +1693,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <strong>💬 מדוע הסדר הזה ב-PUSH?</strong><br>
       מתחיל בלחיצת חזה כבדה כשהגוף הכי טרי. אחר כך Incline לחזה עליון שהוא נקודת חולשה אצל רוב האנשים. רק אחרי שהחזה עבד — עובר לכתפיים. הטריצפס קיבל עבודה עקיפה מכל הלחיצות, ורק בסוף נותנים לו עבודה ישירה. <strong>זה הסדר שהגיון פיזיולוגי ברזל עומד מאחוריו.</strong>
     </div>
+    <div class="warmup-card">
+      <div class="warmup-title">🔆 חימום — 5–7 דקות לפני PUSH</div>
+      <div class="warmup-items">
+        <span class="warmup-item">קפיצות / Jumping Jacks × 1 דק׳</span>
+        <span class="warmup-item">סיבובי כתפיים × 20</span>
+        <span class="warmup-item">Push-ups קלות × 15</span>
+        <span class="warmup-item">Band Pull-Apart × 15</span>
+        <span class="warmup-item">לחיצת חזה ריקה — טכניקה × 10</span>
+      </div>
+    </div>
     <div class="card" data-wm="PUSH">
       <div class="card-head">
         <h2>ראשון — PUSH DAY</h2>
@@ -1724,6 +1772,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
             </tr>
           </tbody>
         </table>
+        <!-- ABS SECTION — Push Day -->
+        <div class="abs-card">
+          <div class="abs-card-title">🔥 בטן — 5 דקות בסוף Push (3× בשבוע)</div>
+          <div class="abs-row"><span class="abs-row-name">Plank</span><span class="abs-row-sets">3 × 30–45 שנ׳</span></div>
+          <div class="abs-row"><span class="abs-row-name">כפיפות בטן (Crunches)</span><span class="abs-row-sets">3 × 20</span></div>
+          <div class="abs-row"><span class="abs-row-name">הרמות רגליים</span><span class="abs-row-sets">3 × 15</span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1735,6 +1790,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="trainer-note">
       <strong>💬 PULL ביום שני — למה זה עובד מצוין?</strong><br>
       שרירי ה-Push (חזה, כתפיים, טריצפס) שעבדו אתמול <strong>לא נוגעים</strong> בשרירי ה-Pull. הגב, הבייסס והכתף האחורית לגמרי טריים. זו הסיבה שיומיים רצופים Push/Pull הם הצמד הכי פחות מזיק שקיים.
+    </div>
+    <div class="warmup-card">
+      <div class="warmup-title">🔆 חימום — 5–7 דקות לפני PULL</div>
+      <div class="warmup-items">
+        <span class="warmup-item">קפיצות × 1 דק׳</span>
+        <span class="warmup-item">סיבובי כתפיים אחוריות × 20</span>
+        <span class="warmup-item">Band Face Pull × 15</span>
+        <span class="warmup-item">Scapular Pull-ups × 10</span>
+        <span class="warmup-item">חתירה קלה — טכניקה × 10</span>
+      </div>
     </div>
     <div class="card" data-wm="PULL">
       <div class="card-head">
@@ -1816,6 +1881,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="trainer-note">
       <strong>💬 רגליים — יום ד׳ אחרי מנוחה ביום ג׳</strong><br>
       הגוף שיקם מלא את שרירי Push ו-Pull. עכשיו יום הרגליים — הכי אנבולי מכולם. סקוואט ולחיצת רגליים מגרים שחרור <strong>טסטוסטרון וGH</strong> יותר מכל תרגיל אחר. מי שמדלג על יום רגליים — מדלג על 40% מהתוצאות. <strong>אין עוד מה לדבר.</strong>
+    </div>
+    <div class="warmup-card">
+      <div class="warmup-title">🔆 חימום — 5–7 דקות לפני LEGS</div>
+      <div class="warmup-items">
+        <span class="warmup-item">אופניים / הליכה × 5 דק׳</span>
+        <span class="warmup-item">סקוואט גוף × 15</span>
+        <span class="warmup-item">הליכת פסיעה × 10 כל רגל</span>
+        <span class="warmup-item">Hip Circles × 10 כל כיוון</span>
+        <span class="warmup-item">Leg Swing × 10 כל רגל</span>
+      </div>
     </div>
     <div class="card" data-wm="LEGS">
       <div class="card-head">
@@ -1970,6 +2045,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <strong style="color:var(--text);">Hamstrings:</strong> 6 סטים &nbsp;|&nbsp;
           <strong style="color:var(--text);">שוק:</strong> 8 סטים (2 שרירים!)
         </div>
+        <!-- ABS SECTION — Legs Day -->
+        <div class="abs-card">
+          <div class="abs-card-title">🔥 בטן — 5 דקות בסוף Legs</div>
+          <div class="abs-row"><span class="abs-row-name">Dead Bug</span><span class="abs-row-sets">3 × 10 (כל צד)</span></div>
+          <div class="abs-row"><span class="abs-row-name">Russian Twists</span><span class="abs-row-sets">3 × 20</span></div>
+          <div class="abs-row"><span class="abs-row-name">Side Plank</span><span class="abs-row-sets">2 × 30 שנ׳ (כל צד)</span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1981,6 +2063,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="trainer-note">
       <strong>💬 יום ה׳ — ARMS: למה יום שלם לידיים?</strong><br>
       בייסס קיבל עבודה עקיפה ב-PULL, טריצפס קיבל עבודה עקיפה ב-PUSH. <strong>עכשיו נותנים להם עבודה ישירה ומסיבית.</strong> זה ה"נשק הסודי" של אנשים עם ידיים גדולות — הם לא מסתמכים רק על עבודה עקיפה. יום ה׳ מושלם כי הרגליים מיום ד׳ לא משפיעות בכלל על הידיים.
+    </div>
+    <div class="warmup-card">
+      <div class="warmup-title">🔆 חימום — 5 דקות לפני ARMS</div>
+      <div class="warmup-items">
+        <span class="warmup-item">Wrist Circles × 20</span>
+        <span class="warmup-item">כפיפות ריקות × 20</span>
+        <span class="warmup-item">Rope Pushdown קל × 20</span>
+        <span class="warmup-item">סיבובי מרפקים × 10</span>
+      </div>
     </div>
     <div class="card" data-wm="ARMS">
       <div class="card-head">
@@ -2129,14 +2220,59 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
               <td><span class="badge badge-red">Drop Set</span></td>
             </tr>
 
+            <!-- FOREARMS SECTION -->
+            <tr style="background:rgba(90,200,250,.04);">
+              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--cyan);letter-spacing:1px;text-transform:uppercase;">── אמות (Forearms) ──</td>
+            </tr>
+            <tr onclick="openModal('wristCurl')">
+              <td><div class="ex-num-cell">7</div></td>
+              <td>
+                <div class="ex-name-main">כפיפת פרק — מוט</div>
+                <div class="ex-name-en">Wrist Curl (barbell)</div>
+                <div class="ex-why">Flexors — בונה עובי אמות מקדמי. אל תזניח!</div>
+              </td>
+              <td><span class="muscle-tag">Wrist Flexors</span><br><span class="part-tag">אמות קדמיות</span></td>
+              <td class="sets-cell">3 × 15–20</td><td class="rest-cell">30 שנ׳</td>
+              <td><span class="badge badge-cyan">בידוד</span></td>
+            </tr>
+            <tr onclick="openModal('reverseWristCurl')">
+              <td><div class="ex-num-cell">8</div></td>
+              <td>
+                <div class="ex-name-main">כפיפת פרק הפוכה</div>
+                <div class="ex-name-en">Reverse Wrist Curl</div>
+                <div class="ex-why">Extensors — מאזן את העומס, מונע כאבי מרפק</div>
+              </td>
+              <td><span class="muscle-tag">Wrist Extensors</span><br><span class="part-tag">אמות אחוריות</span></td>
+              <td class="sets-cell">3 × 15–20</td><td class="rest-cell">30 שנ׳</td>
+              <td><span class="badge badge-cyan">בידוד</span></td>
+            </tr>
+            <tr onclick="openModal('farmerWalk')">
+              <td><div class="ex-num-cell">9</div></td>
+              <td>
+                <div class="ex-name-main">Farmer's Carry</div>
+                <div class="ex-name-en">Farmer's Walk / Hold</div>
+                <div class="ex-why">אחיזה + Forearms + כל הגוף — תרגיל עוצמה</div>
+              </td>
+              <td><span class="muscle-tag">Grip + Forearms</span><br><span class="part-tag">כוח אחיזה</span></td>
+              <td class="sets-cell">3 × 30–45 שנ׳</td><td class="rest-cell">60 שנ׳</td>
+              <td><span class="badge badge-yellow">פונקציונלי</span></td>
+            </tr>
           </tbody>
         </table>
 
         <div style="margin-top:16px;background:var(--bg3);border-radius:10px;padding:14px;font-size:.82rem;color:var(--muted2);line-height:1.8;">
-          <strong style="color:var(--text);">⏱ זמן משוער:</strong> ~75 דק׳ &nbsp;|&nbsp;
+          <strong style="color:var(--text);">⏱ זמן משוער:</strong> ~85 דק׳ &nbsp;|&nbsp;
           <strong style="color:var(--text);">סטים לבייסס:</strong> 9 &nbsp;|&nbsp;
           <strong style="color:var(--text);">סטים לטריצפס:</strong> 9 &nbsp;|&nbsp;
-          <strong style="color:var(--text);">כתפיים:</strong> 6
+          <strong style="color:var(--text);">כתפיים:</strong> 6 &nbsp;|&nbsp;
+          <strong style="color:var(--cyan);">Forearms:</strong> 9
+        </div>
+        <!-- ABS SECTION — Arms Day -->
+        <div class="abs-card">
+          <div class="abs-card-title">🔥 בטן — 5 דקות בסוף Arms</div>
+          <div class="abs-row"><span class="abs-row-name">Hollow Body Hold</span><span class="abs-row-sets">3 × 30 שנ׳</span></div>
+          <div class="abs-row"><span class="abs-row-name">Bicycle Crunches</span><span class="abs-row-sets">3 × 20 (כל צד)</span></div>
+          <div class="abs-row"><span class="abs-row-name">Leg Raises תלויות</span><span class="abs-row-sets">3 × 12</span></div>
         </div>
       </div>
     </div>
@@ -2309,8 +2445,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   ══════════════════════════════════ -->
   <div class="panel" id="panel-elog">
     <div class="trainer-note">
-      <strong>📝 יומן משקלים אישי</strong><br>
-      רשום כאן את המשקל שאתה עושה בכל תרגיל. זה הכלי הכי חשוב ל-Progressive Overload — אם לא כתבת, לא גדלת.
+      <strong>📝 יומן משקולות תרגילים</strong><br>
+      כאן שומרים <strong>כמה ק"ג × כמה חזרות</strong> בכל תרגיל. זה Progressive Overload — כתב, תגדל. (זה שונה מ"גרף משקל גוף" שנמצא בלשונית ההתקדמות)
     </div>
     <div id="elog-content">
       <!-- filled by JS -->
@@ -2956,6 +3092,41 @@ function calcNutrition(u){
 
 const GOAL_LABELS={lean_bulk:'Lean Bulk',bulk:'מסה מקסימלית',cut:'הורדת שומן',maintain:'שמירה'};
 
+// ═══════════════════════════════════════════════════
+// EXERCISE ALTERNATIVES
+// ═══════════════════════════════════════════════════
+const EX_ALTERNATIVES = {
+  benchPress:[{name:'לחיצת משקולות שכיבה',tag:'Dumbbell Bench Press — ריינג׳ של תנועה גדול יותר'},{name:'פוש-אפ בחגורה',tag:'Weighted Push-up — בית / ללא מכשיר'},{name:'פק דק / Chest Press מכונה',tag:'Machine Chest Press — מתחילים / שיקום'}],
+  incline:[{name:'Incline Dumbbell Press',tag:'אותה קבוצת שריר, יותר יציבות'},{name:'Incline Push-up',tag:'ללא ציוד — שנה זווית הרצפה'},{name:'Low to High Cable Fly',tag:'כבל — מתח קבוע בחזה עליון'}],
+  cableFly:[{name:'פרפר עם משקולות',tag:'Dumbbell Fly — שכיבה'},{name:'Pec Deck מכונה',tag:'בידוד מושלם לחזה'},{name:'Push-up רחב',tag:'ללא ציוד'}],
+  shoulderPress:[{name:'Arnold Press',tag:'סיבוב פנימי/חיצוני — כיסוי מלא של כתף'},{name:'Machine Shoulder Press',tag:'בטוח יותר לגב תחתון'},{name:'לחיצת כתפיים עמידה',tag:'Barbell OHP — מפתח כוח'}],
+  lateralRaise:[{name:'הרמות צד עם משקולות',tag:'Dumbbell Lateral Raise'},{name:'Upright Row כבל',tag:'מגרה גם trapezius'},{name:'Machine Lateral Raise',tag:'בידוד מדויק'}],
+  pullup:[{name:'לט פולדאון',tag:'Lat Pulldown — אותו תנועה בישיבה'},{name:'Assisted Pull-up',tag:'מכונה עם עזר — לפיתוח כוח'},{name:'TRX Row',tag:'ישיבה נוטה — קל יותר'}],
+  bentRow:[{name:'חתירה עם משקולות',tag:'Dumbbell Row — גב ישר, יש הדגמות בכל מכון'},{name:'Machine Row',tag:'ללא שיווי משקל — טוב למתחילים'},{name:'TRX Row',tag:'ניתן לכוונן עצימות'}],
+  cableRow:[{name:'חתירה עם מוט',tag:'Barbell Row — כבד יותר'},{name:'חתירה עם משקולות',tag:'Dumbbell Row — כל יד בנפרד'},{name:'T-Bar Row',tag:'זווית שונה לגב אמצעי'}],
+  squat:[{name:'לחיצת רגליים',tag:'Leg Press — ללא עומס על עמוד השדרה'},{name:'Goblet Squat',tag:'משקולת אחת — טוב לטכניקה'},{name:'Bulgarian Split Squat',tag:'חד-רגלי — פחות משקל, יותר עבודה'}],
+  legPress:[{name:'סקוואט',tag:'Squat — כוח מלא'},{name:'Hack Squat',tag:'פחות עומס על גב תחתון'},{name:'Sissy Squat',tag:'בודד Quads — ללא ציוד'}],
+  rdl:[{name:'ליפט סומו',tag:'Sumo Deadlift — אחיזה רחבה, פחות גב'},{name:'Nordic Curl',tag:'Hamstrings ללא ציוד'},{name:'Leg Curl מכונה',tag:'בידוד Hamstrings'}],
+  bbCurl:[{name:'כפיפות משקולות',tag:'Dumbbell Curl — כל יד בנפרד'},{name:'Preacher Curl',tag:'מקנה גם ראש קצר בלבד — עיצוב'},{name:'כבל — כפיפות',tag:'Cable Curl — מתח קבוע'}],
+  skullCrusher:[{name:'Dips',tag:'מקביל — טריצפס + חזה תחתון'},{name:'Overhead Dumbbell Extension',tag:'Long Head — משקולת'},{name:'Close-Grip Push-up',tag:'ללא ציוד — טריצפס'}],
+  triPushdown:[{name:'Overhead Cable Extension',tag:'Long Head — מתיחה מלאה'},{name:'Dips',tag:'משקל גוף — כל Tricep'},{name:'Kickbacks משקולות',tag:'בידוד — בחינם'}],
+  wristCurl:[{name:'כפיפת פרק עם ריצועית',tag:'Resistance Band Wrist Curl'},{name:'אחיזת בקבוק מים',tag:'ללא ציוד — 3×60 שנ׳'},{name:'Farmer Hold',tag:'אחיזה סטטית — ניהול עומס'}],
+};
+
+function showAlternatives(exKey, exName){
+  const alts=EX_ALTERNATIVES[exKey];
+  if(!alts||!alts.length){ showToast('אין חלופות מוגדרות לתרגיל זה'); return; }
+  document.getElementById('alt-title').textContent='חלופות ל: '+exName;
+  const list=document.getElementById('alt-list');
+  list.innerHTML=alts.map(a=>`
+    <div class="alt-item">
+      <div><div class="alt-item-name">${a.name}</div><div class="alt-item-tag">${a.tag}</div></div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted2)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>`).join('');
+  document.getElementById('alt-modal').classList.add('open');
+}
+function closeAltModal(){ document.getElementById('alt-modal').classList.remove('open'); }
+
 function renderDashboardStats(u){
   if(!u) return;
   const n=calcNutrition(u);
@@ -3584,17 +3755,49 @@ function animateStats(){
 // ═══════════════════════════════════════════════════
 // REST TIMER
 // ═══════════════════════════════════════════════════
-let _timerIv=null, _timerTotal=0, _timerRemain=0;
+let _timerIv=null, _timerTotal=0, _timerRemain=0, _timerEndAt=0;
+let _lastTimerSec=parseInt(localStorage.getItem('pf_lastTimer')||'90');
 const CIRC=2*Math.PI*24; // r=24
+
+// Background timer — resume when page becomes visible again
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden && _timerIv && _timerEndAt){
+    const remain=Math.max(0,Math.round((_timerEndAt-Date.now())/1000));
+    _timerRemain=remain;
+    if(remain<=0){ clearInterval(_timerIv); _timerIv=null;
+      document.getElementById('timer-btn')?.classList.remove('running');
+      document.getElementById('timer-ring')?.classList.remove('show');
+      document.getElementById('timer-btn').textContent='⏱ מנוחה';
+    } else tickTimer();
+  }
+});
+
+// ESC key closes gym mode
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('gym-overlay')?.classList.contains('open')) confirmCloseGymMode();
+    if(document.getElementById('gym-set-popup')?.classList.contains('show'))
+      document.getElementById('gym-set-popup').classList.remove('show');
+  }
+});
 
 function onTimerBtnClick(){
   if(_timerIv){ cancelTimer(); }
-  else { document.getElementById('timer-presets').classList.toggle('show'); }
+  else {
+    // Show presets panel — highlight last used
+    const presets=document.getElementById('timer-presets');
+    presets?.classList.toggle('show');
+    presets?.querySelectorAll('button').forEach(b=>{
+      b.style.fontWeight=parseInt(b.dataset.sec)===_lastTimerSec?'900':'';
+      b.style.borderColor=parseInt(b.dataset.sec)===_lastTimerSec?'var(--blue)':'';
+    });
+  }
 }
 function pickTimer(sec){
   document.getElementById('timer-presets').classList.remove('show');
   if(_timerIv){ clearInterval(_timerIv); _timerIv=null; }
-  _timerTotal=sec; _timerRemain=sec;
+  _lastTimerSec=sec; localStorage.setItem('pf_lastTimer',String(sec));
+  _timerTotal=sec; _timerRemain=sec; _timerEndAt=Date.now()+sec*1000;
   const btn=document.getElementById('timer-btn');
   const ring=document.getElementById('timer-ring');
   btn.classList.add('running');
@@ -3798,7 +4001,27 @@ window.addEventListener('load',()=>{
     const sp=document.getElementById('splash');
     if(sp){sp.classList.add('out');setTimeout(()=>sp.remove(),600);}
   },1300);
+  // Inject swap buttons into exercise rows that have alternatives
+  injectSwapButtons();
 });
+
+function injectSwapButtons(){
+  // Map onclick attr to key
+  document.querySelectorAll('.ex-table tbody tr[onclick]').forEach(tr=>{
+    const m=tr.getAttribute('onclick')?.match(/openModal\('(\w+)'\)/);
+    if(!m) return;
+    const key=m[1];
+    if(!EX_ALTERNATIVES[key]) return;
+    const nameCell=tr.querySelector('.ex-name-main');
+    if(!nameCell||nameCell.querySelector('.ex-swap-btn')) return;
+    const btn=document.createElement('button');
+    btn.className='ex-swap-btn';
+    btn.textContent='חלופות';
+    btn.title='הצג תרגילים חלופיים';
+    btn.onclick=(e)=>{e.stopPropagation();showAlternatives(key,nameCell.textContent.replace('חלופות','').trim());};
+    nameCell.appendChild(btn);
+  });
+}
 
 // Close timer presets if clicking elsewhere
 document.addEventListener('click',e=>{
@@ -4240,11 +4463,34 @@ async function sendChat(){
 // F10 — OFFLINE AI FALLBACK
 // ═══════════════════════════════════════════════════
 const OFFLINE_QA=[
-  {k:['חלבון','protein'],a:'לבניית שריר אתה צריך 2–2.5 גרם חלבון לכל ק"ג גוף. על 60 ק"ג — 120–150 גרם ביום. המקורות הטובים: חזה עוף, דגים, ביצים, יוגורט יווני, קוטג׳. (תשובה מקומית — אין חיבור)'},
-  {k:['שינה','sleep'],a:'שינה היא הסאפלמנט הכי זול ויעיל. בשינה מופרש הורמון גדילה שבונה שריר. מטרה: 7–9 שעות. גוף ישן = גוף שמתאושש. (תשובה מקומית — אין חיבור)'},
-  {k:['כאב שריר','DOMS','כאב'],a:'כאב שריר מאוחר (DOMS) — תגובה נורמלית לגירוי חדש. נעלם אחרי 48–72 שעות. לא חייב לכאוב בשביל לגדול. אם הכאב חד ופתאומי — עצור. (תשובה מקומית — אין חיבור)'},
-  {k:['קריאטין','creatine'],a:'קריאטין מונוהידרט — אחד מהסאפלמנטים הכי מוכחים מחקרית. 3–5 גרם ביום, לא צריך loading. מגביר כוח ונפח שריר. בטוח לשימוש ארוך טווח. (תשובה מקומית — אין חיבור)'},
-  {k:['פחמימות','carb','קארב'],a:'פחמימות הן דלק לשרירים. לפני אימון — פחמימות מורכבות (שיבולת שועל, אורז). אחרי אימון — פחמימות מהירות + חלבון. לא אויב, חלק חיוני מהתזונה. (תשובה מקומית — אין חיבור)'},
+  {k:['חלבון','protein','ביצים','עוף'],a:'לבניית שריר אתה צריך 2–2.5 גרם חלבון לכל ק"ג גוף. המקורות הטובים: חזה עוף, דגים, ביצים, יוגורט יווני, קוטג׳, Whey. פזר על פני כל הארוחות — הגוף לא יכול לספוג הכל בפעם אחת.'},
+  {k:['שינה','sleep','עייפות'],a:'שינה היא הסאפלמנט הכי זול ויעיל. בשינה מופרש הורמון גדילה שבונה שריר. מטרה: 7–9 שעות. גוף ישן = גוף שמתאושש. אם מתקשה לישון: הורד קפאין אחרי 14:00, שמור על טמפרטורה קרירה.'},
+  {k:['כאב שריר','DOMS','כאב','כואב'],a:'כאב שריר מאוחר (DOMS) — תגובה נורמלית לגירוי חדש. נעלם אחרי 48–72 שעות. לא חייב לכאוב בשביל לגדול. אם הכאב חד ופתאומי — עצור. מה עוזר: חום, מגנזיום, מסז׳, הליכה קלה.'},
+  {k:['קריאטין','creatine'],a:'קריאטין מונוהידרט — אחד מהסאפלמנטים הכי מוכחים מחקרית. 3–5 גרם ביום, לא צריך loading phase. מגביר כוח ונפח שריר. בטוח לשימוש ארוך טווח. שתה הרבה מים.'},
+  {k:['פחמימות','carb','קארב','אורז','לחם'],a:'פחמימות הן דלק לשרירים. לפני אימון — אורז, בטטה, שיבולת שועל. אחרי אימון — בננה + Whey. לא אויב, חלק חיוני. בגרעון: הורד פחמימות, שמור חלבון גבוה.'},
+  {k:['שומן','fat','אבוקדו','שמן'],a:'שומן חיוני לייצור הורמונים כולל טסטוסטרון. מטרה: 25–30% מהקלוריות. מקורות טובים: אבוקדו, אגוזי מלך, שמן זית, סלמון. הימנע משומן טרנס (מזון מעובד).'},
+  {k:['קלוריות','calories','אכילה','לאכול','כמה לאכול'],a:'לבניית שריר (Lean Bulk): TDEE + 300–400 קלוריות. לירידת שומן (Cut): TDEE - 400 קלוריות. TDEE = BMR × רמת פעילות. הדשבורד מחשב את זה עבורך אוטומטית בהתאם לפרופיל.'},
+  {k:['whey','ויי','אבקת חלבון','אבקה'],a:'Whey Isolate נספג מהר — אידיאלי 30 דק׳ אחרי אימון. Casein נספג לאט — טוב לפני שינה. לא חובה, אבל עוזר לעמוד ביעד החלבון. בחר Isolate אם יש רגישות ללקטוז.'},
+  {k:['סקוואט','squat','רגליים'],a:'הסקוואט הוא מלך תרגילי הרגליים. טכניקה: גב ישר, חזה למעלה, ברכיים בכיוון בהונות, ירידה עד 90°. אם הגב סובל — נסה Goblet Squat לתיקון טכניקה.'},
+  {k:['לחיצת חזה','bench','bench press','חזה'],a:'Bench Press: שכב על ספסל, מוט ברוחב כתפיים+, שכמות מקובצות. הורד לחזה התחתון (לא לצוואר), דחוף. להגדלת חזה עליון — Incline press חיוני.'},
+  {k:['מנוחה','recovery','ריקוורי'],a:'שריר גדל בזמן מנוחה, לא בזמן אימון. קבוצת שריר צריכה 48–72 שעות מנוחה. לכן PPLA מחולק נכון — כל קבוצה פעם בשבוע עם מנוחה מלאה.'},
+  {k:['חימום','warmup','להתחמם'],a:'חימום 5–7 דקות לפני כל אימון: קפיצות + סיבובי מפרקים + תרגיל קל בטכניקה. חימום מוריד סיכון לפציעה ב-30% ומשפר ביצועים. בכל פאנל יש כרטיס חימום מפורט.'},
+  {k:['אינטרמיטנט','IF','צום','16:8'],a:'Intermittent Fasting (16:8) עובד לירידת שומן כי מקל על יצירת גרעון קלורי. לבניית מסה — פחות אידיאלי. חשוב: לאכול מספיק חלבון בחלון האכילה. לא קסם — פשוט כלי.'},
+  {k:['כולסטרול','LDL','HDL'],a:'להורדת כולסטרול תוך כדי אימון: הגדל אומגה 3 (סלמון, אגוזי מלך), שיבולת שועל (Beta-Glucan), שמן זית. הפחת בשר אדום ומוצרי חלב שמנים. HDL עולה עם אירובי.'},
+  {k:['השמנה','שומן בבטן','בטן','להשמין'],a:'שומן בבטן מוריד עם גרעון קלורי + אימוני כוח + שינה. אין "ממקד" — לא ניתן לאבד שומן רק מבטן. Cardio עוזר לגרעון. 80% מהתוצאה היא מהתזונה.'},
+  {k:['ויטמינים','vitamin','D3','מגנזיום','zinc'],a:'ויטמינים חיוניים לספורטאי: D3 (1000–2000 IU), מגנזיום גליצינאט (200–400 מ"ג לפני שינה), Zinc (25 מ"ג), אומגה 3 (2–3 גרם EPA+DHA). בדוק ערכי דם.'},
+  {k:['Lean Bulk','לין בולק','בניית מסה','להגדיל'],a:'Lean Bulk = עודף קטן של 300–400 קלוריות. קצב: 0.5–1 ק"ג בחודש. לאט, אך רוב העלייה הוא שריר. מיקס: 80% מזון אמיתי + 20% גמישות. הניטור הוא המפתח.'},
+  {k:['Cut','קאט','לרזות','ירידה'],a:'Cut = גרעון של 400–500 קלוריות. שמור חלבון גבוה (2.5 גרם/ק"ג) לשמירת שריר. הוסף 20–30 דק׳ Cardio × 3 בשבוע. קצב אידיאלי: 0.5–1 ק"ג שבועי.'},
+  {k:['Bulk','מסה','bulking'],a:'Bulk = עודף גדול של 500–700 קלוריות. גדילה מהירה יותר אבל עם יותר שומן. אחרי 3–4 חודשי Bulk — עבור ל-Cut לחשוף את השריר. מחזוריות היא המפתח.'},
+  {k:['מדידות','התקדמות','progress','כמה עלה'],a:'מד התקדמות נכון: שקול עצמך שבועי (בבוקר, בצום). מדוד גם היקפי שריר (חזה, זרוע, ירך). לפעמים המשקל לא עולה אבל האחוז שומן יורד — זה בסדר. השתמש בגרף ההתקדמות.'},
+  {k:['אמות','forearms','אחיזה','grip'],a:'Forearms עובדים כמה שבוע? 3–4 פעמים. תרגילים: Wrist Curl, Reverse Wrist Curl, Farmer Walk. גם מתחים ולחיצות מכשירים את האחיזה. בפאנל ARMS כבר יש חלק Forearms מפורט.'},
+  {k:['בטן','core','abs','קיטוע'],a:'בטן מתאמנת 3× בשבוע בסוף Push/Legs/Arms. תרגילים: Plank, Crunches, Leg Raises, Russian Twists. בטן מתגלה כשאחוז השומן נמוך — תזונה היא 80% מהמשוואה.'},
+  {k:['supplement','סאפלמנטים','תוספים'],a:'סאפלמנטים לפי עדיפות: 1) קריאטין מונוהידרט 3-5g, 2) Whey Protein (אם קשה לעמוד ביעד), 3) D3 1000IU, 4) מגנזיום גליצינאט, 5) אומגה 3. שאר — שיווק.'},
+  {k:['Push','PUSH','חזה','לחיצה'],a:'Push Day: חזה → כתפיים → טריצפס. הסדר חשוב! עצב שניה כשהגוף טרי. Bench Press → Incline → Overhead Press → טריצפס. מנוחה 2–3 דק׳ בין סטים כבדים.'},
+  {k:['Pull','PULL','גב','מתח'],a:'Pull Day: גב → בייסס → כתף אחורית. מתח / לט פולדאון → חתירה → Face Pull → כפיפות. גב חזק = יציבה טובה + פחות כאבי גב.'},
+  {k:['Progressive Overload','עומס','להתקדם'],a:'Progressive Overload = הוספת עומס בהדרגה. כל שבועיים-שלושה: הוסף 2.5 ק"ג או חזרה נוספת. זה עיקרון הגדילה. בלי זה — הגוף לא מגיב. יומן המשקלים הוא הכלי.'},
+];
+
   {k:['שומן','fat','כולסטרול'],a:'שומן בריא (אומגה 3, שמן זית, אבוקדו) חשוב לייצור הורמונים כולל טסטוסטרון. הימנע משומן טראנס ושומן רווי מוגזם. (תשובה מקומית — אין חיבור)'},
   {k:['overtraining','אוברטריינינג','יתר'],a:'סימני אוברטריינינג: ירידה בביצועים, עייפות כרונית, עצבנות, נדודי שינה. הפתרון: שבוע דה-לוד — אותן תנועות, 40% פחות משקל. (תשובה מקומית — אין חיבור)'},
   {k:['חימום','warmup'],a:'חימום נכון: 5 דק׳ קרדיו קל + סט חימום לכל תרגיל ב-50% מהמשקל. מקטין סיכון פציעה ומשפר ביצועים. (תשובה מקומית — אין חיבור)'},
@@ -4260,7 +4506,7 @@ function offlineAnswer(q){
   for(const qa of OFFLINE_QA){
     if(qa.k.some(k=>lower.includes(k.toLowerCase()))) return qa.a;
   }
-  return 'אין חיבור לאינטרנט כרגע. נסה לשאול על: חלבון, שינה, קריאטין, חימום, קלוריות, שרירים, מנוחה. (תשובה מקומית)';
+  return 'אני יועץ הכושר שלך גם ללא אינטרנט 💪 שאל על: חלבון, שינה, קריאטין, פחמימות, קלוריות, DOMS, חימום, Lean Bulk, Cut, Bulk, מנוחה, אמות, בטן, ויטמינים, Progressive Overload.';
 }
 
 // ═══════════════════════════════════════════════════
@@ -4496,6 +4742,10 @@ let _gymColor='var(--red)';
 let _gymLabel='PUSH';
 let _tempoOn=false;
 let _tempoTimer=null;
+let _gymStopwatchStart=0;
+let _gymStopwatchIv=null;
+let _gymPendingSetKey=null; // key for elog when saving set
+let _gymPendingSetIdx=0;
 
 function startGymMode(panelName,label,color){
   const panel=document.getElementById('panel-'+panelName);
@@ -4506,15 +4756,29 @@ function startGymMode(panelName,label,color){
     nameEn:tr.querySelector('.ex-name-en')?.textContent?.trim()||'',
     sets:tr.querySelector('.sets-cell')?.textContent?.trim()||'3×10',
     muscle:tr.querySelector('.muscle-tag')?.textContent?.trim()||'',
-    tr:tr
-  })).filter(e=>e.name!='תרגיל'||e.sets);
-  if(!_gymExercises.length){ alert('לא נמצאו תרגילים'); return; }
+    key:tr.getAttribute('onclick')?.match(/openModal\('(\w+)'\)/)?.[1]||null
+  })).filter(e=>e.name&&e.sets);
+  if(!_gymExercises.length){ showToast('לא נמצאו תרגילים'); return; }
   _gymIdx=0; _gymColor=color.trim(); _gymLabel=label;
   const badge=document.getElementById('gym-badge');
   if(badge){badge.textContent=label;badge.style.color=_gymColor;badge.style.borderColor=_gymColor;}
   renderGymExercise();
   document.getElementById('gym-overlay').classList.add('open');
   document.body.style.overflow='hidden';
+  // Start stopwatch
+  _gymStopwatchStart=Date.now();
+  if(_gymStopwatchIv) clearInterval(_gymStopwatchIv);
+  _gymStopwatchIv=setInterval(()=>{
+    const el=document.getElementById('gym-stopwatch');
+    if(!el) return;
+    const s=Math.floor((Date.now()-_gymStopwatchStart)/1000);
+    const m=Math.floor(s/60), sec=s%60;
+    el.textContent=m+':'+(sec<10?'0':'')+sec;
+  },1000);
+}
+
+function confirmCloseGymMode(){
+  if(confirm('לצאת ממצב אימון?')) closeGymMode();
 }
 function renderGymExercise(){
   const body=document.getElementById('gym-body');
@@ -4556,22 +4820,26 @@ function renderGymExercise(){
 function gymCheckSet(i){
   const el=document.getElementById('gym-chk-'+i);
   if(!el) return;
-  const done=!el.classList.contains('done');
-  el.classList.toggle('done',done);
-  el.textContent=done?'✓':'';
-  el.style.background=done?_gymColor:'';
-  if(done){
-    if(navigator.vibrate) navigator.vibrate(30);
-    // Also update the main log
-    const ex=_gymExercises[_gymIdx];
-    const today=todayStr(); const l=getLog();
-    if(!l[today]) l[today]={}; if(!l[today][ex.name]) l[today][ex.name]={};
-    l[today][ex.name][i]=true; saveLog(l);
-    // Auto-start rest timer
-    setTimeout(()=>{ if(typeof pickTimer==='function') pickTimer(90); },400);
-    // Start tempo if on
-    if(_tempoOn) speakTempo();
+  const alreadyDone=el.classList.contains('done');
+  if(alreadyDone){
+    // Uncheck
+    el.classList.remove('done'); el.textContent=''; el.style.background='';
+    return;
   }
+  // Mark done visually
+  el.classList.add('done'); el.textContent='✓'; el.style.background=_gymColor;
+  if(navigator.vibrate) navigator.vibrate(30);
+  // Update workout log
+  const ex=_gymExercises[_gymIdx];
+  const today=todayStr(); const l=getLog();
+  if(!l[today]) l[today]={}; if(!l[today][ex.name]) l[today][ex.name]={};
+  l[today][ex.name][i]=true; saveLog(l);
+  // Auto-start rest timer (remember last)
+  setTimeout(()=>{ if(typeof pickTimer==='function') pickTimer(_lastTimerSec||90); },400);
+  // Start tempo if on
+  if(_tempoOn) speakTempo();
+  // Open set weight/reps popup
+  if(ex.key) setTimeout(()=>openGymSetPopup(ex.key,i),600);
 }
 function gymNext(){
   if(_gymIdx<_gymExercises.length) _gymIdx++;
@@ -4583,9 +4851,37 @@ function gymPrev(){
 }
 function closeGymMode(){
   document.getElementById('gym-overlay').classList.remove('open');
+  document.getElementById('gym-set-popup')?.classList.remove('show');
   document.body.style.overflow='';
   if(_tempoTimer){ clearTimeout(_tempoTimer); _tempoTimer=null; }
+  if(_gymStopwatchIv){ clearInterval(_gymStopwatchIv); _gymStopwatchIv=null; }
   window.speechSynthesis?.cancel();
+}
+function openGymSetPopup(exKey,setIdx){
+  _gymPendingSetKey=exKey;
+  _gymPendingSetIdx=setIdx;
+  const popup=document.getElementById('gym-set-popup');
+  const title=document.getElementById('gym-set-popup-title');
+  if(title) title.textContent='סט '+(setIdx+1)+' — הזן משקל + חזרות';
+  // Pre-fill from last elog entry
+  const elog=getElog();
+  const last=elog[exKey]?.[0];
+  const kgEl=document.getElementById('gym-set-kg');
+  const repEl=document.getElementById('gym-set-reps');
+  if(kgEl) kgEl.value=last?.kg||'';
+  if(repEl) repEl.value=last?.reps||'';
+  popup?.classList.add('show');
+  kgEl?.focus();
+}
+function saveGymSet(){
+  const kg=parseFloat(document.getElementById('gym-set-kg')?.value);
+  const reps=parseInt(document.getElementById('gym-set-reps')?.value);
+  if(_gymPendingSetKey && !isNaN(kg) && !isNaN(reps) && kg>0 && reps>0){
+    saveElogEntry(_gymPendingSetKey,kg,reps);
+    showToast(kg+'ק"ג × '+reps+' — נשמר ✓');
+  }
+  document.getElementById('gym-set-popup')?.classList.remove('show');
+  _gymPendingSetKey=null;
 }
 
 // F11 — TEMPO COACH
@@ -4961,8 +5257,9 @@ async function requestWorkoutNotif(){
 <div class="gym-overlay" id="gym-overlay">
   <div class="gym-header">
     <div class="gym-badge" id="gym-badge">PUSH</div>
+    <span class="gym-stopwatch" id="gym-stopwatch">00:00</span>
     <button class="gym-tempo-btn" id="gym-tempo-btn" onclick="toggleTempo()">קצב OFF</button>
-    <button class="gym-close" onclick="closeGymMode()">✕</button>
+    <button class="gym-close" onclick="confirmCloseGymMode()">✕ יציאה</button>
   </div>
   <div class="gym-body" id="gym-body">
     <!-- Filled by JS -->
@@ -4986,6 +5283,16 @@ async function requestWorkoutNotif(){
     <button class="gym-nav-btn" id="gym-prev" onclick="gymPrev()" disabled>הקודם</button>
     <button class="gym-nav-btn next" id="gym-next" onclick="gymNext()">הבא</button>
   </div>
+  <!-- Set weight/reps popup -->
+  <div class="gym-set-popup" id="gym-set-popup">
+    <div class="gym-set-popup-title" id="gym-set-popup-title">סט 1 — רשום משקל + חזרות</div>
+    <div class="gym-set-inputs">
+      <input class="gym-set-input" id="gym-set-kg" type="number" min="0" step="0.5" placeholder="ק״ג"/>
+      <span class="gym-set-x">×</span>
+      <input class="gym-set-input" id="gym-set-reps" type="number" min="1" max="50" placeholder="חזרות"/>
+    </div>
+    <button class="gym-set-save" id="gym-set-save-btn" onclick="saveGymSet()">שמור וסמן ✓</button>
+  </div>
 </div>
 
 <!-- SHARE MODAL -->
@@ -4999,6 +5306,16 @@ async function requestWorkoutNotif(){
       <button class="share-dl-btn" id="share-native-btn" style="display:none" onclick="nativeShare()">שתף</button>
       <button class="share-close-btn" onclick="closeShareModal()">סגור</button>
     </div>
+  </div>
+</div>
+
+<!-- EXERCISE ALTERNATIVES MODAL -->
+<div class="alt-modal" id="alt-modal" onclick="if(event.target.id==='alt-modal')closeAltModal()">
+  <div class="alt-box">
+    <div class="alt-title" id="alt-title">חלופות לתרגיל</div>
+    <div class="alt-sub">אין מכשיר? בחר חלופה:</div>
+    <div id="alt-list"></div>
+    <button class="alt-close-btn" onclick="closeAltModal()">סגור</button>
   </div>
 </div>
 
@@ -5127,10 +5444,10 @@ async function requestWorkoutNotif(){
 <!-- REST TIMER -->
 <div class="timer-float" id="timer-float">
   <div class="timer-presets" id="timer-presets">
-    <button onclick="pickTimer(60);event.stopPropagation()">60 שנ׳</button>
-    <button onclick="pickTimer(90);event.stopPropagation()">90 שנ׳</button>
-    <button onclick="pickTimer(120);event.stopPropagation()">2 דק׳</button>
-    <button onclick="pickTimer(180);event.stopPropagation()">3 דק׳</button>
+    <button data-sec="60" onclick="pickTimer(60);event.stopPropagation()">60 שנ׳</button>
+    <button data-sec="90" onclick="pickTimer(90);event.stopPropagation()">90 שנ׳</button>
+    <button data-sec="120" onclick="pickTimer(120);event.stopPropagation()">2 דק׳</button>
+    <button data-sec="180" onclick="pickTimer(180);event.stopPropagation()">3 דק׳</button>
   </div>
   <div class="timer-ring" id="timer-ring">
     <svg width="62" height="62" viewBox="0 0 60 60">
