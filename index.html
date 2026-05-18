@@ -11,7 +11,7 @@
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="ProFit"/>
+<meta name="apple-mobile-web-app-title" content="Fit or Be Defeated"/>
 
 <!-- SEO / Share -->
 <meta name="description" content="תוכנית Push/Pull/Legs/Arms אישית עם תזונה מותאמת לכולסטרול"/>
@@ -39,23 +39,20 @@
 <!-- SPLASH SCREEN -->
 <div class="splash" id="splash">
   <div class="splash-mark">
-    <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7">
+    <svg width="52" height="52" viewBox="0 0 24 24" fill="none">
       <defs>
-        <linearGradient id="dbell-grad" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="logo-g" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="#22C55E"/>
           <stop offset="100%" stop-color="#3B82F6"/>
         </linearGradient>
+        <filter id="logo-glow">
+          <feGaussianBlur stdDeviation="1.2" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
       </defs>
-      <!-- bar -->
-      <line x1="7.5" y1="12" x2="16.5" y2="12" stroke="url(#dbell-grad)"/>
-      <!-- left outer plate -->
-      <rect x="1.5" y="8.5" width="3" height="7" rx="1.2" stroke="url(#dbell-grad)" fill="none"/>
-      <!-- left inner plate -->
-      <rect x="4.5" y="9.8" width="2" height="4.4" rx=".7" stroke="url(#dbell-grad)" fill="none"/>
-      <!-- right inner plate -->
-      <rect x="17.5" y="9.8" width="2" height="4.4" rx=".7" stroke="url(#dbell-grad)" fill="none"/>
-      <!-- right outer plate -->
-      <rect x="19.5" y="8.5" width="3" height="7" rx="1.2" stroke="url(#dbell-grad)" fill="none"/>
+      <!-- Lightning bolt — solid, bold, iconic -->
+      <path d="M14 2.5L6.5 13.5H12.5L10 21.5L17.5 10.5H11.5L14 2.5Z"
+        fill="url(#logo-g)" filter="url(#logo-glow)"/>
     </svg>
   </div>
   <div class="splash-name" style="font-size:1.5rem;letter-spacing:-1px;">FIT OR BE</div>
@@ -1521,7 +1518,7 @@
 <div class="onboard-overlay" id="onboard-overlay" style="display:none;">
   <div class="onboard-box">
     <div class="onboard-header">
-      <div class="onboard-logo">ProFit</div>
+      <div class="onboard-logo" style="font-size:1.1rem;letter-spacing:-.5px;">FIT OR BE DEFEATED</div>
       <div class="onboard-sub">תוכנית אימונים ותזונה אישית</div>
     </div>
     <div class="onboard-step active" id="ob-step-1">
