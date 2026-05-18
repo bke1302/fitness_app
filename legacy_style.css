@@ -547,7 +547,7 @@ body{
 .today-hero-rest:hover{transform:none!important;box-shadow:none!important;}
 
 /* ─── REST TIMER ─── */
-.timer-float{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom));left:24px;z-index:290;display:flex;flex-direction:column;align-items:flex-start;gap:8px;}
+.timer-float{position:fixed;bottom:calc(80px + 16px + env(safe-area-inset-bottom));left:24px;z-index:290;display:flex;flex-direction:column;align-items:flex-start;gap:8px;}
 .timer-presets{
   display:none;flex-direction:column;gap:4px;
   background:rgba(8,8,8,.96);border:1px solid var(--border2);border-radius:14px;
@@ -1362,3 +1362,20 @@ body{
 .toggle-pill.on{background:var(--red);}
 .toggle-pill::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .25s var(--ease-spring);}
 .toggle-pill.on::after{transform:translateX(20px);}
+
+/* ─── SET LOG ─── */
+.sl-btn{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.28);color:var(--blue);border-radius:6px;padding:3px 8px;font-size:.7rem;font-weight:700;cursor:pointer;margin-right:6px;transition:all .18s;white-space:nowrap;}
+.sl-btn:hover{background:rgba(59,130,246,.22);}
+.sl-btn.open{background:rgba(59,130,246,.25);border-color:var(--blue);}
+.set-log-row td{padding:0!important;}
+.set-log-box{padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px;border-top:1px solid rgba(59,130,246,.15);animation:slideDown .2s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.sl-set-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.sl-set-label{font-size:.72rem;color:var(--muted);font-weight:700;min-width:42px;}
+.sl-kg,.sl-reps{background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:6px;padding:5px 8px;color:var(--text);font-size:.82rem;width:64px;text-align:center;font-family:var(--font-d);font-weight:700;}
+.sl-kg:focus,.sl-reps:focus{outline:none;border-color:var(--blue);}
+.sl-x{color:var(--muted);font-size:.75rem;font-weight:700;}
+.sl-save-btn{background:var(--blue);border:none;color:#fff;border-radius:6px;padding:5px 12px;font-size:.75rem;font-weight:700;cursor:pointer;margin-right:auto;transition:opacity .18s;}
+.sl-save-btn:hover{opacity:.85;}
+.sl-saved{font-size:.7rem;color:var(--green);font-weight:700;display:none;}
+.sl-saved.show{display:inline;}

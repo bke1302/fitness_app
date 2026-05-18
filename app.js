@@ -1434,6 +1434,8 @@ window.addEventListener('load',()=>{
   },1300);
   // Inject swap buttons into exercise rows that have alternatives
   injectSwapButtons();
+  // Inject set-log rows into all exercise tables
+  injectSetLogRows();
 });
 
 function injectSwapButtons(){
@@ -1452,6 +1454,89 @@ function injectSwapButtons(){
     btn.onclick=(e)=>{e.stopPropagation();showAlternatives(key,nameCell.textContent.replace('חלופות','').trim());};
     nameCell.appendChild(btn);
   });
+}
+
+function injectSetLogRows(){
+  document.querySelectorAll('.ex-table tbody tr[onclick]').forEach(tr=>{
+    const m=tr.getAttribute('onclick')?.match(/openModal\('(\w+)'\)/);
+    if(!m) return;
+    const key=m[1];
+    const setsCell=tr.querySelector('td:nth-child(4)');
+    const setsText=setsCell?.textContent||'3';
+    const nSets=parseInt(setsText)||3;
+    const nameCell=tr.querySelector('.ex-name-main');
+    if(!nameCell||nameCell.querySelector('.sl-btn')) return;
+    const btn=document.createElement('button');
+    btn.className='sl-btn';
+    btn.textContent='📝 סטים';
+    btn.setAttribute('data-key',key);
+    btn.onclick=(e)=>{
+      e.stopPropagation();
+      const logRow=document.getElementById('slr-'+key);
+      if(!logRow) return;
+      const open=logRow.style.display==='table-row';
+      logRow.style.display=open?'none':'table-row';
+      btn.classList.toggle('open',!open);
+      if(!open) prefillSetLog(key,nSets);
+    };
+    nameCell.appendChild(btn);
+    const logTr=document.createElement('tr');
+    logTr.className='set-log-row';
+    logTr.id='slr-'+key;
+    logTr.style.display='none';
+    const td=document.createElement('td');
+    td.colSpan=6;
+    td.innerHTML=buildSetLogHTML(key,nSets);
+    logTr.appendChild(td);
+    tr.insertAdjacentElement('afterend',logTr);
+  });
+}
+
+function buildSetLogHTML(key,nSets){
+  let rows='';
+  for(let i=1;i<=nSets;i++){
+    rows+=`<div class="sl-set-row">
+      <span class="sl-set-label">סט ${i}</span>
+      <input class="sl-kg" id="sl-${key}-kg-${i}" type="number" min="0" step="0.5" placeholder="ק״ג">
+      <span class="sl-x">×</span>
+      <input class="sl-reps" id="sl-${key}-reps-${i}" type="number" min="0" step="1" placeholder="חז׳">
+    </div>`;
+  }
+  return `<div class="set-log-box">
+    ${rows}
+    <div style="display:flex;align-items:center;gap:12px;margin-top:4px;">
+      <button class="sl-save-btn" onclick="saveSetLog('${key}',${nSets})">שמור</button>
+      <span class="sl-saved" id="sl-saved-${key}">✓ נשמר</span>
+    </div>
+  </div>`;
+}
+
+function prefillSetLog(key,nSets){
+  const saved=JSON.parse(localStorage.getItem('pf_setlog')||'{}')[key]||[];
+  for(let i=1;i<=nSets;i++){
+    const s=saved[i-1]||{};
+    const kgEl=document.getElementById(`sl-${key}-kg-${i}`);
+    const repsEl=document.getElementById(`sl-${key}-reps-${i}`);
+    if(kgEl&&s.kg) kgEl.value=s.kg;
+    if(repsEl&&s.reps) repsEl.value=s.reps;
+  }
+}
+
+function saveSetLog(key,nSets){
+  const sets=[];
+  let bestKg=0,bestReps=0;
+  for(let i=1;i<=nSets;i++){
+    const kg=parseFloat(document.getElementById(`sl-${key}-kg-${i}`)?.value)||0;
+    const reps=parseInt(document.getElementById(`sl-${key}-reps-${i}`)?.value)||0;
+    sets.push({kg,reps});
+    if(kg>bestKg){bestKg=kg;bestReps=reps;}
+  }
+  const all=JSON.parse(localStorage.getItem('pf_setlog')||'{}');
+  all[key]=sets;
+  localStorage.setItem('pf_setlog',JSON.stringify(all));
+  if(bestKg>0) saveElogEntry(key,bestKg,bestReps);
+  const saved=document.getElementById('sl-saved-'+key);
+  if(saved){saved.classList.add('show');setTimeout(()=>saved.classList.remove('show'),2000);}
 }
 
 // Close timer presets if clicking elsewhere
