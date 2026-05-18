@@ -1322,38 +1322,243 @@
   </div>
 </div>
 
-    <nav style="position:absolute;bottom:0;left:0;right:0;background:rgba(10,15,20,.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,255,255,.07);padding:12px 28px 20px;display:flex;justify-content:space-between;align-items:center;">
-            <!-- Home (Active) -->
-            <button onclick="showPanel('dashboard', this)" style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#22C55E;background:none;border:none;cursor:pointer;">
-                <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                </svg>
-                <span style="font-size:.6rem;font-weight:700;">ראשי</span>
-            </button>
-            <!-- Workouts -->
-            <button onclick="showPanel('schedule', this)" style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#64748B;background:none;border:none;cursor:pointer;transition:color .2s;">
-                <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
-                </svg>
-                <span style="font-size:.6rem;font-weight:600;">אימונים</span>
-            </button>
-            <!-- Nutrition -->
-            <button onclick="showPanel('nutrition', this)" style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#64748B;background:none;border:none;cursor:pointer;transition:color .2s;">
-                <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.364l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span style="font-size:.6rem;font-weight:600;">תזונה</span>
-            </button>
-            <!-- Analytics -->
-            <button onclick="showPanel('progress', this)" style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#64748B;background:none;border:none;cursor:pointer;transition:color .2s;">
-                <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-                </svg>
-                <span style="font-size:.6rem;font-weight:600;">מעקב</span>
-            </button>
-        </nav>
+<!-- ══════════════════════════════════
+     MOBILE BOTTOM NAV
+══════════════════════════════════ -->
+<nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+
+  <button class="mbn-item active" id="mbn-dashboard" onclick="showPanel('dashboard',null);setMobileNav('dashboard');" aria-label="לוח בקרה">
+    <svg class="mbn-icon" viewBox="0 0 24 24">
+      <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+      <polyline points="9,21 9,12 15,12 15,21"/>
+    </svg>
+    <span class="mbn-label">ראשי</span>
+  </button>
+
+  <button class="mbn-item" id="mbn-push" onclick="showPanel('push',null);setMobileNav('push');" aria-label="אימון">
+    <svg class="mbn-icon" viewBox="0 0 24 24">
+      <line x1="6" y1="12" x2="18" y2="12"/>
+      <rect x="2" y="9.5" width="3" height="5" rx="1"/>
+      <rect x="19" y="9.5" width="3" height="5" rx="1"/>
+      <rect x="5" y="10.8" width="2" height="2.4" rx=".5"/>
+      <rect x="17" y="10.8" width="2" height="2.4" rx=".5"/>
+    </svg>
+    <span class="mbn-label">אימון</span>
+  </button>
+
+  <button class="mbn-item" id="mbn-nutrition" onclick="showPanel('nutrition',null);setMobileNav('nutrition');" aria-label="תזונה">
+    <svg class="mbn-icon" viewBox="0 0 24 24">
+      <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+      <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+      <line x1="6" y1="1" x2="6" y2="4"/>
+      <line x1="10" y1="1" x2="10" y2="4"/>
+      <line x1="14" y1="1" x2="14" y2="4"/>
+    </svg>
+    <span class="mbn-label">תזונה</span>
+  </button>
+
+  <button class="mbn-item" id="mbn-progress" onclick="showPanel('progress',null);setMobileNav('progress');" aria-label="מעקב">
+    <svg class="mbn-icon" viewBox="0 0 24 24">
+      <line x1="18" y1="20" x2="18" y2="10"/>
+      <line x1="12" y1="20" x2="12" y2="4"/>
+      <line x1="6" y1="20" x2="6" y2="14"/>
+    </svg>
+    <span class="mbn-label">מעקב</span>
+  </button>
+
+  <button class="mbn-item" id="mbn-settings" onclick="showPanel('settings',null);setMobileNav('settings');" aria-label="הגדרות">
+    <svg class="mbn-icon" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+    <span class="mbn-label">הגדרות</span>
+  </button>
+
+</nav>
     </div> <!-- Close mobile wrapper -->
+
+<!-- CELEBRATION MODAL -->
+<div class="celebrate-overlay" id="celebrate-overlay">
+  <div class="celebrate-box">
+    <div class="celebrate-emoji" style="font-family:var(--font-d);font-size:3rem;font-weight:900;color:var(--green);letter-spacing:-2px;">DONE</div>
+    <div class="celebrate-title">אימון הושלם!</div>
+    <div class="celebrate-sub" id="celebrate-text">כל הכבוד! סיימת את האימון של היום.<br>הגוף שלך מתחזק מאימון לאימון.</div>
+    <button class="celebrate-close" onclick="closeCelebration()">סגור</button>
+  </div>
+</div>
+
+<!-- GYM MODE OVERLAY -->
+<div class="gym-overlay" id="gym-overlay">
+  <div class="gym-header">
+    <div class="gym-badge" id="gym-badge">PUSH</div>
+    <span class="gym-stopwatch" id="gym-stopwatch">00:00</span>
+    <button class="gym-tempo-btn" id="gym-tempo-btn" onclick="toggleTempo()">קצב OFF</button>
+    <button class="gym-close" onclick="confirmCloseGymMode()">✕ יציאה</button>
+  </div>
+  <div class="gym-body" id="gym-body"></div>
+  <div class="rpe-wrap" id="rpe-wrap">
+    <div class="rpe-label">עצימות סט (RPE 1–10)</div>
+    <div class="rpe-btns" id="rpe-btns">
+      <button class="rpe-btn" data-v="1" onclick="setRPE(1)">1</button>
+      <button class="rpe-btn" data-v="2" onclick="setRPE(2)">2</button>
+      <button class="rpe-btn" data-v="3" onclick="setRPE(3)">3</button>
+      <button class="rpe-btn" data-v="4" onclick="setRPE(4)">4</button>
+      <button class="rpe-btn" data-v="5" onclick="setRPE(5)">5</button>
+      <button class="rpe-btn" data-v="6" onclick="setRPE(6)">6</button>
+      <button class="rpe-btn" data-v="7" onclick="setRPE(7)">7</button>
+      <button class="rpe-btn" data-v="8" onclick="setRPE(8)">8</button>
+      <button class="rpe-btn" data-v="9" onclick="setRPE(9)">9</button>
+      <button class="rpe-btn" data-v="10" onclick="setRPE(10)">10</button>
+    </div>
+  </div>
+  <div class="gym-footer">
+    <button class="gym-nav-btn" id="gym-prev" onclick="gymPrev()" disabled>הקודם</button>
+    <button class="gym-nav-btn next" id="gym-next" onclick="gymNext()">הבא</button>
+  </div>
+  <div class="gym-set-popup" id="gym-set-popup">
+    <div class="gym-set-popup-title" id="gym-set-popup-title">סט 1 — רשום משקל + חזרות</div>
+    <div class="gym-set-inputs">
+      <input class="gym-set-input" id="gym-set-kg" type="number" min="0" step="0.5" placeholder="ק״ג"/>
+      <span class="gym-set-x">×</span>
+      <input class="gym-set-input" id="gym-set-reps" type="number" min="1" max="50" placeholder="חזרות"/>
+    </div>
+    <button class="gym-set-save" id="gym-set-save-btn" onclick="saveGymSet()">שמור וסמן ✓</button>
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="share-overlay" id="share-overlay">
+  <div class="share-box">
+    <div class="share-title">שתף את הסטטיסטיקות שלך</div>
+    <div class="share-sub">כרטיס ProFit — שמור כתמונה ושתף</div>
+    <canvas id="share-canvas" width="400" height="260"></canvas>
+    <div class="share-actions">
+      <button class="share-dl-btn" onclick="downloadShareCard()">שמור תמונה</button>
+      <button class="share-dl-btn" id="share-native-btn" style="display:none" onclick="nativeShare()">שתף</button>
+      <button class="share-close-btn" onclick="closeShareModal()">סגור</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXERCISE ALTERNATIVES MODAL -->
+<div class="alt-modal" id="alt-modal" onclick="if(event.target.id==='alt-modal')closeAltModal()">
+  <div class="alt-box">
+    <div class="alt-title" id="alt-title">חלופות לתרגיל</div>
+    <div class="alt-sub">אין מכשיר? בחר חלופה:</div>
+    <div id="alt-list"></div>
+    <button class="alt-close-btn" onclick="closeAltModal()">סגור</button>
+  </div>
+</div>
+
+<!-- ONBOARDING WIZARD -->
+<div class="onboard-overlay" id="onboard-overlay" style="display:none;">
+  <div class="onboard-box">
+    <div class="onboard-header">
+      <div class="onboard-logo">ProFit</div>
+      <div class="onboard-sub">תוכנית אימונים ותזונה אישית</div>
+    </div>
+    <div class="onboard-step active" id="ob-step-1">
+      <div class="onboard-step-title">מי אתה? 👋</div>
+      <div class="onboard-field" style="margin-bottom:14px;">
+        <label>שם</label>
+        <input id="ob-name" type="text" placeholder="השם שלך" style="text-align:right;"/>
+      </div>
+      <div class="onboard-grid">
+        <div class="onboard-field"><label>גיל</label><input id="ob-age" type="number" min="16" max="80" placeholder="30"/></div>
+        <div class="onboard-field"><label>משקל (ק״ג)</label><input id="ob-weight" type="number" min="30" max="250" step="0.1" placeholder="75"/></div>
+        <div class="onboard-field"><label>גובה (ס״מ)</label><input id="ob-height" type="number" min="100" max="230" placeholder="175"/></div>
+        <div class="onboard-field">
+          <label>מין</label>
+          <select id="ob-gender" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border2);border-radius:10px;padding:11px 14px;color:var(--text);font-size:.95rem;">
+            <option value="m">זכר</option><option value="f">נקבה</option>
+          </select>
+        </div>
+        <div class="onboard-field"><label>שעת אימון (בד"כ)</label><input id="ob-workout-time" type="time" value="18:00" style="color-scheme:dark;"/></div>
+      </div>
+    </div>
+    <div class="onboard-step" id="ob-step-2">
+      <div class="onboard-step-title">מה המטרה שלך? 🎯</div>
+      <div class="onboard-goal-grid">
+        <button class="goal-btn" data-goal="lean_bulk" onclick="selectGoal(this)"><div class="goal-icon">💪</div><div class="goal-name">Lean Bulk</div><div class="goal-desc">+350 קל׳ / בניית מסה נקייה</div></button>
+        <button class="goal-btn" data-goal="bulk" onclick="selectGoal(this)"><div class="goal-icon">🏋️</div><div class="goal-name">מסה מקסימלית</div><div class="goal-desc">+600 קל׳ / גדילה מהירה</div></button>
+        <button class="goal-btn" data-goal="cut" onclick="selectGoal(this)"><div class="goal-icon">🔥</div><div class="goal-name">הורדת שומן</div><div class="goal-desc">-400 קל׳ / שמירת שריר</div></button>
+        <button class="goal-btn" data-goal="maintain" onclick="selectGoal(this)"><div class="goal-icon">⚖️</div><div class="goal-name">שמירה</div><div class="goal-desc">תחזוקה + בריאות</div></button>
+      </div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:8px;">כמה ארוחות ביום?</div>
+        <div class="meal-count-grid">
+          <button class="mc-btn" data-mc="3" onclick="selectMealCount(this)"><div class="mc-num">3</div><div class="mc-lbl">ארוחות</div></button>
+          <button class="mc-btn" data-mc="4" onclick="selectMealCount(this)"><div class="mc-num">4</div><div class="mc-lbl">ארוחות</div></button>
+          <button class="mc-btn sel" data-mc="5" onclick="selectMealCount(this)"><div class="mc-num">5</div><div class="mc-lbl">ארוחות</div></button>
+          <button class="mc-btn" data-mc="6" onclick="selectMealCount(this)"><div class="mc-num">6</div><div class="mc-lbl">ארוחות</div></button>
+        </div>
+      </div>
+      <div class="health-toggle" onclick="toggleChol(this)">
+        <span class="health-toggle-label">❤️ יש לי בעיות כולסטרול / שומנים בדם</span>
+        <div class="toggle-pill" id="ob-chol-pill"></div>
+      </div>
+    </div>
+    <div class="onboard-step" id="ob-step-3">
+      <div class="onboard-step-title">רמת פעילות 🏃</div>
+      <div class="activity-grid">
+        <button class="act-btn" data-act="1.2" onclick="selectActivity(this)"><div class="act-icon">🛋️</div><div class="act-info"><div class="act-name">יושבני</div><div class="act-desc">עבודת משרד, ללא ספורט</div></div></button>
+        <button class="act-btn" data-act="1.375" onclick="selectActivity(this)"><div class="act-icon">🚶</div><div class="act-info"><div class="act-name">קל</div><div class="act-desc">ספורט 1–3 פעמים בשבוע</div></div></button>
+        <button class="act-btn" data-act="1.55" onclick="selectActivity(this)"><div class="act-icon">💪</div><div class="act-info"><div class="act-name">מתון-גבוה</div><div class="act-desc">אימון 4–5 פעמים בשבוע</div></div></button>
+        <button class="act-btn" data-act="1.725" onclick="selectActivity(this)"><div class="act-icon">⚡</div><div class="act-info"><div class="act-name">אינטנסיבי</div><div class="act-desc">אימון יומי + עבודה פיזית</div></div></button>
+      </div>
+    </div>
+    <div class="onboard-dots">
+      <div class="onboard-dot active" id="od-1"></div>
+      <div class="onboard-dot" id="od-2"></div>
+      <div class="onboard-dot" id="od-3"></div>
+    </div>
+    <div class="onboard-footer">
+      <button class="onboard-back" id="ob-back" onclick="obBack()" style="display:none;">חזור</button>
+      <button class="onboard-next" id="ob-next" onclick="obNext()">הבא →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFETTI -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- LEVEL-UP TOAST -->
+<div class="levelup-toast" id="levelup-toast">עלית לרמה!</div>
+
+<!-- VOICE STATUS TOAST -->
+<div class="voice-toast" id="voice-toast"></div>
+
+<!-- REST TIMER -->
+<div class="timer-float" id="timer-float">
+  <div class="timer-presets" id="timer-presets">
+    <button data-sec="60" onclick="pickTimer(60);event.stopPropagation()">60 שנ׳</button>
+    <button data-sec="90" onclick="pickTimer(90);event.stopPropagation()">90 שנ׳</button>
+    <button data-sec="120" onclick="pickTimer(120);event.stopPropagation()">2 דק׳</button>
+    <button data-sec="180" onclick="pickTimer(180);event.stopPropagation()">3 דק׳</button>
+  </div>
+  <div class="timer-ring" id="timer-ring">
+    <svg width="62" height="62" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="24" class="ring-track"/>
+      <circle cx="30" cy="30" r="24" id="ring-prog" class="ring-prog" stroke-dasharray="150.8" stroke-dashoffset="0"/>
+    </svg>
+    <div class="ring-text" id="ring-text">0:00</div>
+  </div>
+  <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">⏱ מנוחה</button>
+</div>
+
     <script src="app.js"></script>
+    <script>
+function setMobileNav(name){
+  document.querySelectorAll('.mbn-item').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('mbn-'+name);
+  if(el) el.classList.add('active');
+  else document.getElementById('mbn-dashboard')?.classList.add('active');
+}
+const _origShowPanel=showPanel;
+showPanel=function(name,btn){
+  _origShowPanel(name,btn);
+  setMobileNav(name);
+};
+    </script>
 </body>
 </html>
