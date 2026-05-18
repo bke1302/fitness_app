@@ -563,6 +563,51 @@ const MEAL_SLOT_POOL = {
 // Which slots to use per meal count
 const MEAL_SLOTS_BY_COUNT = {3:[0,2,5], 4:[0,2,4,5], 5:[0,2,3,4,5], 6:[0,1,2,3,4,5]};
 
+/* ── Meal alternative foods (per slot index 0-5) ── */
+const MEAL_FOOD_ALTS = {
+  0:[
+    ['🥚 שקשוקה 3 ביצים','🍅 עגבניות','🌿 עשבי תיבול','☕ קפה שחור'],
+    ['🍞 2 פרוסות לחם שיפון','🥑 אבוקדו','🧀 גבינה לבנה 5%','🥚 ביצה'],
+    ['🥞 פנקייק חלבון','🍯 דבש','🫐 אוכמניות','🥛 קפה לאטה'],
+  ],
+  1:[
+    ['🍎 תפוח + 20g שקדים'],
+    ['🥕 ירקות חיים + 100g חומוס'],
+    ['🥜 25g אגוזי מלך + 🍊 תפוז'],
+  ],
+  2:[
+    ['🍗 200g הודו','🍚 150g קינואה','🥦 ירקות','🫒 שמן זית'],
+    ['🐟 200g טונה','🥗 סלט ירקות גדול','🍞 לחם מלא'],
+    ['🥚 4 ביצים','🫘 100g עדשים','🥗 סלט + לימון'],
+  ],
+  3:[
+    ['🍌 בננה + 🥛 200g קוטג׳ 1%'],
+    ['🍎 תפוח + 🥚 2 ביצים קשות + ☕ קפה'],
+    ['🥣 50g שיבולת שועל + 🍯 דבש'],
+  ],
+  4:[
+    ['🥛 Whey Isolate + מים + 🍌 בננה'],
+    ['🥚 4 ביצים קשות + 🍌 בננה'],
+    ['🧀 200g קוטג׳ 1% + 🍯 דבש'],
+  ],
+  5:[
+    ['🐟 150g טונה + 🥗 סלט ירקות + 🍋 לימון'],
+    ['🍗 130g חזה עוף + 🥦 ברוקולי מאודה'],
+    ['🥚 3 ביצים + 🧀 גבינה + 🥒 ירקות חיים'],
+  ],
+};
+
+function swapMeal(mealIdx){
+  const key='pf_meal_swaps';
+  const swaps=JSON.parse(localStorage.getItem(key)||'{}');
+  const alts=MEAL_FOOD_ALTS[mealIdx]||[];
+  if(!alts.length) return;
+  const cur=swaps[mealIdx]||0;
+  swaps[mealIdx]=(cur+1)%(alts.length+1);
+  localStorage.setItem(key,JSON.stringify(swaps));
+  renderNutritionPanel();
+}
+
 function getMealPlan(u,n){
   const g=u.goal||'lean_bulk';
   const count=u.meal_count||5;
@@ -606,7 +651,8 @@ function renderNutritionPanel(){
   const meals=getMealPlan(u,n);
   const cont=document.getElementById('meals-container');
   if(!cont) return;
-  cont.innerHTML=meals.map(m=>{
+  const swaps=JSON.parse(localStorage.getItem('pf_meal_swaps')||'{}');
+  cont.innerHTML=meals.map((m,i)=>{
     const kcal=Math.round(n.target*m.pct);
     const p=Math.round(n.protein*m.pRat);
     const c=Math.round(n.carbs*m.cRat);
@@ -614,13 +660,21 @@ function renderNutritionPanel(){
     const border=m.accent==='red'?'style="border-color:rgba(255,55,95,.35);"':'';
     const timeColor=m.accent==='red'?`style="color:var(--red)"`:'' ;
     const tipColor=m.tip.includes('❤')||m.tip.includes('✅')||m.tip.includes('💚')?'var(--green)':m.tip.includes('⚠')?'var(--yellow)':'var(--muted2)';
+    const alts=MEAL_FOOD_ALTS[i]||[];
+    const swapIdx=swaps[i]||0;
+    const foods=swapIdx>0&&alts[swapIdx-1]?alts[swapIdx-1]:m.foods;
+    const swapLabel=swapIdx>0?`החלף (${swapIdx}/${alts.length})`:'החלף';
+    const swapBtn=alts.length?`<button onclick="swapMeal(${i})" style="font-size:.62rem;font-weight:700;color:var(--cyan);background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.25);border-radius:6px;padding:3px 8px;cursor:pointer;white-space:nowrap;">${swapLabel} 🔄</button>`:'';
     return `<div class="meal-row" ${border}>
       <div class="meal-top">
         <div><div class="meal-name">${m.name}</div><div class="meal-time" ${timeColor}>${m.time}</div></div>
-        <div style="text-align:left;"><div class="meal-cals">${kcal}</div><div class="meal-cals-unit">קל׳</div></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="text-align:left;"><div class="meal-cals">${kcal}</div><div class="meal-cals-unit">קל׳</div></div></div>
       </div>
-      <div class="meal-foods">${m.foods.join(' · ')}</div>
-      <div style="font-size:.75rem;color:${tipColor};margin-bottom:8px;">${m.tip}</div>
+      <div class="meal-foods">${foods.join(' · ')}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:.75rem;color:${tipColor};">${m.tip}</div>
+        ${swapBtn}
+      </div>
       <div class="meal-macros"><span class="mp mp-p">חלבון ${p}g</span><span class="mp mp-c">פחמימות ${c}g</span><span class="mp mp-f">שומן ${f}g</span></div>
     </div>`;
   }).join('');
