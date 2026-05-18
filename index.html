@@ -39,20 +39,19 @@
 <!-- SPLASH SCREEN -->
 <div class="splash" id="splash">
   <div class="splash-mark">
-    <svg width="52" height="52" viewBox="0 0 24 24" fill="none">
+    <svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="logo-g" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="app-grad" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="#22C55E"/>
           <stop offset="100%" stop-color="#3B82F6"/>
         </linearGradient>
-        <filter id="logo-glow">
-          <feGaussianBlur stdDeviation="1.2" result="blur"/>
+        <filter id="app-glow">
+          <feGaussianBlur stdDeviation="2" result="blur"/>
           <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
-      <!-- Lightning bolt — solid, bold, iconic -->
-      <path d="M14 2.5L6.5 13.5H12.5L10 21.5L17.5 10.5H11.5L14 2.5Z"
-        fill="url(#logo-g)" filter="url(#logo-glow)"/>
+      <path style="fill:rgba(255,255,255,.08)" d="m 22.5,5 30,40 -40,50 -5,0 35,-45 -35,-45 z m 65,0 -40,50 30,40 15,0 -35,-45 35,-45 z"/>
+      <path style="fill:url(#app-grad)" filter="url(#app-glow)" d="m 21,25 a 48,36 0 1 0 58,0 l -0.8,1 a 44,33 0 1 1 -55,2 z m 15,-4 a 48,36 0 0 1 36,1 l -0.8,1 a 44,33 0 0 0 -34,0"/>
     </svg>
   </div>
   <div class="splash-name" style="font-size:1.5rem;letter-spacing:-1px;">FIT OR BE</div>
