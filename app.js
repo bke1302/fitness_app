@@ -197,7 +197,6 @@ function showPanel(name,btn){
   if(btn)btn.classList.add('active');
   const pt=document.getElementById('page-title');
   if(pt){pt.classList.add('switching');setTimeout(()=>{pt.textContent=TITLES[name]||name;pt.classList.remove('switching');},100);}
-  else{document.getElementById('page-title').textContent=TITLES[name]||name;}
   if(window.innerWidth<=768) closeSidebar();
   window.scrollTo(0,0);
   // Lazy-render panels that build their UI dynamically
