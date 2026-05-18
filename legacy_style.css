@@ -35,18 +35,21 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 
 /* ── App shell ── */
+html,body{height:100%;overflow:hidden;}
 body{
   font-family:var(--font);background:var(--bg);color:var(--text);
-  min-height:100vh;direction:rtl;overflow-x:hidden;
+  direction:rtl;overflow-x:hidden;
   display:flex;justify-content:center;
+  height:100dvh; /* dynamic viewport — accounts for mobile browser bars */
 }
 
-/* App frame — phone-width container, centers on desktop */
+/* App frame — phone-width container, fixed height so content scrolls */
 .app-frame{
-  width:100%;max-width:520px;min-height:100vh;
-  position:relative;
+  width:100%;max-width:520px;
+  height:100dvh;
   background:var(--bg);
   display:flex;flex-direction:column;
+  overflow:hidden;
 }
 @media(min-width:769px){
   .app-frame{
@@ -56,12 +59,15 @@ body{
   }
 }
 
-/* Content wrapper — scrollable, leaves room for bottom nav */
+/* Content wrapper — takes remaining height, scrolls */
 .content{
   flex:1;
+  min-height:0;        /* critical: allows flex child to shrink + scroll */
   overflow-y:auto;
+  overflow-x:hidden;
   padding:0 16px 96px;
   -webkit-overflow-scrolling:touch;
+  scroll-behavior:smooth;
 }
 
 /* Panels */
