@@ -1334,8 +1334,9 @@
             <input id="sf-apikey" class="settings-input" type="password" placeholder="sk-ant-..." autocomplete="off"/>
             <div style="font-size:.75rem;color:var(--muted);margin-top:5px;">נשמר רק במכשיר שלך.</div>
           </div>
-          <div style="margin-top:20px;">
+          <div style="margin-top:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
             <button class="settings-save" onclick="saveSettingsForm()">שמור הגדרות</button>
+            <button id="theme-btn" onclick="toggleTheme()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text);border-radius:10px;padding:10px 18px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .18s;">☀️ מסך בהיר</button>
           </div>
         </form>
       </div>
