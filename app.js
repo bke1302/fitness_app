@@ -2694,12 +2694,29 @@ window.addEventListener('load',()=>{
   },200);
   // new feature inits
   initTheme();
+  initTopbar();
   initNotifCard();
   renderMeasurements();
   setTimeout(injectOverloadBadges, 300);
 });
 
 // ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// TOPBAR — dynamic greeting + profile name
+// ═══════════════════════════════════════════════════
+function initTopbar(){
+  const h=new Date().getHours();
+  const gr=h<12?'בוקר טוב':h<17?'צהריים טובים':h<21?'ערב טוב':'לילה טוב';
+  const u=typeof getActiveUser==='function'?getActiveUser():null;
+  const name=u?.name||'';
+  const grEl=document.getElementById('tb-greeting');
+  const nmEl=document.getElementById('tb-name');
+  const avEl=document.getElementById('tb-avatar');
+  if(grEl) grEl.textContent=name?`${gr}, ${name} 👋`:gr+' 👋';
+  if(nmEl) nmEl.textContent=name||'IRONWILL';
+  if(avEl) avEl.textContent=(name||'I').charAt(0).toUpperCase();
+}
+
 // LIGHT / DARK THEME
 // ═══════════════════════════════════════════════════
 function initTheme(){
