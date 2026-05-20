@@ -2713,7 +2713,7 @@ function initTopbar(){
   const nmEl=document.getElementById('tb-name');
   const avEl=document.getElementById('tb-avatar');
   if(grEl) grEl.textContent=name?`${gr}, ${name} 👋`:gr+' 👋';
-  if(nmEl) nmEl.textContent=name||'IRONWILL';
+  if(nmEl) nmEl.textContent=name||'IronWill';
   if(avEl) avEl.textContent=(name||'I').charAt(0).toUpperCase();
 }
 
