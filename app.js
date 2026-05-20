@@ -175,8 +175,29 @@ function openModal(key){
   renderSetLogInModal(key);
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
+  // Focus trap — לכלוא focus בתוך המודל
+  const FOCUSABLE='button,input,select,textarea,[tabindex]:not([tabindex="-1"])';
+  function _trapFocus(e){
+    const modal=document.querySelector('.modal');
+    if(!modal) return;
+    const els=[...modal.querySelectorAll(FOCUSABLE)].filter(el=>!el.disabled&&el.offsetParent!==null);
+    if(!els.length) return;
+    if(e.key==='Tab'){
+      const first=els[0],last=els[els.length-1];
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    }
+  }
+  document.addEventListener('keydown',_trapFocus);
+  document.querySelector('.modal .modal-close')?.focus();
+  document.getElementById('modal-overlay')._trapFocus=_trapFocus;
 }
-function closeModal(){document.getElementById('modal-overlay').classList.remove('open');document.body.style.overflow='';}
+function closeModal(){
+  const overlay=document.getElementById('modal-overlay');
+  if(overlay?._trapFocus) document.removeEventListener('keydown',overlay._trapFocus);
+  overlay?.classList.remove('open');
+  document.body.style.overflow='';
+}
 function closeModalBg(ev){if(ev.target.id==='modal-overlay')closeModal();}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
@@ -265,9 +286,10 @@ function toggleSidebar(){
     sb.style.transition='';
     sb.style.transform='';
     const isOpen=sb.classList.contains('open');
-    if(!isOpen && dx < -THRESHOLD){
+    // RTL: sidebar opens from right → swipe right (dx>0) to open, left (dx<0) to close
+    if(!isOpen && dx > THRESHOLD){
       openSidebar();
-    } else if(isOpen && dx > THRESHOLD){
+    } else if(isOpen && dx < -THRESHOLD){
       closeSidebar();
     }
     tracking=false;
@@ -353,7 +375,8 @@ function updateBMRPreview(){
   if(calIn && !calIn.dataset.touched) calIn.value = target;
 }
 function saveSettingsForm(){
-  const name=(document.getElementById('sf-name')?.value||'').trim()||'המשתמש שלי';
+  const name=(document.getElementById('sf-name')?.value||'').trim();
+  if(!name||name.length<2){showToast('⚠️ שם חובה — לפחות 2 תווים');return;}
   const weight=parseFloat(document.getElementById('sf-weight')?.value)||60;
   const height=parseFloat(document.getElementById('sf-height')?.value)||170;
   const age=parseInt(document.getElementById('sf-age')?.value)||31;
@@ -393,13 +416,19 @@ const USERS_KEY = 'pf_users';
 const ACTIVE_USER_KEY = 'pf_active_user_id';
 
 function getUsers(){ try{return JSON.parse(localStorage.getItem(USERS_KEY)||'[]')}catch(e){return[];} }
-function saveUsers(u){ localStorage.setItem(USERS_KEY,JSON.stringify(u)); }
+function saveUsers(u){ localStorage.setItem(USERS_KEY,JSON.stringify(u)); invalidateUserCache(); }
 function getActiveUserId(){ return localStorage.getItem(ACTIVE_USER_KEY)||null; }
 function setActiveUserId(id){ localStorage.setItem(ACTIVE_USER_KEY,id); }
+let _cachedUser=null,_cachedUserId=null;
 function getActiveUser(){
-  const users=getUsers(); const id=getActiveUserId();
-  return users.find(u=>u.id===id)||users[0]||null;
+  const id=getActiveUserId();
+  if(id===_cachedUserId&&_cachedUser) return _cachedUser;
+  _cachedUserId=id;
+  const users=getUsers();
+  _cachedUser=users.find(u=>u.id===id)||users[0]||null;
+  return _cachedUser;
 }
+function invalidateUserCache(){_cachedUser=null;_cachedUserId=null;}
 
 function calcNutrition(u){
   const sex=(u.gender||'m')==='f'?-161:5;
@@ -2877,4 +2906,45 @@ async function requestWorkoutNotif(){
   } else if(perm==='denied'){
     document.getElementById('notif-card')?.classList.add('display:none');
   }
+}
+
+// ─── Export / Import ───────────────────────────────────────────────────────
+function exportData(){
+  const data={
+    users: getUsers(),
+    settings: getSettings(),
+    log: getLog(),
+    prs: getPRs(),
+    elog: JSON.parse(localStorage.getItem('proFit_elog')||'{}'),
+    setlog: JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}'),
+    exported: new Date().toISOString()
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='ironwill-backup-'+todayStr()+'.json';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),10000);
+}
+function importData(e){
+  const file=e.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      if(d.users)    localStorage.setItem(USERS_KEY,    JSON.stringify(d.users));
+      if(d.settings) localStorage.setItem(SETTINGS_KEY, JSON.stringify(d.settings));
+      if(d.log)      localStorage.setItem(LOG_KEY,      JSON.stringify(d.log));
+      if(d.prs)      localStorage.setItem(PR_KEY,       JSON.stringify(d.prs));
+      if(d.elog)     localStorage.setItem('proFit_elog', JSON.stringify(d.elog));
+      if(d.setlog)   localStorage.setItem(SETLOG_KEY,   JSON.stringify(d.setlog));
+      showToast('✅ נתונים יובאו בהצלחה!');
+      setTimeout(()=>location.reload(),1200);
+    }catch(err){
+      showToast('❌ קובץ לא תקין');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value=''; // allow re-import same file
 }

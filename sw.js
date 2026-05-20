@@ -1,7 +1,9 @@
-const CACHE = 'ironwill-v2';
+const CACHE = 'ironwill-v3';
 const ASSETS = [
   '/fitness_app/',
   '/fitness_app/index.html',
+  '/fitness_app/app.js',
+  '/fitness_app/legacy_style.css',
   '/fitness_app/manifest.json',
   '/fitness_app/sw.js',
   '/fitness_app/icons/icon-72.png',

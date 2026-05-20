@@ -409,10 +409,10 @@ body{
   position:relative;font-size:.8rem;color:rgba(255,255,255,.55);margin-top:4px;
 }
 .modal-close{
-  position:absolute;top:14px;left:14px;
+  position:absolute;top:10px;left:10px;
   background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);
-  color:#fff;width:36px;height:36px;border-radius:50%;
-  cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;
+  color:#fff;width:44px;height:44px;border-radius:50%;
+  cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;
   transition:all .2s;z-index:2;
 }
 .modal-close:hover{background:rgba(0,0,0,.6);}
@@ -1208,7 +1208,7 @@ body{
 .voice-toast.show{display:block;}
 
 /* ─── SHARE TOPBAR BTN ─── */
-.topbar-icon-btn{background:none;border:1px solid var(--border2);border-radius:999px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);transition:all .2s;flex-shrink:0;}
+.topbar-icon-btn{background:none;border:1px solid var(--border2);border-radius:999px;width:44px;height:44px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);transition:all .2s;flex-shrink:0;position:relative;}
 .topbar-icon-btn:hover{border-color:var(--red);color:var(--text);}
 .topbar-right{display:flex;align-items:center;gap:8px;}
 
@@ -1241,7 +1241,7 @@ body{
 [data-theme="light"] .card{background:var(--bg2);}
 
 /* ─── THEME TOGGLE ─── */
-.theme-btn{background:none;border:1px solid var(--border2);border-radius:999px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);transition:all .2s;flex-shrink:0;font-size:.95rem;}
+.theme-btn{background:none;border:1px solid var(--border2);border-radius:999px;width:44px;height:44px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);transition:all .2s;flex-shrink:0;font-size:.95rem;}
 .theme-btn:hover{border-color:var(--yellow);color:var(--yellow);}
 
 /* ─── CONFETTI ─── */
@@ -1417,3 +1417,21 @@ body{
 .msl-hist-row{display:flex;gap:8px;align-items:baseline;margin-bottom:5px;}
 .msl-hist-date{font-size:.7rem;font-weight:700;color:var(--blue);min-width:32px;flex-shrink:0;}
 .msl-hist-data{font-size:.7rem;color:var(--muted2);line-height:1.6;}
+
+/* ─── TOPBAR HEADER (replaces Tailwind CDN) ─── */
+.topbar-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px 12px;padding-top:calc(16px + env(safe-area-inset-top,0px));flex-shrink:0;}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.topbar-avatar-ring{width:44px;height:44px;border-radius:50%;border:2px solid rgba(34,197,94,.6);overflow:hidden;background:#1A2330;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(34,197,94,.2);flex-shrink:0;}
+.topbar-avatar-letter{font-size:.875rem;font-weight:700;color:var(--lime);}
+.topbar-text{display:flex;flex-direction:column;gap:1px;}
+.topbar-greeting{font-size:.69rem;color:#64748B;font-weight:500;}
+.topbar-appname{font-size:.94rem;font-weight:700;color:#fff;line-height:1.2;margin:0;}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+.topbar-level-badge{background:#1A2330;color:var(--lime);font-size:.625rem;font-weight:700;padding:4px 10px;border-radius:999px;border:1px solid rgba(34,197,94,.2);white-space:nowrap;}
+.topbar-notif-dot{width:8px;height:8px;background:#EF4444;border-radius:50%;position:absolute;top:9px;right:9px;pointer-events:none;}
+
+/* ─── DASHBOARD CSS CLASSES (replaces inline styles) ─── */
+.dash-stat-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px;}
+.dash-row{display:flex;align-items:center;gap:8px;}
+.dash-label{font-size:.68rem;color:#64748B;font-weight:500;}
+.dash-value{font-size:.875rem;font-weight:700;color:#F8FAFC;}

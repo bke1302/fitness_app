@@ -21,7 +21,8 @@
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
   "screenshots": [
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "narrow" }
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "narrow", "label": "IronWill — Dashboard" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "wide",   "label": "IronWill — Desktop" }
   ],
   "categories": ["health", "fitness", "sports"],
   "shortcuts": [
