@@ -90,12 +90,12 @@
         <span style="font-size:1.5rem;">🔥</span>
         <div>
           <div style="font-size:.68rem;color:#64748B;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">רצף פעיל</div>
-          <div style="font-size:1.1rem;font-weight:800;color:#F8FAFC;">7 ימים ברצף</div>
+          <div style="font-size:1.1rem;font-weight:800;color:#F8FAFC;"><span id="streak-num">0</span> ימים · <span id="streak-msg" style="font-size:.75rem;font-weight:600;">מתחילים</span></div>
         </div>
       </div>
       <div style="text-align:left;">
         <div style="font-size:.65rem;color:#64748B;">השבוע</div>
-        <div style="font-size:.85rem;font-weight:700;color:#22C55E;">3 / 4 אימונים</div>
+        <div style="font-size:.85rem;font-weight:700;color:#22C55E;" id="week-workouts-display">0 / 4 אימונים</div>
       </div>
     </div>
 
@@ -141,8 +141,8 @@
           <path id="ring-protein-inner" stroke="#3B82F6" style="transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1) .12s;filter:drop-shadow(0 0 4px rgba(59,130,246,.5))" stroke-dasharray="100,100" stroke-width="2.8" stroke-linecap="round" fill="none" d="M18 6 a 12 12 0 0 1 0 24 a 12 12 0 0 1 0 -24"/>
         </svg>
         <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-          <span style="font-size:1.25rem;font-weight:800;line-height:1;"><span id="ring-cals-label">72</span>%</span>
-          <span style="font-size:.6rem;color:#64748B;margin-top:2px;">ביצוע</span>
+          <span style="font-size:.9rem;font-weight:800;line-height:1;" id="ring-cals-label">—</span>
+          <span style="font-size:.52rem;color:#64748B;margin-top:2px;">קל׳ יעד</span>
         </div>
       </div>
       <!-- Stats column -->
@@ -151,7 +151,7 @@
           <div style="width:8px;height:8px;border-radius:50%;background:#22C55E;box-shadow:0 0 6px rgba(34,197,94,.6);flex-shrink:0;"></div>
           <div>
             <div style="font-size:.65rem;color:#64748B;">קלוריות</div>
-            <div style="font-size:.88rem;font-weight:700;color:#F8FAFC;"><span id="ring-cals-val">1,850</span> <span style="color:#64748B;font-weight:400;">/ <span id="tc-cal">2,750</span> קק"ל</span></div>
+            <div style="font-size:.88rem;font-weight:700;color:#F8FAFC;"><span id="ring-cals-val">—</span></div>
           </div>
         </div>
         <div style="height:1px;background:rgba(255,255,255,.05);"></div>
@@ -159,7 +159,7 @@
           <div style="width:8px;height:8px;border-radius:50%;background:#3B82F6;box-shadow:0 0 6px rgba(59,130,246,.6);flex-shrink:0;"></div>
           <div>
             <div style="font-size:.65rem;color:#64748B;">חלבון</div>
-            <div style="font-size:.88rem;font-weight:700;color:#F8FAFC;"><span id="ring-protein-val">120g</span> <span style="color:#64748B;font-weight:400;">/ 150g</span></div>
+            <div style="font-size:.88rem;font-weight:700;color:#F8FAFC;"><span id="ring-protein-val">—</span></div>
           </div>
         </div>
         <div style="height:1px;background:rgba(255,255,255,.05);"></div>
@@ -246,10 +246,10 @@
           <span style="font-size:.65rem;color:#64748B;font-weight:600;text-transform:uppercase;">צעדים</span>
           <span style="font-size:.9rem;">👟</span>
         </div>
-        <div style="font-size:1.35rem;font-weight:800;color:#F8FAFC;line-height:1;">6,240</div>
-        <div style="font-size:.62rem;color:#64748B;margin-top:3px;">מתוך 10,000</div>
+        <div style="font-size:1.35rem;font-weight:800;color:#F8FAFC;line-height:1;">—</div>
+        <div style="font-size:.62rem;color:#64748B;margin-top:3px;">אין נתון</div>
         <div style="height:3px;background:rgba(255,255,255,.06);border-radius:99px;margin-top:10px;overflow:hidden;">
-          <div style="width:62%;height:100%;background:linear-gradient(90deg,#8B5CF6,#6D28D9);border-radius:99px;"></div>
+          <div style="width:0%;height:100%;background:linear-gradient(90deg,#8B5CF6,#6D28D9);border-radius:99px;"></div>
         </div>
       </div>
       <!-- Water -->
@@ -258,10 +258,10 @@
           <span style="font-size:.65rem;color:#64748B;font-weight:600;text-transform:uppercase;">מים</span>
           <span style="font-size:.9rem;">💧</span>
         </div>
-        <div style="font-size:1.35rem;font-weight:800;color:#F8FAFC;line-height:1;">5 <span style="font-size:.75rem;font-weight:500;color:#64748B;">כוסות</span></div>
+        <div style="font-size:1.35rem;font-weight:800;color:#F8FAFC;line-height:1;">0 <span style="font-size:.75rem;font-weight:500;color:#64748B;">כוסות</span></div>
         <div style="font-size:.62rem;color:#64748B;margin-top:3px;">מתוך 8 מטרה</div>
         <div style="height:3px;background:rgba(255,255,255,.06);border-radius:99px;margin-top:10px;overflow:hidden;">
-          <div style="width:62%;height:100%;background:linear-gradient(90deg,#06B6D4,#0891B2);border-radius:99px;"></div>
+          <div style="width:0%;height:100%;background:linear-gradient(90deg,#06B6D4,#0891B2);border-radius:99px;"></div>
         </div>
       </div>
     </div>
@@ -270,28 +270,28 @@
     <div style="background:#1A2330;border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
         <span style="font-size:.9rem;font-weight:700;color:#F8FAFC;">הרגלי היום</span>
-        <span style="font-size:.68rem;color:#22C55E;font-weight:700;background:rgba(34,197,94,.1);padding:3px 8px;border-radius:6px;">3/5</span>
+        <span id="habit-count-badge" style="font-size:.68rem;color:#22C55E;font-weight:700;background:rgba(34,197,94,.1);padding:3px 8px;border-radius:6px;">0/5</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" checked style="accent-color:#22C55E;width:16px;height:16px;border-radius:4px;cursor:pointer;"/>
-          <span style="font-size:.82rem;color:#94A3B8;text-decoration:line-through;">אימון בוצע</span>
+          <input type="checkbox" id="habit-cb-0" onchange="toggleHabit(0)" style="accent-color:#22C55E;width:16px;height:16px;cursor:pointer;"/>
+          <span id="habit-lbl-0" style="font-size:.82rem;color:var(--text,#F8FAFC);">אימון בוצע</span>
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" checked style="accent-color:#22C55E;width:16px;height:16px;border-radius:4px;cursor:pointer;"/>
-          <span style="font-size:.82rem;color:#94A3B8;text-decoration:line-through;">ארוחת חלבון × 4</span>
+          <input type="checkbox" id="habit-cb-1" onchange="toggleHabit(1)" style="accent-color:#22C55E;width:16px;height:16px;cursor:pointer;"/>
+          <span id="habit-lbl-1" style="font-size:.82rem;color:var(--text,#F8FAFC);">ארוחת חלבון × 4</span>
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" checked style="accent-color:#22C55E;width:16px;height:16px;border-radius:4px;cursor:pointer;"/>
-          <span style="font-size:.82rem;color:#94A3B8;text-decoration:line-through;">8 כוסות מים</span>
+          <input type="checkbox" id="habit-cb-2" onchange="toggleHabit(2)" style="accent-color:#22C55E;width:16px;height:16px;cursor:pointer;"/>
+          <span id="habit-lbl-2" style="font-size:.82rem;color:var(--text,#F8FAFC);">8 כוסות מים</span>
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" style="accent-color:#22C55E;width:16px;height:16px;border-radius:4px;cursor:pointer;"/>
-          <span style="font-size:.82rem;color:#F8FAFC;">שינה 7+ שעות</span>
+          <input type="checkbox" id="habit-cb-3" onchange="toggleHabit(3)" style="accent-color:#22C55E;width:16px;height:16px;cursor:pointer;"/>
+          <span id="habit-lbl-3" style="font-size:.82rem;color:var(--text,#F8FAFC);">שינה 7+ שעות</span>
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" style="accent-color:#22C55E;width:16px;height:16px;border-radius:4px;cursor:pointer;"/>
-          <span style="font-size:.82rem;color:#F8FAFC;">רשמת משקלים</span>
+          <input type="checkbox" id="habit-cb-4" onchange="toggleHabit(4)" style="accent-color:#22C55E;width:16px;height:16px;cursor:pointer;"/>
+          <span id="habit-lbl-4" style="font-size:.82rem;color:var(--text,#F8FAFC);">רשמת משקלים</span>
         </label>
       </div>
     </div>

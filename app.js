@@ -911,6 +911,7 @@ function obFinish(){
     initTodayHero();
     initCheckboxes();
     updateStreak();
+    renderHabits();
     animateStats();
     renderWLog();
     renderWChart();
@@ -1189,6 +1190,50 @@ function updateStreak(){
   const msgs=[[0,0,'מתחילים'],[1,3,'התחלה טובה'],[4,7,'אחלה קצב'],[8,14,'מכונה'],[15,999,'אגדה']];
   const msg=(msgs.find(([lo,hi])=>n>=lo&&n<=hi)||msgs[0])[2];
   ['streak-msg','streak-msg2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=msg;});
+  // week workouts count
+  const log=getLog();
+  const today=new Date();
+  let done=0;
+  for(let i=0;i<7;i++){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const ds=d.toISOString().slice(0,10);
+    if(TRAIN_DAYS.includes(d.getDay())&&log[ds]?.__complete) done++;
+  }
+  const el=document.getElementById('week-workouts-display');
+  if(el) el.textContent=done+' / '+TRAIN_DAYS.length+' אימונים';
+}
+
+// ─── HABITS ──────────────────────────────────────────────────────────────
+const HABIT_KEY='pf_habits';
+function getHabitsToday(){
+  const stored=JSON.parse(localStorage.getItem(HABIT_KEY)||'{}');
+  if(stored.date===todayStr()) return stored.checked||[false,false,false,false,false];
+  return [false,false,false,false,false];
+}
+function saveHabitsToday(arr){
+  localStorage.setItem(HABIT_KEY,JSON.stringify({date:todayStr(),checked:arr}));
+}
+function renderHabits(){
+  const checked=getHabitsToday();
+  const count=checked.filter(Boolean).length;
+  const badge=document.getElementById('habit-count-badge');
+  if(badge) badge.textContent=count+'/5';
+  checked.forEach((v,i)=>{
+    const cb=document.getElementById('habit-cb-'+i);
+    const lbl=document.getElementById('habit-lbl-'+i);
+    if(!cb) return;
+    cb.checked=v;
+    if(lbl){
+      lbl.style.textDecoration=v?'line-through':'none';
+      lbl.style.opacity=v?'0.5':'1';
+    }
+  });
+}
+function toggleHabit(i){
+  const arr=getHabitsToday();
+  arr[i]=!arr[i];
+  saveHabitsToday(arr);
+  renderHabits();
 }
 
 // ═══════════════════════════════════════════════════
@@ -1562,6 +1607,7 @@ window.addEventListener('load',()=>{
   initTodayHero();
   initCheckboxes();
   updateStreak();
+  renderHabits();
   animateStats();
   renderWLog();
   renderWChart();
