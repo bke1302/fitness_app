@@ -201,6 +201,16 @@ function closeModal(){
 function closeModalBg(ev){if(ev.target.id==='modal-overlay')closeModal();}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
+// ─── TOAST ────────────────────────────────────────────────────────────────
+function showToast(msg,duration=2800){
+  const t=document.getElementById('app-toast');
+  if(!t) return;
+  t.textContent=msg;
+  t.style.opacity='1';
+  clearTimeout(t._tid);
+  t._tid=setTimeout(()=>{t.style.opacity='0';},duration);
+}
+
 const TITLES={dashboard:'לוח בקרה',schedule:'לוח שבועי',push:'ראשון — PUSH DAY',pull:'שני — PULL DAY',legs:'רביעי — LEGS DAY',arms:'חמישי — ARMS DAY',nutrition:'תוכנית תזונה',supplements:'תוספי תזונה',tips:'טיפים מהמאמן',timeline:'ציר זמן',elog:'יומן משקלים',food:'מעקב תזונה יומי',chat:'יועץ תזונה AI',progress:'גרף משקל גוף',settings:'הגדרות אישיות'};
 function showPanel(name,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -634,12 +644,17 @@ function getMealPlan(u,n){
   const pool=MEAL_SLOT_POOL[g]||MEAL_SLOT_POOL['lean_bulk'];
   const indices=MEAL_SLOTS_BY_COUNT[count]||MEAL_SLOTS_BY_COUNT[5];
   const selected=indices.map(i=>pool[i]);
-  // Renormalize percentages to sum 1.0
-  const totalPct=selected.reduce((s,t)=>s+t[2],0);
+  // Renormalize all ratios so daily totals always = 100%
+  const totalPct =selected.reduce((s,t)=>s+t[2],0)||1;
+  const totalPRat=selected.reduce((s,t)=>s+t[3],0)||1;
+  const totalCRat=selected.reduce((s,t)=>s+t[4],0)||1;
+  const totalFRat=selected.reduce((s,t)=>s+t[5],0)||1;
   return selected.map(t=>({
     name:t[0],time:t[1],
-    pct:t[2]/totalPct,
-    pRat:t[3],cRat:t[4],fRat:t[5],
+    pct:  t[2]/totalPct,
+    pRat: t[3]/totalPRat,
+    cRat: t[4]/totalCRat,
+    fRat: t[5]/totalFRat,
     foods:t[6],tip:t[7],accent:t[8]
   }));
 }
@@ -912,6 +927,7 @@ function obFinish(){
     initCheckboxes();
     updateStreak();
     renderHabits();
+    renderWater();
     animateStats();
     renderWLog();
     renderWChart();
@@ -1236,6 +1252,33 @@ function toggleHabit(i){
   renderHabits();
 }
 
+// ─── WATER TRACKER ───────────────────────────────────────────────────────
+const WATER_KEY='pf_water';
+function getWaterToday(){
+  try{
+    const stored=JSON.parse(localStorage.getItem(WATER_KEY)||'{}');
+    return stored.date===todayStr()?stored.cups||0:0;
+  }catch(e){return 0;}
+}
+function saveWaterToday(cups){
+  localStorage.setItem(WATER_KEY,JSON.stringify({date:todayStr(),cups}));
+}
+function addWaterCup(){
+  const cups=Math.min(20,getWaterToday()+1);
+  saveWaterToday(cups);renderWater();
+}
+function removeWaterCup(){
+  const cups=Math.max(0,getWaterToday()-1);
+  saveWaterToday(cups);renderWater();
+}
+function renderWater(){
+  const cups=getWaterToday();
+  const el=document.getElementById('water-display');
+  const bar=document.getElementById('water-bar');
+  if(el) el.textContent=cups;
+  if(bar) bar.style.width=Math.min(100,Math.round((cups/8)*100))+'%';
+}
+
 // ═══════════════════════════════════════════════════
 // TODAY HERO BANNER
 // ═══════════════════════════════════════════════════
@@ -1502,7 +1545,7 @@ function renderWChart(){
     arr.forEach(entry=>{
       if(!entry.date||!entry.kg||!entry.reps) return;
       const wk=getWeekKey(entry.date);
-      volByWeek[wk]=(volByWeek[wk]||0)+Math.round(entry.kg*entry.reps);
+      volByWeek[wk]=(volByWeek[wk]||0)+Math.round(entry.kg*entry.reps*(entry.sets||1));
     });
   });
   const vols=log.map(e=>volByWeek[getWeekKey(e.date)]||0);
@@ -1608,6 +1651,7 @@ window.addEventListener('load',()=>{
   initCheckboxes();
   updateStreak();
   renderHabits();
+  renderWater();
   animateStats();
   renderWLog();
   renderWChart();
@@ -2975,10 +3019,15 @@ function exportData(){
 function importData(e){
   const file=e.target.files[0];
   if(!file) return;
+  if(!confirm('⚠️ ייבוא ידרוס את כל הנתונים הקיימים.\nהאם להמשיך?')){e.target.value='';return;}
   const reader=new FileReader();
   reader.onload=ev=>{
     try{
       const d=JSON.parse(ev.target.result);
+      // Basic validation — must have at least one known key
+      if(!d||typeof d!=='object'||(!d.users&&!d.log&&!d.prs&&!d.elog)){
+        showToast('❌ קובץ גיבוי לא תקין');return;
+      }
       if(d.users)    localStorage.setItem(USERS_KEY,    JSON.stringify(d.users));
       if(d.settings) localStorage.setItem(SETTINGS_KEY, JSON.stringify(d.settings));
       if(d.log)      localStorage.setItem(LOG_KEY,      JSON.stringify(d.log));
@@ -2988,7 +3037,7 @@ function importData(e){
       showToast('✅ נתונים יובאו בהצלחה!');
       setTimeout(()=>location.reload(),1200);
     }catch(err){
-      showToast('❌ קובץ לא תקין');
+      showToast('❌ שגיאה בקריאת הקובץ — ודא שהקובץ תקין');
     }
   };
   reader.readAsText(file);
