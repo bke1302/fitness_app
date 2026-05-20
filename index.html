@@ -1268,6 +1268,13 @@
               <input id="sf-name" class="settings-input" type="text" placeholder="השם שלך" aria-label="שם מלא" required minlength="2" maxlength="30"/>
             </div>
             <div class="settings-field">
+              <label class="settings-label" for="sf-gender">מין</label>
+              <select id="sf-gender" class="settings-input" aria-label="מין" onchange="updateBMRPreview()">
+                <option value="m">זכר</option>
+                <option value="f">נקבה</option>
+              </select>
+            </div>
+            <div class="settings-field">
               <label class="settings-label" for="sf-age">גיל</label>
               <input id="sf-age" class="settings-input" type="number" min="16" max="80" placeholder="גיל" aria-label="גיל" oninput="updateBMRPreview()"/>
             </div>

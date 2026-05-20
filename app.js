@@ -373,7 +373,8 @@ function updateBMRPreview(){
   const a=parseInt(document.getElementById('sf-age')?.value)||0;
   const prev=document.getElementById('bmr-preview');
   if(!prev||!w||!h||!a){if(prev)prev.innerHTML='הזן נתונים לחישוב BMR ו-TDEE';return;}
-  const bmr=Math.round(10*w+6.25*h-5*a+5);
+  const _g=(getActiveUser()?.gender||'m')==='f'?-161:5;
+  const bmr=Math.round(10*w+6.25*h-5*a+_g);
   const actVal=parseFloat(document.getElementById('sf-activity')?.value)||1.55;
   const tdee=Math.round(bmr*actVal);
   const goalVal=document.getElementById('sf-goal')?.value||'lean_bulk';
@@ -398,13 +399,14 @@ function saveSettingsForm(){
   const goal=document.getElementById('sf-goal')?.value||'lean_bulk';
   const activity=parseFloat(document.getElementById('sf-activity')?.value)||1.55;
   const workout_time=document.getElementById('sf-workout-time')?.value||'18:00';
+  const gender=document.getElementById('sf-gender')?.value||'m';
   const meal_count=_sfMealCount||5;
   const cholesterol=_sfCholesterol;
   // Sync active user record
   const users=getUsers(); const aid=getActiveUserId();
   const idx=users.findIndex(u=>u.id===aid);
   if(idx>=0){
-    users[idx]={...users[idx],name,weight,height,age,calories,goal,activity,workout_time,meal_count,cholesterol};
+    users[idx]={...users[idx],name,weight,height,age,calories,goal,activity,workout_time,gender,meal_count,cholesterol};
     saveUsers(users);
     renderUserList();
     renderNutritionPanel();
@@ -794,6 +796,7 @@ function prefillSettingsForm(){
   const sg=document.getElementById('sf-goal'); if(sg) sg.value=u.goal||'lean_bulk';
   const act=document.getElementById('sf-activity'); if(act) act.value=String(u.activity||1.55);
   const wt=document.getElementById('sf-workout-time'); if(wt) wt.value=u.workout_time||'18:00';
+  const sgen=document.getElementById('sf-gender'); if(sgen) sgen.value=u.gender||'m';
   _sfMealCount=u.meal_count||5; _sfCholesterol=!!u.cholesterol;
   document.querySelectorAll('[data-smc]').forEach(b=>b.classList.toggle('sel',b.dataset.smc===String(_sfMealCount)));
   document.getElementById('sf-chol-pill')?.classList.toggle('on',_sfCholesterol);
@@ -3029,7 +3032,7 @@ async function requestWorkoutNotif(){
       badge:'/fitness_app/icons/icon-72.png'
     });
   } else if(perm==='denied'){
-    document.getElementById('notif-card')?.classList.add('display:none');
+    document.getElementById('notif-card')?.style.setProperty('display','none');
   }
 }
 
