@@ -1051,6 +1051,9 @@ function renderSetLogInModal(key){
       מקסימום תיאורטי (Epley): <strong id="orm-val">—</strong>
       <span style="font-size:.72rem;color:var(--muted);margin-right:6px;">= משקל × (1 + חזרות/30)</span>
     </div>
+    <button id="pr-share-btn" onclick="openPRShareCard(this.dataset.key,+this.dataset.kg,+this.dataset.reps)" style="display:none;margin-top:10px;width:100%;background:linear-gradient(135deg,#e63946,#c1121f);border:none;border-radius:10px;padding:10px;color:#fff;font-weight:800;font-size:.9rem;cursor:pointer;font-family:var(--font);align-items:center;justify-content:center;gap:6px;">
+      🏆 שתף את השיא שלך
+    </button>
   </div>`;
 }
 
@@ -1093,7 +1096,16 @@ function saveModalSetLog(key,nSets){
     msg.textContent=isNew?`🔥 שיא חדש! ${bestKg}ק״ג × ${bestReps}`:`✓ נשמר — ${bestKg}ק״ג × ${bestReps}`;
     msg.className='msl-saved-msg '+(isNew?'msl-saved-pr':'msl-saved-ok');
     if(isNew&&navigator.vibrate) navigator.vibrate([200,100,200,100,400]);
-    if(isNew) showToast('שיא אישי חדש! '+bestKg+'ק״ג × '+bestReps+' 🏆');
+    if(isNew){
+      showToast('שיא אישי חדש! '+bestKg+'ק״ג × '+bestReps+' 🏆');
+      // Add share PR button
+      setTimeout(()=>{
+        const shareBtn=document.getElementById('pr-share-btn');
+        if(shareBtn){shareBtn.dataset.key=key;shareBtn.dataset.kg=bestKg;shareBtn.dataset.reps=bestReps;shareBtn.style.display='inline-flex';}
+      },400);
+    } else {
+      setTimeout(()=>checkProgressiveSuggestion(key,bestKg,bestReps),600);
+    }
     if(typeof addXP==='function') addXP(isNew?25:5);
     setTimeout(()=>renderSetLogInModal(key),350);
   }
@@ -2850,7 +2862,9 @@ window.addEventListener('load',()=>{
   initTheme();
   initTopbar();
   initNotifCard();
-  renderMeasurements();
+  renderMeasurementsFull();
+  renderRecoveryCard();
+  renderWeeklyReport();
   setTimeout(injectOverloadBadges, 300);
 });
 
@@ -2871,21 +2885,10 @@ function initTopbar(){
   if(avEl) avEl.textContent=(name||'I').charAt(0).toUpperCase();
 }
 
-// LIGHT / DARK THEME
-// ═══════════════════════════════════════════════════
+// LIGHT / DARK / AMOLED THEME — defined below in AMOLED section
 function initTheme(){
   const t=localStorage.getItem('pf_theme')||'dark';
   applyTheme(t);
-}
-function applyTheme(t){
-  document.documentElement.setAttribute('data-theme',t==='light'?'light':'');
-  const btn=document.getElementById('theme-btn');
-  if(btn) btn.textContent=t==='light'?'🌙':'☀️';
-  localStorage.setItem('pf_theme',t);
-}
-function toggleTheme(){
-  const cur=localStorage.getItem('pf_theme')||'dark';
-  applyTheme(cur==='dark'?'light':'dark');
 }
 
 // ═══════════════════════════════════════════════════
@@ -3109,4 +3112,391 @@ async function testApiKey(){
     showToast('⚠️ שגיאת רשת — בדוק חיבור');
     if(btn){btn.textContent='בדוק מפתח';btn.disabled=false;}
   }
+}
+
+// ═══════════════════════════════════════════════════
+// PLATE CALCULATOR
+// ═══════════════════════════════════════════════════
+const PLATE_SIZES=[25,20,15,10,5,2.5,1.25];
+function openPlateCalc(){
+  document.getElementById('plate-calc-modal')?.classList.add('open');
+  calcPlates();
+}
+function closePlateCalc(){
+  document.getElementById('plate-calc-modal')?.classList.remove('open');
+}
+function calcPlates(){
+  const target=parseFloat(document.getElementById('pc-target')?.value)||0;
+  const bar=parseFloat(document.getElementById('pc-bar')?.value)||20;
+  const el=document.getElementById('pc-result');
+  if(!el) return;
+  if(!target||target<=bar){
+    el.innerHTML='<div style="color:var(--muted);font-size:.85rem;text-align:center;padding:8px 0;">הכנס משקל יעד גדול מהמוט</div>';
+    return;
+  }
+  let remaining=parseFloat(((target-bar)/2).toFixed(2));
+  const used=[];
+  for(const p of PLATE_SIZES){
+    const n=Math.floor(remaining/p+0.001);
+    if(n>0){used.push({p,n});remaining=parseFloat((remaining-n*p).toFixed(2));}
+  }
+  if(remaining>0.1){
+    el.innerHTML='<div style="color:var(--red);font-size:.85rem;text-align:center;">⚠️ לא ניתן בצלחות סטנדרטיות</div>';
+    return;
+  }
+  const COLORS={25:'#e63946',20:'#3b82f6',15:'#8b5cf6',10:'#22c55e',5:'#f59e0b',2.5:'#06b6d4',1.25:'#64748b'};
+  el.innerHTML=`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;direction:ltr;">
+    ${used.map(({p,n})=>Array(n).fill(0).map(()=>`
+      <div style="background:${COLORS[p]||'#555'};color:#fff;border-radius:6px;padding:6px 10px;font-weight:800;font-size:.9rem;min-width:36px;text-align:center;">${p}</div>
+    `).join('')).join('')}
+  </div>
+  <div style="font-size:.78rem;color:var(--muted);border-top:1px solid var(--border);padding-top:8px;">
+    ${used.map(({p,n})=>`<span style="margin-inline-end:10px;">${p}ק"ג × ${n}</span>`).join('')}
+    <div style="margin-top:4px;">מוט ${bar}ק"ג + צלחות × 2 = <strong style="color:var(--text);">${target}ק"ג</strong></div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// 1RM CALCULATOR
+// ═══════════════════════════════════════════════════
+function calc1RM(kg,reps){
+  if(reps===1) return kg;
+  return Math.round(kg*(1+reps/30)); // Epley
+}
+function open1RMCalc(){
+  // Populate exercise select
+  const sel=document.getElementById('orm-ex-select');
+  if(sel&&sel.options.length<=1){
+    Object.entries(EX).forEach(([k,v])=>{
+      const o=document.createElement('option');
+      o.value=k; o.textContent=v.name;
+      sel.appendChild(o);
+    });
+  }
+  document.getElementById('orm-modal')?.classList.add('open');
+  render1RM();
+}
+function close1RMCalc(){
+  document.getElementById('orm-modal')?.classList.remove('open');
+}
+function render1RM(){
+  const el=document.getElementById('orm-result');
+  if(!el) return;
+  const kg=parseFloat(document.getElementById('orm-kg')?.value)||0;
+  const reps=parseInt(document.getElementById('orm-reps')?.value)||0;
+  const key=document.getElementById('orm-ex-select')?.value;
+  // Also try from history
+  let histOrm=0;
+  if(key){
+    const hist=getModalSetHistory(key)||[];
+    hist.forEach(session=>{
+      if(!Array.isArray(session)) return;
+      session.forEach(s=>{if(s.kg&&s.reps) histOrm=Math.max(histOrm,calc1RM(s.kg,s.reps));});
+    });
+  }
+  const manualOrm=kg&&reps?calc1RM(kg,reps):0;
+  const orm=manualOrm||histOrm;
+  if(!orm){el.innerHTML='<div style="color:var(--muted);text-align:center;padding:8px;">הזן משקל + חזרות</div>';return;}
+  const pcts=[1,.9,.8,.7,.6,.5];
+  el.innerHTML=`
+    <div style="text-align:center;margin-bottom:12px;">
+      <div style="font-size:3rem;font-weight:900;color:var(--red);line-height:1;">${orm}</div>
+      <div style="font-size:.8rem;color:var(--muted);">ק"ג · מקסימום חזרה אחת (1RM)</div>
+      ${manualOrm?`<div style="font-size:.7rem;color:var(--muted);margin-top:2px;">מחושב מ-${kg}ק"ג × ${reps} חזרות</div>`:`<div style="font-size:.7rem;color:var(--cyan);margin-top:2px;">מהיסטוריית האימונים שלך</div>`}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+      ${pcts.map(p=>`
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center;">
+          <div style="font-size:1rem;font-weight:700;color:var(--text);">${Math.round(orm*p)}</div>
+          <div style="font-size:.65rem;color:var(--muted);">${Math.round(p*100)}% 1RM</div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// AMOLED THEME (3rd mode: dark → light → amoled)
+// ═══════════════════════════════════════════════════
+function applyTheme(t){
+  const root=document.documentElement;
+  root.setAttribute('data-theme',t==='light'?'light':t==='amoled'?'amoled':'');
+  const btn=document.getElementById('theme-btn');
+  if(btn) btn.textContent=t==='light'?'🌙':t==='amoled'?'☀️':'🌑';
+  localStorage.setItem('pf_theme',t);
+}
+function toggleTheme(){
+  const cur=localStorage.getItem('pf_theme')||'dark';
+  const next={dark:'light',light:'amoled',amoled:'dark'}[cur]||'dark';
+  applyTheme(next);
+}
+
+// ═══════════════════════════════════════════════════
+// PR SHARE CARD
+// ═══════════════════════════════════════════════════
+function openPRShareCard(exKey,kg,reps){
+  const canvas=document.getElementById('share-canvas');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const W=400,H=260;
+  const exName=(EX[exKey]?.name)||exKey;
+  const orm=calc1RM(kg,reps);
+  // Background
+  ctx.fillStyle='#0a0c10'; ctx.fillRect(0,0,W,H);
+  const g=ctx.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'rgba(230,57,70,.22)'); g.addColorStop(1,'rgba(255,214,0,.08)');
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  // Border
+  ctx.strokeStyle='rgba(230,57,70,.5)'; ctx.lineWidth=2; ctx.strokeRect(1,1,W-2,H-2);
+  // Trophy
+  ctx.font='52px sans-serif'; ctx.textAlign='left'; ctx.fillText('🏆',20,68);
+  // PR label
+  ctx.font='900 13px "Barlow Condensed",Barlow,sans-serif';
+  ctx.fillStyle='#FFD60A'; ctx.textAlign='left'; ctx.fillText('שיא אישי חדש!',86,42);
+  // Exercise name
+  ctx.font='700 22px Barlow,sans-serif';
+  ctx.fillStyle='#F8FAFC'; ctx.fillText(exName,86,68);
+  // Big weight
+  ctx.font='900 72px "Barlow Condensed",Barlow,sans-serif';
+  ctx.fillStyle='#e63946'; ctx.textAlign='center'; ctx.fillText(kg+'ק״ג',W/2,160);
+  // Reps
+  ctx.font='700 22px Barlow,sans-serif';
+  ctx.fillStyle='rgba(255,255,255,.6)'; ctx.fillText('× '+reps+' חזרות',W/2,188);
+  // 1RM
+  ctx.font='600 14px Barlow,sans-serif';
+  ctx.fillStyle='rgba(255,255,255,.4)'; ctx.fillText('1RM מוערך: '+orm+'ק״ג',W/2,212);
+  // User + date
+  const s=getSettings();
+  ctx.font='400 11px Barlow,sans-serif'; ctx.fillStyle='rgba(255,255,255,.3)';
+  ctx.fillText((s.name||'IronWill')+'  ·  '+todayStr(),W/2,H-14);
+  // Logo
+  ctx.font='900 14px "Barlow Condensed",Barlow,sans-serif';
+  ctx.fillStyle='rgba(230,57,70,.7)'; ctx.textAlign='right';
+  ctx.fillText('IRONWILL',W-16,H-14);
+  document.getElementById('share-overlay').classList.add('open');
+  if(navigator.canShare) document.getElementById('share-native-btn').style.display='inline-block';
+}
+
+// ═══════════════════════════════════════════════════
+// PROGRESSIVE OVERLOAD SUGGESTIONS
+// ═══════════════════════════════════════════════════
+function checkProgressiveSuggestion(exKey,kg,reps){
+  const hist=getModalSetHistory(exKey)||[];
+  if(hist.length<2) return; // need at least 2 sessions
+  // Find best of PREVIOUS session (not current)
+  const prev=hist[1]; // hist[0] is current session
+  if(!Array.isArray(prev)||!prev.length) return;
+  const prevBest=prev.reduce((best,s)=>{
+    return(!best||calc1RM(s.kg,s.reps)>calc1RM(best.kg,best.reps))?s:best;
+  },null);
+  if(!prevBest) return;
+  const currOrm=calc1RM(kg,reps);
+  const prevOrm=calc1RM(prevBest.kg,prevBest.reps);
+  const delta=Math.round((currOrm-prevOrm)/prevOrm*100);
+  if(currOrm>prevOrm){
+    showToast(`📈 +${delta}% vs השבוע שעבר — ממשיכים!`);
+  } else if(currOrm===prevOrm){
+    showToast(`💡 משקל זהה לשבוע שעבר — נסה +2.5ק"ג בסט הבא`);
+  }
+  // else: lighter, don't comment (might be deload)
+}
+
+// ═══════════════════════════════════════════════════
+// RECOVERY SCORE
+// ═══════════════════════════════════════════════════
+const RECOVERY_KEY='pf_recovery';
+function getRecoveryToday(){
+  try{
+    const d=JSON.parse(localStorage.getItem(RECOVERY_KEY)||'{}');
+    return d.date===todayStr()?d:null;
+  }catch(e){return null;}
+}
+function saveRecovery(sleep,energy,soreness){
+  const score=Math.round((sleep+energy+(6-soreness))/3*2); // 1–10
+  const rec={date:todayStr(),sleep,energy,soreness,score};
+  localStorage.setItem(RECOVERY_KEY,JSON.stringify(rec));
+  renderRecoveryCard();
+}
+function renderRecoveryCard(){
+  const el=document.getElementById('recovery-card-body');
+  if(!el) return;
+  const today=getRecoveryToday();
+  if(!today){
+    el.innerHTML=`
+      <div style="font-size:.85rem;color:var(--muted);margin-bottom:12px;">לא עשית צ'ק-אין היום — 3 שאלות מהירות:</div>
+      <div style="margin-bottom:10px;">
+        <label style="font-size:.78rem;color:var(--muted2);display:block;margin-bottom:4px;">😴 איכות שינה (1=גרועה, 5=מצוינת)</label>
+        <div style="display:flex;gap:6px;" id="rec-sleep-btns">
+          ${[1,2,3,4,5].map(v=>`<button onclick="selectRecovery('sleep',${v},this)" style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:6px 0;font-weight:700;color:var(--text);cursor:pointer;font-family:var(--font);">${v}</button>`).join('')}
+        </div>
+      </div>
+      <div style="margin-bottom:10px;">
+        <label style="font-size:.78rem;color:var(--muted2);display:block;margin-bottom:4px;">⚡ רמת אנרגיה (1=נמוכה, 5=גבוהה)</label>
+        <div style="display:flex;gap:6px;" id="rec-energy-btns">
+          ${[1,2,3,4,5].map(v=>`<button onclick="selectRecovery('energy',${v},this)" style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:6px 0;font-weight:700;color:var(--text);cursor:pointer;font-family:var(--font);">${v}</button>`).join('')}
+        </div>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="font-size:.78rem;color:var(--muted2);display:block;margin-bottom:4px;">💪 כאבי שרירים (1=הרבה, 5=אין)</label>
+        <div style="display:flex;gap:6px;" id="rec-soreness-btns">
+          ${[1,2,3,4,5].map(v=>`<button onclick="selectRecovery('soreness',${v},this)" style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:6px 0;font-weight:700;color:var(--text);cursor:pointer;font-family:var(--font);">${v}</button>`).join('')}
+        </div>
+      </div>
+      <button onclick="submitRecovery()" style="width:100%;background:var(--red);color:#fff;border:none;border-radius:10px;padding:10px;font-weight:700;font-size:.9rem;cursor:pointer;font-family:var(--font);">שמור צ'ק-אין</button>`;
+    window._rec={sleep:3,energy:3,soreness:3};
+    return;
+  }
+  const score=today.score;
+  const color=score>=8?'var(--lime)':score>=5?'var(--yellow)':'var(--red)';
+  const rec=score>=8?'💪 ירוק — אימון מלא מומלץ!':score>=5?'🟡 בינוני — אימון מתון/עצימות נמוכה':' ⚠️ אדום — מנוחה פעילה מומלצת';
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div style="text-align:center;min-width:64px;">
+        <div style="font-size:2.5rem;font-weight:900;color:${color};line-height:1;">${score}</div>
+        <div style="font-size:.65rem;color:var(--muted);">מתוך 10</div>
+      </div>
+      <div>
+        <div style="font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:4px;">${rec}</div>
+        <div style="font-size:.72rem;color:var(--muted);">שינה: ${today.sleep}/5 · אנרגיה: ${today.energy}/5 · כאבים: ${today.soreness}/5</div>
+      </div>
+    </div>`;
+}
+let _rec={sleep:3,energy:3,soreness:3};
+function selectRecovery(type,val,btn){
+  _rec[type]=val;
+  const container=btn.closest('[id$="-btns"]');
+  if(container) container.querySelectorAll('button').forEach(b=>{
+    b.style.background=b===btn?'var(--red)':'var(--bg2)';
+    b.style.color=b===btn?'#fff':'var(--text)';
+  });
+}
+function submitRecovery(){
+  saveRecovery(_rec.sleep||3,_rec.energy||3,_rec.soreness||3);
+  showToast('✅ צ\'ק-אין יומי נשמר!');
+}
+
+// ═══════════════════════════════════════════════════
+// WEEKLY REPORT
+// ═══════════════════════════════════════════════════
+function renderWeeklyReport(){
+  const el=document.getElementById('weekly-report-body');
+  if(!el) return;
+  const log=getLog();
+  const prs=getPRs();
+  // Calculate this week's workouts
+  const now=new Date();
+  const dayOfWeek=now.getDay();
+  const monday=new Date(now);
+  monday.setDate(now.getDate()-(dayOfWeek===0?6:dayOfWeek-1));
+  const weekDates=Array.from({length:7},(_,i)=>{
+    const d=new Date(monday);d.setDate(monday.getDate()+i);
+    return d.toISOString().slice(0,10);
+  });
+  const workoutDays=weekDates.filter(d=>log[d]&&Object.values(log[d]).some(v=>v===true||v===1)).length;
+  // Volume this week
+  const elog=(() => {try{return JSON.parse(localStorage.getItem('proFit_elog')||'{}')}catch(e){return{};} })();
+  let weekVol=0;
+  Object.values(elog).forEach(arr=>{
+    if(!Array.isArray(arr)) return;
+    arr.forEach(e=>{
+      if(weekDates.includes(e.date)) weekVol+=Math.round((e.kg||0)*(e.reps||0)*(e.sets||1));
+    });
+  });
+  // PRs this week
+  const weekPRs=Object.entries(prs).filter(([,v])=>weekDates.includes(v.date)).length;
+  // Food this week
+  const foodLogs=weekDates.map(d=>{
+    try{return JSON.parse(localStorage.getItem('pf_food_'+d)||'[]');}catch(e){return[];}
+  });
+  const avgCal=Math.round(foodLogs.reduce((s,fl)=>s+fl.reduce((a,f)=>a+(f.cal||0)*((f.qty||1)),0),0)/Math.max(1,foodLogs.filter(fl=>fl.length).length));
+  el.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
+        <div style="font-size:2rem;font-weight:900;color:var(--lime);">${workoutDays}</div>
+        <div style="font-size:.72rem;color:var(--muted);">אימונים השבוע</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
+        <div style="font-size:2rem;font-weight:900;color:var(--red);">${weekPRs}</div>
+        <div style="font-size:.72rem;color:var(--muted);">שיאים חדשים</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
+        <div style="font-size:2rem;font-weight:900;color:var(--cyan);">${weekVol>0?Math.round(weekVol/1000)+'K':'—'}</div>
+        <div style="font-size:.72rem;color:var(--muted);">נפח אימון (ק"ג)</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
+        <div style="font-size:2rem;font-weight:900;color:var(--yellow);">${avgCal||'—'}</div>
+        <div style="font-size:.72rem;color:var(--muted);">קל' ממוצע ליום</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:4px;justify-content:center;">
+      ${weekDates.map((d,i)=>{
+        const days=['ב','ג','ד','ה','ו','ש','א'];
+        const hasWorkout=log[d]&&Object.values(log[d]).some(v=>v===true||v===1);
+        const isToday=d===todayStr();
+        return `<div style="flex:1;text-align:center;">
+          <div style="height:32px;border-radius:6px;background:${hasWorkout?'var(--lime)':isToday?'var(--border)':'var(--bg2)'};border:1px solid ${isToday?'var(--cyan)':'var(--border)'};margin-bottom:3px;"></div>
+          <div style="font-size:.6rem;color:var(--muted);">${days[i]}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// BODY MEASUREMENTS — enhanced with mini chart
+// ═══════════════════════════════════════════════════
+function saveMeasurementFull(){
+  const fields=['meas-chest','meas-waist','meas-arm','meas-hip','meas-neck','meas-thigh'];
+  const keys  =['chest','waist','arm','hip','neck','thigh'];
+  const vals={};
+  fields.forEach((id,i)=>{
+    const v=parseFloat(document.getElementById(id)?.value)||null;
+    if(v) vals[keys[i]]=v;
+  });
+  if(!Object.keys(vals).length){showToast('⚠️ הזן לפחות מדידה אחת');return;}
+  const arr=getMeasurements();
+  arr.unshift({date:todayStr(),...vals});
+  localStorage.setItem(MEAS_KEY,JSON.stringify(arr.slice(0,60)));
+  fields.forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  renderMeasurementsFull();
+  showToast('✅ מדידות נשמרו!');
+  if(navigator.vibrate) navigator.vibrate(30);
+}
+function renderMeasurementsFull(){
+  renderMeasurements(); // existing list
+  renderMeasChart();
+}
+function renderMeasChart(){
+  const svg=document.getElementById('meas-svg');
+  if(!svg) return;
+  const arr=getMeasurements().slice(0,12).reverse();
+  if(arr.length<2){
+    svg.innerHTML='<text x="50%" y="50%" text-anchor="middle" fill="var(--muted)" font-size="12">הוסף לפחות 2 מדידות לגרף</text>';
+    return;
+  }
+  const W=320,H=120,P={t:16,r:20,b:24,l:36};
+  const metrics=[
+    {key:'chest',color:'#e63946',label:'חזה'},
+    {key:'waist',color:'#f59e0b',label:'מותן'},
+    {key:'arm',color:'#22c55e',label:'זרוע'},
+  ];
+  const allVals=arr.flatMap(m=>metrics.map(me=>m[me.key]).filter(Boolean));
+  if(!allVals.length){svg.innerHTML='';return;}
+  const minV=Math.min(...allVals)-1,maxV=Math.max(...allVals)+1;
+  const xs=i=>P.l+(i/(arr.length-1))*(W-P.l-P.r);
+  const ys=v=>P.t+(1-(v-minV)/(maxV-minV))*(H-P.t-P.b);
+  let h=`<defs>`;
+  metrics.forEach((m,mi)=>{h+=`<linearGradient id="mg${mi}" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="${m.color}"/><stop offset="100%" stop-color="${m.color}" stop-opacity=".6"/></linearGradient>`;});
+  h+='</defs>';
+  metrics.forEach((m,mi)=>{
+    const pts=arr.map((e,i)=>e[m.key]?`${xs(i)},${ys(e[m.key])}`:null).filter(Boolean);
+    if(pts.length<2) return;
+    h+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${m.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+    arr.forEach((e,i)=>{if(e[m.key])h+=`<circle cx="${xs(i)}" cy="${ys(e[m.key])}" r="3" fill="${m.color}" stroke="#0a0c10" stroke-width="1.5"/>`; });
+  });
+  // X labels
+  const step=Math.max(1,Math.floor(arr.length/4));
+  arr.forEach((e,i)=>{if(i%step===0||i===arr.length-1)h+=`<text x="${xs(i)}" y="${H-P.b+13}" text-anchor="middle" fill="#6b7a99" font-size="8" font-family="Barlow,sans-serif">${e.date.slice(5).replace('-','/')}</text>`;});
+  // Legend
+  metrics.forEach((m,mi)=>{h+=`<circle cx="${P.l+mi*70}" cy="${H-P.b+22}" r="3" fill="${m.color}"/><text x="${P.l+mi*70+6}" y="${H-P.b+26}" fill="${m.color}" font-size="8" font-family="Barlow,sans-serif">${m.label}</text>`;});
+  svg.setAttribute('viewBox',`0 0 ${W} ${H+28}`);
+  svg.innerHTML=h;
 }

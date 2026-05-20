@@ -1458,3 +1458,25 @@ body{
 .dash-row{display:flex;align-items:center;gap:8px;}
 .dash-label{font-size:.68rem;color:#64748B;font-weight:500;}
 .dash-value{font-size:.875rem;font-weight:700;color:#F8FAFC;}
+
+/* ─── PLATE + 1RM + TOOL MODALS ─── */
+#plate-calc-modal.open,#orm-modal.open{display:flex!important;}
+
+/* ─── AMOLED THEME ─── */
+[data-theme="amoled"]{
+  --bg:#000;--bg2:#0a0a0a;--bg3:#111;--border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.1);
+}
+[data-theme="amoled"] .card{background:#0a0a0a;border-color:rgba(255,255,255,.07);}
+[data-theme="amoled"] .topbar{background:rgba(0,0,0,.97);}
+[data-theme="amoled"] .mobile-bottom-nav{background:rgba(0,0,0,.98);}
+[data-theme="amoled"] .sidebar{background:#000;}
+[data-theme="amoled"] [style*="background:#1A2330"]{background:#0d0d0d!important;}
+[data-theme="amoled"] [style*="background:rgba(255,255,255,.04)"]{background:rgba(255,255,255,.03)!important;}
+[data-theme="amoled"] [style*="background:rgba(255,255,255,.05)"]{background:rgba(255,255,255,.04)!important;}
+[data-theme="amoled"] [style*="background:rgba(255,255,255,.06)"]{background:rgba(255,255,255,.05)!important;}
+
+/* ─── TOOLS QUICK ACCESS (bottom bar in settings) ─── */
+.tools-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.tool-btn{flex:1;min-width:80px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;font-family:var(--font);font-size:.78rem;font-weight:700;color:var(--text);cursor:pointer;text-align:center;transition:background .2s;}
+.tool-btn:hover{background:var(--border);}
+.tool-btn .tool-icon{font-size:1.3rem;display:block;margin-bottom:4px;}
