@@ -1,4 +1,4 @@
-const CACHE = 'proFit-v22';
+const CACHE = 'ironwill-v1';
 const ASSETS = [
   '/fitness_app/',
   '/fitness_app/index.html',
