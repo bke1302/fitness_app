@@ -1,6 +1,6 @@
 {
-  "name": "IRONWILL — תוכנית אימונים אישית",
-  "short_name": "IRONWILL",
+  "name": "IronWill — תוכנית אימונים אישית",
+  "short_name": "IronWill",
   "description": "תוכנית Push/Pull/Legs/Arms אישית עם תזונה לכולסטרול",
   "start_url": "/fitness_app/",
   "scope": "/fitness_app/",
