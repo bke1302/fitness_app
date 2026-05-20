@@ -65,9 +65,16 @@ body{
   min-height:0;        /* critical: allows flex child to shrink + scroll */
   overflow-y:auto;
   overflow-x:hidden;
-  padding:0 16px calc(96px + env(safe-area-inset-bottom,0px));
+  padding:0 16px 0;
   -webkit-overflow-scrolling:touch;
   scroll-behavior:smooth;
+}
+/* Spacer at end of scroll — padding-bottom on flex+overflow is broken in mobile WebKit */
+.content::after{
+  content:'';
+  display:block;
+  height:calc(96px + env(safe-area-inset-bottom,34px));
+  flex-shrink:0;
 }
 
 /* Panels */
