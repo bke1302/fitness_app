@@ -172,16 +172,7 @@ function openModal(key){
       </div>
     </a>`;
   }
-  // Load PR
-  const prs = getPRs();
-  const pr = prs[key];
-  const kgEl = document.getElementById('pr-kg');
-  const repsEl = document.getElementById('pr-reps');
-  const dispEl = document.getElementById('pr-display');
-  if(kgEl) kgEl.value = pr ? pr.kg : '';
-  if(repsEl) repsEl.value = pr ? pr.reps : '';
-  if(dispEl) dispEl.textContent = pr ? `שיא נוכחי: ${pr.kg}ק"ג × ${pr.reps} (${pr.date})` : '';
-  if(dispEl) dispEl.style.color = 'var(--cyan)';
+  renderSetLogInModal(key);
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
@@ -929,6 +920,128 @@ function savePRFromModal(){
   if(isNew) showToast('שיא אישי חדש! '+kg+'ק"ג × '+reps+' 🏆');
   if(typeof addXP==='function') addXP(isNew?25:0);
   if(typeof updateORMDisplay==='function') updateORMDisplay(kg,reps);
+}
+
+// ═══════════════════════════════════════════════════
+// MODAL SET LOG — per-set tracking with history
+// ═══════════════════════════════════════════════════
+const SETLOG_KEY='pf_setlog2';
+
+function parseSetsCount(setsStr){
+  const m=(setsStr||'').match(/^(\d+)/);
+  return m?parseInt(m[1]):3;
+}
+
+function getModalSetHistory(key){
+  try{return JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}')[key]||[];}catch(e){return[];}
+}
+
+function renderSetLogInModal(key){
+  const ex=EX[key]; if(!ex) return;
+  const nSets=parseSetsCount(ex.sets||'3');
+  const history=getModalSetHistory(key);
+  const last=history[0];
+  const today=todayStr();
+
+  // Set rows
+  let setRows='';
+  for(let i=1;i<=nSets;i++){
+    const prev=last?.sets?.[i-1];
+    const prevHint=prev&&prev.kg?`${prev.kg}×${prev.reps}`:'';
+    const todayVal=last?.date===today&&prev;
+    setRows+=`<div class="msl-set-row">
+      <span class="msl-set-num">סט ${i}</span>
+      <div class="msl-inputs">
+        <input class="msl-kg" id="msl-${key}-kg-${i}" type="number" min="0" step="0.5" placeholder="ק״ג" inputmode="decimal"${todayVal?` value="${prev.kg}"`:''}/>
+        <span class="msl-x">×</span>
+        <input class="msl-reps" id="msl-${key}-reps-${i}" type="number" min="0" step="1" placeholder="חז׳" inputmode="numeric"${todayVal?` value="${prev.reps}"`:''}/>
+      </div>
+      <span class="msl-prev-hint">${prevHint}</span>
+    </div>`;
+  }
+
+  // History rows (past sessions, not today)
+  const past=history.filter(s=>s.date!==today).slice(0,3);
+  let histHTML='';
+  if(past.length){
+    const rows=past.map(s=>{
+      const d=s.date.slice(5).replace('-','.');
+      const line=s.sets.map(st=>st.kg?`${st.kg}×${st.reps}`:'—').join(' | ');
+      return `<div class="msl-hist-row"><span class="msl-hist-date">${d}</span><span class="msl-hist-data">${line}</span></div>`;
+    }).join('');
+    histHTML=`<div class="msl-history"><div class="msl-hist-label">אימונים קודמים</div>${rows}</div>`;
+  }
+
+  const section=document.getElementById('m-setlog-section');
+  if(!section) return;
+  section.innerHTML=`<div class="msl-section">
+    <div class="msl-header">
+      <span class="msl-title">📋 רשום את האימון</span>
+      <span class="msl-subtitle">${ex.sets} · ${ex.rest}</span>
+    </div>
+    <div class="msl-sets">${setRows}</div>
+    <button class="msl-save-btn" onclick="saveModalSetLog('${key}',${nSets})">✓ שמור אימון</button>
+    <div class="msl-saved-msg" id="msl-saved-${key}"></div>
+    ${histHTML}
+    <div class="orm-box" id="orm-box" style="display:none;">
+      מקסימום תיאורטי (Epley): <strong id="orm-val">—</strong>
+      <span style="font-size:.72rem;color:var(--muted);margin-right:6px;">= משקל × (1 + חזרות/30)</span>
+    </div>
+  </div>`;
+}
+
+function saveModalSetLog(key,nSets){
+  const sets=[];
+  let bestKg=0,bestReps=0;
+  for(let i=1;i<=nSets;i++){
+    const kg=parseFloat(document.getElementById(`msl-${key}-kg-${i}`)?.value)||0;
+    const reps=parseInt(document.getElementById(`msl-${key}-reps-${i}`)?.value)||0;
+    sets.push({kg,reps});
+    if(kg>bestKg||(kg===bestKg&&reps>bestReps)){bestKg=kg;bestReps=reps;}
+  }
+  if(!sets.some(s=>s.kg>0)){
+    const msg=document.getElementById(`msl-saved-${key}`);
+    if(msg){msg.textContent='⚠️ הזן לפחות סט אחד';msg.className='msl-saved-msg msl-saved-err';}
+    return;
+  }
+  // Save to historical log
+  const all=JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}');
+  const arr=all[key]||[];
+  const today=todayStr();
+  const filtered=arr.filter(s=>s.date!==today);
+  filtered.unshift({date:today,sets});
+  all[key]=filtered.slice(0,20);
+  localStorage.setItem(SETLOG_KEY,JSON.stringify(all));
+  // PR + elog
+  if(bestKg>0){
+    savePREntry(key,bestKg,bestReps);
+    saveElogEntry(key,bestKg,bestReps);
+    const orm=bestKg*(1+bestReps/30);
+    const ormBox=document.getElementById('orm-box');
+    const ormVal=document.getElementById('orm-val');
+    if(ormBox&&ormVal){ormVal.textContent=orm.toFixed(1)+'ק״ג';ormBox.style.display='block';}
+  }
+  // Feedback
+  const msg=document.getElementById(`msl-saved-${key}`);
+  if(msg){
+    const pr=(getPRs())[key];
+    const isNew=pr&&bestKg>=pr.kg;
+    msg.textContent=isNew?`🔥 שיא חדש! ${bestKg}ק״ג × ${bestReps}`:`✓ נשמר — ${bestKg}ק״ג × ${bestReps}`;
+    msg.className='msl-saved-msg '+(isNew?'msl-saved-pr':'msl-saved-ok');
+    if(isNew&&navigator.vibrate) navigator.vibrate([200,100,200,100,400]);
+    if(isNew) showToast('שיא אישי חדש! '+bestKg+'ק״ג × '+bestReps+' 🏆');
+    if(typeof addXP==='function') addXP(isNew?25:5);
+    setTimeout(()=>renderSetLogInModal(key),350);
+  }
+}
+
+function savePREntry(key,kg,reps){
+  const prs=getPRs();
+  const prev=prs[key];
+  if(!prev||kg>prev.kg||(kg===prev.kg&&reps>prev.reps)){
+    prs[key]={kg,reps,date:todayStr()};
+    localStorage.setItem(PR_KEY,JSON.stringify(prs));
+  }
 }
 
 // ═══════════════════════════════════════════════════

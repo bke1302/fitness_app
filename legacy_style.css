@@ -1391,3 +1391,29 @@ body{
 .sl-save-btn:hover{opacity:.85;}
 .sl-saved{font-size:.7rem;color:var(--green);font-weight:700;display:none;}
 .sl-saved.show{display:inline;}
+
+/* ─── MODAL SET LOG ─── */
+.msl-section{margin-top:16px;}
+.msl-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;}
+.msl-title{font-size:.82rem;font-weight:800;color:var(--text);letter-spacing:.02em;}
+.msl-subtitle{font-size:.72rem;color:var(--muted);font-weight:600;}
+.msl-sets{display:flex;flex-direction:column;gap:6px;}
+.msl-set-row{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:8px 12px;}
+.msl-set-num{font-size:.72rem;font-weight:800;color:var(--muted);min-width:34px;text-align:center;}
+.msl-inputs{display:flex;align-items:center;gap:6px;flex:1;}
+.msl-kg,.msl-reps{background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:7px;padding:6px 8px;color:var(--text);font-size:.9rem;width:68px;text-align:center;font-family:var(--font-d);font-weight:700;}
+.msl-kg:focus,.msl-reps:focus{outline:none;border-color:var(--lime);background:rgba(34,197,94,.06);}
+.msl-x{color:var(--muted);font-size:.75rem;font-weight:700;}
+.msl-prev-hint{font-size:.62rem;color:var(--muted);font-weight:600;min-width:54px;opacity:.65;text-align:left;}
+.msl-save-btn{width:100%;margin-top:12px;background:linear-gradient(135deg,var(--lime),#16a34a);border:none;color:#000;border-radius:10px;padding:12px;font-size:.9rem;font-weight:800;cursor:pointer;letter-spacing:.02em;transition:opacity .18s;box-shadow:0 4px 16px rgba(34,197,94,.25);}
+.msl-save-btn:hover{opacity:.88;}
+.msl-save-btn:active{transform:scale(.97);}
+.msl-saved-msg{min-height:20px;font-size:.8rem;font-weight:700;margin-top:8px;text-align:center;}
+.msl-saved-ok{color:var(--cyan);}
+.msl-saved-pr{color:var(--yellow);}
+.msl-saved-err{color:var(--red);}
+.msl-history{margin-top:14px;border-top:1px solid var(--border);padding-top:12px;}
+.msl-hist-label{font-size:.62rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.msl-hist-row{display:flex;gap:8px;align-items:baseline;margin-bottom:5px;}
+.msl-hist-date{font-size:.7rem;font-weight:700;color:var(--blue);min-width:32px;flex-shrink:0;}
+.msl-hist-data{font-size:.7rem;color:var(--muted2);line-height:1.6;}
