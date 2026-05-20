@@ -37,6 +37,10 @@
 :focus{outline:none;}
 :focus-visible{outline:2px solid var(--lime);outline-offset:2px;border-radius:4px;}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible,label:focus-visible{outline:2px solid var(--lime);outline-offset:2px;}
+/* ── RTL text inputs — auto direction per-character ── */
+input[type="text"],input[type="email"],input[type="search"],textarea{direction:auto;unicode-bidi:bidi-override;}
+/* ── Notif dot — hidden by default, shown via JS ── */
+.topbar-notif-dot{display:none;}
 
 /* ── App shell ── */
 html,body{height:100%;overflow:hidden;}

@@ -551,6 +551,21 @@ function renderDashboardStats(u){
   if(m5) m5.innerHTML=`שינוי דרמטי. <strong>+${Math.round(w*0.06)}–${Math.round(w*0.1)} ק"ג שריר נטו.</strong> Bench ${bench}ק"ג, Squat ${squat}ק"ג. גוף מוצק.`;
   const m9=document.getElementById('tl-m9');
   if(m9) m9.innerHTML=`<strong>+${Math.round(w*0.1)}–${Math.round(w*0.15)} ק"ג שריר נטו</strong> — Deadlift ${dead}ק"ג. גוף שנבנה מחדש. שקול לעבור ל-Cut.`;
+
+  // Dashboard nutrition preview — dynamic meal title + first 2 meals
+  const goalHeName=goalHe[g]||g;
+  set('dash-meal-title','ארוחות ל-'+goalHeName);
+  try{
+    const meals=getMealPlan(u,n);
+    if(meals[0]){
+      set('dash-meal-1-name', meals[0].name);
+      set('dash-meal-1-macro', Math.round(n.protein*meals[0].pRat)+'g חלבון · '+Math.round(n.target*meals[0].pct)+' קל׳');
+    }
+    if(meals[1]){
+      set('dash-meal-2-name', meals[1].name);
+      set('dash-meal-2-macro', Math.round(n.protein*meals[1].pRat)+'g חלבון · '+Math.round(n.target*meals[1].pct)+' קל׳');
+    }
+  }catch(e){}
 }
 
 // 6 possible meal slots per goal (index 0-5)
@@ -2027,8 +2042,12 @@ function renderFoodPanel(){
       ${log.length?log.map((e,i)=>`<div class="food-log-entry">
         <div style="flex:1"><div class="fle-name">${e.name}${e.qty!==1?` ×${e.qty}`:''}${e.unit?' '+e.unit:''}</div>
         <div class="fle-amount">${Math.round(e.cal)} קל׳ | <span style="color:var(--blue)">${Math.round(e.p)}g P</span> · <span style="color:var(--yellow)">${Math.round(e.c)}g C</span> · <span style="color:var(--green)">${Math.round(e.f)}g F</span></div></div>
-        <button class="fle-del" onclick="deleteFoodEntry(${i})">✕</button>
-      </div>`).join(''):'<div style="color:var(--muted);font-size:.85rem;padding:6px 0;">לא נוסף עדיין מזון להיום</div>'}
+        <button class="fle-del" onclick="deleteFoodEntry(${i})" aria-label="מחק רשומה">✕</button>
+      </div>`).join(''):`<div style="text-align:center;padding:24px 0;color:var(--muted);">
+        <div style="font-size:2rem;margin-bottom:8px;">🍽️</div>
+        <div style="font-size:.88rem;font-weight:600;margin-bottom:4px;">לא תועד מזון להיום</div>
+        <div style="font-size:.75rem;">השתמש בחיפוש למעלה להוספת מזון</div>
+      </div>`}
     </div>
   </div>`;
 }
@@ -2198,11 +2217,24 @@ async function sendChat(){
       })
     });
     const data=await res.json();
-    const reply=data.content?.[0]?.text||'מצטער, לא הצלחתי לקבל תשובה.';
-    _chatHistory.push({role:'assistant',content:reply});
+    if(data.error){
+      const errType=data.error.type||'';
+      if(errType==='authentication_error'){
+        showToast('❌ מפתח API שגוי — עדכן בהגדרות');
+        _chatHistory.push({role:'assistant',content:'❌ מפתח API לא תקין. עבור להגדרות ועדכן את המפתח.'});
+      }else{
+        showToast('⚠️ שגיאת API: '+data.error.message.slice(0,60));
+        const offline=offlineAnswer(_chatHistory[_chatHistory.length-1]?.content||'');
+        _chatHistory.push({role:'assistant',content:'⚠️ שגיאת API. תשובה מקומית:\n\n'+offline});
+      }
+    }else{
+      const reply=data.content?.[0]?.text||'מצטער, לא הצלחתי לקבל תשובה.';
+      _chatHistory.push({role:'assistant',content:reply});
+    }
   }catch(err){
+    showToast('❌ אין חיבור — תשובה מקומית');
     const offline=offlineAnswer(_chatHistory[_chatHistory.length-1]?.content||'');
-    _chatHistory.push({role:'assistant',content:offline});
+    _chatHistory.push({role:'assistant',content:'📵 אין חיבור לרשת. תשובה מקומית:\n\n'+offline});
   }
   renderChatPanel();
 }
@@ -2975,9 +3007,12 @@ function setRPE(v){
 function initNotifCard(){
   const card=document.getElementById('notif-card');
   const btn=document.getElementById('notif-btn');
-  if(!card||!btn) return;
+  if(!card) return;
+  // Show red dot only while permission is not yet decided
+  const dot=document.querySelector('.topbar-notif-dot');
+  if(dot) dot.style.display=('Notification' in window&&Notification.permission==='default')?'block':'none';
   if(!('Notification' in window)){ card.style.display='none'; return; }
-  if(Notification.permission==='granted'){ btn.textContent='פעיל ✓'; btn.disabled=true; }
+  if(Notification.permission==='granted'&&btn){ btn.textContent='פעיל ✓'; btn.disabled=true; }
   else if(Notification.permission==='denied'){ card.style.display='none'; }
 }
 async function requestWorkoutNotif(){
@@ -3042,4 +3077,33 @@ function importData(e){
   };
   reader.readAsText(file);
   e.target.value=''; // allow re-import same file
+}
+
+// ─── Test API Key ─────────────────────────────────────────────────────────
+async function testApiKey(){
+  const key=(document.getElementById('sf-apikey')?.value||'').trim()
+           ||localStorage.getItem('proFit_apiKey')||'';
+  if(!key){showToast('⚠️ הכנס מפתח API קודם');return;}
+  const btn=document.getElementById('test-api-btn');
+  if(btn){btn.textContent='בודק…';btn.disabled=true;}
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true','content-type':'application/json'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:5,messages:[{role:'user',content:'hi'}]})
+    });
+    if(res.ok||res.status===200){
+      showToast('✅ מפתח תקין — AI מוכן!');
+      if(btn){btn.textContent='✅ תקין';btn.style.color='var(--lime)';}
+    } else if(res.status===401){
+      showToast('❌ מפתח שגוי — בדוק שהעתקת נכון');
+      if(btn){btn.textContent='❌ שגוי';btn.style.color='var(--red)';}
+    } else {
+      showToast('⚠️ שגיאה '+res.status+' — נסה שוב');
+      if(btn){btn.textContent='בדוק מפתח';btn.disabled=false;}
+    }
+  }catch(err){
+    showToast('⚠️ שגיאת רשת — בדוק חיבור');
+    if(btn){btn.textContent='בדוק מפתח';btn.disabled=false;}
+  }
 }

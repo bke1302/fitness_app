@@ -304,20 +304,17 @@
 
     <!-- ── NUTRITION PREVIEW ── -->
     <div>
-      <span style="font-size:.95rem;font-weight:700;color:#F8FAFC;display:block;margin-bottom:10px;">ארוחות ל-Lean Bulk</span>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <span id="dash-meal-title" style="font-size:.95rem;font-weight:700;color:#F8FAFC;display:block;margin-bottom:10px;">ארוחות יומי</span>
+      <div id="dash-nutrition-preview" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:14px;padding:14px;opacity:.75;">
-          <span style="font-size:.63rem;color:#22C55E;font-weight:700;">✔ אכלתי</span>
-          <div style="font-size:.82rem;font-weight:700;color:#F8FAFC;margin-top:5px;">חזה עוף + אורז</div>
-          <div style="font-size:.68rem;color:#64748B;margin-top:4px;">45g חלבון</div>
+          <span style="font-size:.63rem;color:#22C55E;font-weight:700;">ארוחה 1</span>
+          <div style="font-size:.82rem;font-weight:700;color:#F8FAFC;margin-top:5px;" id="dash-meal-1-name">—</div>
+          <div style="font-size:.68rem;color:#64748B;margin-top:4px;" id="dash-meal-1-macro">—</div>
         </div>
         <div style="background:#1A2330;border:1px solid rgba(239,68,68,.2);border-radius:14px;padding:14px;position:relative;">
-          <span style="font-size:.63rem;color:#EF4444;font-weight:700;">הבא בתור</span>
-          <div style="font-size:.82rem;font-weight:700;color:#F8FAFC;margin-top:5px;">שקשוקה + לחם</div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
-            <span style="font-size:.68rem;color:#64748B;">35g חלבון</span>
-            <button style="width:22px;height:22px;border-radius:50%;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);color:#EF4444;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
-          </div>
+          <span style="font-size:.63rem;color:#EF4444;font-weight:700;">ארוחה 2</span>
+          <div style="font-size:.82rem;font-weight:700;color:#F8FAFC;margin-top:5px;" id="dash-meal-2-name">—</div>
+          <div style="font-size:.68rem;color:#64748B;margin-top:4px;" id="dash-meal-2-macro">—</div>
         </div>
       </div>
     </div>
@@ -1335,7 +1332,10 @@
           <div class="settings-field" style="margin-top:8px;">
             <label class="settings-label" for="sf-apikey">מפתח API — Claude AI</label>
             <input id="sf-apikey" class="settings-input" type="password" placeholder="sk-ant-..." autocomplete="off" aria-label="מפתח API"/>
-            <div style="font-size:.75rem;color:var(--muted);margin-top:5px;">נשמר רק במכשיר שלך.</div>
+            <div style="display:flex;align-items:center;gap:10px;margin-top:7px;">
+              <span style="font-size:.75rem;color:var(--muted);">נשמר רק במכשיר שלך.</span>
+              <button type="button" onclick="testApiKey()" style="background:none;border:1px solid var(--border2);color:var(--muted2);border-radius:8px;padding:4px 12px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;" id="test-api-btn">בדוק מפתח</button>
+            </div>
           </div>
           <div style="margin-top:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
             <button class="settings-save" onclick="saveSettingsForm()">שמור הגדרות</button>
