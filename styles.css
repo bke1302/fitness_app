@@ -1532,6 +1532,9 @@ body{
 .coach-tip--decrease{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.25);border-right-color:var(--yellow);}
 .coach-tip--change  {background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.25);border-right-color:var(--red);}
 
+/* ─── SPARKLINES ─── */
+.ex-spark{display:block;margin-top:4px;opacity:.85;}
+
 /* ─── WEEKLY REPORT ─── */
 .wr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
 .wr-stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;}

@@ -1,3 +1,15 @@
+const CONFIG = {
+  WATER_GOAL: 10,
+  MAX_ELOG_ENTRIES: 15,
+  SPARKLINE_SESSIONS: 6,
+  COACH_STAGNATION: 4,
+  COACH_INCREASE_MIN: 2,
+  GYM_TIMER_CIRC: 2 * Math.PI * 38,
+  TIMER_DEFAULT_SEC: 90,
+  CONFETTI_PARTICLES: 90,
+  CONFETTI_DURATION: 3200,
+};
+
 const EX = {
   benchPress:{name:'לחיצת חזה בשכיבה',en:'Flat Bench Press',e:'🏋️',cat:'חזה',sets:'4×6–8',rest:'2–3 דק׳',lvl:'כבד',
     desc:'תרגיל הבסיס לחזה. שוכב על ספסל, מוט מוריד לחזה התחתון-אמצעי ודוחף למעלה.',
@@ -262,6 +274,7 @@ function showPanel(name,btn){
   if(name==='elog') setTimeout(renderElogPanel,0);
   if(name==='food') setTimeout(renderFoodPanel,0);
   if(name==='chat') setTimeout(renderChatPanel,0);
+  if(['push','pull','legs','arms','day-a','day-b','day-c'].includes(name)) setTimeout(injectSparklines,0);
 }
 function goDay(name){showPanel(name);}
 function openSidebar(){
@@ -484,6 +497,7 @@ function getActiveUser(){
 }
 function invalidateUserCache(){_cachedUser=null;_cachedUserId=null;}
 
+/** @param {{weight:number,height:number,age:number,gender:string,goal:string}} u @returns {{target:number,protein:number,carbs:number,fat:number,bmr:number,tdee:number}} */
 function calcNutrition(u){
   const sex=(u.gender||'m')==='f'?-161:5;
   const bmr=Math.round(10*(u.weight||75)+6.25*(u.height||175)-5*(u.age||30)+sex);
@@ -1202,6 +1216,7 @@ function saveModalSetLog(key,nSets){
     msg.className='msl-saved-msg '+(isNew?'msl-saved-pr':'msl-saved-ok');
     if(isNew&&navigator.vibrate) navigator.vibrate([200,100,200,100,400]);
     if(isNew){
+      launchConfetti();
       showToast('שיא אישי חדש! '+bestKg+'ק״ג × '+bestReps+' 🏆');
       // Add share PR button
       setTimeout(()=>{
@@ -1216,6 +1231,7 @@ function saveModalSetLog(key,nSets){
   }
 }
 
+/** @param {string} key @param {number} kg @param {number} reps @returns {boolean} isNew */
 function savePREntry(key,kg,reps){
   const prs=getPRs();
   const prev=prs[key];
@@ -1337,7 +1353,7 @@ function computeStreak(){
 
 function updateStreak(){
   const n=computeStreak();
-  ['streak-num','streak-num2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
+  ['streak-num','streak-num2'].forEach(id=>{const el=document.getElementById(id);if(el){countUp(el,n);}});
   const msgs=[[0,0,'מתחילים'],[1,3,'התחלה טובה'],[4,7,'אחלה קצב'],[8,14,'מכונה'],[15,999,'אגדה']];
   const msg=(msgs.find(([lo,hi])=>n>=lo&&n<=hi)||msgs[0])[2];
   ['streak-msg','streak-msg2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=msg;});
@@ -1399,7 +1415,7 @@ function saveWaterToday(cups){
   localStorage.setItem(WATER_KEY,JSON.stringify({date:todayStr(),cups}));
 }
 function addWaterCup(){
-  const cups=Math.min(20,getWaterToday()+1);
+  const cups=Math.min(CONFIG.WATER_GOAL*2,getWaterToday()+1);
   saveWaterToday(cups);renderWater();
 }
 function removeWaterCup(){
@@ -1411,7 +1427,7 @@ function renderWater(){
   const el=document.getElementById('water-display');
   const bar=document.getElementById('water-bar');
   if(el) el.textContent=cups;
-  if(bar) bar.style.width=Math.min(100,Math.round((cups/10)*100))+'%';
+  if(bar) bar.style.width=Math.min(100,Math.round((cups/CONFIG.WATER_GOAL)*100))+'%';
 }
 
 // ═══════════════════════════════════════════════════
@@ -1948,6 +1964,7 @@ function cleanEmojis(){
 // ═══════════════════════════════════════════════════
 const ELOG_KEY='proFit_elog';
 function getElog(){ try{return JSON.parse(localStorage.getItem(ELOG_KEY)||'{}')}catch(e){return{};} }
+/** @param {string} key @param {number} kg @param {number} reps */
 function saveElogEntry(key,kg,reps){
   const log=getElog();
   if(!log[key]) log[key]=[];
@@ -1957,16 +1974,18 @@ function saveElogEntry(key,kg,reps){
   if(idx>=0) log[key][idx]={date:today,kg,reps};
   else log[key].unshift({date:today,kg,reps});
   // Keep last 15 entries
-  log[key]=log[key].slice(0,15);
+  log[key]=log[key].slice(0,CONFIG.MAX_ELOG_ENTRIES);
   localStorage.setItem(ELOG_KEY,JSON.stringify(log));
 }
 
 // ─── COACH: Progressive Overload Analysis ───────────────────────────────────
+/** @param {string} setsStr @returns {{min:number,max:number}} */
 function _parseRepRange(setsStr){
   const m=(setsStr||'').match(/\d+[×xX](\d+)(?:[–\-](\d+))?/);
   if(!m) return {min:8,max:12};
   return {min:parseInt(m[1]),max:parseInt(m[2]||m[1])};
 }
+/** @param {string} exKey @returns {{icon:string,msg:string,type:string}|null} */
 function getCoachTip(exKey){
   const ex=EX[exKey]; if(!ex) return null;
   const hist=(getElog()[exKey]||[]).slice(0,5);
@@ -1974,11 +1993,11 @@ function getCoachTip(exKey){
   const range=_parseRepRange(ex.sets);
   const r0=hist[0];
   // Stagnation: 4+ sessions identical kg + reps
-  if(hist.length>=4&&hist.slice(0,4).every(r=>r.kg===r0.kg&&r.reps===r0.reps))
-    return {icon:'🔄',msg:`קיפאון — 4 אימונים ב-${r0.kg}ק"ג × ${r0.reps} חזרות. שנה תרגיל או עצימות.`,type:'change'};
+  if(hist.length>=CONFIG.COACH_STAGNATION&&hist.slice(0,CONFIG.COACH_STAGNATION).every(r=>r.kg===r0.kg&&r.reps===r0.reps))
+    return {icon:'🔄',msg:`קיפאון — ${CONFIG.COACH_STAGNATION} אימונים ב-${r0.kg}ק"ג × ${r0.reps} חזרות. שנה תרגיל או עצימות.`,type:'change'};
   // Weight increase: last 2+ sessions at or above max reps, same kg
   const topSessions=hist.filter(r=>r.reps>=range.max);
-  if(topSessions.length>=2&&hist[0].kg===hist[1].kg)
+  if(topSessions.length>=CONFIG.COACH_INCREASE_MIN&&hist[0].kg===hist[1].kg)
     return {icon:'⬆️',msg:`מעולה — ${topSessions.length} אימונים ב-${r0.reps}+ חזרות. הגיע הזמן להעלות +2.5ק"ג!`,type:'increase'};
   // One more: last session hit max
   if(hist[0].reps>=range.max)
@@ -1987,6 +2006,104 @@ function getCoachTip(exKey){
   if(hist.slice(0,2).every(r=>r.reps<range.min))
     return {icon:'⬇️',msg:`המשקל כבד מדי (${r0.reps} חזרות, מטרה ${range.min}+). נסה להוריד 2.5ק"ג.`,type:'decrease'};
   return null;
+}
+
+// ─── ANIMATIONS & VISUAL EFFECTS ────────────────────────────────────────────
+
+/**
+ * @param {HTMLElement} el
+ * @param {number} to
+ * @param {number} [duration=700]
+ */
+function countUp(el,to,duration=700){
+  if(!el||isNaN(to)) return;
+  const from=parseInt(el.textContent)||0;
+  if(from===to) return;
+  const start=performance.now();
+  const diff=to-from;
+  function frame(now){
+    const t=Math.min((now-start)/duration,1);
+    const ease=1-Math.pow(1-t,3);
+    el.textContent=Math.round(from+diff*ease);
+    if(t<1) requestAnimationFrame(frame);
+    else el.textContent=to;
+  }
+  requestAnimationFrame(frame);
+}
+
+/** @returns {void} */
+function launchConfetti(){
+  const canvas=document.createElement('canvas');
+  canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
+  document.body.appendChild(canvas);
+  const ctx=canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth; canvas.height=canvas.offsetHeight;
+  const COLORS=['#22C55E','#EF4444','#3B82F6','#F59E0B','#8B5CF6','#06B6D4','#ffffff'];
+  const N=CONFIG.CONFETTI_PARTICLES;
+  const particles=Array.from({length:N},()=>({
+    x:Math.random()*canvas.width, y:-10-Math.random()*40,
+    vx:(Math.random()-0.5)*4, vy:2+Math.random()*4,
+    w:6+Math.random()*8, h:3+Math.random()*5,
+    rot:Math.random()*360, rotV:(Math.random()-0.5)*8,
+    color:COLORS[Math.floor(Math.random()*COLORS.length)],
+    alpha:1
+  }));
+  const startT=performance.now();
+  const DUR=CONFIG.CONFETTI_DURATION;
+  function draw(now){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const elapsed=now-startT;
+    particles.forEach(p=>{
+      p.y+=p.vy; p.x+=p.vx; p.rot+=p.rotV; p.vy+=0.12;
+      p.alpha=Math.max(0,1-(elapsed-DUR*0.6)/(DUR*0.4));
+      ctx.save();
+      ctx.globalAlpha=p.alpha;
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+    });
+    if(elapsed<DUR) requestAnimationFrame(draw);
+    else canvas.remove();
+  }
+  requestAnimationFrame(draw);
+}
+
+/**
+ * @param {string} exKey
+ * @returns {string} SVG HTML or ''
+ */
+function _buildSparkline(exKey){
+  const hist=(getElog()[exKey]||[]).slice(0,CONFIG.SPARKLINE_SESSIONS).reverse();
+  if(hist.length<2) return '';
+  const W=60,H=20,P=2;
+  const vals=hist.map(e=>e.kg||0);
+  const min=Math.min(...vals),max=Math.max(...vals),range=max-min||1;
+  const pts=vals.map((v,i)=>{
+    const x=P+(i/(vals.length-1))*(W-P*2);
+    const y=H-P-(v-min)/range*(H-P*2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  const up=vals[vals.length-1]>=vals[0];
+  const col=up?'var(--lime)':'var(--red)';
+  const [lx,ly]=pts[pts.length-1].split(',');
+  return `<svg class="ex-spark" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" aria-hidden="true">
+    <polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>
+    <circle cx="${lx}" cy="${ly}" r="2.5" fill="${col}"/>
+  </svg>`;
+}
+
+/** @returns {void} */
+function injectSparklines(){
+  document.querySelectorAll('.ex-table tbody tr[onclick]').forEach(tr=>{
+    if(tr.querySelector('.ex-spark')) return;
+    const m=tr.getAttribute('onclick')?.match(/openModal\('(\w+)'\)/);
+    if(!m) return;
+    const spark=_buildSparkline(m[1]);
+    if(!spark) return;
+    tr.querySelector('.ex-name-en')?.insertAdjacentHTML('afterend',spark);
+  });
 }
 
 const WORKOUT_ORDER=[
@@ -2690,7 +2807,7 @@ function playBeep(){
 let _gymTimerIv=null;
 let _gymTimerRemain=0;
 let _gymTimerTotal=0;
-const GYM_TIMER_CIRC=2*Math.PI*38; // r=38, circumference≈238.76
+// GYM_TIMER_CIRC moved to CONFIG.GYM_TIMER_CIRC
 
 function startGymMode(panelName,label,color){
   const panel=document.getElementById('panel-'+panelName);
@@ -2862,7 +2979,7 @@ function gymTickTimer(){
   if(timeEl) timeEl.textContent=timeStr;
   if(prog&&_gymTimerTotal>0){
     const frac=Math.max(0,_gymTimerRemain/_gymTimerTotal);
-    prog.style.strokeDashoffset=GYM_TIMER_CIRC*(1-frac);
+    prog.style.strokeDashoffset=CONFIG.GYM_TIMER_CIRC*(1-frac);
   }
 }
 function cancelGymTimer(){
@@ -3615,6 +3732,7 @@ function _getWeekDates(){
     return d.toISOString().slice(0,10);
   });
 }
+/** @param {string[]} weekDates @returns {{workoutDays:number,weekPRs:number,weekVol:number,avgCal:number}} */
 function _buildWeekStats(weekDates){
   const log=getLog(); const prs=getPRs(); const elog=getElog();
   const workoutDays=weekDates.filter(d=>log[d]&&Object.values(log[d]).some(v=>v===true||v===1)).length;
@@ -3649,10 +3767,10 @@ function renderWeeklyReport(){
   const days=['ב','ג','ד','ה','ו','ש','א'];
   el.innerHTML=`
     <div class="wr-grid">
-      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--lime)">${workoutDays}</div><div class="wr-stat-lbl">אימונים השבוע</div></div>
-      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--red)">${weekPRs}</div><div class="wr-stat-lbl">שיאים חדשים</div></div>
+      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--lime)" data-val="${workoutDays}">0</div><div class="wr-stat-lbl">אימונים השבוע</div></div>
+      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--red)" data-val="${weekPRs}">0</div><div class="wr-stat-lbl">שיאים חדשים</div></div>
       <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--cyan)">${weekVol>0?Math.round(weekVol/1000)+'K':'—'}</div><div class="wr-stat-lbl">נפח אימון (ק"ג)</div></div>
-      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--yellow)">${avgCal||'—'}</div><div class="wr-stat-lbl">קל' ממוצע ליום</div></div>
+      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--yellow)" data-val="${avgCal||0}">${avgCal?'0':'—'}</div><div class="wr-stat-lbl">קל' ממוצע ליום</div></div>
     </div>
     <div class="wr-days">
       ${weekDates.map((d,i)=>{
@@ -3665,6 +3783,7 @@ function renderWeeklyReport(){
       }).join('')}
     </div>
     ${_buildWeekCoachSection()}`;
+  el.querySelectorAll('.wr-stat-val[data-val]').forEach(v=>countUp(v,+v.dataset.val));
 }
 
 // ═══════════════════════════════════════════════════
