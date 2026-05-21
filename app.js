@@ -263,7 +263,7 @@ function openModal(key){
       <div class="demo-thumb">
         <span class="demo-bg-emoji">${e.e}</span>
         <div class="demo-play-ring"><svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
-        <span class="demo-ex-tag">${e.en}</span>
+        <span class="demo-ex-tag">${_esc(e.en)}</span>
       </div>
       <div class="demo-bar">
         <span class="demo-bar-text">הדגמת ביצוע נכון — לחץ לצפייה</span>
@@ -467,8 +467,8 @@ function toggleSidebar(){
 if('serviceWorker' in navigator){
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js')
-      .then(() => console.log('ProFit SW registered'))
-      .catch(e => console.log('SW error', e));
+      .then(() => {})
+      .catch(() => {});
   });
   navigator.serviceWorker.addEventListener('message', e => {
     if(e.data && e.data.type === 'SW_UPDATED'){
@@ -670,7 +670,7 @@ function showAlternatives(exKey, exName){
   const list=document.getElementById('alt-list');
   list.innerHTML=alts.map(a=>`
     <div class="alt-item">
-      <div><div class="alt-item-name">${a.name}</div><div class="alt-item-tag">${a.tag}</div></div>
+      <div><div class="alt-item-name">${_esc(a.name)}</div><div class="alt-item-tag">${_esc(a.tag)}</div></div>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted2)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </div>`).join('');
   document.getElementById('alt-modal').classList.add('open');
@@ -3071,9 +3071,9 @@ function renderGymExercise(){
     </div>`).join('');
   body.innerHTML=`
     <div class="gym-counter">תרגיל ${_gymIdx+1} מתוך ${_gymExercises.length}</div>
-    <div class="gym-name" style="color:${_gymColor}">${ex.name}</div>
-    ${ex.nameEn?`<div class="gym-name-en">${ex.nameEn}</div>`:''}
-    ${ex.muscle?`<div class="gym-muscle-tag">${ex.muscle}</div>`:''}
+    <div class="gym-name" style="color:${_gymColor}">${_esc(ex.name)}</div>
+    ${ex.nameEn?`<div class="gym-name-en">${_esc(ex.nameEn)}</div>`:''}
+    ${ex.muscle?`<div class="gym-muscle-tag">${_esc(ex.muscle)}</div>`:''}
     <div class="gym-sets-label">${ex.sets}</div>
     <div class="gym-setrows">${rowsHTML}</div>`;
   if(prev) prev.disabled=_gymIdx===0;
@@ -3520,7 +3520,7 @@ function renderMeasurements(){
   const arr=getMeasurements();
   if(!arr.length){ list.innerHTML='<div style="color:var(--muted);font-size:.85rem;">אין מדידות עדיין</div>'; return; }
   list.innerHTML=arr.slice(0,8).map(m=>`<div class="meas-row">
-    <span class="meas-date">${m.date}</span>
+    <span class="meas-date">${_esc(m.date)}</span>
     <div class="meas-vals">
       ${m.chest?`<span class="meas-val">חזה <span>${m.chest}</span></span>`:''}
       ${m.waist?`<span class="meas-val">מותן <span>${m.waist}</span></span>`:''}
