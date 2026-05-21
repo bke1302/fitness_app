@@ -750,6 +750,34 @@ function getMealPlan(u,n){
   }));
 }
 
+function _buildMealCard(m, i, n, swaps){
+  const kcal=Math.round(n.target*m.pct);
+  const p=Math.round(n.protein*m.pRat);
+  const c=Math.round(n.carbs*m.cRat);
+  const f=Math.round(n.fat*m.fRat);
+  const borderStyle=m.accent==='red'?' style="border-color:rgba(255,55,95,.35);"':'';
+  const timeStyle=m.accent==='red'?' style="color:var(--red)"':'';
+  const tipColor=m.tip.includes('❤')||m.tip.includes('✅')||m.tip.includes('💚')?'var(--green)':m.tip.includes('⚠')?'var(--yellow)':'var(--muted2)';
+  const alts=MEAL_FOOD_ALTS[i]||[];
+  const swapIdx=swaps[i]||0;
+  const activeAlt=swapIdx>0?alts[swapIdx-1]:null;
+  const foods=activeAlt?_getMealAltFoods(activeAlt):m.foods;
+  const activeTag=activeAlt?_getMealAltTag(activeAlt):'';
+  const swapLabel=swapIdx>0?`${activeTag?activeTag+' ':''}החלף (${swapIdx}/${alts.length})`:'החלף';
+  const swapBtn=alts.length?`<button class="meal-swap-btn" onclick="swapMeal(${i})">${swapLabel} 🔄</button>`:'';
+  return `<div class="meal-row"${borderStyle}>
+    <div class="meal-top">
+      <div><div class="meal-name">${m.name}</div><div class="meal-time"${timeStyle}>${m.time}</div></div>
+      <div class="meal-cals-wrap"><div class="meal-cals">${kcal}</div><div class="meal-cals-unit">קל׳</div></div>
+    </div>
+    <div class="meal-foods">${foods.join(' · ')}</div>
+    <div class="meal-tip-row">
+      <div class="meal-tip" style="color:${tipColor}">${m.tip}</div>
+      ${swapBtn}
+    </div>
+    <div class="meal-macros"><span class="mp mp-p">חלבון ${p}g</span><span class="mp mp-c">פחמימות ${c}g</span><span class="mp mp-f">שומן ${f}g</span></div>
+  </div>`;
+}
 function renderNutritionPanel(){
   const u=getActiveUser(); if(!u) return;
   const n=calcNutrition(u);
@@ -769,45 +797,15 @@ function renderNutritionPanel(){
   if(badge) badge.textContent=GOAL_LABELS[g]||g;
   if(fatNote) fatNote.innerHTML=`BMR: <strong>${n.bmr.toLocaleString()}</strong> קל׳ &nbsp;|&nbsp; TDEE: <strong>${n.tdee.toLocaleString()}</strong> קל׳ &nbsp;|&nbsp; יעד: <strong style="color:var(--red)">${n.target.toLocaleString()}</strong> קל׳`;
 
-  // Meal badge
   const mealBadge=document.getElementById('meal-count-badge');
   if(mealBadge) mealBadge.textContent=(u.meal_count||5)+' ארוחות';
 
-  // Meals
   const meals=getMealPlan(u,n);
   const cont=document.getElementById('meals-container');
   if(!cont) return;
   const swaps=JSON.parse(localStorage.getItem('pf_meal_swaps')||'{}');
-  cont.innerHTML=meals.map((m,i)=>{
-    const kcal=Math.round(n.target*m.pct);
-    const p=Math.round(n.protein*m.pRat);
-    const c=Math.round(n.carbs*m.cRat);
-    const f=Math.round(n.fat*m.fRat);
-    const border=m.accent==='red'?'style="border-color:rgba(255,55,95,.35);"':'';
-    const timeColor=m.accent==='red'?`style="color:var(--red)"`:'' ;
-    const tipColor=m.tip.includes('❤')||m.tip.includes('✅')||m.tip.includes('💚')?'var(--green)':m.tip.includes('⚠')?'var(--yellow)':'var(--muted2)';
-    const alts=MEAL_FOOD_ALTS[i]||[];
-    const swapIdx=swaps[i]||0;
-    const activeAlt=swapIdx>0?alts[swapIdx-1]:null;
-    const foods=activeAlt?_getMealAltFoods(activeAlt):m.foods;
-    const activeTag=activeAlt?_getMealAltTag(activeAlt):'';
-    const swapLabel=swapIdx>0?`${activeTag?activeTag+' ':''}החלף (${swapIdx}/${alts.length})`:'החלף';
-    const swapBtn=alts.length?`<button onclick="swapMeal(${i})" style="font-size:.62rem;font-weight:700;color:var(--cyan);background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.25);border-radius:6px;padding:3px 8px;cursor:pointer;white-space:nowrap;">${swapLabel} 🔄</button>`:'';
-    return `<div class="meal-row" ${border}>
-      <div class="meal-top">
-        <div><div class="meal-name">${m.name}</div><div class="meal-time" ${timeColor}>${m.time}</div></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="text-align:left;"><div class="meal-cals">${kcal}</div><div class="meal-cals-unit">קל׳</div></div></div>
-      </div>
-      <div class="meal-foods">${foods.join(' · ')}</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <div style="font-size:.75rem;color:${tipColor};">${m.tip}</div>
-        ${swapBtn}
-      </div>
-      <div class="meal-macros"><span class="mp mp-p">חלבון ${p}g</span><span class="mp mp-c">פחמימות ${c}g</span><span class="mp mp-f">שומן ${f}g</span></div>
-    </div>`;
-  }).join('');
+  cont.innerHTML=meals.map((m,i)=>_buildMealCard(m,i,n,swaps)).join('');
 
-  // Also update topbar chips
   applySettings({...getSettings(),calories:n.target,weight:u.weight});
 }
 
@@ -1413,7 +1411,7 @@ function renderWater(){
   const el=document.getElementById('water-display');
   const bar=document.getElementById('water-bar');
   if(el) el.textContent=cups;
-  if(bar) bar.style.width=Math.min(100,Math.round((cups/8)*100))+'%';
+  if(bar) bar.style.width=Math.min(100,Math.round((cups/10)*100))+'%';
 }
 
 // ═══════════════════════════════════════════════════
@@ -1675,7 +1673,7 @@ function renderWChart(){
 
   // ── Weekly Volume from elog (red, right Y) ──
   function getWeekKey(dateStr){const d=new Date(dateStr);const day=d.getDay();const diff=d.getDate()-(day||7)+1;const mon=new Date(d);mon.setDate(diff);return mon.toISOString().slice(0,10);}
-  const elog=(() => { try{return JSON.parse(localStorage.getItem('proFit_elog')||'{}')}catch(e){return{};} })();
+  const elog=(() => { try{return JSON.parse(localStorage.getItem(ELOG_KEY)||'{}')}catch(e){return{};} })();
   const volByWeek={};
   Object.values(elog).forEach(arr=>{
     if(!Array.isArray(arr)) return;
@@ -3276,7 +3274,7 @@ function exportData(){
     settings: getSettings(),
     log: getLog(),
     prs: getPRs(),
-    elog: JSON.parse(localStorage.getItem('proFit_elog')||'{}'),
+    elog: JSON.parse(localStorage.getItem(ELOG_KEY)||'{}'),
     setlog: JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}'),
     exported: new Date().toISOString()
   };
@@ -3303,7 +3301,7 @@ function importData(e){
       if(d.settings) localStorage.setItem(SETTINGS_KEY, JSON.stringify(d.settings));
       if(d.log)      localStorage.setItem(LOG_KEY,      JSON.stringify(d.log));
       if(d.prs)      localStorage.setItem(PR_KEY,       JSON.stringify(d.prs));
-      if(d.elog)     localStorage.setItem('proFit_elog', JSON.stringify(d.elog));
+      if(d.elog)     localStorage.setItem(ELOG_KEY,      JSON.stringify(d.elog));
       if(d.setlog)   localStorage.setItem(SETLOG_KEY,   JSON.stringify(d.setlog));
       showToast('✅ נתונים יובאו בהצלחה!');
       setTimeout(()=>location.reload(),1200);
@@ -3607,79 +3605,66 @@ function submitRecovery(){
 // ═══════════════════════════════════════════════════
 // WEEKLY REPORT
 // ═══════════════════════════════════════════════════
-function renderWeeklyReport(){
-  const el=document.getElementById('weekly-report-body');
-  if(!el) return;
-  const log=getLog();
-  const prs=getPRs();
-  // Calculate this week's workouts
+function _getWeekDates(){
   const now=new Date();
-  const dayOfWeek=now.getDay();
-  const monday=new Date(now);
-  monday.setDate(now.getDate()-(dayOfWeek===0?6:dayOfWeek-1));
-  const weekDates=Array.from({length:7},(_,i)=>{
-    const d=new Date(monday);d.setDate(monday.getDate()+i);
+  const day=now.getDay();
+  const mon=new Date(now);
+  mon.setDate(now.getDate()-(day===0?6:day-1));
+  return Array.from({length:7},(_,i)=>{
+    const d=new Date(mon); d.setDate(mon.getDate()+i);
     return d.toISOString().slice(0,10);
   });
+}
+function _buildWeekStats(weekDates){
+  const log=getLog(); const prs=getPRs(); const elog=getElog();
   const workoutDays=weekDates.filter(d=>log[d]&&Object.values(log[d]).some(v=>v===true||v===1)).length;
-  // Volume this week
-  const elog=(() => {try{return JSON.parse(localStorage.getItem('proFit_elog')||'{}')}catch(e){return{};} })();
   let weekVol=0;
   Object.values(elog).forEach(arr=>{
     if(!Array.isArray(arr)) return;
-    arr.forEach(e=>{
-      if(weekDates.includes(e.date)) weekVol+=Math.round((e.kg||0)*(e.reps||0)*(e.sets||1));
-    });
+    arr.forEach(e=>{ if(weekDates.includes(e.date)) weekVol+=Math.round((e.kg||0)*(e.reps||0)*(e.sets||1)); });
   });
-  // PRs this week
   const weekPRs=Object.entries(prs).filter(([,v])=>weekDates.includes(v.date)).length;
-  // Food this week
-  const foodLogs=weekDates.map(d=>{
-    try{return JSON.parse(localStorage.getItem(FOOD_KEY+'_'+d)||'[]');}catch(e){return[];}
-  });
-  const avgCal=Math.round(foodLogs.reduce((s,fl)=>s+fl.reduce((a,f)=>a+(f.cal||0)*((f.qty||1)),0),0)/Math.max(1,foodLogs.filter(fl=>fl.length).length));
+  const foodLogs=weekDates.map(d=>{try{return JSON.parse(localStorage.getItem(FOOD_KEY+'_'+d)||'[]');}catch(e){return[];}});
+  const avgCal=Math.round(foodLogs.reduce((s,fl)=>s+fl.reduce((a,f)=>a+(f.cal||0)*(f.qty||1),0),0)/Math.max(1,foodLogs.filter(fl=>fl.length).length));
+  return {workoutDays,weekPRs,weekVol,avgCal};
+}
+function _buildWeekCoachSection(){
+  const tips=Object.keys(EX).map(k=>({key:k,tip:getCoachTip(k)})).filter(x=>x.tip);
+  if(!tips.length) return '';
+  return `<div class="wr-coach">
+    <div class="wr-coach-title">💡 המלצות מאמן</div>
+    ${tips.map(x=>`<div class="coach-tip coach-tip--${x.tip.type}">
+      <span class="ct-icon">${x.tip.icon}</span>
+      <span class="ct-ex-name">${EX[x.key].name}:</span>
+      <span class="ct-msg">${x.tip.msg}</span>
+    </div>`).join('')}
+  </div>`;
+}
+function renderWeeklyReport(){
+  const el=document.getElementById('weekly-report-body');
+  if(!el) return;
+  const weekDates=_getWeekDates();
+  const log=getLog();
+  const {workoutDays,weekPRs,weekVol,avgCal}=_buildWeekStats(weekDates);
+  const days=['ב','ג','ד','ה','ו','ש','א'];
   el.innerHTML=`
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;">
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
-        <div style="font-size:2rem;font-weight:900;color:var(--lime);">${workoutDays}</div>
-        <div style="font-size:.72rem;color:var(--muted);">אימונים השבוע</div>
-      </div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
-        <div style="font-size:2rem;font-weight:900;color:var(--red);">${weekPRs}</div>
-        <div style="font-size:.72rem;color:var(--muted);">שיאים חדשים</div>
-      </div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
-        <div style="font-size:2rem;font-weight:900;color:var(--cyan);">${weekVol>0?Math.round(weekVol/1000)+'K':'—'}</div>
-        <div style="font-size:.72rem;color:var(--muted);">נפח אימון (ק"ג)</div>
-      </div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;">
-        <div style="font-size:2rem;font-weight:900;color:var(--yellow);">${avgCal||'—'}</div>
-        <div style="font-size:.72rem;color:var(--muted);">קל' ממוצע ליום</div>
-      </div>
+    <div class="wr-grid">
+      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--lime)">${workoutDays}</div><div class="wr-stat-lbl">אימונים השבוע</div></div>
+      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--red)">${weekPRs}</div><div class="wr-stat-lbl">שיאים חדשים</div></div>
+      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--cyan)">${weekVol>0?Math.round(weekVol/1000)+'K':'—'}</div><div class="wr-stat-lbl">נפח אימון (ק"ג)</div></div>
+      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--yellow)">${avgCal||'—'}</div><div class="wr-stat-lbl">קל' ממוצע ליום</div></div>
     </div>
-    <div style="display:flex;gap:4px;justify-content:center;">
+    <div class="wr-days">
       ${weekDates.map((d,i)=>{
-        const days=['ב','ג','ד','ה','ו','ש','א'];
         const hasWorkout=log[d]&&Object.values(log[d]).some(v=>v===true||v===1);
         const isToday=d===todayStr();
-        return `<div style="flex:1;text-align:center;">
-          <div style="height:32px;border-radius:6px;background:${hasWorkout?'var(--lime)':isToday?'var(--border)':'var(--bg2)'};border:1px solid ${isToday?'var(--cyan)':'var(--border)'};margin-bottom:3px;"></div>
-          <div style="font-size:.6rem;color:var(--muted);">${days[i]}</div>
+        return `<div class="wr-day">
+          <div class="wr-day-bar${hasWorkout?' done':''}${isToday?' today':''}"></div>
+          <div class="wr-day-lbl">${days[i]}</div>
         </div>`;
       }).join('')}
     </div>
-    ${(()=>{
-      const tips=Object.keys(EX).map(k=>({key:k,tip:getCoachTip(k)})).filter(x=>x.tip);
-      if(!tips.length) return '';
-      return `<div style="margin-top:16px;">
-        <div style="font-size:.75rem;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px;">💡 המלצות מאמן</div>
-        ${tips.map(x=>`<div class="coach-tip coach-tip--${x.tip.type}" style="margin-bottom:6px;">
-          <span class="ct-icon">${x.tip.icon}</span>
-          <span style="font-size:.72rem;font-weight:600;color:var(--text);margin-left:4px;">${EX[x.key].name}:</span>
-          <span class="ct-msg">${x.tip.msg}</span>
-        </div>`).join('')}
-      </div>`;
-    })()}`;
+    ${_buildWeekCoachSection()}`;
 }
 
 // ═══════════════════════════════════════════════════
