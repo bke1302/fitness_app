@@ -41,6 +41,32 @@ const CONFIG = {
   CONFETTI_DURATION: 3200,
 };
 
+// ─── GLOBAL ERROR LOGGER ────────────────────────────────────────────────────
+const ERR_KEY='pf_errors';
+function _logError(msg,src,line){
+  try{
+    const log=JSON.parse(localStorage.getItem(ERR_KEY)||'[]');
+    log.unshift({ts:new Date().toISOString(),msg:String(msg).slice(0,200),src:String(src||'').slice(0,100),line});
+    localStorage.setItem(ERR_KEY,JSON.stringify(log.slice(0,20)));
+  }catch(e){}
+}
+window.onerror=function(msg,src,line){ _logError(msg,src,line); return false; };
+window.addEventListener('unhandledrejection',function(e){ _logError(e.reason?.message||String(e.reason),'promise',0); });
+
+// ─── ACHIEVEMENT BADGES ──────────────────────────────────────────────────────
+const ACHIEVEMENTS=[
+  {id:'first_workout', icon:'🎯', name:'פרוטוקול ראשון', desc:'השלמת אימון ראשון', check:(s)=>s.totalWorkouts>=1},
+  {id:'streak_3',      icon:'🔥', name:'3 ימים ברצף',    desc:'3 אימונים ברצף',    check:(s)=>s.streak>=3},
+  {id:'streak_7',      icon:'⚡', name:'שבוע שלם',        desc:'7 ימים ברצף',       check:(s)=>s.streak>=7},
+  {id:'streak_30',     icon:'🚀', name:'חודש מכונה',      desc:'30 ימים ברצף',      check:(s)=>s.streak>=30},
+  {id:'pr_first',      icon:'🏆', name:'שיא ראשון',       desc:'שיא אישי ראשון',    check:(s)=>s.totalPRs>=1},
+  {id:'pr_10',         icon:'💎', name:'10 שיאים',        desc:'10 שיאים אישיים',   check:(s)=>s.totalPRs>=10},
+  {id:'pr_50',         icon:'👑', name:'50 שיאים',        desc:'50 שיאים אישיים',   check:(s)=>s.totalPRs>=50},
+  {id:'workouts_10',   icon:'💪', name:'10 אימונים',      desc:'10 אימונים סה"כ',   check:(s)=>s.totalWorkouts>=10},
+  {id:'workouts_50',   icon:'🦾', name:'50 אימונים',      desc:'50 אימונים סה"כ',   check:(s)=>s.totalWorkouts>=50},
+  {id:'workouts_100',  icon:'🏅', name:'100 אימונים',     desc:'100 אימונים סה"כ',  check:(s)=>s.totalWorkouts>=100},
+];
+
 const EX = {
   benchPress:{name:'לחיצת חזה בשכיבה',en:'Flat Bench Press',e:'🏋️',cat:'חזה',sets:'4×6–8',rest:'2–3 דק׳',lvl:'כבד',
     desc:'תרגיל הבסיס לחזה. שוכב על ספסל, מוט מוריד לחזה התחתון-אמצעי ודוחף למעלה.',
@@ -293,6 +319,49 @@ function showToast(msg,duration=2800){
 }
 
 const TITLES={dashboard:'לוח בקרה',schedule:'לוח שבועי',push:'ראשון — PUSH DAY',pull:'שני — PULL DAY',legs:'רביעי — LEGS DAY',arms:'חמישי — ARMS DAY',nutrition:'תוכנית תזונה',supplements:'תוספי תזונה',tips:'טיפים מהמאמן',timeline:'ציר זמן',elog:'יומן משקלים',food:'מעקב תזונה יומי',chat:'יועץ תזונה AI',progress:'גרף משקל גוף',settings:'הגדרות אישיות'};
+// ─── EXERCISE SEARCH ───────────────────────────────────────────────────────
+function renderExSearch(query){
+  const q=(query||'').trim().toLowerCase();
+  const resultsEl=document.getElementById('ex-search-results');
+  if(!resultsEl) return;
+  if(!q){ resultsEl.innerHTML=''; resultsEl.style.display='none'; return; }
+
+  const matches=Object.entries(EX).filter(([key,ex])=>{
+    return ex.name?.includes(q)||
+           (ex.en||'').toLowerCase().includes(q)||
+           (ex.cat||'').includes(q)||
+           (ex.muscles||'').toLowerCase().includes(q);
+  }).slice(0,8);
+
+  if(matches.length===0){
+    resultsEl.innerHTML=`<div class="ex-search-empty">לא נמצאו תרגילים עבור "${_esc(query)}"</div>`;
+    resultsEl.style.display='block';
+    return;
+  }
+
+  resultsEl.innerHTML=matches.map(([key,ex])=>`
+    <div class="ex-search-item" onclick="openModal('${key}');closeExSearch()">
+      <span class="ex-search-icon">${ex.e||'💪'}</span>
+      <div class="ex-search-info">
+        <div class="ex-search-name">${_esc(ex.name)}</div>
+        <div class="ex-search-meta">${_esc(ex.cat||'')} · ${_esc(ex.sets||'')}</div>
+      </div>
+    </div>
+  `).join('');
+  resultsEl.style.display='block';
+}
+
+function closeExSearch(){
+  const r=document.getElementById('ex-search-results');
+  const i=document.getElementById('ex-search-input');
+  if(r){r.innerHTML='';r.style.display='none';}
+  if(i) i.value='';
+}
+
+document.addEventListener('click', function(e){
+  if(!e.target.closest('#ex-search-wrap')) closeExSearch();
+});
+
 function showPanel(name,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
@@ -684,6 +753,14 @@ function renderDashboardStats(u){
       set('dash-meal-2-macro', Math.round(n.protein*meals[1].pRat)+'g חלבון · '+Math.round(n.target*meals[1].pct)+' קל׳');
     }
   }catch(e){}
+  // Achievements row in dashboard
+  const achEl=document.getElementById('achievements-row');
+  if(achEl){
+    const unlocked=getUnlockedAchievements();
+    achEl.innerHTML=unlocked.length===0
+      ? '<span style="color:var(--muted);font-size:.8rem">השלם אימונים כדי לפתוח הישגים</span>'
+      : unlocked.map(a=>`<div class="ach-badge" title="${a.desc}"><span class="ach-icon">${a.icon}</span><span class="ach-name">${_esc(a.name)}</span></div>`).join('');
+  }
 }
 
 // 6 possible meal slots per goal (index 0-5)
@@ -1274,6 +1351,7 @@ function saveModalSetLog(key,nSets){
     if(typeof addXP==='function') addXP(isNew?25:5);
     setTimeout(()=>renderSetLogInModal(key),350);
   }
+  checkNewAchievements();
 }
 
 /** @param {string} key @param {number} kg @param {number} reps @returns {boolean} isNew */
@@ -1284,6 +1362,7 @@ function savePREntry(key,kg,reps){
     prs[key]={kg,reps,date:todayStr()};
     localStorage.setItem(PR_KEY,JSON.stringify(prs));
   }
+  checkNewAchievements();
 }
 
 // ═══════════════════════════════════════════════════
@@ -1361,6 +1440,7 @@ function checkPanelDone(panel){
   if(navigator.vibrate) navigator.vibrate([100,50,200]);
   updateStreak();
   if(typeof addXP==='function') addXP(50);
+  checkNewAchievements();
   // confetti-ish message
   const ct=document.getElementById('celebrate-text');
   const day=panel.id.replace('panel-','').toUpperCase();
@@ -1396,12 +1476,57 @@ function computeStreak(){
   return streak;
 }
 
+function getAchievementStats(){
+  const log=getLog(); const prs=getPRs();
+  const totalWorkouts=Object.values(log).filter(d=>d&&Object.values(d).some(v=>v===true||v===1)).length;
+  const totalPRs=Object.keys(prs).length;
+  const streak=computeStreak();
+  return {totalWorkouts,totalPRs,streak};
+}
+
+function getUnlockedAchievements(){
+  const s=getAchievementStats();
+  return ACHIEVEMENTS.filter(a=>a.check(s));
+}
+
+function checkNewAchievements(){
+  const ACH_KEY='pf_achievements_seen';
+  const seen=new Set(JSON.parse(localStorage.getItem(ACH_KEY)||'[]'));
+  const unlocked=getUnlockedAchievements();
+  const newOnes=unlocked.filter(a=>!seen.has(a.id));
+  if(newOnes.length>0){
+    newOnes.forEach(a=>{
+      seen.add(a.id);
+      setTimeout(()=>{
+        showToast(a.icon+' הישג חדש: '+a.name+'!');
+        if(navigator.vibrate) navigator.vibrate([100,50,100,50,200]);
+      }, newOnes.indexOf(a)*1200);
+    });
+    localStorage.setItem(ACH_KEY,JSON.stringify([...seen]));
+  }
+}
+
 function updateStreak(){
   const n=computeStreak();
   ['streak-num','streak-num2'].forEach(id=>{const el=document.getElementById(id);if(el){countUp(el,n);}});
   const msgs=[[0,0,'מתחילים'],[1,3,'התחלה טובה'],[4,7,'אחלה קצב'],[8,14,'מכונה'],[15,999,'אגדה']];
   const msg=(msgs.find(([lo,hi])=>n>=lo&&n<=hi)||msgs[0])[2];
   ['streak-msg','streak-msg2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=msg;});
+  // Motivational micro-copy based on streak
+  const streak=n;
+  const microCopy=[
+    [0,0,''],
+    [1,2,'כל מסע מתחיל בצעד הראשון 💡'],
+    [3,4,'הרגל מתגבש — אל תפסיק עכשיו! 🔥'],
+    [5,6,'שבוע אימונים — אתה בנוי אחרת 💪'],
+    [7,9,'שבוע שלם! הגוף שלך מודה לך ⚡'],
+    [10,14,'הרמה הבאה — אתה מכונה 🦾'],
+    [15,20,'ביצועים של ספורטאי אמיתי 🏆'],
+    [21,999,'אגדה חיה — ${streak} ימים ברצף 👑'],
+  ];
+  const micro=(microCopy.find(([lo,hi])=>streak>=lo&&streak<=hi)||microCopy[0])[2];
+  const microEl=document.getElementById('streak-micro');
+  if(microEl&&micro) microEl.textContent=micro.replace('${streak}',streak);
   // week workouts count
   const log=getLog();
   const today=new Date();
@@ -2163,6 +2288,11 @@ const WORKOUT_ORDER=[
 function renderElogPanel(){
   const wrap=document.getElementById('elog-content');
   if(!wrap) return;
+  // Show skeleton while building content
+  if(wrap.children.length===0){
+    wrap.innerHTML='<div class="skeleton skeleton-title"></div>'+
+      Array(3).fill('<div class="skeleton skeleton-card"></div>').join('');
+  }
   const elog=getElog();
   // Empty state
   const hasData=Object.values(elog).some(week=>Object.values(week).some(ex=>Object.keys(ex).length>0));
@@ -2306,6 +2436,15 @@ function saveFoodLog(log){ localStorage.setItem(FOOD_KEY+'_'+todayStr(),JSON.str
 
 function renderFoodPanel(){
   const wrap=document.getElementById('food-content'); if(!wrap) return;
+  // Show skeleton while building content
+  const foodEl=document.getElementById('panel-food');
+  if(foodEl && !foodEl.querySelector('.food-loaded')){
+    const existing=foodEl.querySelector('.food-content');
+    if(existing && existing.children.length===0){
+      existing.innerHTML='<div class="skeleton skeleton-title"></div>'+
+        Array(3).fill('<div class="skeleton skeleton-card"></div>').join('');
+    }
+  }
   const s=getSettings();
   const log=getFoodLog();
   const totals=log.reduce((acc,e)=>({cal:acc.cal+e.cal,p:acc.p+e.p,c:acc.c+e.c,f:acc.f+e.f}),{cal:0,p:0,c:0,f:0});
@@ -2387,7 +2526,7 @@ function foodSearch(q){
   const matches=FOODS.filter(f=>f.name.includes(q)||f.name.toLowerCase().includes(q.toLowerCase())).slice(0,8);
   if(!matches.length){dd.classList.remove('show');return;}
   dd.innerHTML=matches.map((f,i)=>`<div class="food-option" onclick="selectFood(${FOODS.indexOf(f)})">
-    ${f.name}<div class="fo-macros">${f.cal} קל׳ · P${f.p}g · C${f.c}g · F${f.f}g</div></div>`).join('');
+    ${_esc(f.name)}<div class="fo-macros">${f.cal} קל׳ · P${f.p}g · C${f.c}g · F${f.f}g</div></div>`).join('');
   dd.classList.add('show');
 }
 let _foodSearchTimer=null;
