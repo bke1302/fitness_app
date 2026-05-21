@@ -1,3 +1,34 @@
+// Migrate API key from localStorage to sessionStorage (security fix)
+(function(){
+  const k='proFit_apiKey';
+  const old=localStorage.getItem(k);
+  if(old){sessionStorage.setItem(k,old);localStorage.removeItem(k);}
+})();
+
+// HTML escape utility — wrap user-supplied strings before injecting into innerHTML
+function _esc(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+// Audio context singleton
+let _audioCtx=null;
+function _getAudioCtx(){
+  if(!_audioCtx||_audioCtx.state==='closed'){
+    try{ _audioCtx=new(window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; }
+  }
+  if(_audioCtx.state==='suspended') _audioCtx.resume();
+  return _audioCtx;
+}
+
+// localStorage quota guard
+function _safeSet(key,val){
+  try{ localStorage.setItem(key,val); }
+  catch(e){
+    if(e.name==='QuotaExceededError'||e.code===22){
+      console.warn('localStorage quota exceeded for key:',key);
+      showToast('אחסון מלא — ייתכן שנתונים ישנים נמחקו');
+    }
+  }
+}
+
 const CONFIG = {
   WATER_GOAL: 10,
   MAX_ELOG_ENTRIES: 15,
@@ -178,6 +209,7 @@ const CAT_STYLE={
 };
 
 let _currentExKey = null;
+let _modalTrapFn = null;
 function openModal(key){
   const e=EX[key]; if(!e)return;
   _currentExKey = key;
@@ -226,7 +258,8 @@ function openModal(key){
   document.body.style.overflow='hidden';
   // Focus trap — לכלוא focus בתוך המודל
   const FOCUSABLE='button,input,select,textarea,[tabindex]:not([tabindex="-1"])';
-  function _trapFocus(e){
+  if(_modalTrapFn){document.removeEventListener('keydown',_modalTrapFn);_modalTrapFn=null;}
+  _modalTrapFn=function(e){
     const modal=document.querySelector('.modal');
     if(!modal) return;
     const els=[...modal.querySelectorAll(FOCUSABLE)].filter(el=>!el.disabled&&el.offsetParent!==null);
@@ -236,14 +269,13 @@ function openModal(key){
       if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
       else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
     }
-  }
-  document.addEventListener('keydown',_trapFocus);
+  };
+  document.addEventListener('keydown',_modalTrapFn);
   document.querySelector('.modal .modal-close')?.focus();
-  document.getElementById('modal-overlay')._trapFocus=_trapFocus;
 }
 function closeModal(){
   const overlay=document.getElementById('modal-overlay');
-  if(overlay?._trapFocus) document.removeEventListener('keydown',overlay._trapFocus);
+  if(_modalTrapFn){document.removeEventListener('keydown',_modalTrapFn);_modalTrapFn=null;}
   overlay?.classList.remove('open');
   document.body.style.overflow='';
 }
@@ -369,6 +401,16 @@ if('serviceWorker' in navigator){
       .then(() => console.log('ProFit SW registered'))
       .catch(e => console.log('SW error', e));
   });
+  navigator.serviceWorker.addEventListener('message', e => {
+    if(e.data && e.data.type === 'SW_UPDATED'){
+      // Show update toast with reload option
+      const toastEl = document.createElement('div');
+      toastEl.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:12px 20px;border-radius:12px;font-size:.85rem;font-weight:600;z-index:9999;display:flex;gap:12px;align-items:center;box-shadow:0 8px 32px rgba(0,0,0,.4);';
+      toastEl.innerHTML = '<span>גרסה חדשה זמינה!</span><button onclick="location.reload()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:4px 12px;border-radius:8px;cursor:pointer;font-weight:700;">רענן</button>';
+      document.body.appendChild(toastEl);
+      setTimeout(() => toastEl.remove(), 8000);
+    }
+  });
 }
 
 // ── INSTALL PROMPT ──
@@ -442,9 +484,12 @@ function saveSettingsForm(){
   const height=parseFloat(document.getElementById('sf-height')?.value)||170;
   const age=parseInt(document.getElementById('sf-age')?.value)||31;
   const calories=parseInt(document.getElementById('sf-calories')?.value)||2750;
+  if(isNaN(weight)||weight<20||weight>300){showToast('ערך לא תקין');return;}
+  if(isNaN(height)||height<100||height>250){showToast('ערך לא תקין');return;}
+  if(isNaN(age)||age<13||age>100){showToast('ערך לא תקין');return;}
   saveSettings({name,weight,height,age,calories});
   const apiKey=(document.getElementById('sf-apikey')?.value||'').trim();
-  if(apiKey) localStorage.setItem('proFit_apiKey',apiKey);
+  if(apiKey) sessionStorage.setItem('proFit_apiKey',apiKey);
   // Read new profile fields
   const goal=document.getElementById('sf-goal')?.value||'lean_bulk';
   const activity=parseFloat(document.getElementById('sf-activity')?.value)||1.55;
@@ -832,9 +877,9 @@ function renderUserList(){
     const n=calcNutrition(u);
     const isActive=u.id===activeId;
     return `<div class="user-item${isActive?' active':''}" onclick="switchUser('${u.id}')">
-      <div class="user-avatar-sm">${(u.name||'?').charAt(0)}</div>
+      <div class="user-avatar-sm">${_esc((u.name||'?').charAt(0))}</div>
       <div class="user-item-info">
-        <div class="user-item-name">${u.name}</div>
+        <div class="user-item-name">${_esc(u.name)}</div>
         <div class="user-item-sub">${u.weight}ק"ג · ${u.height}ס"מ · ${GOAL_LABELS[u.goal]||u.goal} · ${n.target.toLocaleString()} קל׳</div>
       </div>
       ${isActive?'<div class="user-item-active-badge">פעיל</div>':''}
@@ -849,7 +894,7 @@ function switchUser(id){
   // Sync settings form and settings key
   const n=calcNutrition(u);
   saveSettings({name:u.name,weight:u.weight,height:u.height,age:u.age,calories:n.target});
-  if(u.apiKey) localStorage.setItem('proFit_apiKey',u.apiKey);
+  if(u.apiKey) sessionStorage.setItem('proFit_apiKey',u.apiKey);
   renderUserList();
   renderNutritionPanel();
   applyUserConditions(u);
@@ -879,7 +924,7 @@ function prefillSettingsForm(){
   const sh=document.getElementById('sf-height'); if(sh) sh.value=s.height;
   const sa=document.getElementById('sf-age'); if(sa) sa.value=s.age;
   const sc2=document.getElementById('sf-calories'); if(sc2) sc2.value=s.calories;
-  const sk=document.getElementById('sf-apikey'); if(sk) sk.value=localStorage.getItem('proFit_apiKey')||'';
+  const sk=document.getElementById('sf-apikey'); if(sk) sk.value=sessionStorage.getItem('proFit_apiKey')||'';
   // New fields from user record
   const sg=document.getElementById('sf-goal'); if(sg) sg.value=u.goal||'lean_bulk';
   const act=document.getElementById('sf-activity'); if(act) act.value=String(u.activity||1.55);
@@ -1197,7 +1242,7 @@ function saveModalSetLog(key,nSets){
   const filtered=arr.filter(s=>s.date!==today);
   filtered.unshift({date:today,sets});
   all[key]=filtered.slice(0,20);
-  localStorage.setItem(SETLOG_KEY,JSON.stringify(all));
+  _safeSet(SETLOG_KEY,JSON.stringify(all));
   // PR + elog
   if(bestKg>0){
     savePREntry(key,bestKg,bestReps);
@@ -1246,7 +1291,7 @@ function savePREntry(key,kg,reps){
 // ═══════════════════════════════════════════════════
 const LOG_KEY='proFit_log';
 function getLog(){ try{return JSON.parse(localStorage.getItem(LOG_KEY)||'{}')}catch(e){return{};} }
-function saveLog(log){ localStorage.setItem(LOG_KEY,JSON.stringify(log)); }
+function saveLog(log){ _safeSet(LOG_KEY,JSON.stringify(log)); }
 function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 
 function initCheckboxes(){
@@ -1771,7 +1816,7 @@ window.addEventListener('load',()=>{
       try{
         const s=JSON.parse(old);
         const migrated={id:'u_0',name:s.name||'המשתמש שלי',age:s.age||31,weight:s.weight||60,height:s.height||170,gender:'m',goal:'lean_bulk',activity:1.55,calories:s.calories||2750};
-        const apiKey=localStorage.getItem('proFit_apiKey');
+        const apiKey=sessionStorage.getItem('proFit_apiKey');
         if(apiKey) migrated.apiKey=apiKey;
         saveUsers([migrated]);
         setActiveUserId('u_0');
@@ -1924,7 +1969,7 @@ function saveSetLog(key,nSets){
   const arr=(all[key]||[]).filter(s=>s.date&&s.date!==todayStr());
   arr.unshift({date:todayStr(),sets});
   all[key]=arr.slice(0,20);
-  localStorage.setItem(SETLOG_KEY,JSON.stringify(all));
+  _safeSet(SETLOG_KEY,JSON.stringify(all));
   if(bestKg>0) saveElogEntry(key,bestKg,bestReps);
   const saved=document.getElementById('sl-saved-'+key);
   if(saved){saved.classList.add('show');setTimeout(()=>saved.classList.remove('show'),2000);}
@@ -1966,6 +2011,8 @@ const ELOG_KEY='proFit_elog';
 function getElog(){ try{return JSON.parse(localStorage.getItem(ELOG_KEY)||'{}')}catch(e){return{};} }
 /** @param {string} key @param {number} kg @param {number} reps */
 function saveElogEntry(key,kg,reps){
+  if(!key||typeof kg!=='number'||kg<0||kg>500)return;
+  if(typeof reps!=='number'||reps<1||reps>100)return;
   const log=getElog();
   if(!log[key]) log[key]=[];
   const today=todayStr();
@@ -1975,7 +2022,7 @@ function saveElogEntry(key,kg,reps){
   else log[key].unshift({date:today,kg,reps});
   // Keep last 15 entries
   log[key]=log[key].slice(0,CONFIG.MAX_ELOG_ENTRIES);
-  localStorage.setItem(ELOG_KEY,JSON.stringify(log));
+  _safeSet(ELOG_KEY,JSON.stringify(log));
 }
 
 // ─── COACH: Progressive Overload Analysis ───────────────────────────────────
@@ -2281,7 +2328,7 @@ function renderFoodPanel(){
     <div class="card-head"><h2>הוסף מזון</h2></div>
     <div class="card-body">
       <div class="food-search-wrap">
-        <input class="food-search" id="food-search" type="text" placeholder="חפש מזון... (לדוג׳ עוף, אורז, ביצה)" oninput="foodSearch(this.value)" autocomplete="off"/>
+        <input class="food-search" id="food-search" type="text" placeholder="חפש מזון... (לדוג׳ עוף, אורז, ביצה)" oninput="foodSearchDebounced(this.value)" autocomplete="off"/>
         <div class="food-dropdown" id="food-dropdown"></div>
       </div>
       <div id="food-selected-wrap" style="display:none;">
@@ -2313,7 +2360,7 @@ function renderFoodPanel(){
     <div class="card-head"><h2>מה אכלתי היום</h2>${log.length?`<span class="badge badge-blue">${log.length} רשומות</span>`:''}</div>
     <div class="card-body" id="food-log-list">
       ${log.length?log.map((e,i)=>`<div class="food-log-entry">
-        <div style="flex:1"><div class="fle-name">${e.name}${e.qty!==1?` ×${e.qty}`:''}${e.unit?' '+e.unit:''}</div>
+        <div style="flex:1"><div class="fle-name">${_esc(e.name)}${e.qty!==1?` ×${e.qty}`:''}${e.unit?' '+_esc(e.unit):''}</div>
         <div class="fle-amount">${Math.round(e.cal)} קל׳ | <span style="color:var(--blue)">${Math.round(e.p)}g P</span> · <span style="color:var(--yellow)">${Math.round(e.c)}g C</span> · <span style="color:var(--green)">${Math.round(e.f)}g F</span></div></div>
         <button class="fle-del" onclick="deleteFoodEntry(${i})" aria-label="מחק רשומה">✕</button>
       </div>`).join(''):`<div style="text-align:center;padding:24px 0;color:var(--muted);">
@@ -2342,6 +2389,11 @@ function foodSearch(q){
   dd.innerHTML=matches.map((f,i)=>`<div class="food-option" onclick="selectFood(${FOODS.indexOf(f)})">
     ${f.name}<div class="fo-macros">${f.cal} קל׳ · P${f.p}g · C${f.c}g · F${f.f}g</div></div>`).join('');
   dd.classList.add('show');
+}
+let _foodSearchTimer=null;
+function foodSearchDebounced(q){
+  clearTimeout(_foodSearchTimer);
+  _foodSearchTimer=setTimeout(()=>{ foodSearch(q); }, 250);
 }
 
 function selectFood(idx){
@@ -2401,7 +2453,7 @@ let _chatRendered=false;
 function renderChatPanel(){
   const wrap=document.getElementById('chat-content'); if(!wrap) return;
   const s=getSettings();
-  const apiKey=localStorage.getItem('proFit_apiKey')||'';
+  const apiKey=sessionStorage.getItem('proFit_apiKey')||'';
   const foodLog=getFoodLog();
   const totals=foodLog.reduce((a,e)=>({cal:a.cal+e.cal,p:a.p+e.p}),{cal:0,p:0});
 
@@ -2445,7 +2497,7 @@ function renderWelcomeMsg(s,totals){
 }
 
 async function sendChat(){
-  const apiKey=localStorage.getItem('proFit_apiKey')||'';
+  const apiKey=sessionStorage.getItem('proFit_apiKey')||'';
   if(!apiKey){showPanel('settings');return;}
   const inp=document.getElementById('chat-input');
   const msg=(inp?.value||'').trim();
@@ -2792,17 +2844,15 @@ let _gymPendingSetKey=null;
 let _gymPendingSetIdx=0;
 // Integrated gym rest timer
 function playBeep(){
-  try{
-    const ctx=new(window.AudioContext||window.webkitAudioContext)();
-    [0,0.28].forEach(t=>{
-      const o=ctx.createOscillator(), g=ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.frequency.value=880;
-      g.gain.setValueAtTime(0.35,ctx.currentTime+t);
-      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+t+0.22);
-      o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+0.25);
-    });
-  }catch(e){}
+  const ctx=_getAudioCtx(); if(!ctx) return;
+  [0,0.28].forEach(t=>{
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.frequency.value=880;
+    g.gain.setValueAtTime(0.35,ctx.currentTime+t);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+t+0.22);
+    o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+0.25);
+  });
 }
 let _gymTimerIv=null;
 let _gymTimerRemain=0;
@@ -3007,7 +3057,9 @@ function openGymSetPopup(exKey,setIdx){
 function saveGymSet(){
   const kg=parseFloat(document.getElementById('gym-set-kg')?.value);
   const reps=parseInt(document.getElementById('gym-set-reps')?.value);
-  if(_gymPendingSetKey && !isNaN(kg) && !isNaN(reps) && kg>0 && reps>0){
+  if(isNaN(kg)||kg<0||kg>500){showToast('משקל לא תקין (0–500 ק"ג)');return;}
+  if(isNaN(reps)||reps<1||reps>100){showToast('חזרות לא תקינות (1–100)');return;}
+  if(_gymPendingSetKey && kg>0 && reps>0){
     saveElogEntry(_gymPendingSetKey,kg,reps);
     showToast(kg+'ק"ג × '+reps+' — נשמר ✓');
   }
@@ -3433,7 +3485,7 @@ function importData(e){
 // ─── Test API Key ─────────────────────────────────────────────────────────
 async function testApiKey(){
   const key=(document.getElementById('sf-apikey')?.value||'').trim()
-           ||localStorage.getItem('proFit_apiKey')||'';
+           ||sessionStorage.getItem('proFit_apiKey')||'';
   if(!key){showToast('⚠️ הכנס מפתח API קודם');return;}
   const btn=document.getElementById('test-api-btn');
   if(btn){btn.textContent='בודק…';btn.disabled=true;}
@@ -3965,7 +4017,7 @@ function buildExRow(key,num){
   const lvlCls=ex.lvl&&ex.lvl.includes('כבד')?'badge-red':ex.lvl&&ex.lvl.includes('בידוד')?'badge-blue':'badge-yellow';
   return `<tr onclick="openModal('${key}')">
     <td><div class="ex-num-cell">${num}</div></td>
-    <td><div class="ex-name-main">${ex.name}</div><div class="ex-name-en">${ex.en}</div>
+    <td><div class="ex-name-main">${ex.name}</div><div class="ex-name-en" lang="en">${ex.en}</div>
         <div class="ex-why">${ex.desc?ex.desc.slice(0,60)+'…':''}</div></td>
     <td><span class="muscle-tag">${ex.cat||''}</span></td>
     <td class="sets-cell">${ex.sets||'3×10'}</td>

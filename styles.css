@@ -1,10 +1,14 @@
+/* ─── SKIP LINK (accessibility) ─── */
+.skip-link{position:absolute;top:-100%;left:50%;transform:translateX(-50%);background:var(--lime);color:#000;padding:8px 16px;border-radius:0 0 8px 8px;font-weight:700;z-index:10000;transition:top .2s;}
+.skip-link:focus{top:0;}
+
 :root{
   /* ── Athletic OS · Dark Navy Foundation ── */
   --bg:#0B0F14;--bg2:#0F141B;--bg3:#141C26;--bg4:#1A2330;--bg5:#1E2A3A;
   /* ── Borders ── */
   --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.10);
   /* ── Text — Slate hierarchy ── */
-  --text:#F8FAFC;--muted:#94A3B8;--muted2:#64748B;
+  --text:#F8FAFC;--muted:#94A3B8;--muted2:#8A9AB5;
   /* ── Primary — Performance Green (#22C55E WHOOP-style) ── */
   --lime:#22C55E;--lime-dim:rgba(34,197,94,.12);--lime-glow:rgba(34,197,94,.28);
   --green:#22C55E;--green-dim:rgba(34,197,94,.12);--green-glow:rgba(34,197,94,.28);
@@ -24,6 +28,9 @@
   --arms-c:#F59E0B;--arms-g:rgba(245,158,11,.12);
   /* ── Glass system ── */
   --glass:rgba(255,255,255,.04);--glass-b:rgba(255,255,255,.08);--glass-h:rgba(255,255,255,.06);
+  /* ── Spacing scale ── */
+  --pad-sm:10px;--pad-md:16px;--pad-lg:24px;
+  --radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:20px;
   /* ── Typography ── */
   --r:16px;--r-sm:10px;
   --font:'Inter','SF Pro Display',system-ui,sans-serif;
@@ -203,15 +210,15 @@ body{
   border-radius:20px;margin-bottom:24px;
   /* NO backdrop-filter — creates stacking contexts that block sidebar pointer events in WebKit */
   /* NO overflow:hidden — clips the interactive hit area of card children */
-  transition:border-color .25s,box-shadow .25s;
+  transition:border-color .25s,box-shadow .25s,transform .18s var(--ease-out);
 }
-.card:hover{border-color:var(--border2);box-shadow:0 12px 48px rgba(0,0,0,.6);}
+.card:hover{border-color:var(--border2);box-shadow:0 12px 40px rgba(0,0,0,.35);transform:translateY(-3px);}
 .card-head{
-  padding:20px 24px;border-bottom:1px solid var(--border);
+  padding:20px var(--pad-lg);border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
 }
 .card-head h2{font-family:var(--font-d);font-size:1.25rem;font-weight:800;letter-spacing:-.4px;display:flex;align-items:center;gap:8px;}
-.card-body{padding:24px;}
+.card-body{padding:var(--pad-lg);}
 /* workout panel card accent borders */
 #panel-push .card{border-top:2px solid var(--push-c);}
 #panel-pull .card{border-top:2px solid var(--pull-c);}
@@ -389,6 +396,8 @@ body{
 /* Hero clips to border-radius without overflow:hidden on whole modal */
 .modal-hero{border-radius:24px 24px 0 0;}
 @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(12px)}to{opacity:1;transform:none}}
+@keyframes modalOut{from{opacity:1;transform:translateY(0) scale(1);}to{opacity:0;transform:translateY(12px) scale(.97);}}
+.modal.closing{animation:modalOut .22s cubic-bezier(.4,0,.2,1) forwards;pointer-events:none;}
 /* cinematic modal hero banner */
 .modal-hero{
   width:100%;height:190px;position:relative;overflow:hidden;
@@ -612,7 +621,9 @@ body{
   background:var(--glass);cursor:pointer;display:inline-flex;align-items:center;
   justify-content:center;font-size:.7rem;color:transparent;
   transition:all .2s var(--ease-spring);flex-shrink:0;user-select:none;
+  position:relative;
 }
+.set-check::before{content:'';position:absolute;inset:-11px;} /* expands hit area to 44px */
 .set-check:hover{border-color:var(--green);}
 .set-check.done{background:var(--lime);border-color:var(--lime);color:#000;box-shadow:0 0 8px var(--lime-glow);}
 .ex-done-text{text-decoration:line-through;color:var(--muted)!important;}
@@ -736,6 +747,17 @@ body{
 .settings-label{font-size:.72rem;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px;display:block;}
 .settings-input{width:100%;background:var(--glass);border:1px solid var(--border2);border-radius:12px;padding:10px 14px;color:var(--text);font-family:var(--font);font-size:.9rem;transition:border-color .2s,box-shadow .2s;}
 .settings-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-glow);}
+.settings-input:focus,.form-input:focus,input[type="number"]:focus,input[type="text"]:focus,textarea:focus{
+  outline:none;
+  border-color:var(--blue) !important;
+  box-shadow:0 0 0 3px rgba(59,130,246,.18);
+  transition:box-shadow .15s ease,border-color .15s ease;
+}
+input:invalid:not(:placeholder-shown),
+select:invalid:not(:placeholder-shown){
+  border-color:var(--red) !important;
+  box-shadow:0 0 0 2px rgba(239,68,68,.15);
+}
 .settings-save{background:var(--lime);color:#000;border:none;border-radius:999px;padding:11px 28px;cursor:pointer;font-family:var(--font-d);font-size:.92rem;font-weight:900;letter-spacing:.4px;transition:opacity .2s;}
 .settings-save:hover{opacity:.85;}
 .bmr-display{background:var(--glass);border:1px solid var(--glass-b);border-radius:12px;padding:12px 14px;font-size:.84rem;color:var(--muted2);margin-top:12px;line-height:1.85;}
@@ -1071,6 +1093,7 @@ body{
 /* ─── LEVEL-UP TOAST ─── */
 .levelup-toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:linear-gradient(135deg,var(--yellow),var(--orange));color:#000;font-family:var(--font-d);font-weight:900;font-size:1rem;letter-spacing:.5px;padding:12px 28px;border-radius:999px;z-index:600;opacity:0;transition:all .4s var(--ease-spring);pointer-events:none;white-space:nowrap;}
 .levelup-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.toast-pr{background:linear-gradient(135deg,var(--yellow),var(--coral));color:#000;font-weight:800;}
 
 /* ─── BOSS CHALLENGE ─── */
 .boss-card{
@@ -1493,7 +1516,7 @@ body{
 /* ─── GYM MODE: INLINE SET ROWS ─── */
 .gym-setrows{width:100%;max-width:340px;display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
 .gym-set-row{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);transition:all .2s;}
-.gym-set-row.done{background:rgba(48,209,88,.07);border-color:rgba(48,209,88,.18);opacity:.7;}
+.gym-set-row.done{background:rgba(48,209,88,.07);border-color:rgba(48,209,88,.18);opacity:.65;text-decoration:line-through;transition:all .2s ease;}
 .gym-sr-num{font-family:var(--font-d);font-size:.72rem;font-weight:800;color:var(--muted);min-width:36px;letter-spacing:.5px;}
 .gym-sr-inputs{display:flex;align-items:center;gap:6px;flex:1;justify-content:center;}
 .gym-sr-kg,.gym-sr-reps{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.14);border-radius:10px;color:var(--text);font-size:.95rem;font-weight:800;padding:8px 4px;width:62px;text-align:center;font-family:var(--font-d);-moz-appearance:textfield;transition:border-color .2s;}

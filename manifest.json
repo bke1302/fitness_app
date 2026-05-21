@@ -1,8 +1,9 @@
 {
   "name": "ProtocolOS — תוכנית אימונים אישית",
   "short_name": "ProtocolOS",
-  "description": "תוכנית Push/Pull/Legs/Arms אישית עם תזונה לכולסטרול",
+  "description": "ProtocolOS — מערכת אימונים חכמה עם מעקב תזונה, progressive overload אוטומטי ומאמן AI אישי",
   "start_url": "/fitness_app/",
+  "id": "/fitness_app/",
   "scope": "/fitness_app/",
   "display": "standalone",
   "orientation": "portrait-primary",
