@@ -3226,7 +3226,7 @@ function initTopbar(){
   const nmEl=document.getElementById('tb-name');
   const avEl=document.getElementById('tb-avatar');
   if(grEl) grEl.textContent=name?`${gr}, ${name} 👋`:gr+' 👋';
-  if(nmEl) nmEl.textContent=name||'IronWill';
+  if(nmEl) nmEl.textContent=name||'ProtocolOS';
   if(avEl) avEl.textContent=(name||'I').charAt(0).toUpperCase();
 }
 
@@ -3398,7 +3398,7 @@ function exportData(){
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download='ironwill-backup-'+todayStr()+'.json';
+  a.download='protocolos-backup-'+todayStr()+'.json';
   a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),10000);
 }
@@ -3612,11 +3612,11 @@ function openPRShareCard(exKey,kg,reps){
   // User + date
   const s=getSettings();
   ctx.font='400 11px Barlow,sans-serif'; ctx.fillStyle='rgba(255,255,255,.3)';
-  ctx.fillText((s.name||'IronWill')+'  ·  '+todayStr(),W/2,H-14);
+  ctx.fillText((s.name||'ProtocolOS')+'  ·  '+todayStr(),W/2,H-14);
   // Logo
   ctx.font='900 14px "Barlow Condensed",Barlow,sans-serif';
   ctx.fillStyle='rgba(230,57,70,.7)'; ctx.textAlign='right';
-  ctx.fillText('IRONWILL',W-16,H-14);
+  ctx.fillText('PROTOCOLOS',W-16,H-14);
   document.getElementById('share-overlay').classList.add('open');
   if(navigator.canShare) document.getElementById('share-native-btn').style.display='inline-block';
 }
@@ -3869,7 +3869,7 @@ function shareWhatsApp(){
   const u=getActiveUser()||{};
   const xp=getXP(); const lvl=getLevelData(xp);
   const streak=parseInt(document.getElementById('streak-num')?.textContent||'0');
-  const text=`💪 *IronWill — האימון שלי*\n\n👤 ${u.name||'מתאמן'}\n🏆 רמה: ${lvl.badge} ${lvl.name}\n⚡ XP: ${xp} נקודות\n🔥 רצף: ${streak} ימים\n\n📲 הורד בחינם: https://bke1302.github.io/fitness_app/`;
+  const text=`💪 *ProtocolOS — האימון שלי*\n\n👤 ${u.name||'מתאמן'}\n🏆 רמה: ${lvl.badge} ${lvl.name}\n⚡ XP: ${xp} נקודות\n🔥 רצף: ${streak} ימים\n\n📲 הורד בחינם: https://bke1302.github.io/fitness_app/`;
   window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
 }
 function shareNativeOrDownload(){
@@ -3878,13 +3878,13 @@ function shareNativeOrDownload(){
   const canvas=document.getElementById('share-canvas');
   if(!canvas) return;
   canvas.toBlob(async blob=>{
-    const file=new File([blob],'ironwill-stats.png',{type:'image/png'});
+    const file=new File([blob],'protocolos-stats.png',{type:'image/png'});
     if(navigator.canShare&&navigator.canShare({files:[file]})){
-      try{ await navigator.share({files:[file],title:'IronWill Stats',text:'הסטטיסטיקות שלי ב-IronWill 💪'}); return; }
+      try{ await navigator.share({files:[file],title:'ProtocolOS Stats',text:'הסטטיסטיקות שלי ב-ProtocolOS 💪'}); return; }
       catch(e){}
     }
     const a=document.createElement('a');
-    a.download='ironwill-stats.png'; a.href=URL.createObjectURL(blob); a.click();
+    a.download='protocolos-stats.png'; a.href=URL.createObjectURL(blob); a.click();
     setTimeout(()=>URL.revokeObjectURL(a.href),2000);
   });
 }
@@ -3894,7 +3894,7 @@ function downloadStatsCard(){
   const canvas=document.getElementById('share-canvas');
   if(!canvas) return;
   const a=document.createElement('a');
-  a.download='ironwill-stats.png'; a.href=canvas.toDataURL('image/png'); a.click();
+  a.download='protocolos-stats.png'; a.href=canvas.toDataURL('image/png'); a.click();
 }
 
 // ═══════════════════════════════════════════════════

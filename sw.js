@@ -1,4 +1,4 @@
-const CACHE = 'ironwill-v4';
+const CACHE = 'protocolos-v1';
 const ASSETS = [
   '/fitness_app/',
   '/fitness_app/index.html',

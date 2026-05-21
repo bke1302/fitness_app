@@ -1,6 +1,6 @@
 {
-  "name": "IronWill — תוכנית אימונים אישית",
-  "short_name": "IronWill",
+  "name": "ProtocolOS — תוכנית אימונים אישית",
+  "short_name": "ProtocolOS",
   "description": "תוכנית Push/Pull/Legs/Arms אישית עם תזונה לכולסטרול",
   "start_url": "/fitness_app/",
   "scope": "/fitness_app/",
@@ -21,8 +21,8 @@
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
   "screenshots": [
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "narrow", "label": "IronWill — Dashboard" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "wide",   "label": "IronWill — Desktop" }
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "narrow", "label": "ProtocolOS — Dashboard" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "wide",   "label": "ProtocolOS — Desktop" }
   ],
   "categories": ["health", "fitness", "sports"],
   "shortcuts": [
