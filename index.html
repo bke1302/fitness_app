@@ -560,11 +560,11 @@
               <td class="sets-cell">4 × 15–20</td><td class="rest-cell">45 שנ׳</td>
               <td><span class="badge badge-green">בידוד</span></td>
             </tr>
-            <tr onclick="openModal('rdl')">
+            <tr onclick="openModal('tBarRow')">
               <td><div class="ex-num-cell">5</div></td>
-              <td><div class="ex-name-main">דד-ליפט רומני</div><div class="ex-name-en">Romanian Deadlift</div><div class="ex-why">הטריגר הטוב ביותר לגב תחתון + ירך אחורי</div></td>
-              <td><span class="muscle-tag">גב תחתון + ירך אחורי</span></td>
-              <td class="sets-cell">3 × 8–10</td><td class="rest-cell">2 דק׳</td>
+              <td><div class="ex-name-main">חתירה T-Bar</div><div class="ex-name-en">T-Bar Row</div><div class="ex-why">עובי גב אמצעי — מה שגורם לגב להיראות "עבה" מהצד</div></td>
+              <td><span class="muscle-tag">גב עבה</span></td>
+              <td class="sets-cell">4 × 8–10</td><td class="rest-cell">2 דק׳</td>
               <td><span class="badge badge-red">כבד</span></td>
             </tr>
             <tr onclick="openModal('bbCurl')">
@@ -1279,13 +1279,13 @@
       <div class="card-body">
         <div class="tools-bar">
           <button class="tool-btn" onclick="openPlateCalc()">
-            <span class="tool-icon">🏋️</span>צלחות
+            <span class="tool-icon">🏋️</span>כמה צלחות?
           </button>
           <button class="tool-btn" onclick="open1RMCalc()">
-            <span class="tool-icon">💪</span>1RM
+            <span class="tool-icon">💪</span>מקסימום 1 חזרה
           </button>
-          <button class="tool-btn" onclick="openShareModal()">
-            <span class="tool-icon">📊</span>שתף Stats
+          <button class="tool-btn" onclick="openShareOptions()">
+            <span class="tool-icon">📤</span>שיתוף
           </button>
           <button class="tool-btn" onclick="toggleTheme()" id="theme-btn-tool">
             <span class="tool-icon">🌙</span>ערכת נושא
@@ -1369,6 +1369,25 @@
                 <button class="mc-btn" data-smc="6" onclick="selectSettingsMC(this)"><div class="mc-num">6</div></button>
               </div>
             </div>
+          </div>
+
+          <!-- Workout frequency -->
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+            <label class="settings-label" for="sf-workout-freq">תדירות אימון בשבוע</label>
+            <select id="sf-workout-freq" class="settings-input" style="cursor:pointer;" onchange="document.querySelector('.sf-split-wrap').style.display=this.value==='3'?'block':'none'">
+              <option value="2">2×/שבוע — Full Body A/B</option>
+              <option value="3">3×/שבוע — בחר סגנון</option>
+              <option value="4">4×/שבוע — Push / Pull / Legs / Arms</option>
+              <option value="5">5×/שבוע — PPL + Upper + Lower</option>
+              <option value="6">6×/שבוע — PPL × 2</option>
+            </select>
+          </div>
+          <div class="sf-split-wrap" style="display:none;margin-top:10px;">
+            <label class="settings-label" for="sf-workout-split">סגנון תוכנית (3 ימים)</label>
+            <select id="sf-workout-split" class="settings-input" style="cursor:pointer;">
+              <option value="3ab">Upper / Lower — מתחלף</option>
+              <option value="3abc">Push / Pull / Legs</option>
+            </select>
           </div>
 
           <!-- Cholesterol toggle -->
@@ -1552,6 +1571,39 @@
   </div>
 </div>
 
+<!-- SHARE OPTIONS MODAL -->
+<div id="share-options-modal" onclick="if(event.target.id==='share-options-modal')closeShareOptions()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:900;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px);">
+  <div style="background:var(--bg);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:500px;">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;">שיתוף</div>
+      <h2 style="font-size:1.1rem;font-weight:800;color:var(--text);margin:0;">מה תרצה לשתף?</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+      <button onclick="shareStatsCard()" style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;font-family:var(--font);transition:background .2s;" onmouseover="this.style.background='var(--border)'" onmouseout="this.style.background='var(--bg2)'">
+        <div style="font-size:1.6rem;margin-bottom:6px;">📊</div>
+        <div style="font-weight:700;color:var(--text);font-size:.88rem;">תמונת מצב</div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:2px;">Stats + רמה + רצף</div>
+      </button>
+      <button onclick="shareWhatsApp()" style="background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;font-family:var(--font);transition:background .2s;" onmouseover="this.style.background='rgba(37,211,102,.2)'" onmouseout="this.style.background='rgba(37,211,102,.1)'">
+        <div style="font-size:1.6rem;margin-bottom:6px;">💬</div>
+        <div style="font-weight:700;color:#25D366;font-size:.88rem;">WhatsApp</div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:2px;">שתף ישירות</div>
+      </button>
+      <button onclick="shareNativeOrDownload()" style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;font-family:var(--font);transition:background .2s;" onmouseover="this.style.background='var(--border)'" onmouseout="this.style.background='var(--bg2)'">
+        <div style="font-size:1.6rem;margin-bottom:6px;">📱</div>
+        <div style="font-weight:700;color:var(--text);font-size:.88rem;">שתף לאינסטגרם</div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:2px;">שמור + שתף</div>
+      </button>
+      <button onclick="downloadStatsCard()" style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;font-family:var(--font);transition:background .2s;" onmouseover="this.style.background='var(--border)'" onmouseout="this.style.background='var(--bg2)'">
+        <div style="font-size:1.6rem;margin-bottom:6px;">💾</div>
+        <div style="font-weight:700;color:var(--text);font-size:.88rem;">שמור תמונה</div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:2px;">לגלריה</div>
+      </button>
+    </div>
+    <button onclick="closeShareOptions()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--muted);font-weight:600;cursor:pointer;font-family:var(--font);">ביטול</button>
+  </div>
+</div>
+
 <!-- PLATE CALCULATOR MODAL -->
 <div id="plate-calc-modal" onclick="if(event.target.id==='plate-calc-modal')closePlateCalc()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:900;align-items:center;justify-content:center;backdrop-filter:blur(6px);">
   <div style="background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:24px;width:min(360px,92vw);max-height:90vh;overflow-y:auto;">
@@ -1672,10 +1724,52 @@
         <button class="act-btn" data-act="1.725" onclick="selectActivity(this)"><div class="act-icon">⚡</div><div class="act-info"><div class="act-name">אינטנסיבי</div><div class="act-desc">אימון יומי + עבודה פיזית</div></div></button>
       </div>
     </div>
+    <!-- STEP 4: Workout Frequency -->
+    <div class="onboard-step" id="ob-step-4">
+      <div class="onboard-step-title">כמה פעמים בשבוע? 📅</div>
+      <div style="font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:16px;">התוכנית תותאם אוטומטית לתדירות שלך</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px;">
+        <button class="ob-freq-btn" data-freq="2" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--text);">2</div>
+          <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
+        </button>
+        <button class="ob-freq-btn" data-freq="3" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--text);">3</div>
+          <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
+        </button>
+        <button class="ob-freq-btn sel" data-freq="4" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--red);">4</div>
+          <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
+        </button>
+        <button class="ob-freq-btn" data-freq="5" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--text);">5</div>
+          <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
+        </button>
+        <button class="ob-freq-btn" data-freq="6" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--text);">6</div>
+          <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
+        </button>
+      </div>
+      <!-- Split selector — visible only for 3x/week -->
+      <div id="ob-split-wrap" style="display:none;margin-bottom:4px;">
+        <div style="font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:10px;">בחר סגנון:</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button class="ob-split-btn" data-split="3ab" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
+            <div style="font-weight:800;color:var(--text);font-size:.9rem;">Upper / Lower</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:3px;">גוף עליון / גוף תחתון</div>
+          </button>
+          <button class="ob-split-btn sel" data-split="3abc" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
+            <div style="font-weight:800;color:var(--red);font-size:.9rem;">Push / Pull / Legs</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:3px;">3 אימונים שונים</div>
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="onboard-dots">
       <div class="onboard-dot active" id="od-1"></div>
       <div class="onboard-dot" id="od-2"></div>
       <div class="onboard-dot" id="od-3"></div>
+      <div class="onboard-dot" id="od-4"></div>
     </div>
     <div class="onboard-footer">
       <button class="onboard-back" id="ob-back" onclick="obBack()" style="display:none;">חזור</button>

@@ -1480,3 +1480,7 @@ body{
 .tool-btn{flex:1;min-width:80px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;font-family:var(--font);font-size:.78rem;font-weight:700;color:var(--text);cursor:pointer;text-align:center;transition:background .2s;}
 .tool-btn:hover{background:var(--border);}
 .tool-btn .tool-icon{font-size:1.3rem;display:block;margin-bottom:4px;}
+/* ─── ONBOARDING FREQUENCY BUTTONS ─── */
+.ob-freq-btn.sel{border-color:var(--red)!important;background:rgba(255,55,95,.12)!important;}
+.ob-freq-btn.sel div:first-child{color:var(--red)!important;}
+.ob-split-btn.sel{border-color:var(--red)!important;background:rgba(255,55,95,.10)!important;}

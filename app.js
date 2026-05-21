@@ -98,7 +98,36 @@ const EX = {
   diamondPushup:{name:'שכיבות יהלום',en:'Diamond Push-ups',e:'💎',cat:'טריצפס',sets:'2×כישלון',rest:'60 שנ׳',lvl:'בינוני',
     desc:'שכיבות עם ידיים צמודות בצורת יהלום — מדגישות טריצפס.',
     muscles:'Triceps Brachii, חזה פנימי.',
-    tips:['ידיים צמודות — אצבעות נוגעות','גוף ישר לחלוטין','מרפקים כלפי מאחור בירידה','עד כישלון מוחלט']}
+    tips:['ידיים צמודות — אצבעות נוגעות','גוף ישר לחלוטין','מרפקים כלפי מאחור בירידה','עד כישלון מוחלט']},
+  // ── תרגילים נוספים ──────────────────────────────
+  deadlift:{name:'דד-ליפט קונבנציונלי',en:'Conventional Deadlift',e:'🏆',cat:'כל הגוף',sets:'4×4–6',rest:'3–4 דק׳',lvl:'כבד מאוד',
+    desc:'המלך האמיתי של חדר הכושר. מגייס 70%+ מהגוף בתנועה אחת. לא להחמיץ.',
+    muscles:'Hamstrings, Glutes, גב תחתון (Erector Spinae), Trapezius, ליבה, אחיזה.',
+    tips:['המוט ממש ליד השוקיים — לאורך כל הדרך','ירך מאחורה, חזה קדימה לפני שמרים','גב ישר לחלוטין — לא כפוף','אל תנעל ברכיים בסיום — הגוף ישר','נשוף בעלייה, שאף בירידה','מותניים יישרים — לא היפרלורדוזיס']},
+  tBarRow:{name:'חתירה T-Bar',en:'T-Bar Row',e:'🔩',cat:'גב עבה',sets:'4×8–10',rest:'2 דק׳',lvl:'כבד',
+    desc:'טריגר מצוין לעובי הגב האמצעי. כיפוף 45° ומשיכת הידית אל הבטן.',
+    muscles:'Rhomboids, Middle Trapezius, Latissimus Dorsi, בייסס.',
+    tips:['גוף ב-45° — לא זקוף ולא שכוב','ידית V-grip = יותר גב אמצעי','ידית רחבה = יותר Lat','שכמות מתקרבות בסיום — הרגש כיווץ','הסר אגו — גב ישר חשוב ממשקל']},
+  hipThrust:{name:'Hip Thrust — מוט',en:'Barbell Hip Thrust',e:'🍑',cat:'ישבן',sets:'4×10–12',rest:'90 שנ׳',lvl:'כבד',
+    desc:'תרגיל הגלוטאוס הכי אפקטיבי שנחקר. כל מי שרוצה ישבן עגול — חייב את זה.',
+    muscles:'Gluteus Maximus (ראשי), Hamstrings, גב תחתון.',
+    tips:['שכמות על ספסל גובה 40–45 ס"מ','המוט מעל האגן עם כרית','כנס סנטר ופשוט את האגן למעלה','בחלק העליון — גוף מקביל לרצפה','לחץ עקבים לרצפה לאורך כל התרגיל','הרגש כיווץ חזק בגלוטאוס בחלק העליון']},
+  seatedCalfRaise:{name:'עריסת עגל ישיבה',en:'Seated Calf Raise',e:'🦿',cat:'שוק — Soleus',sets:'4×15–20',rest:'45 שנ׳',lvl:'בידוד',
+    desc:'ישיבה מדגישה את ה-Soleus שנמצא מתחת ל-Gastrocnemius. שניהם יחד = שוק מלאה.',
+    muscles:'Soleus (ראשי), Gastrocnemius (משני).',
+    tips:['ברכיים כפופות ב-90°','מתיחה מלאה למטה בכל חזרה','עלייה עד גובה מקסימלי','5 שניות ירידה איטית — Soleus מגיב לטמפו','לפחות 15 חזרות — שריר איטי']},
+  wristCurl:{name:'כפיפת פרק — מוט',en:'Barbell Wrist Curl',e:'🤜',cat:'אמות',sets:'3×15–20',rest:'30 שנ׳',lvl:'בידוד',
+    desc:'מחזק את שרירי האמה הקדמיים — חיוני לאחיזה ולמניעת Tennis Elbow.',
+    muscles:'Flexor Carpi Radialis, Flexor Carpi Ulnaris.',
+    tips:['ישיבה, אמות על ירכיים','תנועה קטנה — רק פרק כף יד','טווח מלא — פתח ב-stretch','חזרות גבוהות עם משקל קל','אל תכאב — תחפש את Burn']},
+  reverseWristCurl:{name:'כפיפת פרק הפוכה',en:'Reverse Wrist Curl',e:'🤛',cat:'אמות',sets:'3×15–20',rest:'30 שנ׳',lvl:'בידוד',
+    desc:'מחזק שרירי האמה האחוריים — מאזן את הלחץ ומונע פציעות פרק.',
+    muscles:'Extensor Carpi Radialis, Extensor Carpi Ulnaris.',
+    tips:['כפות ידיים כלפי מטה','תנועה קטנה — רק פרק כף יד','חזרות גבוהות','הגן על המרפקים — אל תכפף יותר מדי','מומלץ: אחרי wrist curl רגיל']},
+  farmerWalk:{name:'Farmer\'s Carry',en:'Farmer\'s Walk',e:'🚜',cat:'אחיזה + ליבה',sets:'3×30–45 שנ׳',rest:'60 שנ׳',lvl:'פונקציונלי',
+    desc:'הליכה עם משקולות כבדות. מחזק אחיזה, ליבה, שכמות ושרירי יציבה.',
+    muscles:'Grip strength, Trapezius, Core, Erector Spinae.',
+    tips:['גב ישר, כתפיים מאחורה','צעדים קצרים ומהירים','עד קצה האולם וחזרה','המשקולות לא נוגעות בגוף','כשהאחיזה נשברת — עצור']}
 };
 
 const EX_YT={
@@ -405,13 +434,16 @@ function saveSettingsForm(){
   // Sync active user record
   const users=getUsers(); const aid=getActiveUserId();
   const idx=users.findIndex(u=>u.id===aid);
+  const workout_freq=parseInt(document.getElementById('sf-workout-freq')?.value)||4;
+  const workout_split=workout_freq===3?(document.getElementById('sf-workout-split')?.value||'3abc'):null;
   if(idx>=0){
-    users[idx]={...users[idx],name,weight,height,age,calories,goal,activity,workout_time,gender,meal_count,cholesterol};
+    users[idx]={...users[idx],name,weight,height,age,calories,goal,activity,workout_time,gender,meal_count,cholesterol,workout_freq,workout_split};
     saveUsers(users);
     renderUserList();
     renderNutritionPanel();
     applyUserConditions(users[idx]);
     renderDashboardStats(users[idx]);
+    renderAdaptivePanels();
   }
   const btn=document.querySelector('#settings-form .settings-save');
   if(btn){
@@ -800,6 +832,9 @@ function prefillSettingsForm(){
   _sfMealCount=u.meal_count||5; _sfCholesterol=!!u.cholesterol;
   document.querySelectorAll('[data-smc]').forEach(b=>b.classList.toggle('sel',b.dataset.smc===String(_sfMealCount)));
   document.getElementById('sf-chol-pill')?.classList.toggle('on',_sfCholesterol);
+  const sffreq=document.getElementById('sf-workout-freq'); if(sffreq) sffreq.value=String(u.workout_freq||4);
+  const sfsplit=document.getElementById('sf-workout-split'); if(sfsplit){sfsplit.value=u.workout_split||'3abc';sfsplit.closest('.sf-split-wrap')&&(sfsplit.closest('.sf-split-wrap').style.display=(u.workout_freq===3)?'block':'none');}
+
 }
 
 // ─── Apply user-specific content visibility ───
@@ -836,6 +871,8 @@ let _obActivity=null;
 let _obCholesterol=false;
 let _obMealCount=5;
 let _isNewUserFlow=false;
+let _obFreq=4;
+let _obSplit=null;
 
 function showOnboarding(){
   _obStep=1;_obGoal=null;_obActivity=null;
@@ -848,7 +885,7 @@ function showOnboarding(){
 }
 function showOnboardingForNew(){
   _isNewUserFlow=true;
-  _obMealCount=5; _obCholesterol=false;
+  _obMealCount=5; _obCholesterol=false; _obFreq=4; _obSplit=null;
   ['ob-name','ob-age','ob-weight','ob-height'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('ob-gender').value='m';
   document.getElementById('ob-workout-time').value='18:00';
@@ -890,6 +927,8 @@ function obNext(){
     _obStep=3;
   } else if(_obStep===3){
     if(!_obActivity){showToast('בחר רמת פעילות');return;}
+    _obStep=4;
+  } else if(_obStep===4){
     obFinish();
     return;
   }
@@ -897,7 +936,9 @@ function obNext(){
   document.getElementById('ob-step-'+_obStep)?.classList.add('active');
   document.querySelectorAll('.onboard-dot').forEach((d,i)=>{d.classList.toggle('active',i===_obStep-1);});
   document.getElementById('ob-back').style.display='block';
-  document.getElementById('ob-next').textContent=_obStep===3?'צור פרופיל ✓':'הבא →';
+  document.getElementById('ob-next').textContent=_obStep===4?'צור פרופיל ✓':'הבא →';
+  // Show/hide split selector in step 4
+  if(_obStep===4) _updateSplitSelector();
 }
 function obBack(){
   if(_obStep<=1) return;
@@ -906,7 +947,27 @@ function obBack(){
   document.getElementById('ob-step-'+_obStep)?.classList.add('active');
   document.querySelectorAll('.onboard-dot').forEach((d,i)=>{d.classList.toggle('active',i===_obStep-1);});
   document.getElementById('ob-back').style.display=_obStep===1?'none':'block';
-  document.getElementById('ob-next').textContent='הבא →';
+  document.getElementById('ob-next').textContent=_obStep===4?'צור פרופיל ✓':'הבא →';
+}
+function selectObFreq(btn){
+  document.querySelectorAll('.ob-freq-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  _obFreq=parseInt(btn.dataset.freq);
+  _updateSplitSelector();
+}
+function selectObSplit(btn){
+  document.querySelectorAll('.ob-split-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  _obSplit=btn.dataset.split;
+}
+function _updateSplitSelector(){
+  const wrap=document.getElementById('ob-split-wrap');
+  if(!wrap) return;
+  wrap.style.display=_obFreq===3?'block':'none';
+  if(_obFreq===3&&!_obSplit){
+    _obSplit='3abc';
+    document.querySelectorAll('.ob-split-btn').forEach(b=>b.classList.toggle('sel',b.dataset.split==='3abc'));
+  }
 }
 function obFinish(){
   const name=(document.getElementById('ob-name')?.value||'').trim();
@@ -922,6 +983,8 @@ function obFinish(){
     cholesterol:_obCholesterol,
     workout_time,
     meal_count:_obMealCount||5,
+    workout_freq:_obFreq||4,
+    workout_split:_obFreq===3?(_obSplit||'3abc'):null,
   };
   const n=calcNutrition(user);
   user.calories=n.target;
@@ -1694,6 +1757,8 @@ window.addEventListener('load',()=>{
     const sp=document.getElementById('splash');
     if(sp){sp.classList.add('out');setTimeout(()=>sp.remove(),600);}
   },1300);
+  // Render adaptive workout panels based on user frequency
+  renderAdaptivePanels();
   // Inject swap buttons into exercise rows that have alternatives
   injectSwapButtons();
   // Inject set-log rows into all exercise tables
@@ -3499,4 +3564,175 @@ function renderMeasChart(){
   metrics.forEach((m,mi)=>{h+=`<circle cx="${P.l+mi*70}" cy="${H-P.b+22}" r="3" fill="${m.color}"/><text x="${P.l+mi*70+6}" y="${H-P.b+26}" fill="${m.color}" font-size="8" font-family="Barlow,sans-serif">${m.label}</text>`;});
   svg.setAttribute('viewBox',`0 0 ${W} ${H+28}`);
   svg.innerHTML=h;
+}
+
+// ═══════════════════════════════════════════════════
+// SHARE OPTIONS MODAL
+// ═══════════════════════════════════════════════════
+function openShareOptions(){
+  const el=document.getElementById('share-options-modal');
+  if(el){el.style.display='flex';}
+}
+function closeShareOptions(){
+  const el=document.getElementById('share-options-modal');
+  if(el){el.style.display='none';}
+}
+function shareStatsCard(){
+  closeShareOptions();
+  drawShareCard();
+  document.getElementById('share-overlay').classList.add('open');
+  if(navigator.canShare) document.getElementById('share-native-btn').style.display='inline-block';
+}
+function shareWhatsApp(){
+  closeShareOptions();
+  const u=getActiveUser()||{};
+  const xp=getXP(); const lvl=getLevelData(xp);
+  const streak=parseInt(document.getElementById('streak-num')?.textContent||'0');
+  const text=`💪 *IronWill — האימון שלי*\n\n👤 ${u.name||'מתאמן'}\n🏆 רמה: ${lvl.badge} ${lvl.name}\n⚡ XP: ${xp} נקודות\n🔥 רצף: ${streak} ימים\n\n📲 הורד בחינם: https://bke1302.github.io/fitness_app/`;
+  window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
+}
+function shareNativeOrDownload(){
+  closeShareOptions();
+  drawShareCard();
+  const canvas=document.getElementById('share-canvas');
+  if(!canvas) return;
+  canvas.toBlob(async blob=>{
+    const file=new File([blob],'ironwill-stats.png',{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      try{ await navigator.share({files:[file],title:'IronWill Stats',text:'הסטטיסטיקות שלי ב-IronWill 💪'}); return; }
+      catch(e){}
+    }
+    const a=document.createElement('a');
+    a.download='ironwill-stats.png'; a.href=URL.createObjectURL(blob); a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+  });
+}
+function downloadStatsCard(){
+  closeShareOptions();
+  drawShareCard();
+  const canvas=document.getElementById('share-canvas');
+  if(!canvas) return;
+  const a=document.createElement('a');
+  a.download='ironwill-stats.png'; a.href=canvas.toDataURL('image/png'); a.click();
+}
+
+// ═══════════════════════════════════════════════════
+// MULTI-FREQUENCY WORKOUT PLANS
+// ═══════════════════════════════════════════════════
+const WORKOUT_PLANS={
+  2:{
+    days:[
+      {id:'push',label:'יום A — Full Body',shortLabel:'יום A',color:'#FF375F',
+       exercises:['squat','benchPress','pullup','ohp','rdl','facePull','calfRaise']},
+      {id:'pull',label:'יום B — Full Body',shortLabel:'יום B',color:'#5AC8FA',
+       exercises:['legPress','inclineBench','bentRow','lateralRaise','legCurl','bbCurl','triPushdown']},
+    ],
+    schedule:'ב׳ + ה׳ (48–72 שעות מנוחה)'
+  },
+  '3ab':{
+    days:[
+      {id:'push',label:'Upper Body',shortLabel:'Upper',color:'#FF375F',
+       exercises:['benchPress','pullup','ohp','bentRow','bbCurl','triPushdown','facePull']},
+      {id:'pull',label:'Lower Body',shortLabel:'Lower',color:'#BF5AF2',
+       exercises:['squat','rdl','legPress','legCurl','legExt','lunges','calfRaise']},
+    ],
+    schedule:'א׳/Upper | ג׳/Lower | ה׳/Upper (מתחלף שבוע-שבוע)'
+  },
+  '3abc':{
+    days:[
+      {id:'push',label:'PUSH — חזה + כתפיים',shortLabel:'PUSH',color:'#FF375F',
+       exercises:['benchPress','inclineBench','ohp','lateralRaise','triPushdown','skullCrusher']},
+      {id:'pull',label:'PULL — גב + בייסס',shortLabel:'PULL',color:'#5AC8FA',
+       exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
+      {id:'legs',label:'LEGS — רגליים',shortLabel:'LEGS',color:'#BF5AF2',
+       exercises:['squat','legPress','rdl','legCurl','legExt','lunges','calfRaise']},
+    ],
+    schedule:'א׳ Push | ג׳ Pull | ה׳ Legs'
+  },
+  4:null,
+  5:{
+    days:[
+      {id:'push',label:'PUSH — כבד',shortLabel:'PUSH',color:'#FF375F',
+       exercises:['benchPress','inclineBench','ohp','lateralRaise','triPushdown','skullCrusher']},
+      {id:'pull',label:'PULL — כבד',shortLabel:'PULL',color:'#5AC8FA',
+       exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
+      {id:'legs',label:'LEGS',shortLabel:'LEGS',color:'#BF5AF2',
+       exercises:['squat','legPress','rdl','legCurl','lunges','calfRaise']},
+      {id:'arms',label:'Upper + Lower (בינוני)',shortLabel:'EXTRA',color:'#FFD60A',
+       exercises:['inclineBench','cableRow','ohp','legPress','bbCurl','triPushdown','legCurl','calfRaise']},
+    ],
+    schedule:'א׳ Push | ב׳ Pull | ד׳ Legs | ה׳ Upper | ו׳ Lower'
+  },
+  6:{
+    days:[
+      {id:'push',label:'PUSH A — כוח',shortLabel:'PUSH A',color:'#FF375F',
+       exercises:['benchPress','ohp','triPushdown','lateralRaise']},
+      {id:'pull',label:'PULL A — רוחב',shortLabel:'PULL A',color:'#5AC8FA',
+       exercises:['pullup','bentRow','facePull','hammerCurl']},
+      {id:'legs',label:'LEGS A — ירכיים',shortLabel:'LEGS A',color:'#BF5AF2',
+       exercises:['squat','legPress','legExt','calfRaise']},
+      {id:'arms',label:'PUSH B + PULL B',shortLabel:'B-DAYS',color:'#FFD60A',
+       exercises:['inclineBench','cableFlye','cableRow','bbCurl','rdl','skullCrusher']},
+    ],
+    schedule:'א׳ Push A | ב׳ Pull A | ג׳ Legs A | ד׳ Push B | ה׳ Pull B | ו׳ Legs B'
+  }
+};
+
+function buildExRow(key,num){
+  const ex=EX[key];
+  if(!ex) return '';
+  const lvlCls=ex.lvl&&ex.lvl.includes('כבד')?'badge-red':ex.lvl&&ex.lvl.includes('בידוד')?'badge-blue':'badge-yellow';
+  return `<tr onclick="openModal('${key}')">
+    <td><div class="ex-num-cell">${num}</div></td>
+    <td><div class="ex-name-main">${ex.name}</div><div class="ex-name-en">${ex.en}</div>
+        <div class="ex-why">${ex.desc?ex.desc.slice(0,60)+'…':''}</div></td>
+    <td><span class="muscle-tag">${ex.cat||''}</span></td>
+    <td class="sets-cell">${ex.sets||'3×10'}</td>
+    <td class="rest-cell">${ex.rest||'90 שנ׳'}</td>
+    <td><span class="badge ${lvlCls}">${ex.lvl||''}</span></td>
+  </tr>`;
+}
+
+function renderWorkoutDay(panelId,dayObj){
+  const panel=document.getElementById('panel-'+panelId);
+  if(!panel) return;
+  let tbl=panel.querySelector('.ex-table tbody');
+  if(tbl) tbl.innerHTML=dayObj.exercises.map((k,i)=>buildExRow(k,i+1)).join('');
+  // Update nav tab label
+  const navBtn=document.querySelector(`.nav-btn[onclick*="'${panelId}'"]`);
+  if(navBtn){
+    const lbl=navBtn.querySelector('.nav-lbl');
+    if(lbl) lbl.textContent=dayObj.shortLabel||panelId.toUpperCase();
+  }
+}
+
+function renderAdaptivePanels(){
+  const u=getActiveUser();
+  const freq=parseInt(u?.workout_freq)||4;
+  const split=u?.workout_split||null;
+  const planKey=freq===3?(split||'3abc'):freq;
+  const plan=WORKOUT_PLANS[planKey];
+  if(!plan) return;
+  const {days}=plan;
+  const allIds=['push','pull','legs','arms'];
+  allIds.forEach((pid,i)=>{
+    const navBtn=document.querySelector(`.nav-btn[onclick*="'${pid}'"]`);
+    if(i>=days.length){
+      if(navBtn) navBtn.style.display='none';
+    } else {
+      if(navBtn) navBtn.style.display='';
+      renderWorkoutDay(pid,days[i]);
+    }
+  });
+  const schedEl=document.getElementById('workout-schedule-text');
+  if(schedEl) schedEl.textContent=plan.schedule||'';
+}
+
+function getWorkoutFreqLabel(freq,split){
+  if(freq===2) return '2×/שבוע — Full Body';
+  if(freq===3) return split==='3ab'?'3×/שבוע — Upper/Lower':'3×/שבוע — Push/Pull/Legs';
+  if(freq===4) return '4×/שבוע — PPL+ARMS';
+  if(freq===5) return '5×/שבוע — PPL+Upper+Lower';
+  if(freq===6) return '6×/שבוע — PPL×2';
+  return `${freq}×/שבוע`;
 }
