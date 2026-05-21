@@ -1596,6 +1596,7 @@ select:invalid:not(:placeholder-shown){
 
 /* ─── SPARKLINES ─── */
 .ex-spark{display:block;margin-top:4px;opacity:.85;}
+.streak-micro-copy{font-size:.75rem;color:var(--muted);margin-top:4px;min-height:1em;transition:opacity .3s;}
 
 /* ─── WEEKLY REPORT ─── */
 .wr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}

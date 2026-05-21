@@ -253,7 +253,7 @@ function openModal(key){
     `<div class="info-pill">סטים: <strong>${e.sets}</strong></div>
      <div class="info-pill">מנוחה: <strong>${e.rest}</strong></div>
      <div class="info-pill">עצימות: <strong>${e.lvl}</strong></div>`;
-  document.getElementById('m-tips').innerHTML=e.tips.map(t=>`<li><span>✅</span><span>${t}</span></li>`).join('');
+  document.getElementById('m-tips').innerHTML=e.tips.map(t=>`<li><span>✅</span><span>${_esc(t)}</span></li>`).join('');
   // Demo video card
   const demoEl=document.getElementById('m-demo');
   if(demoEl){
@@ -300,10 +300,11 @@ function openModal(key){
   document.querySelector('.modal .modal-close')?.focus();
 }
 function closeModal(){
-  const overlay=document.getElementById('modal-overlay');
   if(_modalTrapFn){document.removeEventListener('keydown',_modalTrapFn);_modalTrapFn=null;}
-  overlay?.classList.remove('open');
-  document.body.style.overflow='';
+  const overlay=document.getElementById('modal-overlay');
+  if(!overlay) return;
+  overlay.classList.add('closing');
+  setTimeout(()=>{overlay.classList.remove('open','closing');document.body.style.overflow='';},220);
 }
 function closeModalBg(ev){if(ev.target.id==='modal-overlay')closeModal();}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
@@ -377,7 +378,6 @@ function showPanel(name,btn){
   if(name==='chat') setTimeout(renderChatPanel,0);
   if(['push','pull','legs','arms','day-a','day-b','day-c'].includes(name)) setTimeout(injectSparklines,0);
 }
-function goDay(name){showPanel(name);}
 function openSidebar(){
   document.getElementById('sidebar').classList.add('open');
   document.getElementById('sidebar-overlay').classList.add('show');
