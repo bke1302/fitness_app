@@ -444,6 +444,8 @@ function saveSettingsForm(){
     applyUserConditions(users[idx]);
     renderDashboardStats(users[idx]);
     renderAdaptivePanels();
+    injectSwapButtons();
+    injectSetLogRows();
   }
   const btn=document.querySelector('#settings-form .settings-save');
   if(btn){
@@ -493,20 +495,35 @@ const GOAL_LABELS={lean_bulk:'Lean Bulk',bulk:'מסה מקסימלית',cut:'ה�
 // EXERCISE ALTERNATIVES
 // ═══════════════════════════════════════════════════
 const EX_ALTERNATIVES = {
+  // ── חזה ──
   benchPress:[{name:'לחיצת משקולות שכיבה',tag:'Dumbbell Bench Press — ריינג׳ של תנועה גדול יותר'},{name:'פוש-אפ בחגורה',tag:'Weighted Push-up — בית / ללא מכשיר'},{name:'פק דק / Chest Press מכונה',tag:'Machine Chest Press — מתחילים / שיקום'}],
-  incline:[{name:'Incline Dumbbell Press',tag:'אותה קבוצת שריר, יותר יציבות'},{name:'Incline Push-up',tag:'ללא ציוד — שנה זווית הרצפה'},{name:'Low to High Cable Fly',tag:'כבל — מתח קבוע בחזה עליון'}],
-  cableFly:[{name:'פרפר עם משקולות',tag:'Dumbbell Fly — שכיבה'},{name:'Pec Deck מכונה',tag:'בידוד מושלם לחזה'},{name:'Push-up רחב',tag:'ללא ציוד'}],
-  shoulderPress:[{name:'Arnold Press',tag:'סיבוב פנימי/חיצוני — כיסוי מלא של כתף'},{name:'Machine Shoulder Press',tag:'בטוח יותר לגב תחתון'},{name:'לחיצת כתפיים עמידה',tag:'Barbell OHP — מפתח כוח'}],
+  inclineBench:[{name:'Incline Dumbbell Press',tag:'אותה קבוצת שריר, יותר יציבות'},{name:'Incline Push-up',tag:'ללא ציוד — שנה זווית הרצפה'},{name:'Low to High Cable Fly',tag:'כבל — מתח קבוע בחזה עליון'}],
+  cableFlye:[{name:'פרפר עם משקולות',tag:'Dumbbell Fly — שכיבה'},{name:'Pec Deck מכונה',tag:'בידוד מושלם לחזה'},{name:'Push-up רחב',tag:'ללא ציוד'}],
+  // ── כתפיים ──
+  ohp:[{name:'Arnold Press',tag:'סיבוב פנימי/חיצוני — כיסוי מלא של כתף'},{name:'Machine Shoulder Press',tag:'בטוח יותר לגב תחתון'},{name:'DB Shoulder Press ישיבה',tag:'Seated DB Press — יציבות גבוהה'}],
   lateralRaise:[{name:'הרמות צד עם משקולות',tag:'Dumbbell Lateral Raise'},{name:'Upright Row כבל',tag:'מגרה גם trapezius'},{name:'Machine Lateral Raise',tag:'בידוד מדויק'}],
+  facePull:[{name:'Reverse Fly עם משקולות',tag:'Rear Delt Fly — שכיבה נוטה קדימה'},{name:'Band Face Pull',tag:'ריצועית — לכל מקום, ללא ציוד'},{name:'Rear Delt Machine',tag:'מכונה — בידוד מושלם'}],
+  // ── גב ──
   pullup:[{name:'לט פולדאון',tag:'Lat Pulldown — אותו תנועה בישיבה'},{name:'Assisted Pull-up',tag:'מכונה עם עזר — לפיתוח כוח'},{name:'TRX Row',tag:'ישיבה נוטה — קל יותר'}],
   bentRow:[{name:'חתירה עם משקולות',tag:'Dumbbell Row — גב ישר, יש הדגמות בכל מכון'},{name:'Machine Row',tag:'ללא שיווי משקל — טוב למתחילים'},{name:'TRX Row',tag:'ניתן לכוונן עצימות'}],
   cableRow:[{name:'חתירה עם מוט',tag:'Barbell Row — כבד יותר'},{name:'חתירה עם משקולות',tag:'Dumbbell Row — כל יד בנפרד'},{name:'T-Bar Row',tag:'זווית שונה לגב אמצעי'}],
+  tBarRow:[{name:'One-Arm Dumbbell Row',tag:'כל יד בנפרד — טווח תנועה גדול'},{name:'Seated Cable Row',tag:'כבל — מתח קבוע לאורך כל התנועה'},{name:'Machine Row',tag:'בטוח יותר לגב תחתון'}],
+  deadlift:[{name:'Trap Bar Deadlift',tag:'עמוד השדרה ניטרלי יותר — טוב למתחילים'},{name:'Rack Pull',tag:'מתנקודת הברך — פחות טווח, יותר משקל'},{name:'Romanian Deadlift',tag:'RDL — הדגשה על Hamstrings'}],
+  // ── רגליים ──
   squat:[{name:'לחיצת רגליים',tag:'Leg Press — ללא עומס על עמוד השדרה'},{name:'Goblet Squat',tag:'משקולת אחת — טוב לטכניקה'},{name:'Bulgarian Split Squat',tag:'חד-רגלי — פחות משקל, יותר עבודה'}],
   legPress:[{name:'סקוואט',tag:'Squat — כוח מלא'},{name:'Hack Squat',tag:'פחות עומס על גב תחתון'},{name:'Sissy Squat',tag:'בודד Quads — ללא ציוד'}],
   rdl:[{name:'ליפט סומו',tag:'Sumo Deadlift — אחיזה רחבה, פחות גב'},{name:'Nordic Curl',tag:'Hamstrings ללא ציוד'},{name:'Leg Curl מכונה',tag:'בידוד Hamstrings'}],
+  legExt:[{name:'Sissy Squat',tag:'ללא ציוד — בידוד Quad מלא'},{name:'Wall Sit',tag:'איזומטרי — 60 שנ׳ בלבד'},{name:'Step-up על ספסל',tag:'פונקציונלי — מגייס גם ישבן'}],
+  legCurl:[{name:'Nordic Curl',tag:'הכי קשה ללא ציוד — Hamstrings 100%'},{name:'Swiss Ball Leg Curl',tag:'כדור — אתגר שיווי משקל'},{name:'Good Morning',tag:'מוט על כתפיים — Hamstrings + גב תחתון'}],
+  lunges:[{name:'Step-up על ספסל',tag:'פחות עומס על ברך — נוח יותר'},{name:'Walking Lunges',tag:'תנועה — שורף יותר קלוריות'},{name:'Reverse Lunge',tag:'פחות לחץ על ברך קדמית'}],
+  hipThrust:[{name:'Glute Bridge',tag:'ללא ספסל — אותה תנועה על הרצפה'},{name:'Cable Kickback',tag:'כבל — בידוד ישבן ללא עומס על גב'},{name:'Donkey Kick',tag:'ללא ציוד — 15–20 חזרות לצד'}],
+  calfRaise:[{name:'Seated Calf Raise',tag:'Soleus — שריר עמוק, יושב בכיפוף ברך'},{name:'Donkey Calf Raise',tag:'נוטה קדימה — מתיחה עמוקה יותר'},{name:'Single-Leg Calf Raise',tag:'חד-רגלי — כפל העומס, ללא ציוד'}],
+  // ── ידיים ──
   bbCurl:[{name:'כפיפות משקולות',tag:'Dumbbell Curl — כל יד בנפרד'},{name:'Preacher Curl',tag:'מקנה גם ראש קצר בלבד — עיצוב'},{name:'כבל — כפיפות',tag:'Cable Curl — מתח קבוע'}],
+  hammerCurl:[{name:'Incline Dumbbell Curl',tag:'נוטה אחורה — מתיחה מלאה ל-Long Head'},{name:'Cross-Body Hammer',tag:'חוצה גוף — דגש על Brachialis'},{name:'Cable Rope Curl',tag:'כבל חבל — מתח קבוע'}],
   skullCrusher:[{name:'Dips',tag:'מקביל — טריצפס + חזה תחתון'},{name:'Overhead Dumbbell Extension',tag:'Long Head — משקולת'},{name:'Close-Grip Push-up',tag:'ללא ציוד — טריצפס'}],
   triPushdown:[{name:'Overhead Cable Extension',tag:'Long Head — מתיחה מלאה'},{name:'Dips',tag:'משקל גוף — כל Tricep'},{name:'Kickbacks משקולות',tag:'בידוד — בחינם'}],
+  // ── אמות ──
   wristCurl:[{name:'כפיפת פרק עם ריצועית',tag:'Resistance Band Wrist Curl'},{name:'אחיזת בקבוק מים',tag:'ללא ציוד — 3×60 שנ׳'},{name:'Farmer Hold',tag:'אחיזה סטטית — ניהול עומס'}],
 };
 
@@ -643,36 +660,50 @@ const MEAL_SLOT_POOL = {
 const MEAL_SLOTS_BY_COUNT = {3:[0,2,5], 4:[0,2,4,5], 5:[0,2,3,4,5], 6:[0,1,2,3,4,5]};
 
 /* ── Meal alternative foods (per slot index 0-5) ── */
+// Each alternative array entry: [foods_array, tag_emoji]
+// tag: '🫀' כולסטרול, '🌿' צמחוני, '💪' עתיר חלבון, '' — רגיל
 const MEAL_FOOD_ALTS = {
   0:[
-    ['🥚 שקשוקה 3 ביצים','🍅 עגבניות','🌿 עשבי תיבול','☕ קפה שחור'],
-    ['🍞 2 פרוסות לחם שיפון','🥑 אבוקדו','🧀 גבינה לבנה 5%','🥚 ביצה'],
-    ['🥞 פנקייק חלבון','🍯 דבש','🫐 אוכמניות','🥛 קפה לאטה'],
+    [['🥚 שקשוקה 3 ביצים','🍅 עגבניות','🌿 עשבי תיבול','☕ קפה שחור'],'💪'],
+    [['🍞 2 פרוסות לחם שיפון','🥑 אבוקדו','🧀 גבינה לבנה 5%','🥚 ביצה'],''],
+    [['🥞 פנקייק חלבון','🍯 דבש','🫐 אוכמניות','🥛 קפה לאטה'],'💪'],
+    [['🥣 שיבולת שועל 50g','🫐 אוכמניות','🥜 שמן פשתן','☕ קפה שחור'],'🫀'],
+    [['🟤 טופו מקושקש 150g','🫑 פלפל','🍅 עגבניה','🌿 שמרים תזונתיים'],'🌿'],
   ],
   1:[
-    ['🍎 תפוח + 20g שקדים'],
-    ['🥕 ירקות חיים + 100g חומוס'],
-    ['🥜 25g אגוזי מלך + 🍊 תפוז'],
+    [['🍎 תפוח + 20g שקדים'],''],
+    [['🥕 ירקות חיים + 100g חומוס'],'🌿'],
+    [['🥜 25g אגוזי מלך + 🍊 תפוז'],'🫀'],
+    [['🧀 100g גבינה 5% + 🍅 עגבניות שרי'],'💪'],
+    [['🫘 100g אדממה + 🍋 לימון + מלח'],'🌿'],
   ],
   2:[
-    ['🍗 200g הודו','🍚 150g קינואה','🥦 ירקות','🫒 שמן זית'],
-    ['🐟 200g טונה','🥗 סלט ירקות גדול','🍞 לחם מלא'],
-    ['🥚 4 ביצים','🫘 100g עדשים','🥗 סלט + לימון'],
+    [['🍗 200g הודו','🍚 150g קינואה','🥦 ירקות','🫒 שמן זית'],'💪'],
+    [['🐟 200g טונה','🥗 סלט ירקות גדול','🍞 לחם מלא'],'🫀'],
+    [['🥚 4 ביצים','🫘 100g עדשים','🥗 סלט + לימון'],'🌿'],
+    [['🐟 150g סלמון','🥦 ברוקולי','🍠 בטטה','🫒 שמן זית'],'🫀'],
+    [['🫘 150g חומוס','🍚 100g אורז מלא','🥗 ירקות','🌿 טחינה'],'🌿'],
   ],
   3:[
-    ['🍌 בננה + 🥛 200g קוטג׳ 1%'],
-    ['🍎 תפוח + 🥚 2 ביצים קשות + ☕ קפה'],
-    ['🥣 50g שיבולת שועל + 🍯 דבש'],
+    [['🍌 בננה + 🥛 200g קוטג׳ 1%'],'💪'],
+    [['🍎 תפוח + 🥚 2 ביצים קשות + ☕ קפה'],''],
+    [['🥣 50g שיבולת שועל + 🍯 דבש'],'🫀'],
+    [['🍇 20g צימוקים + 🥜 20g שקדים + 🧀 קוטג׳'],''],
+    [['🌰 30g אגוזי מלך + 🍊 תפוז גדול'],'🫀'],
   ],
   4:[
-    ['🥛 Whey Isolate + מים + 🍌 בננה'],
-    ['🥚 4 ביצים קשות + 🍌 בננה'],
-    ['🧀 200g קוטג׳ 1% + 🍯 דבש'],
+    [['🥛 Whey Isolate + מים + 🍌 בננה'],'💪'],
+    [['🥚 4 ביצים קשות + 🍌 בננה'],'💪'],
+    [['🧀 200g קוטג׳ 1% + 🍯 דבש'],'💪'],
+    [['🍌 בננה + 🥜 30g חמאת בוטנים טבעית'],'🌿'],
+    [['🥛 200ml חלב דל שומן + 🥣 50g שיבולת שועל'],'🫀'],
   ],
   5:[
-    ['🐟 150g טונה + 🥗 סלט ירקות + 🍋 לימון'],
-    ['🍗 130g חזה עוף + 🥦 ברוקולי מאודה'],
-    ['🥚 3 ביצים + 🧀 גבינה + 🥒 ירקות חיים'],
+    [['🐟 150g טונה + 🥗 סלט ירקות + 🍋 לימון'],'🫀'],
+    [['🍗 130g חזה עוף + 🥦 ברוקולי מאודה'],'💪'],
+    [['🥚 3 ביצים + 🧀 גבינה + 🥒 ירקות חיים'],''],
+    [['🐟 150g סלמון אפוי + 🥗 עלים + 🥑 אבוקדו'],'🫀'],
+    [['🫘 150g עדשים + 🍅 רוטב עגבניות + 🌿 עשבים'],'🌿'],
   ],
 };
 
@@ -686,6 +717,9 @@ function swapMeal(mealIdx){
   localStorage.setItem(key,JSON.stringify(swaps));
   renderNutritionPanel();
 }
+// Helper: get foods array + tag from MEAL_FOOD_ALTS entry (supports old string[] and new [string[],tag] format)
+function _getMealAltFoods(entry){ return Array.isArray(entry[0])?entry[0]:entry; }
+function _getMealAltTag(entry){ return Array.isArray(entry[0])?(entry[1]||''):''; }
 
 function getMealPlan(u,n){
   const g=u.goal||'lean_bulk';
@@ -746,8 +780,10 @@ function renderNutritionPanel(){
     const tipColor=m.tip.includes('❤')||m.tip.includes('✅')||m.tip.includes('💚')?'var(--green)':m.tip.includes('⚠')?'var(--yellow)':'var(--muted2)';
     const alts=MEAL_FOOD_ALTS[i]||[];
     const swapIdx=swaps[i]||0;
-    const foods=swapIdx>0&&alts[swapIdx-1]?alts[swapIdx-1]:m.foods;
-    const swapLabel=swapIdx>0?`החלף (${swapIdx}/${alts.length})`:'החלף';
+    const activeAlt=swapIdx>0?alts[swapIdx-1]:null;
+    const foods=activeAlt?_getMealAltFoods(activeAlt):m.foods;
+    const activeTag=activeAlt?_getMealAltTag(activeAlt):'';
+    const swapLabel=swapIdx>0?`${activeTag?activeTag+' ':''}החלף (${swapIdx}/${alts.length})`:'החלף';
     const swapBtn=alts.length?`<button onclick="swapMeal(${i})" style="font-size:.62rem;font-weight:700;color:var(--cyan);background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.25);border-radius:6px;padding:3px 8px;cursor:pointer;white-space:nowrap;">${swapLabel} 🔄</button>`:'';
     return `<div class="meal-row" ${border}>
       <div class="meal-top">
@@ -1839,7 +1875,7 @@ function buildSetLogHTML(key,nSets){
 }
 
 function prefillSetLog(key,nSets){
-  const saved=JSON.parse(localStorage.getItem('pf_setlog')||'{}')[key]||[];
+  const saved=JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}')[key]||[];
   for(let i=1;i<=nSets;i++){
     const s=saved[i-1]||{};
     const kgEl=document.getElementById(`sl-${key}-kg-${i}`);
@@ -1858,9 +1894,9 @@ function saveSetLog(key,nSets){
     sets.push({kg,reps});
     if(kg>bestKg){bestKg=kg;bestReps=reps;}
   }
-  const all=JSON.parse(localStorage.getItem('pf_setlog')||'{}');
+  const all=JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}');
   all[key]=sets;
-  localStorage.setItem('pf_setlog',JSON.stringify(all));
+  localStorage.setItem(SETLOG_KEY,JSON.stringify(all));
   if(bestKg>0) saveElogEntry(key,bestKg,bestReps);
   const saved=document.getElementById('sl-saved-'+key);
   if(saved){saved.classList.add('show');setTimeout(()=>saved.classList.remove('show'),2000);}
@@ -3470,7 +3506,7 @@ function renderWeeklyReport(){
   const weekPRs=Object.entries(prs).filter(([,v])=>weekDates.includes(v.date)).length;
   // Food this week
   const foodLogs=weekDates.map(d=>{
-    try{return JSON.parse(localStorage.getItem('pf_food_'+d)||'[]');}catch(e){return[];}
+    try{return JSON.parse(localStorage.getItem(FOOD_KEY+'_'+d)||'[]');}catch(e){return[];}
   });
   const avgCal=Math.round(foodLogs.reduce((s,fl)=>s+fl.reduce((a,f)=>a+(f.cal||0)*((f.qty||1)),0),0)/Math.max(1,foodLogs.filter(fl=>fl.length).length));
   el.innerHTML=`
@@ -3724,6 +3760,13 @@ function renderAdaptivePanels(){
       renderWorkoutDay(pid,days[i]);
     }
   });
+  // If currently active panel was hidden, switch to first visible panel
+  const activePanelEl=document.querySelector('.panel.active');
+  const activePanelId=activePanelEl?.id?.replace('panel-','');
+  const hiddenPanelIds=allIds.slice(days.length);
+  if(activePanelId&&hiddenPanelIds.includes(activePanelId)){
+    showPanel(days[0].id);
+  }
   const schedEl=document.getElementById('workout-schedule-text');
   if(schedEl) schedEl.textContent=plan.schedule||'';
 }
