@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover"/>
 <title>IronWill</title>
 
 <!-- PWA -->
@@ -1522,13 +1522,37 @@
 <div class="gym-overlay" id="gym-overlay">
   <div class="gym-header">
     <div class="gym-badge" id="gym-badge">PUSH</div>
-    <span class="gym-stopwatch" id="gym-stopwatch">00:00</span>
+    <span class="gym-stopwatch" id="gym-stopwatch">0:00</span>
     <button class="gym-tempo-btn" id="gym-tempo-btn" onclick="toggleTempo()">קצב OFF</button>
-    <button class="gym-close" onclick="confirmCloseGymMode()">✕ יציאה</button>
+    <button class="gym-close" onclick="confirmCloseGymMode()">✕</button>
   </div>
   <div class="gym-body" id="gym-body"></div>
+
+  <!-- INTEGRATED REST TIMER -->
+  <div class="gym-rest-timer" id="gym-rest-timer" style="display:none;">
+    <div class="grt-inner">
+      <div class="grt-ring-wrap">
+        <svg class="grt-svg" viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="38" class="grt-track"/>
+          <circle cx="45" cy="45" r="38" id="gym-ring-prog" class="grt-prog" stroke-dasharray="238.76" stroke-dashoffset="0"/>
+        </svg>
+        <div class="grt-time" id="gym-ring-text">--</div>
+      </div>
+      <div class="grt-right">
+        <div class="grt-label" id="gym-rest-msg">מנוחה</div>
+        <div class="grt-presets">
+          <button onclick="gymPickTimer(60)">1:00</button>
+          <button onclick="gymPickTimer(90)">1:30</button>
+          <button onclick="gymPickTimer(120)">2:00</button>
+          <button onclick="gymPickTimer(180)">3:00</button>
+        </div>
+        <button class="grt-skip" onclick="cancelGymTimer()">דלג ›</button>
+      </div>
+    </div>
+  </div>
+
   <div class="rpe-wrap" id="rpe-wrap">
-    <div class="rpe-label">עצימות סט (RPE 1–10)</div>
+    <div class="rpe-label">עצימות (RPE)</div>
     <div class="rpe-btns" id="rpe-btns">
       <button class="rpe-btn" data-v="1" onclick="setRPE(1)">1</button>
       <button class="rpe-btn" data-v="2" onclick="setRPE(2)">2</button>
@@ -1545,15 +1569,6 @@
   <div class="gym-footer">
     <button class="gym-nav-btn" id="gym-prev" onclick="gymPrev()" disabled>הקודם</button>
     <button class="gym-nav-btn next" id="gym-next" onclick="gymNext()">הבא</button>
-  </div>
-  <div class="gym-set-popup" id="gym-set-popup">
-    <div class="gym-set-popup-title" id="gym-set-popup-title">סט 1 — רשום משקל + חזרות</div>
-    <div class="gym-set-inputs">
-      <input class="gym-set-input" id="gym-set-kg" type="number" min="0" step="0.5" placeholder="ק״ג"/>
-      <span class="gym-set-x">×</span>
-      <input class="gym-set-input" id="gym-set-reps" type="number" min="1" max="50" placeholder="חזרות"/>
-    </div>
-    <button class="gym-set-save" id="gym-set-save-btn" onclick="saveGymSet()">שמור וסמן ✓</button>
   </div>
 </div>
 

@@ -2631,8 +2631,13 @@ let _tempoOn=false;
 let _tempoTimer=null;
 let _gymStopwatchStart=0;
 let _gymStopwatchIv=null;
-let _gymPendingSetKey=null; // key for elog when saving set
+let _gymPendingSetKey=null;
 let _gymPendingSetIdx=0;
+// Integrated gym rest timer
+let _gymTimerIv=null;
+let _gymTimerRemain=0;
+let _gymTimerTotal=0;
+const GYM_TIMER_CIRC=2*Math.PI*38; // r=38, circumference≈238.76
 
 function startGymMode(panelName,label,color){
   const panel=document.getElementById('panel-'+panelName);
@@ -2671,13 +2676,14 @@ function renderGymExercise(){
   const body=document.getElementById('gym-body');
   const prev=document.getElementById('gym-prev');
   const next=document.getElementById('gym-next');
+  // Hide rest timer when navigating to new exercise
+  cancelGymTimer();
   if(_gymIdx>=_gymExercises.length){
-    // Done screen
     body.innerHTML=`<div class="gym-done-screen">
       <div class="gym-done-title">DONE</div>
       <div class="gym-done-sub">האימון הושלם!<br>הגוף שלך מתחזק.</div>
       <div class="gym-done-xp">+50 XP</div>
-      <button class="gym-nav-btn next" onclick="closeGymMode()" style="max-width:200px">סגור</button>
+      <button class="gym-nav-btn next" onclick="closeGymMode()" style="max-width:200px;margin-top:8px;">סגור</button>
     </div>`;
     if(prev) prev.style.display='none';
     if(next) next.style.display='none';
@@ -2686,47 +2692,69 @@ function renderGymExercise(){
     return;
   }
   const ex=_gymExercises[_gymIdx];
-  // Parse sets count from sets string e.g. "4×8–10" → 4
   const setsCount=parseInt(ex.sets)||3;
-  // Get current check state from workout log
   const today=todayStr(); const log=getLog();
-  const key=ex.name;
-  const checks=Array.from({length:setsCount},(_,i)=>log[today]?.[key]?.[i]||false);
-  const checksHTML=checks.map((done,i)=>`
-    <div class="gym-check${done?' done':''}" id="gym-chk-${i}" onclick="gymCheckSet(${i})">${done?'✓':''}</div>`).join('');
+  const checks=Array.from({length:setsCount},(_,i)=>log[today]?.[ex.name]?.[i]||false);
+  // Pre-fill last saved kg/reps from elog
+  const elog=getElog();
+  const lastEntry=ex.key?elog[ex.key]?.[0]:null;
+  const prefillKg=lastEntry?.kg||'';
+  const prefillReps=lastEntry?.reps||'';
+  const rowsHTML=checks.map((done,i)=>`
+    <div class="gym-set-row${done?' done':''}" id="gym-sr-${i}">
+      <span class="gym-sr-num">סט ${i+1}</span>
+      <div class="gym-sr-inputs">
+        <input class="gym-sr-kg" id="gym-sr-kg-${i}" type="number" inputmode="decimal" min="0" step="0.5" placeholder="ק״ג" value="${prefillKg}" ${done?'disabled':''}/>
+        <span class="gym-sr-x">×</span>
+        <input class="gym-sr-reps" id="gym-sr-reps-${i}" type="number" inputmode="numeric" min="1" max="50" placeholder="חז׳" value="${prefillReps}" ${done?'disabled':''}/>
+      </div>
+      <button class="gym-check${done?' done':''}" id="gym-chk-${i}" onclick="gymCheckSet(${i})">${done?'✓':''}</button>
+    </div>`).join('');
   body.innerHTML=`
     <div class="gym-counter">תרגיל ${_gymIdx+1} מתוך ${_gymExercises.length}</div>
     <div class="gym-name" style="color:${_gymColor}">${ex.name}</div>
     ${ex.nameEn?`<div class="gym-name-en">${ex.nameEn}</div>`:''}
     ${ex.muscle?`<div class="gym-muscle-tag">${ex.muscle}</div>`:''}
     <div class="gym-sets-label">${ex.sets}</div>
-    <div class="gym-checks">${checksHTML}</div>`;
+    <div class="gym-setrows">${rowsHTML}</div>`;
   if(prev) prev.disabled=_gymIdx===0;
-  if(next){ next.textContent=_gymIdx>=_gymExercises.length-1?'סיים האימון':'הבא →'; }
+  if(next) next.textContent=_gymIdx>=_gymExercises.length-1?'סיים האימון ✓':'הבא →';
 }
 function gymCheckSet(i){
   const el=document.getElementById('gym-chk-'+i);
   if(!el) return;
   const alreadyDone=el.classList.contains('done');
   if(alreadyDone){
-    // Uncheck
     el.classList.remove('done'); el.textContent=''; el.style.background='';
+    const row=document.getElementById('gym-sr-'+i);
+    if(row){ row.classList.remove('done');
+      row.querySelectorAll('input').forEach(inp=>inp.disabled=false); }
     return;
   }
+  // Read kg/reps from inline inputs
+  const ex=_gymExercises[_gymIdx];
+  const kgEl=document.getElementById('gym-sr-kg-'+i);
+  const repEl=document.getElementById('gym-sr-reps-'+i);
+  const kg=parseFloat(kgEl?.value)||0;
+  const reps=parseInt(repEl?.value)||0;
   // Mark done visually
   el.classList.add('done'); el.textContent='✓'; el.style.background=_gymColor;
+  const row=document.getElementById('gym-sr-'+i);
+  if(row){ row.classList.add('done');
+    row.querySelectorAll('input').forEach(inp=>inp.disabled=true); }
   if(navigator.vibrate) navigator.vibrate(30);
+  // Save kg/reps to elog
+  if(ex.key&&kg>0&&reps>0){
+    saveElogEntry(ex.key,kg,reps);
+    showToast(kg+'ק"ג × '+reps+' ✓');
+  }
   // Update workout log
-  const ex=_gymExercises[_gymIdx];
   const today=todayStr(); const l=getLog();
   if(!l[today]) l[today]={}; if(!l[today][ex.name]) l[today][ex.name]={};
   l[today][ex.name][i]=true; saveLog(l);
-  // Auto-start rest timer (remember last)
-  setTimeout(()=>{ if(typeof pickTimer==='function') pickTimer(_lastTimerSec||90); },400);
-  // Start tempo if on
+  // Start integrated rest timer
+  gymPickTimer(_lastTimerSec||90);
   if(_tempoOn) speakTempo();
-  // Open set weight/reps popup
-  if(ex.key) setTimeout(()=>openGymSetPopup(ex.key,i),600);
 }
 function gymNext(){
   if(_gymIdx<_gymExercises.length) _gymIdx++;
@@ -2738,11 +2766,56 @@ function gymPrev(){
 }
 function closeGymMode(){
   document.getElementById('gym-overlay').classList.remove('open');
-  document.getElementById('gym-set-popup')?.classList.remove('show');
   document.body.style.overflow='';
   if(_tempoTimer){ clearTimeout(_tempoTimer); _tempoTimer=null; }
   if(_gymStopwatchIv){ clearInterval(_gymStopwatchIv); _gymStopwatchIv=null; }
+  cancelGymTimer();
   window.speechSynthesis?.cancel();
+}
+function gymPickTimer(sec){
+  if(_gymTimerIv){ clearInterval(_gymTimerIv); _gymTimerIv=null; }
+  _lastTimerSec=sec; localStorage.setItem('pf_lastTimer',String(sec));
+  _gymTimerTotal=sec; _gymTimerRemain=sec;
+  const zone=document.getElementById('gym-rest-timer');
+  const msg=document.getElementById('gym-rest-msg');
+  if(zone) zone.style.display='block';
+  if(msg) msg.textContent='מנוחה';
+  // Highlight active preset
+  document.querySelectorAll('.grt-presets button').forEach(b=>{
+    const v=parseInt(b.textContent.replace(':','').replace('0','').split(':').reduce((m,s)=>+m*60+(+s),0));
+    b.classList.toggle('active', parseInt(b.getAttribute('onclick')?.match(/\d+/)?.[0]||0)===sec);
+  });
+  gymTickTimer();
+  _gymTimerIv=setInterval(()=>{
+    _gymTimerRemain--;
+    gymTickTimer();
+    if(_gymTimerRemain<=0){
+      clearInterval(_gymTimerIv); _gymTimerIv=null;
+      const msgEl=document.getElementById('gym-rest-msg');
+      if(msgEl) msgEl.textContent='התחל סט! 💪';
+      const timeEl=document.getElementById('gym-ring-text');
+      if(timeEl) timeEl.textContent='GO';
+      if(navigator.vibrate) navigator.vibrate([200,100,200,100,200]);
+    }
+  },1000);
+}
+function gymTickTimer(){
+  const m=Math.floor(_gymTimerRemain/60);
+  const s=_gymTimerRemain%60;
+  const timeStr=m+':'+(s<10?'0':'')+s;
+  const timeEl=document.getElementById('gym-ring-text');
+  const prog=document.getElementById('gym-ring-prog');
+  if(timeEl) timeEl.textContent=timeStr;
+  if(prog&&_gymTimerTotal>0){
+    const frac=Math.max(0,_gymTimerRemain/_gymTimerTotal);
+    prog.style.strokeDashoffset=GYM_TIMER_CIRC*(1-frac);
+  }
+}
+function cancelGymTimer(){
+  if(_gymTimerIv){ clearInterval(_gymTimerIv); _gymTimerIv=null; }
+  _gymTimerRemain=0; _gymTimerTotal=0;
+  const zone=document.getElementById('gym-rest-timer');
+  if(zone) zone.style.display='none';
 }
 function openGymSetPopup(exKey,setIdx){
   _gymPendingSetKey=exKey;
