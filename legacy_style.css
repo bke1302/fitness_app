@@ -1518,6 +1518,15 @@ body{
 .grt-skip{background:none;border:none;color:var(--muted);font-size:.72rem;font-weight:700;cursor:pointer;padding:0;font-family:var(--font-d);letter-spacing:.5px;align-self:flex-start;}
 .grt-skip:hover{color:var(--text);}
 
+/* ─── COACH TIP CARDS ─── */
+.coach-tip{display:flex;align-items:flex-start;gap:7px;border-radius:10px;padding:9px 11px;margin:6px 0;font-size:.73rem;border:1px solid;}
+.ct-icon{font-size:1rem;line-height:1;flex-shrink:0;}
+.ct-msg{color:var(--text);line-height:1.45;font-weight:500;}
+.coach-tip--increase{background:rgba(48,209,88,.1);border-color:rgba(48,209,88,.3);}
+.coach-tip--almost  {background:rgba(10,132,255,.1);border-color:rgba(10,132,255,.3);}
+.coach-tip--decrease{background:rgba(255,159,10,.1);border-color:rgba(255,159,10,.3);}
+.coach-tip--change  {background:rgba(255,55,95,.1);border-color:rgba(255,55,95,.3);}
+
 /* ─── MOBILE: prevent overflow & improve touch targets ─── */
 *{-webkit-tap-highlight-color:rgba(0,0,0,0);touch-action:pan-y;}
 html,body{overscroll-behavior:none;touch-action:pan-y;}

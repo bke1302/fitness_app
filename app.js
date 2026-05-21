@@ -202,6 +202,14 @@ function openModal(key){
     </a>`;
   }
   renderSetLogInModal(key);
+  // Coach tip
+  const coachEl=document.getElementById('m-coach-tip');
+  if(coachEl){
+    const tip=getCoachTip(key);
+    coachEl.innerHTML=tip
+      ? `<div class="coach-tip coach-tip--${tip.type}"><span class="ct-icon">${tip.icon}</span><span class="ct-msg">${tip.msg}</span></div>`
+      : '';
+  }
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
   // Focus trap — לכלוא focus בתוך המודל
@@ -1123,8 +1131,8 @@ function renderSetLogInModal(key){
     </div>`;
   }
 
-  // History rows (past sessions, not today)
-  const past=history.filter(s=>s.date!==today).slice(0,3);
+  // History rows (past sessions, not today) — only new-format entries
+  const past=history.filter(s=>s.date&&Array.isArray(s.sets)&&s.date!==today).slice(0,3);
   let histHTML='';
   if(past.length){
     const rows=past.map(s=>{
@@ -1875,7 +1883,10 @@ function buildSetLogHTML(key,nSets){
 }
 
 function prefillSetLog(key,nSets){
-  const saved=JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}')[key]||[];
+  const history=JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}')[key]||[];
+  const last=Array.isArray(history)&&history[0];
+  // Support both formats: new [{date,sets:[{kg,reps}]}] and old [{kg,reps}]
+  const saved=Array.isArray(last?.sets)?last.sets:(Array.isArray(history)&&history[0]?.kg!=null?history:[]);
   for(let i=1;i<=nSets;i++){
     const s=saved[i-1]||{};
     const kgEl=document.getElementById(`sl-${key}-kg-${i}`);
@@ -1894,8 +1905,11 @@ function saveSetLog(key,nSets){
     sets.push({kg,reps});
     if(kg>bestKg){bestKg=kg;bestReps=reps;}
   }
+  // Save in new format {date, sets} — compatible with saveModalSetLog
   const all=JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}');
-  all[key]=sets;
+  const arr=(all[key]||[]).filter(s=>s.date&&s.date!==todayStr());
+  arr.unshift({date:todayStr(),sets});
+  all[key]=arr.slice(0,20);
   localStorage.setItem(SETLOG_KEY,JSON.stringify(all));
   if(bestKg>0) saveElogEntry(key,bestKg,bestReps);
   const saved=document.getElementById('sl-saved-'+key);
@@ -1947,6 +1961,34 @@ function saveElogEntry(key,kg,reps){
   // Keep last 15 entries
   log[key]=log[key].slice(0,15);
   localStorage.setItem(ELOG_KEY,JSON.stringify(log));
+}
+
+// ─── COACH: Progressive Overload Analysis ───────────────────────────────────
+function _parseRepRange(setsStr){
+  const m=(setsStr||'').match(/\d+[×xX](\d+)(?:[–\-](\d+))?/);
+  if(!m) return {min:8,max:12};
+  return {min:parseInt(m[1]),max:parseInt(m[2]||m[1])};
+}
+function getCoachTip(exKey){
+  const ex=EX[exKey]; if(!ex) return null;
+  const hist=(getElog()[exKey]||[]).slice(0,5);
+  if(hist.length<2) return null;
+  const range=_parseRepRange(ex.sets);
+  const r0=hist[0];
+  // Stagnation: 4+ sessions identical kg + reps
+  if(hist.length>=4&&hist.slice(0,4).every(r=>r.kg===r0.kg&&r.reps===r0.reps))
+    return {icon:'🔄',msg:`קיפאון — 4 אימונים ב-${r0.kg}ק"ג × ${r0.reps} חזרות. שנה תרגיל או עצימות.`,type:'change'};
+  // Weight increase: last 2+ sessions at or above max reps, same kg
+  const topSessions=hist.filter(r=>r.reps>=range.max);
+  if(topSessions.length>=2&&hist[0].kg===hist[1].kg)
+    return {icon:'⬆️',msg:`מעולה — ${topSessions.length} אימונים ב-${r0.reps}+ חזרות. הגיע הזמן להעלות +2.5ק"ג!`,type:'increase'};
+  // One more: last session hit max
+  if(hist[0].reps>=range.max)
+    return {icon:'💪',msg:`אימון מצוין (${r0.reps} חזרות)! עוד אימון אחד כזה ותעלה משקל.`,type:'almost'};
+  // Too heavy: last 2 sessions below min reps
+  if(hist.slice(0,2).every(r=>r.reps<range.min))
+    return {icon:'⬇️',msg:`המשקל כבד מדי (${r0.reps} חזרות, מטרה ${range.min}+). נסה להוריד 2.5ק"ג.`,type:'decrease'};
+  return null;
 }
 
 const WORKOUT_ORDER=[
@@ -2634,6 +2676,19 @@ let _gymStopwatchIv=null;
 let _gymPendingSetKey=null;
 let _gymPendingSetIdx=0;
 // Integrated gym rest timer
+function playBeep(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [0,0.28].forEach(t=>{
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value=880;
+      g.gain.setValueAtTime(0.35,ctx.currentTime+t);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+t+0.22);
+      o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+0.25);
+    });
+  }catch(e){}
+}
 let _gymTimerIv=null;
 let _gymTimerRemain=0;
 let _gymTimerTotal=0;
@@ -2796,6 +2851,7 @@ function gymPickTimer(sec){
       const timeEl=document.getElementById('gym-ring-text');
       if(timeEl) timeEl.textContent='GO';
       if(navigator.vibrate) navigator.vibrate([200,100,200,100,200]);
+      playBeep();
     }
   },1000);
 }
@@ -3611,7 +3667,19 @@ function renderWeeklyReport(){
           <div style="font-size:.6rem;color:var(--muted);">${days[i]}</div>
         </div>`;
       }).join('')}
-    </div>`;
+    </div>
+    ${(()=>{
+      const tips=Object.keys(EX).map(k=>({key:k,tip:getCoachTip(k)})).filter(x=>x.tip);
+      if(!tips.length) return '';
+      return `<div style="margin-top:16px;">
+        <div style="font-size:.75rem;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px;">💡 המלצות מאמן</div>
+        ${tips.map(x=>`<div class="coach-tip coach-tip--${x.tip.type}" style="margin-bottom:6px;">
+          <span class="ct-icon">${x.tip.icon}</span>
+          <span style="font-size:.72rem;font-weight:600;color:var(--text);margin-left:4px;">${EX[x.key].name}:</span>
+          <span class="ct-msg">${x.tip.msg}</span>
+        </div>`).join('')}
+      </div>`;
+    })()}`;
 }
 
 // ═══════════════════════════════════════════════════
