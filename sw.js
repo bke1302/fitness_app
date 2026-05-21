@@ -1,25 +1,11 @@
-const CACHE = 'protocolos-v1';
-const ASSETS = [
-  '/fitness_app/',
-  '/fitness_app/index.html',
-  '/fitness_app/app.js',
-  '/fitness_app/styles.css',
-  '/fitness_app/manifest.json',
-  '/fitness_app/sw.js',
-  '/fitness_app/icons/icon-72.png',
-  '/fitness_app/icons/icon-96.png',
-  '/fitness_app/icons/icon-128.png',
-  '/fitness_app/icons/icon-144.png',
-  '/fitness_app/icons/icon-152.png',
-  '/fitness_app/icons/icon-192.png',
-  '/fitness_app/icons/icon-384.png',
-  '/fitness_app/icons/icon-512.png'
-];
+const CACHE = 'protocolos-v2';
 
-// Install — cache all assets
+// Install — cache app shell only; Vite-hashed assets cached dynamically on fetch
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then(c => c.addAll(['/fitness_app/', '/fitness_app/index.html']))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -30,7 +16,6 @@ self.addEventListener('activate', e => {
       Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
     ).then(() => {
       self.clients.claim();
-      // Notify all clients that a new version is active
       return self.clients.matchAll({type:'window'}).then(clients => {
         clients.forEach(client => client.postMessage({type:'SW_UPDATED',version:CACHE}));
       });
@@ -38,9 +23,8 @@ self.addEventListener('activate', e => {
   );
 });
 
-// Fetch — cache first, fallback to network
+// Fetch — cache first, fallback to network; dynamically cache new assets
 self.addEventListener('fetch', e => {
-  // Skip non-GET and cross-origin requests
   if(e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
   if(url.origin !== location.origin) return;

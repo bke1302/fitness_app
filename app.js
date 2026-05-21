@@ -4215,3 +4215,35 @@ function getWorkoutFreqLabel(freq,split){
   if(freq===6) return '6×/שבוע — PPL×2';
   return `${freq}×/שבוע`;
 }
+
+// ─── EXPOSE GLOBALS FOR HTML INLINE HANDLERS ────────────────────────────────
+// index.html has 137 inline onclick= handlers — these must remain on window
+// when app.js runs as an ES module (type="module" is function-scoped)
+Object.assign(window,{
+  openModal,closeModal,closeModalBg,closeAltModal,
+  showPanel,renderExSearch,closeExSearch,
+  addWaterCup,removeWaterCup,
+  toggleHabit,
+  startGymMode,confirmCloseGymMode,gymNext,gymPrev,
+  gymPickTimer,cancelGymTimer,toggleTempo,setRPE,
+  closeCelebration,
+  saveSettingsForm,updateBMRPreview,selectSettingsMC,toggleSettingsChol,
+  testApiKey,exportData,importData,toggleTheme,
+  showOnboarding,showOnboardingForNew,
+  selectGoal,selectMealCount,toggleChol,selectActivity,
+  obNext,obBack,selectObFreq,selectObSplit,obFinish,
+  onTimerBtnClick,pickTimer,
+  closeShareModal,downloadShareCard,nativeShare,
+  openShareOptions,closeShareOptions,openShareModal,
+  shareStatsCard,shareWhatsApp,shareNativeOrDownload,downloadStatsCard,
+  openPlateCalc,closePlateCalc,calcPlates,
+  open1RMCalc,close1RMCalc,render1RM,
+  addWeightForm,saveMeasurementFull,updateNutritionTiming,
+  elogSave,elogAdjust,swapMeal,selectFood,
+  selectRecovery,submitRecovery,bossAddProgress,dismissDeload,
+  toggleSidebar,openSidebar,closeSidebar,
+  switchUser,showAlternatives,savePRFromModal,
+  dismissInstallBanner,
+});
+
+export {};
