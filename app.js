@@ -196,7 +196,27 @@ const EX = {
   farmerWalk:{name:'Farmer\'s Carry',en:'Farmer\'s Walk',e:'🚜',cat:'אחיזה + ליבה',sets:'3×30–45 שנ׳',rest:'60 שנ׳',lvl:'פונקציונלי',
     desc:'הליכה עם משקולות כבדות. מחזק אחיזה, ליבה, שכמות ושרירי יציבה.',
     muscles:'Grip strength, Trapezius, Core, Erector Spinae.',
-    tips:['גב ישר, כתפיים מאחורה','צעדים קצרים ומהירים','עד קצה האולם וחזרה','המשקולות לא נוגעות בגוף','כשהאחיזה נשברת — עצור']}
+    tips:['גב ישר, כתפיים מאחורה','צעדים קצרים ומהירים','עד קצה האולם וחזרה','המשקולות לא נוגעות בגוף','כשהאחיזה נשברת — עצור']},
+  bulgSplit:{name:'סקוואט בולגרי',en:'Bulgarian Split Squat',e:'🦵',cat:'ירכיים',
+    sets:'3×10 לצד',rest:'90 שנ׳',lvl:'בינוני',
+    desc:'מלך תרגילי הרגל החד-צדדיים — מבדיל בין הרגליים ומחזק יציבות.',
+    muscles:'קוואדריצפס, גלוטאוס, המסטרינג, שרירי יציבה.',
+    tips:['שים רגל אחורית על ספסל בגובה הברך','ברך קדמית לא עוברת את האצבעות','גב ישר לאורך כל התנועה','ירד לאט — 2–3 שניות']},
+  closeGripBench:{name:'לחיצת חזה אחיזה צרה',en:'Close Grip Bench Press',e:'💪',cat:'טריצפס',
+    sets:'4×8–10',rest:'90 שנ׳',lvl:'כבד',
+    desc:'תרגיל הבסיס לטריצפס — עומס גבוה, טווח תנועה מלא.',
+    muscles:'טריצפס (ראשי), חזה תיכוני, כתפיים קדמיות.',
+    tips:['ידיים ברוחב כתפיים — לא צר מדי','מרפקים קרוב לגוף','הורד לחזה בשליטה','אל תנעל מרפקים בפסגה']},
+  ezCurl:{name:'כפיפות מוט EZ',en:'EZ Bar Curl',e:'🏋️',cat:'בייסס',
+    sets:'4×10–12',rest:'75 שנ׳',lvl:'בינוני',
+    desc:'EZ bar מפחית עומס על המפרק ומאפשר כיווץ מלא יותר של הביצפס.',
+    muscles:'ביצפס (שני ראשים), ברכיאליס.',
+    tips:['אחיזה ב-45 מעלות על המוט','מרפקים קבועים לצד הגוף','עלה מהר, ירד לאט (2 שנ)','כיווץ מלא בפסגה']},
+  cableCurl:{name:'כפיפות כבל עמידה',en:'Standing Cable Curl',e:'🔗',cat:'בייסס',
+    sets:'3×15',rest:'60 שנ׳',lvl:'בידוד',
+    desc:'כבל שומר על מתח קבוע לאורך כל טווח התנועה — שאב דם מושלם לסיום.',
+    muscles:'ביצפס, ברכיאליס.',
+    tips:['זרוע ישרה לגמרי בתחתית','כיווץ מלא בפסגה','תנועה איטית ומבוקרת','אפשר לעשות חד-צדדי']}
 };
 
 const EX_YT={
@@ -4121,7 +4141,19 @@ const WORKOUT_PLANS={
     ],
     schedule:'א׳ Push | ג׳ Pull | ה׳ Legs'
   },
-  4:null,
+  4:{
+    days:[
+      {id:'push',label:'PUSH + רגליים (קוואדס)',shortLabel:'PUSH',color:'#FF375F',
+       exercises:['benchPress','squat','ohp','inclineBench','lateralRaise','triPushdown']},
+      {id:'pull',label:'PULL + רגליים (אחורי)',shortLabel:'PULL',color:'#5AC8FA',
+       exercises:['rdl','pullup','bentRow','facePull','bbCurl','hammerCurl']},
+      {id:'legs',label:'LEGS — יום רגליים מלא',shortLabel:'LEGS',color:'#BF5AF2',
+       exercises:['legPress','bulgSplit','legCurl','hipThrust','legExt','calfRaise']},
+      {id:'arms',label:'ARMS — זרועות',shortLabel:'ARMS',color:'#FFD60A',
+       exercises:['closeGripBench','ezCurl','skullCrusher','inclineCurl','triPushdown','cableCurl']},
+    ],
+    schedule:'א׳ Push | ב׳ Pull | ד׳ Legs | ה׳ Arms'
+  },
   5:{
     days:[
       {id:'push',label:'PUSH — כבד',shortLabel:'PUSH',color:'#FF375F',
