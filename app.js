@@ -260,7 +260,10 @@ function openModal(key){
   const e=EX[key]; if(!e)return;
   _currentExKey = key;
   // cinematic hero
-  const cs=CAT_STYLE[e.cat]||CAT_STYLE.PUSH;
+  const _catMap={'ירכיים':'LEGS','ישבן':'LEGS','קוואדס':'LEGS','המסטרינג':'LEGS',
+    'טריצפס':'PUSH','כתפיים':'PUSH','חזה':'PUSH',
+    'גב':'PULL','בייסס':'PULL','ביצפס':'PULL'};
+  const cs=CAT_STYLE[e.cat]||CAT_STYLE[_catMap[e.cat]]||CAT_STYLE.PUSH;
   document.getElementById('m-hero-bg').style.background=cs.grad;
   document.getElementById('m-hero-wm').textContent=e.e;
   document.getElementById('m-hero-cat').textContent=e.cat+' DAY';
@@ -2611,6 +2614,9 @@ let _chatRendered=false;
 
 function renderChatPanel(){
   const wrap=document.getElementById('chat-content'); if(!wrap) return;
+  if(!_chatHistory.length){
+    try{_chatHistory=JSON.parse(localStorage.getItem('pf_chat')||'[]');}catch(e){_chatHistory=[];}
+  }
   const s=getSettings();
   const apiKey=sessionStorage.getItem('proFit_apiKey')||'';
   const foodLog=getFoodLog();
@@ -2720,6 +2726,7 @@ async function sendChat(){
     const offline=offlineAnswer(_chatHistory[_chatHistory.length-1]?.content||'');
     _chatHistory.push({role:'assistant',content:'📵 אין חיבור לרשת. תשובה מקומית:\n\n'+offline});
   }
+  _safeSet('pf_chat',JSON.stringify(_chatHistory.slice(-20)));
   renderChatPanel();
 }
 
