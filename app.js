@@ -641,10 +641,10 @@ function calcNutrition(u){
   const tdee=Math.round(bmr*(u.activity||1.55));
   const surplusMap={lean_bulk:350,bulk:600,cut:-400,maintain:0};
   const surplus=surplusMap[u.goal||'lean_bulk']??350;
-  const target=u.calories||Math.round(tdee+surplus);
+  const target=Math.max(1200,u.calories||Math.round(tdee+surplus));
   const protein=Math.round((u.weight||75)*2.5);
   const fat=Math.round(target*0.27/9);
-  const carbs=Math.round((target-protein*4-fat*9)/4);
+  const carbs=Math.max(0,Math.round((target-protein*4-fat*9)/4));
   return{bmr,tdee,target,protein,fat,carbs};
 }
 
@@ -1000,6 +1000,8 @@ function switchUser(id){
   applyUserConditions(u);
   applySettings(getSettings());
   prefillSettingsForm();
+  renderAdaptivePanels();
+  initTodayHero();
   showToast('עברת ל-'+u.name+' 👤');
 }
 
@@ -2580,6 +2582,7 @@ function addFoodEntry(){
   if(!_selectedFood) return;
   const qty=parseFloat(document.getElementById('food-qty')?.value)||1;
   const log=getFoodLog();
+  if(log.length>=30){ showToast('הגעת למגבלת 30 רשומות ביום'); return; }
   log.push({name:_selectedFood.name,qty,cal:_selectedFood.cal*qty,p:_selectedFood.p*qty,c:_selectedFood.c*qty,f:_selectedFood.f*qty});
   saveFoodLog(log);
   _selectedFood=null;
@@ -2597,6 +2600,7 @@ function addCustomFood(){
   const f=parseFloat(document.getElementById('cf-f')?.value)||0;
   if(!name||!cal) return;
   const log=getFoodLog();
+  if(log.length>=30){ showToast('הגעת למגבלת 30 רשומות ביום'); return; }
   log.push({name,qty:1,cal,p,c,f});
   saveFoodLog(log);
   renderFoodPanel();
@@ -4119,6 +4123,13 @@ function downloadStatsCard(){
 // MULTI-FREQUENCY WORKOUT PLANS
 // ═══════════════════════════════════════════════════
 const WORKOUT_PLANS={
+  1:{
+    days:[
+      {id:'push',label:'Full Body — אימון שבועי',shortLabel:'FULL',color:'#22C55E',
+       exercises:['squat','benchPress','bentRow','ohp','rdl','bbCurl','triPushdown']},
+    ],
+    schedule:'פעם בשבוע — Full Body (מומלץ: רביעי)'
+  },
   2:{
     days:[
       {id:'push',label:'יום A — Full Body',shortLabel:'יום A',color:'#FF375F',
@@ -4223,7 +4234,7 @@ function renderAdaptivePanels(){
   const split=u?.workout_split||null;
   const planKey=freq===3?(split||'3abc'):freq;
   const plan=WORKOUT_PLANS[planKey];
-  if(!plan) return;
+  if(!plan){ showToast('תוכנית אימון לא זמינה לתדירות זו'); return; }
   const {days}=plan;
   const allIds=['push','pull','legs','arms'];
   allIds.forEach((pid,i)=>{
