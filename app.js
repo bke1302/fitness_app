@@ -351,7 +351,7 @@ function closeModal(){
   setTimeout(()=>{overlay.classList.remove('open','closing');document.body.style.overflow='';},220);
 }
 function closeModalBg(ev){if(ev.target.id==='modal-overlay')closeModal();}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();},{passive:true});
 
 // ─── TOAST ────────────────────────────────────────────────────────────────
 function showToast(msg,duration=2800){
@@ -914,7 +914,7 @@ const MEAL_FOOD_ALTS = {
 
 function swapMeal(mealIdx){
   const key='pf_meal_swaps';
-  const swaps=JSON.parse(localStorage.getItem(key)||'{}');
+  const swaps=_getJSON(key,{});
   const alts=MEAL_FOOD_ALTS[mealIdx]||[];
   if(!alts.length) return;
   const cur=swaps[mealIdx]||0;
@@ -1005,7 +1005,7 @@ function renderNutritionPanel(){
   const meals=getMealPlan(u,n);
   const cont=document.getElementById('meals-container');
   if(!cont) return;
-  const swaps=JSON.parse(localStorage.getItem('pf_meal_swaps')||'{}');
+  const swaps=_getJSON('pf_meal_swaps',{});
   cont.innerHTML=meals.map((m,i)=>_buildMealCard(m,i,n,swaps)).join('');
 
   applySettings({...getSettings(),calories:n.target,weight:u.weight});
@@ -1408,7 +1408,7 @@ function saveModalSetLog(key,nSets){
     return;
   }
   // Save to historical log
-  const all=JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}');
+  const all=_getJSON(SETLOG_KEY,{});
   const arr=all[key]||[];
   const today=todayStr();
   const filtered=arr.filter(s=>s.date!==today);
@@ -1586,7 +1586,7 @@ function getUnlockedAchievements(){
 
 function checkNewAchievements(){
   const ACH_KEY='pf_achievements_seen';
-  const seen=new Set(JSON.parse(localStorage.getItem(ACH_KEY)||'[]'));
+  const seen=new Set(_getJSON(ACH_KEY,[]));
   const unlocked=getUnlockedAchievements();
   const newOnes=unlocked.filter(a=>!seen.has(a.id));
   if(newOnes.length>0){
@@ -1638,7 +1638,7 @@ function updateStreak(){
 // ─── HABITS ──────────────────────────────────────────────────────────────
 const HABIT_KEY='pf_habits';
 function getHabitsToday(){
-  const stored=JSON.parse(localStorage.getItem(HABIT_KEY)||'{}');
+  const stored=_getJSON(HABIT_KEY,{});
   if(stored.date===todayStr()) return stored.checked||[false,false,false,false,false];
   return [false,false,false,false,false];
 }
@@ -1692,6 +1692,8 @@ function renderWater(){
   const el=document.getElementById('water-display');
   const bar=document.getElementById('water-bar');
   if(el) el.textContent=cups;
+  const wd=document.getElementById('water-dash-display');
+  if(wd) wd.textContent=cups;
   if(bar) bar.style.width=Math.min(100,Math.round((cups/CONFIG.WATER_GOAL)*100))+'%';
 }
 
@@ -2015,6 +2017,7 @@ function addWeightForm(){
   // Sync latest weight to active user profile so BMR stays current
   const _au=getActiveUser();
   if(_au){ _au.weight=kg; const us=getUsers(); const idx2=us.findIndex(u=>u.id===_au.id); if(idx2>=0){us[idx2]=_au; localStorage.setItem(USERS_KEY,JSON.stringify(us)); invalidateUserCache();} }
+  showToast('✅ משקל נשמר — '+kg+' ק"ג');
   renderWLog(); renderWChart();
 }
 function deleteWEntry(date){
@@ -2028,7 +2031,7 @@ function renderWLog(){
   if(!log.length){el.innerHTML='<div style="color:var(--muted);font-size:.85rem;padding:6px 0;">אין רשומות עדיין — הוסף מדידה ראשונה!</div>';return;}
   const sorted=log.slice().sort((a,b)=>a.date.localeCompare(b.date));
   const first=sorted[0].kg, latest=sorted[sorted.length-1].kg;
-  const pct=((latest-first)/first*100);
+  const pct=first>0?((latest-first)/first*100):0;
   const pctStr=(pct>=0?'+':'')+pct.toFixed(1)+'%';
   const pctColor=pct>0?'var(--red)':pct<0?'var(--lime)':'var(--muted)';
   const u=getActiveUser();
@@ -2277,7 +2280,7 @@ function buildSetLogHTML(key,nSets){
 }
 
 function prefillSetLog(key,nSets){
-  const history=JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}')[key]||[];
+  const history=(_getJSON(SETLOG_KEY,{}))[key]||[];
   const last=Array.isArray(history)&&history[0];
   // Support both formats: new [{date,sets:[{kg,reps}]}] and old [{kg,reps}]
   const saved=Array.isArray(last?.sets)?last.sets:(Array.isArray(history)&&history[0]?.kg!=null?history:[]);
@@ -2300,7 +2303,7 @@ function saveSetLog(key,nSets){
     if(kg>bestKg){bestKg=kg;bestReps=reps;}
   }
   // Save in new format {date, sets} — compatible with saveModalSetLog
-  const all=JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}');
+  const all=_getJSON(SETLOG_KEY,{});
   const arr=(all[key]||[]).filter(s=>s.date&&s.date!==todayStr());
   arr.unshift({date:todayStr(),sets});
   all[key]=arr.slice(0,20);
@@ -2793,7 +2796,7 @@ function addCustomFood(){
   const p=parseFloat(document.getElementById('cf-p')?.value)||0;
   const c=parseFloat(document.getElementById('cf-c')?.value)||0;
   const f=parseFloat(document.getElementById('cf-f')?.value)||0;
-  if(!name||!cal) return;
+  if(!name||!cal){ showToast('⚠️ שם וקלוריות הם שדות חובה','warn'); return; }
   const log=getFoodLog();
   if(log.length>=30){ showToast('הגעת למגבלת 30 רשומות ביום'); return; }
   log.push({name,qty:1,cal,p,c,f});
@@ -3787,7 +3790,7 @@ const RPE_KEY='pf_rpe';
 function setRPE(v){
   document.querySelectorAll('.rpe-btn').forEach(b=>b.classList.toggle('sel',+b.dataset.v===v));
   const today=todayStr();
-  const rpe=JSON.parse(localStorage.getItem(RPE_KEY)||'{}');
+  const rpe=_getJSON(RPE_KEY,{});
   if(!rpe[today]) rpe[today]=[];
   rpe[today].push({t:new Date().toTimeString().slice(0,5),v});
   localStorage.setItem(RPE_KEY,JSON.stringify(rpe));
@@ -3832,10 +3835,10 @@ function exportData(){
     settings: getSettings(),
     log: getLog(),
     prs: getPRs(),
-    elog: JSON.parse(localStorage.getItem(ELOG_KEY)||'{}'),
-    setlog: JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}'),
-    wlog: JSON.parse(localStorage.getItem(WLOG_KEY)||'[]'),
-    measurements: JSON.parse(localStorage.getItem(MEAS_KEY)||'[]'),
+    elog: _getJSON(ELOG_KEY,{}),
+    setlog: _getJSON(SETLOG_KEY,{}),
+    wlog: _getJSON(WLOG_KEY,[]),
+    measurements: _getJSON(MEAS_KEY,[]),
     exported: new Date().toISOString()
   };
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -4556,6 +4559,7 @@ Object.assign(window,{
   addFoodEntry,addCustomFood,
   closeGymMode,
   sendChat,
+  saveGymSet,openGymSetPopup,
 });
 
 export {};

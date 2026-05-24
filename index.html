@@ -176,7 +176,7 @@
           <div style="width:8px;height:8px;border-radius:50%;background:#06B6D4;flex-shrink:0;"></div>
           <div>
             <div style="font-size:.65rem;color:var(--muted);">מים</div>
-            <div style="font-size:.88rem;font-weight:700;color:#F8FAFC;">5 <span style="color:var(--muted);font-weight:400;">/ 10 כוסות</span></div>
+            <div style="font-size:.88rem;font-weight:700;color:var(--text);"><span id="water-dash-display">0</span> <span style="color:var(--muted);font-weight:400;">/ 10 כוסות</span></div>
           </div>
         </div>
       </div>
@@ -243,7 +243,7 @@
           <span style="font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;">מים</span>
           <span style="font-size:.9rem;">💧</span>
         </div>
-        <div style="font-size:1.35rem;font-weight:800;color:#F8FAFC;line-height:1;">
+        <div style="font-size:1.35rem;font-weight:800;color:var(--text);line-height:1;">
           <span id="water-display">0</span><span style="font-size:.75rem;font-weight:500;color:var(--muted);"> כוסות</span>
         </div>
         <div style="font-size:.62rem;color:var(--muted);margin-top:3px;">מתוך 10 מטרה · 2.5 ליטר</div>
@@ -265,23 +265,23 @@
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" id="habit-cb-0" onchange="toggleHabit(0)" style="accent-color:#22C55E;width:16px;height:16px;cursor:pointer;"/>
+          <input type="checkbox" id="habit-cb-0" onchange="toggleHabit(0)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
           <span id="habit-lbl-0" style="font-size:.82rem;color:var(--text,#F8FAFC);">אימון בוצע</span>
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" id="habit-cb-1" onchange="toggleHabit(1)" style="accent-color:#22C55E;width:16px;height:16px;cursor:pointer;"/>
+          <input type="checkbox" id="habit-cb-1" onchange="toggleHabit(1)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
           <span id="habit-lbl-1" style="font-size:.82rem;color:var(--text,#F8FAFC);">ארוחת חלבון × 4</span>
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" id="habit-cb-2" onchange="toggleHabit(2)" style="accent-color:#22C55E;width:16px;height:16px;cursor:pointer;"/>
+          <input type="checkbox" id="habit-cb-2" onchange="toggleHabit(2)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
           <span id="habit-lbl-2" style="font-size:.82rem;color:var(--text,#F8FAFC);">10 כוסות מים (2.5ל׳)</span>
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" id="habit-cb-3" onchange="toggleHabit(3)" style="accent-color:#22C55E;width:16px;height:16px;cursor:pointer;"/>
+          <input type="checkbox" id="habit-cb-3" onchange="toggleHabit(3)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
           <span id="habit-lbl-3" style="font-size:.82rem;color:var(--text,#F8FAFC);">שינה 7+ שעות</span>
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" id="habit-cb-4" onchange="toggleHabit(4)" style="accent-color:#22C55E;width:16px;height:16px;cursor:pointer;"/>
+          <input type="checkbox" id="habit-cb-4" onchange="toggleHabit(4)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
           <span id="habit-lbl-4" style="font-size:.82rem;color:var(--text,#F8FAFC);">רשמת משקלים</span>
         </label>
       </div>
@@ -1194,14 +1194,14 @@
     </div>
 
     <!-- Workout Journal CTA -->
-    <div onclick="showPanel('elog',null);setMobileNav('progress');" style="background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(59,130,246,.06));border:1.5px solid rgba(34,197,94,.25);border-radius:16px;padding:16px 18px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+    <button type="button" onclick="showPanel('elog',null);setMobileNav('progress');" style="background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(59,130,246,.06));border:1.5px solid rgba(34,197,94,.25);border-radius:16px;padding:16px 18px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;text-align:right;font-family:var(--font);">
       <div>
-        <div style="font-size:.65rem;color:#22C55E;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">יומן אימונים</div>
-        <div style="font-size:1rem;font-weight:800;color:#F8FAFC;">משקלים · סטים · חזרות</div>
+        <div style="font-size:.65rem;color:var(--lime);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">יומן אימונים</div>
+        <div style="font-size:1rem;font-weight:800;color:var(--text);">משקלים · סטים · חזרות</div>
         <div style="font-size:.72rem;color:var(--muted);margin-top:3px;">מעקב PR לכל תרגיל לאורך זמן</div>
       </div>
       <div style="font-size:1.8rem;">📒</div>
-    </div>
+    </button>
     <div class="card">
       <div class="card-head"><h2>📊 גרף משקל גוף</h2><span class="badge badge-cyan">לאורך זמן</span></div>
       <div class="card-body">
@@ -1412,7 +1412,7 @@
             </div>
           </div>
           <div style="margin-top:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-            <button class="settings-save" onclick="saveSettingsForm()">שמור הגדרות</button>
+            <button id="btn-save-settings" class="settings-save" onclick="saveSettingsForm()">שמור הגדרות</button>
             <button id="theme-btn" onclick="toggleTheme()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text);border-radius:10px;padding:10px 18px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .18s;">☀️ מסך בהיר / 🌑 AMOLED</button>
           </div>
           <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
@@ -1690,7 +1690,7 @@
 <div class="onboard-overlay" id="onboard-overlay" style="display:none;">
   <div class="onboard-box">
     <div class="onboard-header">
-      <div class="onboard-logo" style="font-size:1.1rem;letter-spacing:-.5px;">FIT OR BE DEFEATED</div>
+      <div class="onboard-logo" style="font-size:1.1rem;letter-spacing:-.5px;">ProtocolOS</div>
       <div class="onboard-sub">תוכנית אימונים ותזונה אישית</div>
     </div>
     <div class="ob-steps" id="ob-steps-indicator">
@@ -1702,20 +1702,20 @@
     <div class="onboard-step active" id="ob-step-1">
       <div class="onboard-step-title">מי אתה? 👋</div>
       <div class="onboard-field" style="margin-bottom:14px;">
-        <label>שם</label>
+        <label for="ob-name">שם</label>
         <input id="ob-name" type="text" placeholder="השם שלך" style="text-align:right;"/>
       </div>
       <div class="onboard-grid">
-        <div class="onboard-field"><label>גיל</label><input id="ob-age" type="number" min="16" max="80" placeholder="30"/></div>
-        <div class="onboard-field"><label>משקל (ק״ג)</label><input id="ob-weight" type="number" min="30" max="250" step="0.1" placeholder="75"/></div>
-        <div class="onboard-field"><label>גובה (ס״מ)</label><input id="ob-height" type="number" min="100" max="230" placeholder="175"/></div>
+        <div class="onboard-field"><label for="ob-age">גיל</label><input id="ob-age" type="number" min="13" max="80" placeholder="30"/></div>
+        <div class="onboard-field"><label for="ob-weight">משקל (ק״ג)</label><input id="ob-weight" type="number" min="30" max="250" step="0.1" placeholder="75"/></div>
+        <div class="onboard-field"><label for="ob-height">גובה (ס״מ)</label><input id="ob-height" type="number" min="100" max="230" placeholder="175"/></div>
         <div class="onboard-field">
-          <label>מין</label>
+          <label for="ob-gender">מין</label>
           <select id="ob-gender" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border2);border-radius:10px;padding:11px 14px;color:var(--text);font-size:.95rem;">
             <option value="m">זכר</option><option value="f">נקבה</option>
           </select>
         </div>
-        <div class="onboard-field"><label>שעת אימון (בד"כ)</label><input id="ob-workout-time" type="time" value="18:00" style="color-scheme:dark;"/></div>
+        <div class="onboard-field"><label for="ob-workout-time">שעת אימון (בד"כ)</label><input id="ob-workout-time" type="time" value="18:00" style="color-scheme:dark;"/></div>
       </div>
     </div>
     <div class="onboard-step" id="ob-step-2">
