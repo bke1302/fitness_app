@@ -8,7 +8,7 @@
   /* ── Borders ── */
   --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.10);
   /* ── Text — Slate hierarchy ── */
-  --text:#F8FAFC;--muted:#94A3B8;--muted2:#9AABBC;
+  --text:#F8FAFC;--muted:#A8B8CC;--muted2:#9AABBC;
   /* ── Primary — Performance Green (#22C55E WHOOP-style) ── */
   --lime:#22C55E;--lime-dim:rgba(34,197,94,.12);--lime-glow:rgba(34,197,94,.28);
   --green:#22C55E;--green-dim:rgba(34,197,94,.12);--green-glow:rgba(34,197,94,.28);
@@ -21,11 +21,11 @@
   --purple:#8B5CF6;--purple-glow:rgba(139,92,246,.22);
   --cyan:#06B6D4;--cyan-glow:rgba(6,182,212,.22);
   --orange:#F97316;
-  /* ── Per-workout color themes ── */
-  --push-c:#EF4444;--push-g:rgba(239,68,68,.12);
-  --pull-c:#06B6D4;--pull-g:rgba(6,182,212,.12);
-  --legs-c:#8B5CF6;--legs-g:rgba(139,92,246,.12);
-  --arms-c:#F59E0B;--arms-g:rgba(245,158,11,.12);
+  /* ── Per-workout color themes (canonical — matches app.js WORKOUT_PLANS) ── */
+  --push-c:#FF375F;--push-g:rgba(255,55,95,.12);
+  --pull-c:#5AC8FA;--pull-g:rgba(90,200,250,.12);
+  --legs-c:#BF5AF2;--legs-g:rgba(191,90,242,.12);
+  --arms-c:#FFD60A;--arms-g:rgba(255,214,10,.12);
   /* ── Glass system ── */
   --glass:rgba(255,255,255,.04);--glass-b:rgba(255,255,255,.08);--glass-h:rgba(255,255,255,.06);
   /* ── Spacing scale ── */
@@ -990,6 +990,18 @@ select:invalid:not(:placeholder-shown){
 .elog-empty-sub{font-size:.86rem;color:var(--muted2);line-height:1.85;max-width:280px;margin-bottom:28px;}
 .elog-empty-cta{background:linear-gradient(135deg,var(--red),var(--purple));color:#fff;border:none;border-radius:999px;padding:12px 28px;cursor:pointer;font-family:var(--font-d);font-size:.95rem;font-weight:700;letter-spacing:.3px;transition:transform .18s var(--ease-spring),opacity .18s;}
 .elog-empty-cta:hover{opacity:.9;transform:translateY(-2px);}
+
+/* ─── Global empty state ─── */
+.empty-state{display:flex;flex-direction:column;align-items:center;text-align:center;padding:48px 24px;animation:cardStagger .4s var(--ease-out) both;}
+.empty-state-icon{font-size:3rem;margin-bottom:14px;opacity:.7;}
+.empty-state-title{font-family:var(--font-d);font-size:1.2rem;font-weight:800;margin-bottom:8px;}
+.empty-state-sub{font-size:.84rem;color:var(--muted);line-height:1.8;max-width:260px;}
+
+/* ─── Onboarding step indicator ─── */
+.ob-steps{display:flex;justify-content:center;gap:8px;margin-bottom:20px;}
+.ob-step-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);transition:background .3s,transform .3s;}
+.ob-step-dot.active{background:var(--lime);transform:scale(1.35);}
+.ob-step-dot.done{background:var(--lime);opacity:.45;}
 
 /* ─── 375px MOBILE BREAKPOINT ─── */
 

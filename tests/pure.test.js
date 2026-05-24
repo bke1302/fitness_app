@@ -41,7 +41,7 @@ describe('_parseRepRange', () => {
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 describe('CONFIG', () => {
   it('has WATER_GOAL = 10', () => { expect(CONFIG.WATER_GOAL).toBe(10); });
-  it('has MAX_ELOG_ENTRIES = 15', () => { expect(CONFIG.MAX_ELOG_ENTRIES).toBe(15); });
+  it('has MAX_ELOG_ENTRIES = 100', () => { expect(CONFIG.MAX_ELOG_ENTRIES).toBe(100); });
   it('has SPARKLINE_SESSIONS = 6', () => { expect(CONFIG.SPARKLINE_SESSIONS).toBe(6); });
   it('has COACH_STAGNATION = 4', () => { expect(CONFIG.COACH_STAGNATION).toBe(4); });
   it('has COACH_INCREASE_MIN = 2', () => { expect(CONFIG.COACH_INCREASE_MIN).toBe(2); });

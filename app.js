@@ -8,6 +8,16 @@
 // HTML escape utility — wrap user-supplied strings before injecting into innerHTML
 function _esc(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
+// ─── DOM helpers (reduce querySelector/getElementById repetition) ─────────────
+function _el(id){ return document.getElementById(id); }
+function _setText(id,val){ const e=_el(id); if(e) e.textContent=val; }
+function _setHTML(id,html){ const e=_el(id); if(e) e.innerHTML=html; }
+function _show(id){ const e=_el(id); if(e) e.style.display=''; }
+function _hide(id){ const e=_el(id); if(e) e.style.display='none'; }
+// ─── localStorage helpers ─────────────────────────────────────────────────────
+function _getJSON(key,fallback=null){ try{ return JSON.parse(localStorage.getItem(key)??'null')??fallback; }catch(e){ return fallback; } }
+function _setJSON(key,val){ _safeSet(key,JSON.stringify(val)); }
+
 // Audio context singleton
 let _audioCtx=null;
 function _getAudioCtx(){
@@ -31,7 +41,7 @@ function _safeSet(key,val){
 
 const CONFIG = {
   WATER_GOAL: 10,
-  MAX_ELOG_ENTRIES: 15,
+  MAX_ELOG_ENTRIES: 100,
   SPARKLINE_SESSIONS: 6,
   COACH_STAGNATION: 4,
   COACH_INCREASE_MIN: 2,
@@ -92,7 +102,7 @@ const EX = {
     desc:'חבל עדיף על ידית ישרה — מאפשר פיצול בסוף התנועה לבידוד מלא.',
     muscles:'Triceps Brachii — lateral head ראשי.',
     tips:['מרפקים קבועים לצדי הגוף','פצל את החבל בסוף התנועה','פשיטה מלאה — הרגש כיווץ','האט בחזרה']},
-  skullCrusher:{name:'Skull Crushers',en:'Lying EZ Bar Tricep Extension',e:'💀',cat:'טריצפס',sets:'3×10–12',rest:'75 שנ׳',lvl:'בינוני',
+  skullCrusher:{name:'מחאות טריצפס',en:'Lying EZ Bar Tricep Extension',e:'💀',cat:'טריצפס',sets:'3×10–12',rest:'75 שנ׳',lvl:'בינוני',
     desc:'שכיבה על ספסל, מוט EZ מוריד לטיפת ראש. מצוין ל-long head.',
     muscles:'Triceps Brachii — long head ראשי.',
     tips:['מוריד לאמצע הראש — לא לפנים','מרפקים קרובים זה לזה','מוט EZ נוח יותר לשורש כף יד','ירידה איטית']},
@@ -116,11 +126,11 @@ const EX = {
     desc:'כיפוף מהאגן בלבד. הטריגר הטוב ביותר לגב תחתון וירך אחורי.',
     muscles:'Hamstrings, Glutes, גב תחתון (Erector Spinae).',
     tips:['הורד מוט לאורך הרגל — ממש ליד העור','כופף מהאגן (hip hinge) — לא מהגב','הפסק כשמרגיש מתיחה, לא כאב','גב ישר לחלוטין — קריטי','משקל שמרני בהתחלה']},
-  bbCurl:{name:'כפיפות מוט EZ',en:'EZ Bar Curl',e:'💪',cat:'בייסס',sets:'4×8–10',rest:'75 שנ׳',lvl:'בינוני',
-    desc:'מוט EZ נוח יותר לשורש כף יד ומאפשר עומס גבוה יותר.',
+  bbCurl:{name:'כפיפות מוט ישר',en:'Barbell Curl',e:'💪',cat:'בייסס',sets:'4×8–10',rest:'75 שנ׳',lvl:'בינוני',
+    desc:'מוט ישר = supination מלאה של האמה — מגרה את הביצפס בצורה מיטבית.',
     muscles:'Biceps Brachii, Brachialis.',
     tips:['מרפקים קבועים בצדי הגוף','תנועה מלאה — מתח עד כיפוף מלא','האט בירידה','לא להשתמש בתנופה — גוף ישר']},
-  hammerCurl:{name:'פטיש',en:'Hammer Curl',e:'🔨',cat:'Brachialis',sets:'3×12',rest:'60 שנ׳',lvl:'בידוד',
+  hammerCurl:{name:'כפיפות פטיש',en:'Hammer Curl',e:'🔨',cat:'בראכיאליס',sets:'3×12',rest:'60 שנ׳',lvl:'בידוד',
     desc:'אחיזה ניטרלית. מחזק Brachialis שנמצא מתחת לבייסס ומרים אותה ויזואלית.',
     muscles:'Brachialis, Brachioradialis, Biceps.',
     tips:['כף יד פונה פנימה לאורך כל התרגיל','אפשר חילופין ימין-שמאל','גוף ישר, אל תשתמש בתנופה','כבל = מתח קבוע יותר ממשקולות']},
@@ -136,7 +146,7 @@ const EX = {
     desc:'בידוד ל-Quad. בסוף כל סט — החזק 2 שניות בפשיטה מלאה.',
     muscles:'Quadriceps — בידוד מלא.',
     tips:['ציר הברך מיושר עם ציר המכונה','תנועה שלמה מלאה','החזק 2 שנ׳ בחלק העליון','האט בהורדה']},
-  legCurl:{name:'כפיפות רגליים — שכיבה',en:'Lying Leg Curl',e:'🔄',cat:'Hamstrings',sets:'3×12',rest:'60 שנ׳',lvl:'בידוד',
+  legCurl:{name:'כפיפות רגליים — שכיבה',en:'Lying Leg Curl',e:'🔄',cat:'ירך אחורי',sets:'3×12',rest:'60 שנ׳',lvl:'בידוד',
     desc:'בידוד לירך האחורי — חיוני לאיזון ולמניעת פציעות ברכיים.',
     muscles:'Biceps Femoris, Semitendinosus.',
     tips:['שכב שטוח — רק הרגל זזה','תנועה מלאה','האט בהורדה','לפחות 3 סטים — שריר מוזנח לעיתים']},
@@ -224,7 +234,7 @@ const EX_YT={
   inclineBench:'incline bench press form tutorial',
   cableFlye:'cable chest fly exercise tutorial form',
   ohp:'overhead press military press form tutorial',
-  lateralRaise:'lateral raise shoulder exercise tutorial',
+  lateralRaise:'lateral raise shoulder proper form tutorial',
   triPushdown:'tricep pushdown cable exercise form',
   skullCrusher:'skull crusher EZ bar tricep tutorial',
   pullup:'pull up chin up proper form tutorial',
@@ -233,7 +243,7 @@ const EX_YT={
   facePull:'face pull cable rear delt exercise tutorial',
   rdl:'romanian deadlift RDL proper form tutorial',
   bbCurl:'barbell curl bicep exercise form tutorial',
-  hammerCurl:'hammer curl dumbbell exercise tutorial',
+  hammerCurl:'hammer curl dumbbell proper form tutorial',
   squat:'barbell squat proper form tutorial',
   legPress:'leg press machine proper form tutorial',
   legExt:'leg extension machine quad exercise tutorial',
@@ -242,9 +252,20 @@ const EX_YT={
   calfRaise:'standing calf raise exercise form tutorial',
   inclineCurl:'incline dumbbell curl bicep tutorial',
   ohTricep:'overhead tricep extension cable long head tutorial',
-  arnoldPress:'arnold press shoulder exercise tutorial',
-  frontRaise:'front raise shoulder exercise tutorial',
-  diamondPushup:'diamond push ups tricep exercise form',
+  arnoldPress:'arnold press shoulder proper form tutorial',
+  frontRaise:'front raise shoulder anterior deltoid proper form tutorial',
+  diamondPushup:'diamond push ups tricep exercise proper form tutorial',
+  hipThrust:'barbell hip thrust glute exercise proper form tutorial',
+  bulgSplit:'bulgarian split squat proper form tutorial',
+  closeGripBench:'close grip bench press tricep proper form tutorial',
+  ezCurl:'ez bar curl bicep proper form tutorial',
+  deadlift:'conventional deadlift proper form tutorial',
+  tBarRow:'t-bar row back exercise proper form tutorial',
+  seatedCalfRaise:'seated calf raise soleus exercise tutorial',
+  wristCurl:'barbell wrist curl forearm exercise proper form',
+  reverseWristCurl:'reverse wrist curl forearm extensor proper form tutorial',
+  farmerWalk:'farmers carry walk exercise proper form tutorial',
+  cableCurl:'standing cable curl bicep exercise proper form tutorial',
 };
 
 const CAT_STYLE={
@@ -663,7 +684,7 @@ const EX_ALTERNATIVES = {
   cableFlye:[{name:'פרפר עם משקולות',tag:'Dumbbell Fly — שכיבה'},{name:'Pec Deck מכונה',tag:'בידוד מושלם לחזה'},{name:'Push-up רחב',tag:'ללא ציוד'}],
   // ── כתפיים ──
   ohp:[{name:'Arnold Press',tag:'סיבוב פנימי/חיצוני — כיסוי מלא של כתף'},{name:'Machine Shoulder Press',tag:'בטוח יותר לגב תחתון'},{name:'DB Shoulder Press ישיבה',tag:'Seated DB Press — יציבות גבוהה'}],
-  lateralRaise:[{name:'הרמות צד עם משקולות',tag:'Dumbbell Lateral Raise'},{name:'Upright Row כבל',tag:'מגרה גם trapezius'},{name:'Machine Lateral Raise',tag:'בידוד מדויק'}],
+  lateralRaise:[{name:'הרמות צד עם משקולות',tag:'Dumbbell Lateral Raise — אותו בידוד'},{name:'Lateral Raise כבל חד-צדדי',tag:'Cable One-Arm Lateral — מתח קבוע'},{name:'Machine Lateral Raise',tag:'בידוד מדויק ללא תנופה'}],
   facePull:[{name:'Reverse Fly עם משקולות',tag:'Rear Delt Fly — שכיבה נוטה קדימה'},{name:'Band Face Pull',tag:'ריצועית — לכל מקום, ללא ציוד'},{name:'Rear Delt Machine',tag:'מכונה — בידוד מושלם'}],
   // ── גב ──
   pullup:[{name:'לט פולדאון',tag:'Lat Pulldown — אותו תנועה בישיבה'},{name:'Assisted Pull-up',tag:'מכונה עם עזר — לפיתוח כוח'},{name:'TRX Row',tag:'ישיבה נוטה — קל יותר'}],
@@ -674,17 +695,17 @@ const EX_ALTERNATIVES = {
   // ── רגליים ──
   squat:[{name:'לחיצת רגליים',tag:'Leg Press — ללא עומס על עמוד השדרה'},{name:'Goblet Squat',tag:'משקולת אחת — טוב לטכניקה'},{name:'Bulgarian Split Squat',tag:'חד-רגלי — פחות משקל, יותר עבודה'}],
   legPress:[{name:'סקוואט',tag:'Squat — כוח מלא'},{name:'Hack Squat',tag:'פחות עומס על גב תחתון'},{name:'Sissy Squat',tag:'בודד Quads — ללא ציוד'}],
-  rdl:[{name:'ליפט סומו',tag:'Sumo Deadlift — אחיזה רחבה, פחות גב'},{name:'Nordic Curl',tag:'Hamstrings ללא ציוד'},{name:'Leg Curl מכונה',tag:'בידוד Hamstrings'}],
+  rdl:[{name:'Rack Pull מגובה הברך',tag:'Rack Pull — פחות טווח, יותר גב תחתון'},{name:'Nordic Curl',tag:'Hamstrings ללא ציוד — הכי קשה'},{name:'Leg Curl מכונה',tag:'בידוד Hamstrings — בטוח לגב'}],
   legExt:[{name:'Sissy Squat',tag:'ללא ציוד — בידוד Quad מלא'},{name:'Wall Sit',tag:'איזומטרי — 60 שנ׳ בלבד'},{name:'Step-up על ספסל',tag:'פונקציונלי — מגייס גם ישבן'}],
   legCurl:[{name:'Nordic Curl',tag:'הכי קשה ללא ציוד — Hamstrings 100%'},{name:'Swiss Ball Leg Curl',tag:'כדור — אתגר שיווי משקל'},{name:'Good Morning',tag:'מוט על כתפיים — Hamstrings + גב תחתון'}],
   lunges:[{name:'Step-up על ספסל',tag:'פחות עומס על ברך — נוח יותר'},{name:'Walking Lunges',tag:'תנועה — שורף יותר קלוריות'},{name:'Reverse Lunge',tag:'פחות לחץ על ברך קדמית'}],
   hipThrust:[{name:'Glute Bridge',tag:'ללא ספסל — אותה תנועה על הרצפה'},{name:'Cable Kickback',tag:'כבל — בידוד ישבן ללא עומס על גב'},{name:'Donkey Kick',tag:'ללא ציוד — 15–20 חזרות לצד'}],
-  calfRaise:[{name:'Seated Calf Raise',tag:'Soleus — שריר עמוק, יושב בכיפוף ברך'},{name:'Donkey Calf Raise',tag:'נוטה קדימה — מתיחה עמוקה יותר'},{name:'Single-Leg Calf Raise',tag:'חד-רגלי — כפל העומס, ללא ציוד'}],
+  calfRaise:[{name:'Donkey Calf Raise',tag:'נוטה קדימה — מתיחה עמוקה ל-Gastrocnemius'},{name:'Seated Calf Raise',tag:'ישיבה = דגש על Soleus (שריר עמוק)'},{name:'Single-Leg Calf Raise',tag:'חד-רגלי ללא ציוד — כפל עומס'}],
   // ── ידיים ──
   bbCurl:[{name:'כפיפות משקולות',tag:'Dumbbell Curl — כל יד בנפרד'},{name:'Preacher Curl',tag:'מקנה גם ראש קצר בלבד — עיצוב'},{name:'כבל — כפיפות',tag:'Cable Curl — מתח קבוע'}],
   hammerCurl:[{name:'Incline Dumbbell Curl',tag:'נוטה אחורה — מתיחה מלאה ל-Long Head'},{name:'Cross-Body Hammer',tag:'חוצה גוף — דגש על Brachialis'},{name:'Cable Rope Curl',tag:'כבל חבל — מתח קבוע'}],
-  skullCrusher:[{name:'Dips',tag:'מקביל — טריצפס + חזה תחתון'},{name:'Overhead Dumbbell Extension',tag:'Long Head — משקולת'},{name:'Close-Grip Push-up',tag:'ללא ציוד — טריצפס'}],
-  triPushdown:[{name:'Overhead Cable Extension',tag:'Long Head — מתיחה מלאה'},{name:'Dips',tag:'משקל גוף — כל Tricep'},{name:'Kickbacks משקולות',tag:'בידוד — בחינם'}],
+  skullCrusher:[{name:'Overhead EZ Extension',tag:'Long Head — אותה תנועה מעל הראש'},{name:'Overhead Dumbbell Extension',tag:'Long Head — משקולת בשתי ידיים'},{name:'Close-Grip Push-up',tag:'ללא ציוד — טריצפס בידוד'}],
+  triPushdown:[{name:'Overhead Cable Extension',tag:'Long Head — מתיחה מלאה בכבל'},{name:'Kickbacks משקולות',tag:'בידוד טהור — ללא עומס אחר'},{name:'Close-Grip Push-up',tag:'ללא ציוד — טריצפס'}],
   // ── אמות ──
   wristCurl:[{name:'כפיפת פרק עם ריצועית',tag:'Resistance Band Wrist Curl'},{name:'אחיזת בקבוק מים',tag:'ללא ציוד — 3×60 שנ׳'},{name:'Farmer Hold',tag:'אחיזה סטטית — ניהול עומס'}],
   closeGripBench:[{name:'Diamond Push-up',tag:'ללא ציוד — טריצפס פנימי'},{name:'Dips במקביל',tag:'משקל גוף — כל ראשי הטריצפס'},{name:'Close-Grip Machine Press',tag:'מכונה — בטוח לפרקים'}],
@@ -692,6 +713,13 @@ const EX_ALTERNATIVES = {
   inclineCurl:[{name:'Concentration Curl',tag:'ריכוז — Long Head בידוד מלא'},{name:'Spider Curl',tag:'נוטה קדימה — Peak Bicep'},{name:'Cable Curl',tag:'כבל — מתח קבוע לאורך כל התנועה'}],
   ohTricep:[{name:'Overhead DB Extension',tag:'משקולת — Long Head'},{name:'French Press / EZ Overhead',tag:'מוט EZ — מתח בשיא'},{name:'Rope Overhead Extension',tag:'כבל חבל — מתח קבוע'}],
   bulgSplit:[{name:'Lunge עם משקולות',tag:'Dumbbell Lunge — פחות לחץ על גב'},{name:'Step-up על ספסל',tag:'פונקציונלי — נח יותר על ברך'},{name:'Single-Leg Press',tag:'חד-רגלי במכונה — בטוח למתחילים'}],
+  arnoldPress:[{name:'DB Shoulder Press ישיבה',tag:'Seated Dumbbell Press — כיסוי מלא ללא סיבוב'},{name:'Machine Shoulder Press',tag:'מכונה — בטוח לגב תחתון ולכתפיים'},{name:'OHP בישיבה',tag:'Seated Barbell Press — עומס גבוה יותר'}],
+  frontRaise:[{name:'Front Raise כבל נמוך',tag:'Cable Front Raise — מתח קבוע לאורך הטווח'},{name:'Plate Front Raise',tag:'דיסקית — אחיזה ניטרלית, קל יותר לשורש'},{name:'Incline Bench Front Raise',tag:'תמיכת גוף — מבטל תנופה לחלוטין'}],
+  diamondPushup:[{name:'Tricep Dips בין שני ספסלים',tag:'Bench Dips — נח יותר לשורשי כף יד'},{name:'Close-Grip Machine Press',tag:'מכונה — בידוד טריצפס בלי עומס כתפיים'},{name:'Overhead DB Tricep Extension',tag:'Long Head — מגייס גם ראש ארוך'}],
+  seatedCalfRaise:[{name:'Standing Calf Raise עם ברכיים כפופות',tag:'ברך כפופה = מדגיש Soleus כמו ישיבה'},{name:'Smith Machine Calf Raise בישיבה',tag:'יציב יותר, עמס גבוה יותר'},{name:'Resistance Band Calf Raise — ישיבה',tag:'ללא ציוד — ריצועית מתחת לברך'}],
+  reverseWristCurl:[{name:'Reverse Curl עם מוט EZ',tag:'EZ Bar — פחות עומס על המרפקים'},{name:'Hammer Curl',tag:'אחיזה ניטרלית — מגייס גם Extensor'},{name:'Resistance Band Reverse Curl',tag:'ריצועית — ללא ציוד, מתח עקבי'}],
+  farmerWalk:[{name:'Suitcase Carry',tag:'חד-צדדי — אתגר ליבה גדול יותר'},{name:'Plate Pinch Carry',tag:'אחיזת דיסקית — בידוד אצבעות'},{name:'Trap Bar Carry',tag:'Hex Bar — עמוד שדרה ניטרלי יותר'}],
+  cableCurl:[{name:'EZ Bar Curl',tag:'מוט EZ — יותר עומס, פחות עומס מרפק'},{name:'Preacher Curl',tag:'Scott Bench — בידוד מלא, ללא תנופה'},{name:'Concentration Curl',tag:'ריכוז — בידוד Long Head, ללא ציוד כבל'}],
 };
 
 function showAlternatives(exKey, exName){
@@ -1130,6 +1158,15 @@ function selectActivity(btn){
   btn.classList.add('sel');
   _obActivity=parseFloat(btn.dataset.act);
 }
+function _updateObDots(step){
+  for(let i=1;i<=4;i++){
+    const d=document.getElementById('ob-dot-'+i);
+    if(!d) continue;
+    d.classList.remove('active','done');
+    if(i<step) d.classList.add('done');
+    else if(i===step) d.classList.add('active');
+  }
+}
 function obNext(){
   if(_obStep===1){
     const name=(document.getElementById('ob-name')?.value||'').trim();
@@ -1151,6 +1188,7 @@ function obNext(){
   document.querySelectorAll('.onboard-step').forEach(s=>s.classList.remove('active'));
   document.getElementById('ob-step-'+_obStep)?.classList.add('active');
   document.querySelectorAll('.onboard-dot').forEach((d,i)=>{d.classList.toggle('active',i===_obStep-1);});
+  _updateObDots(_obStep);
   document.getElementById('ob-back').style.display='block';
   document.getElementById('ob-next').textContent=_obStep===4?'צור פרופיל ✓':'הבא →';
   // Show/hide split selector in step 4
@@ -1162,6 +1200,7 @@ function obBack(){
   document.querySelectorAll('.onboard-step').forEach(s=>s.classList.remove('active'));
   document.getElementById('ob-step-'+_obStep)?.classList.add('active');
   document.querySelectorAll('.onboard-dot').forEach((d,i)=>{d.classList.toggle('active',i===_obStep-1);});
+  _updateObDots(_obStep);
   document.getElementById('ob-back').style.display=_obStep===1?'none':'block';
   document.getElementById('ob-next').textContent=_obStep===4?'צור פרופיל ✓':'הבא →';
 }
@@ -3906,6 +3945,8 @@ function saveRecovery(sleep,energy,soreness){
   const rec={date:todayStr(),sleep,energy,soreness,score};
   localStorage.setItem(RECOVERY_KEY,JSON.stringify(rec));
   renderRecoveryCard();
+  if(score<=3) showToast('🔴 ריקברי נמוך מאוד — מנוחה מלאה מומלצת היום!',4000);
+  else if(score<=5) showToast('🟡 ריקברי בינוני — שקול אימון קל / Deload',3000);
 }
 function renderRecoveryCard(){
   const el=document.getElementById('recovery-card-body');
