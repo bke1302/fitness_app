@@ -277,6 +277,7 @@ body{
   border-radius:16px;padding:16px 6px 12px;text-align:center;cursor:pointer;
   border:1px solid var(--border);transition:all .25s var(--ease-out);
   background:var(--bg3);position:relative;overflow:hidden;
+  font-family:var(--font);color:var(--text);
 }
 .day-cell::before{
   content:'';position:absolute;top:0;left:0;right:0;height:3px;
@@ -719,6 +720,11 @@ body{
 .elog-save{background:var(--blue);border:none;color:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;font-family:var(--font-d);font-size:.8rem;font-weight:700;white-space:nowrap;letter-spacing:.3px;transition:all .2s;}
 .elog-save:hover{background:#0066cc;}
 .elog-save:active{transform:scale(.95);}
+.elog-coach-tip{font-size:.74rem;line-height:1.55;margin-top:6px;padding:5px 9px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);}
+.elog-tip-increase{border-color:rgba(34,197,94,.3);color:var(--lime);}
+.elog-tip-almost{border-color:rgba(34,197,94,.2);color:var(--lime);}
+.elog-tip-change{border-color:rgba(255,214,10,.3);color:var(--yellow);}
+.elog-tip-decrease{border-color:rgba(239,68,68,.3);color:#f87171;}
 .elog-inc-btn{background:var(--glass);border:1px solid var(--border2);color:var(--text);border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:.9rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s;}
 .elog-inc-btn:hover{border-color:var(--blue);color:var(--blue);}
 .ex-last-log{font-size:.7rem;color:var(--cyan);margin-top:3px;display:inline-flex;align-items:center;gap:4px;}
@@ -1437,7 +1443,7 @@ select:invalid:not(:placeholder-shown){
 .mc-btn .mc-lbl{font-size:.62rem;color:var(--muted);margin-top:4px;}
 
 /* ─── HEALTH TOGGLE ─── */
-.health-toggle{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.03);cursor:pointer;margin-top:14px;transition:border-color .18s;}
+.health-toggle{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.03);cursor:pointer;margin-top:14px;transition:border-color .18s;width:100%;font-family:var(--font);color:var(--text);text-align:right;}
 .health-toggle:hover{border-color:var(--border2);}
 .health-toggle-label{font-size:.85rem;color:var(--muted2);}
 .toggle-pill{width:44px;height:24px;border-radius:999px;background:var(--border2);transition:background .25s;position:relative;flex-shrink:0;}
@@ -1509,7 +1515,7 @@ select:invalid:not(:placeholder-shown){
 .topbar-avatar-ring{width:44px;height:44px;border-radius:50%;border:2px solid rgba(34,197,94,.6);overflow:hidden;background:#1A2330;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(34,197,94,.2);flex-shrink:0;}
 .topbar-avatar-letter{font-size:.875rem;font-weight:700;color:var(--lime);}
 .topbar-text{display:flex;flex-direction:column;gap:1px;}
-.topbar-greeting{font-size:.69rem;color:#64748B;font-weight:500;}
+.topbar-greeting{font-size:.69rem;color:var(--muted);font-weight:500;}
 .topbar-appname{font-size:.94rem;font-weight:700;color:#fff;line-height:1.2;margin:0;}
 .topbar-right{display:flex;align-items:center;gap:8px;}
 .topbar-level-badge{background:#1A2330;color:var(--lime);font-size:.625rem;font-weight:700;padding:4px 10px;border-radius:999px;border:1px solid rgba(34,197,94,.2);white-space:nowrap;}
@@ -1518,7 +1524,7 @@ select:invalid:not(:placeholder-shown){
 /* ─── DASHBOARD CSS CLASSES (replaces inline styles) ─── */
 .dash-stat-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px;}
 .dash-row{display:flex;align-items:center;gap:8px;}
-.dash-label{font-size:.68rem;color:#64748B;font-weight:500;}
+.dash-label{font-size:.68rem;color:var(--muted);font-weight:500;}
 .dash-value{font-size:.875rem;font-weight:700;color:#F8FAFC;}
 
 /* ─── PLATE + 1RM + TOOL MODALS ─── */

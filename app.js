@@ -1705,13 +1705,74 @@ const DAY_CFG={
   3:{panel:'legs',badge:'🦵 LEGS',color:'#BF5AF2',label:'ירכיים · ירך אחורי · שוק',sub:'LEGS DAY C',meta:'~65 דק׳ · 7 תרגילים'},
   4:{panel:'arms',badge:'💪 ARMS',color:'#FFD60A',label:'בייסס · טריצפס · כתפיים',sub:'ARMS DAY D',meta:'~50 דק׳ · 7 תרגילים'}
 };
+// Builds a day-of-week→config map dynamically from user's WORKOUT_PLAN
+function _buildDayCfg(planKey){
+  const plan=WORKOUT_PLANS[planKey];
+  if(!plan||!plan.days||!plan.days.length) return DAY_CFG;
+  const scheduleMap={
+    1:[5],
+    2:[1,4],
+    '3ab':[0,2,4],
+    '3abc':[0,2,4],
+    4:[0,1,3,4],
+    '4ab':[0,1,3,4],
+    5:[0,1,2,4,5],
+    6:[0,1,2,3,4,5],
+    7:[0,1,2,3,4,5,6],
+  };
+  const dows=scheduleMap[planKey]||[0,1,3,4];
+  const result={};
+  plan.days.forEach((day,idx)=>{
+    if(idx>=dows.length) return;
+    const dow=dows[idx];
+    const n=day.exercises?day.exercises.length:6;
+    result[dow]={
+      panel:day.id,
+      badge:day.shortLabel||day.label.slice(0,6),
+      color:day.color||'#FF375F',
+      label:day.label,
+      sub:day.shortLabel||day.id.toUpperCase(),
+      meta:`~${45+n*5} דק׳ · ${n} תרגילים`
+    };
+  });
+  return result;
+}
 const HEB_DAYS3=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+const HEB_DAYS_SHORT=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳',''];
+const DAY_ICONS={push:'💥',pull:'🔄',legs:'🦵',arms:'💪',push2:'🔥',pull2:'🌀'};
+
+function _renderWeekBar(activeDayCfg){
+  const bar=document.querySelector('.week-bar');
+  if(!bar) return;
+  bar.innerHTML=HEB_DAYS3.map((name,i)=>{
+    const cfg=activeDayCfg[i];
+    const letter=HEB_DAYS_SHORT[i];
+    if(cfg){
+      const icon=DAY_ICONS[cfg.panel]||'🏋️';
+      const label=cfg.label.split(' — ').pop().split(' · ').slice(0,2).join(' · ');
+      return `<button class="day-cell" onclick="goDay('${cfg.panel}')" data-type="${cfg.panel}" aria-label="${name}: ${cfg.label}">
+        <div class="dc-name">${name} ${letter}</div>
+        <div class="dc-icon">${icon}</div>
+        <div class="dc-type" style="color:${cfg.color}">${cfg.sub}</div>
+        <div class="dc-label">${label}</div>
+      </button>`;
+    }
+    return `<button class="day-cell rest-day" disabled aria-label="${name}: מנוחה">
+      <div class="dc-name">${name} ${letter}</div>
+      <div class="dc-icon">😴</div>
+      <div class="dc-type" style="color:var(--green)">מנוחה</div>
+      <div class="dc-label">שיקום</div>
+    </button>`;
+  }).join('');
+}
 
 function initTodayHero(){
   const d=new Date().getDay();
   const hero=document.getElementById('today-hero');
   if(!hero) return;
-  const cfg=DAY_CFG[d];
+  const u=getActiveUser();
+  const activeDayCfg=(u&&u.plan)?_buildDayCfg(u.plan):DAY_CFG;
+  const cfg=activeDayCfg[d];
   const log=getLog(); const today=todayStr();
   const done=log[today]?.__complete;
   if(cfg){
@@ -1760,9 +1821,13 @@ function initTodayHero(){
         </div>
       </div>`;
   }
+  // Rebuild week bar dynamically from user's plan
+  _renderWeekBar(activeDayCfg);
   // Highlight today + mark completed days this week + count
   const fullLog=getLog();
-  const DAY_PANEL={0:'push',1:'pull',3:'legs',4:'arms'};
+  const DAY_PANEL={};
+  Object.entries(activeDayCfg).forEach(([dow,cfg])=>{DAY_PANEL[parseInt(dow)]=cfg.panel;});
+  const totalWorkoutDays=Object.keys(activeDayCfg).length;
   const now=new Date();
   const mon=new Date(now);mon.setDate(now.getDate()-((now.getDay()+6)%7));
   let weekDone=0;
@@ -1800,8 +1865,8 @@ function initTodayHero(){
   // Update week counter
   const wc=document.getElementById('week-counter');
   if(wc){
-    const color=weekDone===4?'var(--green)':weekDone>=2?'var(--yellow)':'var(--muted)';
-    wc.innerHTML=`<span style="color:${color}">${weekDone}</span><span style="color:var(--muted);font-size:.72rem;font-weight:600;"> / 4 אימונים</span>`;
+    const color=weekDone>=totalWorkoutDays?'var(--green)':weekDone>=Math.ceil(totalWorkoutDays/2)?'var(--yellow)':'var(--muted)';
+    wc.innerHTML=`<span style="color:${color}">${weekDone}</span><span style="color:var(--muted);font-size:.72rem;font-weight:600;"> / ${totalWorkoutDays} אימונים</span>`;
   }
 }
 
@@ -1936,7 +2001,29 @@ function renderWLog(){
   const el=document.getElementById('weight-log-list'); if(!el) return;
   const log=getWLog();
   if(!log.length){el.innerHTML='<div style="color:var(--muted);font-size:.85rem;padding:6px 0;">אין רשומות עדיין — הוסף מדידה ראשונה!</div>';return;}
-  el.innerHTML=log.slice().reverse().map(e=>`<div class="wlog-entry">
+  const sorted=log.slice().sort((a,b)=>a.date.localeCompare(b.date));
+  const first=sorted[0].kg, latest=sorted[sorted.length-1].kg;
+  const pct=((latest-first)/first*100);
+  const pctStr=(pct>=0?'+':'')+pct.toFixed(1)+'%';
+  const pctColor=pct>0?'var(--red)':pct<0?'var(--lime)':'var(--muted)';
+  const u=getActiveUser();
+  const h=(u&&u.height)||0;
+  const bmiHtml=h>0?`<div style="text-align:center;">
+    <div style="font-size:1.1rem;font-weight:800;color:var(--cyan);">${(latest/((h/100)**2)).toFixed(1)}</div>
+    <div style="font-size:.65rem;color:var(--muted);margin-top:2px;">BMI</div>
+  </div>`:'';
+  const statsHtml=`<div style="display:flex;gap:12px;justify-content:space-around;background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:12px 8px;margin-bottom:10px;">
+    <div style="text-align:center;">
+      <div style="font-size:1.1rem;font-weight:800;color:var(--cyan);">${latest} ק"ג</div>
+      <div style="font-size:.65rem;color:var(--muted);margin-top:2px;">עכשיו</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:1.1rem;font-weight:800;color:${pctColor};">${pctStr}</div>
+      <div style="font-size:.65rem;color:var(--muted);margin-top:2px;">שינוי</div>
+    </div>
+    ${bmiHtml}
+  </div>`;
+  el.innerHTML=statsHtml+log.slice().reverse().map(e=>`<div class="wlog-entry">
     <span>${e.date.split('-').reverse().join('/')}</span>
     <strong style="color:var(--cyan)">${e.kg} ק"ג</strong>
     <button class="wlog-del" onclick="deleteWEntry('${e.date}')">✕</button>
@@ -2422,15 +2509,22 @@ function renderElogPanel(){
       const chips=hist.filter(e=>e.date!==today).slice(0,3)
         .map(e=>`<span class="elog-hist-chip">${e.date.slice(5)} — ${e.kg}ק"ג×${e.reps}</span>`).join('');
       const todayEntry=hist.find(e=>e.date===today);
+      const spark=_buildSparkline(key);
+      const tip=getCoachTip(key);
+      const tipHtml=tip?`<div class="elog-coach-tip elog-tip-${tip.type}">${tip.icon} ${tip.msg}</div>`:'';
       html+=`<div class="elog-row" id="elog-row-${key}">
         <div class="elog-ex-info">
-          <div class="elog-ex-name">${ex.name}</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="elog-ex-name">${ex.name}</div>
+            ${spark}
+          </div>
           <div class="elog-ex-en" style="font-size:.72rem;color:var(--muted);margin-top:1px;">${ex.en}</div>
           <div class="elog-history">
             ${todayEntry?`<span class="elog-hist-chip latest">היום: ${todayEntry.kg}ק"ג×${todayEntry.reps}</span>`:''}
             ${chips}
             ${!chips&&!todayEntry?'<span style="color:var(--muted);font-size:.72rem;">אין היסטוריה עדיין</span>':''}
           </div>
+          ${tipHtml}
         </div>
         <div class="elog-inputs">
           <button class="elog-inc-btn" onclick="elogAdjust('${key}',-2.5)">−</button>
