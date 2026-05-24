@@ -3163,11 +3163,14 @@ function renderGymExercise(){
       </div>
       <button class="gym-check${done?' done':''}" id="gym-chk-${i}" onclick="gymCheckSet(${i})">${done?'✓':''}</button>
     </div>`).join('');
+  const pr=ex.key?(getPRs())[ex.key]:null;
+  const prBadge=pr?`<div class="gym-pr-badge">🏆 PR: ${pr.kg}ק״ג × ${pr.reps}</div>`:'';
   body.innerHTML=`
     <div class="gym-counter">תרגיל ${_gymIdx+1} מתוך ${_gymExercises.length}</div>
     <div class="gym-name" style="color:${_gymColor}">${_esc(ex.name)}</div>
     ${ex.nameEn?`<div class="gym-name-en">${_esc(ex.nameEn)}</div>`:''}
     ${ex.muscle?`<div class="gym-muscle-tag">${_esc(ex.muscle)}</div>`:''}
+    ${prBadge}
     <div class="gym-sets-label">${ex.sets}</div>
     <div class="gym-setrows">${rowsHTML}</div>`;
   if(prev) prev.disabled=_gymIdx===0;
@@ -3209,11 +3212,32 @@ function gymCheckSet(i){
   gymPickTimer(_lastTimerSec||90);
   if(_tempoOn) speakTempo();
 }
+function _saveGymExToSetlog(){
+  const ex=_gymExercises[_gymIdx];
+  if(!ex||!ex.key) return;
+  const setsCount=parseInt(ex.sets)||3;
+  const sets=[];
+  for(let i=0;i<setsCount;i++){
+    const kg=parseFloat(document.getElementById('gym-sr-kg-'+i)?.value)||0;
+    const reps=parseInt(document.getElementById('gym-sr-reps-'+i)?.value)||0;
+    if(kg>0) sets.push({kg,reps});
+  }
+  if(!sets.length) return;
+  const all=_getJSON(SETLOG_KEY,{});
+  const arr=all[ex.key]||[];
+  const today=todayStr();
+  const filtered=arr.filter(s=>s.date!==today);
+  filtered.unshift({date:today,sets});
+  all[ex.key]=filtered.slice(0,20);
+  _setJSON(SETLOG_KEY,all);
+}
 function gymNext(){
+  _saveGymExToSetlog();
   if(_gymIdx<_gymExercises.length) _gymIdx++;
   renderGymExercise();
 }
 function gymPrev(){
+  _saveGymExToSetlog();
   if(_gymIdx>0) _gymIdx--;
   renderGymExercise();
 }

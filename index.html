@@ -226,7 +226,7 @@
     <div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <span style="font-size:.95rem;font-weight:700;color:#F8FAFC;">התוכנית להיום</span>
-        <span style="font-size:.7rem;color:#22C55E;font-weight:600;cursor:pointer;">הצג הכל →</span>
+        <button onclick="showPanel('schedule')" style="font-size:.7rem;color:#22C55E;font-weight:600;cursor:pointer;background:none;border:none;padding:0;">הצג הכל →</button>
       </div>
       <div style="position:relative;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#1A2330,#0F1A24);border:1px solid rgba(239,68,68,.2);padding:20px;">
         <!-- Glow orb -->
@@ -1230,7 +1230,8 @@
       <div class="card-head"><h2>📊 גרף משקל גוף</h2><span class="badge badge-cyan">לאורך זמן</span></div>
       <div class="card-body">
         <div class="weight-log-form">
-          <input type="date" id="wl-date" class="wl-input" />
+          <label for="wl-date" class="sr-only">תאריך</label>
+          <input type="date" id="wl-date" class="wl-input" aria-label="תאריך" />
           <input type="number" id="wl-kg" class="wl-input" placeholder="משקל (ק״ג)" step="0.1" min="20" max="300" style="width:130px;" />
           <button class="weight-add-btn" onclick="addWeightForm()">+ הוסף</button>
         </div>
@@ -1275,7 +1276,7 @@
           <input class="meas-input" id="meas-arm" type="number" placeholder="זרוע (ס״מ)" min="20" max="80" step="0.5"/>
           <input class="meas-input" id="meas-hip" type="number" placeholder="ירך (ס״מ)" min="50" max="200" step="0.5"/>
           <input class="meas-input" id="meas-neck" type="number" placeholder="צוואר (ס״מ)" min="20" max="80" step="0.5"/>
-          <input class="meas-input" id="meas-thigh" type="number" placeholder="ירך עגול (ס״מ)" min="30" max="120" step="0.5"/>
+          <input class="meas-input" id="meas-thigh" type="number" placeholder="עגל ירך (ס״מ)" min="30" max="120" step="0.5"/>
           <button class="meas-save-btn" onclick="saveMeasurementFull()">שמור מדידה</button>
         </div>
         <div style="margin:10px 0;overflow-x:auto;">
