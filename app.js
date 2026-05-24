@@ -1741,6 +1741,30 @@ const HEB_DAYS3=['ראשון','שני','שלישי','רביעי','חמישי','�
 const HEB_DAYS_SHORT=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳',''];
 const DAY_ICONS={push:'💥',pull:'🔄',legs:'🦵',arms:'💪',push2:'🔥',pull2:'🌀'};
 
+function _renderDashChips(activeDayCfg){
+  const row=document.getElementById('dash-week-row');
+  if(!row) return;
+  const HEB_SHORT=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳'];
+  const ICONS={push:'💥',pull:'🔄',legs:'🦵',arms:'💪'};
+  row.innerHTML=HEB_SHORT.map((ltr,i)=>{
+    const cfg=activeDayCfg[i];
+    if(cfg){
+      const icon=ICONS[cfg.panel]||'🏋️';
+      const short=cfg.sub.split(' ')[0];
+      return `<div class="dash-day-chip">
+        <span class="ddc-emoji">${icon}</span>
+        <span class="ddc-name">${ltr}</span>
+        <span class="ddc-type" style="color:${cfg.color}">${short}</span>
+      </div>`;
+    }
+    return `<div class="dash-day-chip ddc-rest">
+      <span class="ddc-emoji">😴</span>
+      <span class="ddc-name">${ltr}</span>
+      <span class="ddc-type">מנוחה</span>
+    </div>`;
+  }).join('');
+}
+
 function _renderWeekBar(activeDayCfg){
   const bar=document.querySelector('.week-bar');
   if(!bar) return;
@@ -1821,8 +1845,9 @@ function initTodayHero(){
         </div>
       </div>`;
   }
-  // Rebuild week bar dynamically from user's plan
+  // Rebuild week bar + dash chips from user's plan
   _renderWeekBar(activeDayCfg);
+  _renderDashChips(activeDayCfg);
   // Highlight today + mark completed days this week + count
   const fullLog=getLog();
   const DAY_PANEL={};
@@ -4527,6 +4552,10 @@ Object.assign(window,{
   deleteWEntry,deleteFoodEntry,
   openPRShareCard,
   goDay,
+  saveSetLog,
+  addFoodEntry,addCustomFood,
+  closeGymMode,
+  sendChat,
 });
 
 export {};

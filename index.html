@@ -186,39 +186,15 @@
     <div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <span style="font-size:.95rem;font-weight:700;color:#F8FAFC;">השבוע שלך</span>
-        <span style="font-size:.7rem;color:var(--muted);">4 ימי אימון</span>
+        <span id="week-counter" style="font-size:.7rem;color:var(--muted);">4 ימי אימון</span>
       </div>
-      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;">
-        <div style="flex-shrink:0;width:62px;background:rgba(34,197,94,.1);border:1.5px solid #22C55E;border-radius:14px;padding:10px 6px;text-align:center;">
-          <div style="font-size:.65rem;color:var(--muted);">א׳</div>
-          <div style="font-size:.78rem;font-weight:800;color:#22C55E;margin-top:4px;">PUSH</div>
-          <div style="font-size:.85rem;margin-top:4px;">💥</div>
-        </div>
-        <div style="flex-shrink:0;width:62px;background:#1A2330;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:10px 6px;text-align:center;opacity:.7;">
-          <div style="font-size:.65rem;color:var(--muted);">ב׳</div>
-          <div style="font-size:.78rem;font-weight:800;color:#06B6D4;margin-top:4px;">PULL</div>
-          <div style="font-size:.85rem;margin-top:4px;">🔄</div>
-        </div>
-        <div style="flex-shrink:0;width:62px;background:#1A2330;border:1px solid rgba(255,255,255,.04);border-radius:14px;padding:10px 6px;text-align:center;opacity:.4;">
-          <div style="font-size:.65rem;color:var(--muted);">ג׳</div>
-          <div style="font-size:.78rem;font-weight:700;color:var(--muted);margin-top:4px;">מנוחה</div>
-          <div style="font-size:.85rem;margin-top:4px;">😴</div>
-        </div>
-        <div style="flex-shrink:0;width:62px;background:#1A2330;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:10px 6px;text-align:center;opacity:.7;">
-          <div style="font-size:.65rem;color:var(--muted);">ד׳</div>
-          <div style="font-size:.78rem;font-weight:800;color:#8B5CF6;margin-top:4px;">LEGS</div>
-          <div style="font-size:.85rem;margin-top:4px;">🦵</div>
-        </div>
-        <div style="flex-shrink:0;width:62px;background:#1A2330;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:10px 6px;text-align:center;opacity:.7;">
-          <div style="font-size:.65rem;color:var(--muted);">ה׳</div>
-          <div style="font-size:.78rem;font-weight:800;color:#F59E0B;margin-top:4px;">ARMS</div>
-          <div style="font-size:.85rem;margin-top:4px;">💪</div>
-        </div>
-        <div style="flex-shrink:0;width:62px;background:#1A2330;border:1px solid rgba(255,255,255,.04);border-radius:14px;padding:10px 6px;text-align:center;opacity:.4;">
-          <div style="font-size:.65rem;color:var(--muted);">ו׳</div>
-          <div style="font-size:.78rem;font-weight:700;color:var(--muted);margin-top:4px;">אקטיב</div>
-          <div style="font-size:.85rem;margin-top:4px;">🚶</div>
-        </div>
+      <div id="dash-week-row" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;">
+        <div class="dash-day-chip"><span class="ddc-emoji">💥</span><span class="ddc-name">א׳</span><span class="ddc-type" style="color:var(--red)">PUSH</span></div>
+        <div class="dash-day-chip"><span class="ddc-emoji">🔄</span><span class="ddc-name">ב׳</span><span class="ddc-type" style="color:var(--cyan)">PULL</span></div>
+        <div class="dash-day-chip ddc-rest"><span class="ddc-emoji">😴</span><span class="ddc-name">ג׳</span><span class="ddc-type">מנוחה</span></div>
+        <div class="dash-day-chip"><span class="ddc-emoji">🦵</span><span class="ddc-name">ד׳</span><span class="ddc-type" style="color:var(--purple)">LEGS</span></div>
+        <div class="dash-day-chip"><span class="ddc-emoji">💪</span><span class="ddc-name">ה׳</span><span class="ddc-type" style="color:var(--yellow)">ARMS</span></div>
+        <div class="dash-day-chip ddc-rest"><span class="ddc-emoji">🚶</span><span class="ddc-name">ו׳</span><span class="ddc-type">אקטיב</span></div>
       </div>
     </div>
 
@@ -228,7 +204,7 @@
         <span style="font-size:.95rem;font-weight:700;color:#F8FAFC;">התוכנית להיום</span>
         <button onclick="showPanel('schedule')" style="font-size:.7rem;color:#22C55E;font-weight:600;cursor:pointer;background:none;border:none;padding:0;">הצג הכל →</button>
       </div>
-      <div style="position:relative;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#1A2330,#0F1A24);border:1px solid rgba(239,68,68,.2);padding:20px;">
+      <div id="today-hero" class="today-hero" style="position:relative;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#1A2330,#0F1A24);border:1px solid rgba(239,68,68,.2);padding:20px;">
         <!-- Glow orb -->
         <div style="position:absolute;top:-20px;left:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(239,68,68,.2),transparent 70%);pointer-events:none;"></div>
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
@@ -1232,7 +1208,7 @@
         <div class="weight-log-form">
           <label for="wl-date" class="sr-only">תאריך</label>
           <input type="date" id="wl-date" class="wl-input" aria-label="תאריך" />
-          <input type="number" id="wl-kg" class="wl-input" placeholder="משקל (ק״ג)" step="0.1" min="20" max="300" style="width:130px;" />
+          <input type="number" id="wl-kg" class="wl-input" placeholder="משקל (ק״ג)" step="0.1" min="20" max="300" style="width:130px;" aria-label="משקל בקילוגרם" />
           <button class="weight-add-btn" onclick="addWeightForm()">+ הוסף</button>
         </div>
         <div class="weight-chart-wrap">
@@ -1271,12 +1247,12 @@
       <div class="card-head"><h2>📐 מדדי גוף</h2><span class="badge badge-purple">מעקב</span></div>
       <div class="card-body">
         <div class="meas-form">
-          <input class="meas-input" id="meas-chest" type="number" placeholder="חזה (ס״מ)" min="50" max="200" step="0.5"/>
-          <input class="meas-input" id="meas-waist" type="number" placeholder="מותן (ס״מ)" min="40" max="200" step="0.5"/>
-          <input class="meas-input" id="meas-arm" type="number" placeholder="זרוע (ס״מ)" min="20" max="80" step="0.5"/>
-          <input class="meas-input" id="meas-hip" type="number" placeholder="ירך (ס״מ)" min="50" max="200" step="0.5"/>
-          <input class="meas-input" id="meas-neck" type="number" placeholder="צוואר (ס״מ)" min="20" max="80" step="0.5"/>
-          <input class="meas-input" id="meas-thigh" type="number" placeholder="עגל ירך (ס״מ)" min="30" max="120" step="0.5"/>
+          <input class="meas-input" id="meas-chest" type="number" placeholder="חזה (ס״מ)" min="50" max="200" step="0.5" aria-label="היקף חזה בסנטימטרים"/>
+          <input class="meas-input" id="meas-waist" type="number" placeholder="מותן (ס״מ)" min="40" max="200" step="0.5" aria-label="היקף מותן בסנטימטרים"/>
+          <input class="meas-input" id="meas-arm" type="number" placeholder="זרוע (ס״מ)" min="20" max="80" step="0.5" aria-label="היקף זרוע בסנטימטרים"/>
+          <input class="meas-input" id="meas-hip" type="number" placeholder="ירך (ס״מ)" min="50" max="200" step="0.5" aria-label="היקף ירך בסנטימטרים"/>
+          <input class="meas-input" id="meas-neck" type="number" placeholder="צוואר (ס״מ)" min="20" max="80" step="0.5" aria-label="היקף צוואר בסנטימטרים"/>
+          <input class="meas-input" id="meas-thigh" type="number" placeholder="עגל ירך (ס״מ)" min="30" max="120" step="0.5" aria-label="היקף עגל ירך בסנטימטרים"/>
           <button class="meas-save-btn" onclick="saveMeasurementFull()">שמור מדידה</button>
         </div>
         <div style="margin:10px 0;overflow-x:auto;">
