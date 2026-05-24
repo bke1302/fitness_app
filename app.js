@@ -407,6 +407,7 @@ document.addEventListener('click', function(e){
   if(!e.target.closest('#ex-search-wrap')) closeExSearch();
 });
 
+function goDay(panelId){ showPanel(panelId,null); }
 function showPanel(name,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
@@ -629,6 +630,7 @@ function saveSettingsForm(){
     injectSwapButtons();
     injectSetLogRows();
   }
+  showToast('✅ הגדרות נשמרו');
   const btn=document.querySelector('#settings-form .settings-save');
   if(btn){
     const o=btn.textContent;btn.textContent='נשמר!';
@@ -974,7 +976,12 @@ function _buildMealCard(m, i, n, swaps){
   </div>`;
 }
 function renderNutritionPanel(){
-  const u=getActiveUser(); if(!u) return;
+  const u=getActiveUser();
+  if(!u){
+    const g=document.getElementById('macro-stats-grid');
+    if(g) g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">🥗</div><div class="empty-state-title">אין פרופיל פעיל</div><div class="empty-state-sub">הגדר פרופיל בהגדרות כדי לקבל תפריט תזונה אישי</div></div>';
+    return;
+  }
   const n=calcNutrition(u);
   const g=u.goal||'lean_bulk';
 
@@ -1915,6 +1922,9 @@ function addWeightForm(){
   log.sort((a,b)=>a.date.localeCompare(b.date));
   localStorage.setItem(WLOG_KEY,JSON.stringify(log));
   if(kEl) kEl.value='';
+  // Sync latest weight to active user profile so BMR stays current
+  const _au=getActiveUser();
+  if(_au){ _au.weight=kg; const us=getUsers(); const idx2=us.findIndex(u=>u.id===_au.id); if(idx2>=0){us[idx2]=_au; localStorage.setItem(USERS_KEY,JSON.stringify(us)); invalidateUserCache();} }
   renderWLog(); renderWChart();
 }
 function deleteWEntry(date){
@@ -2461,6 +2471,9 @@ function elogSave(key){
   if(!prev||kg>prev.kg||(kg===prev.kg&&reps>prev.reps)){
     prs[key]={kg,reps,date:todayStr()};
     localStorage.setItem(PR_KEY,JSON.stringify(prs));
+    showToast('🏆 שיא חדש! '+kg+'ק״ג × '+reps);
+    launchConfetti();
+    if(navigator.vibrate) navigator.vibrate([200,100,200]);
   }
 }
 
@@ -3702,6 +3715,8 @@ function exportData(){
     prs: getPRs(),
     elog: JSON.parse(localStorage.getItem(ELOG_KEY)||'{}'),
     setlog: JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}'),
+    wlog: JSON.parse(localStorage.getItem(WLOG_KEY)||'[]'),
+    measurements: JSON.parse(localStorage.getItem(MEAS_KEY)||'[]'),
     exported: new Date().toISOString()
   };
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -3727,8 +3742,10 @@ function importData(e){
       if(d.settings) localStorage.setItem(SETTINGS_KEY, JSON.stringify(d.settings));
       if(d.log)      localStorage.setItem(LOG_KEY,      JSON.stringify(d.log));
       if(d.prs)      localStorage.setItem(PR_KEY,       JSON.stringify(d.prs));
-      if(d.elog)     localStorage.setItem(ELOG_KEY,      JSON.stringify(d.elog));
-      if(d.setlog)   localStorage.setItem(SETLOG_KEY,   JSON.stringify(d.setlog));
+      if(d.elog)         localStorage.setItem(ELOG_KEY,      JSON.stringify(d.elog));
+      if(d.setlog)       localStorage.setItem(SETLOG_KEY,   JSON.stringify(d.setlog));
+      if(d.wlog)         localStorage.setItem(WLOG_KEY,      JSON.stringify(d.wlog));
+      if(d.measurements) localStorage.setItem(MEAS_KEY,      JSON.stringify(d.measurements));
       showToast('✅ נתונים יובאו בהצלחה!');
       setTimeout(()=>location.reload(),1200);
     }catch(err){
@@ -4411,6 +4428,11 @@ Object.assign(window,{
   toggleSidebar,openSidebar,closeSidebar,
   switchUser,showAlternatives,savePRFromModal,
   dismissInstallBanner,
+  gymCheckSet,
+  saveModalSetLog,
+  deleteWEntry,deleteFoodEntry,
+  openPRShareCard,
+  goDay,
 });
 
 export {};
