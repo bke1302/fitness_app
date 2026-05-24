@@ -1394,19 +1394,25 @@
           <!-- Workout frequency -->
           <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
             <label class="settings-label" for="sf-workout-freq">תדירות אימון בשבוע</label>
-            <select id="sf-workout-freq" class="settings-input" style="cursor:pointer;" onchange="document.querySelector('.sf-split-wrap').style.display=this.value==='3'?'block':'none'">
+            <select id="sf-workout-freq" class="settings-input" style="cursor:pointer;" onchange="(function(v){var sw=document.querySelector('.sf-split-wrap');var s3=document.getElementById('sf-workout-split-3');var s4=document.getElementById('sf-workout-split-4');sw.style.display=(v==='3'||v==='4')?'block':'none';if(s3)s3.style.display=v==='3'?'block':'none';if(s4)s4.style.display=v==='4'?'block':'none';})(this.value)">
+              <option value="1">1×/שבוע — Full Body שבועי</option>
               <option value="2">2×/שבוע — Full Body A/B</option>
               <option value="3">3×/שבוע — בחר סגנון</option>
-              <option value="4">4×/שבוע — Push / Pull / Legs / Arms</option>
+              <option value="4">4×/שבוע — בחר סגנון</option>
               <option value="5">5×/שבוע — PPL + Upper + Lower</option>
               <option value="6">6×/שבוע — PPL × 2</option>
+              <option value="7">7×/שבוע — ⚠️ לא מומלץ</option>
             </select>
           </div>
           <div class="sf-split-wrap" style="display:none;margin-top:10px;">
-            <label class="settings-label" for="sf-workout-split">סגנון תוכנית (3 ימים)</label>
-            <select id="sf-workout-split" class="settings-input" style="cursor:pointer;">
+            <label class="settings-label">סגנון תוכנית</label>
+            <select id="sf-workout-split-3" class="settings-input" style="cursor:pointer;">
               <option value="3ab">Upper / Lower — מתחלף</option>
               <option value="3abc">Push / Pull / Legs</option>
+            </select>
+            <select id="sf-workout-split-4" class="settings-input" style="cursor:pointer;display:none;">
+              <option value="">Push / Pull / Legs / Arms</option>
+              <option value="4ab">Upper / Lower A/B</option>
             </select>
           </div>
 
@@ -1764,7 +1770,11 @@
     <div class="onboard-step" id="ob-step-4">
       <div class="onboard-step-title">כמה פעמים בשבוע? 📅</div>
       <div style="font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:16px;">התוכנית תותאם אוטומטית לתדירות שלך</div>
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px;">
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:20px;">
+        <button class="ob-freq-btn" data-freq="1" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--text);">1</div>
+          <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
+        </button>
         <button class="ob-freq-btn" data-freq="2" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
           <div style="font-size:1.4rem;font-weight:900;color:var(--text);">2</div>
           <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
@@ -1785,11 +1795,16 @@
           <div style="font-size:1.4rem;font-weight:900;color:var(--text);">6</div>
           <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
         </button>
+        <button class="ob-freq-btn" data-freq="7" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--muted);">7</div>
+          <div style="font-size:.55rem;color:var(--muted);">⚠️ לא מומלץ</div>
+        </button>
       </div>
-      <!-- Split selector — visible only for 3x/week -->
+      <!-- Split selector — visible for 3x/week and 4x/week -->
       <div id="ob-split-wrap" style="display:none;margin-bottom:4px;">
         <div style="font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:10px;">בחר סגנון:</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <!-- 3-day splits -->
+        <div id="ob-split-3" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <button class="ob-split-btn" data-split="3ab" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
             <div style="font-weight:800;color:var(--text);font-size:.9rem;">Upper / Lower</div>
             <div style="font-size:.7rem;color:var(--muted);margin-top:3px;">גוף עליון / גוף תחתון</div>
@@ -1797,6 +1812,17 @@
           <button class="ob-split-btn sel" data-split="3abc" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
             <div style="font-weight:800;color:var(--red);font-size:.9rem;">Push / Pull / Legs</div>
             <div style="font-size:.7rem;color:var(--muted);margin-top:3px;">3 אימונים שונים</div>
+          </button>
+        </div>
+        <!-- 4-day splits -->
+        <div id="ob-split-4" style="display:none;grid-template-columns:1fr 1fr;gap:8px;">
+          <button class="ob-split-btn sel" data-split="4" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
+            <div style="font-weight:800;color:var(--red);font-size:.85rem;">Push/Pull/Legs/Arms</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:3px;">PPL קלאסי</div>
+          </button>
+          <button class="ob-split-btn" data-split="4ab" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
+            <div style="font-weight:800;color:var(--text);font-size:.85rem;">Upper/Lower A/B</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:3px;">כוח + נפח</div>
           </button>
         </div>
       </div>

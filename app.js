@@ -593,7 +593,10 @@ function saveSettingsForm(){
   const users=getUsers(); const aid=getActiveUserId();
   const idx=users.findIndex(u=>u.id===aid);
   const workout_freq=parseInt(document.getElementById('sf-workout-freq')?.value)||4;
-  const workout_split=workout_freq===3?(document.getElementById('sf-workout-split')?.value||'3abc'):null;
+  let workout_split=null;
+  if(workout_freq===3) workout_split=document.getElementById('sf-workout-split-3')?.value||'3abc';
+  if(workout_freq===4){const s=document.getElementById('sf-workout-split-4')?.value;workout_split=s||null;}
+  if(workout_freq===7) showToast('⚠️ 7 ימים ברצף לא מומלץ — הגוף חייב מנוחה!');
   if(idx>=0){
     users[idx]={...users[idx],name,weight,height,age,calories,goal,activity,workout_time,gender,meal_count,cholesterol,workout_freq,workout_split};
     saveUsers(users);
@@ -684,6 +687,11 @@ const EX_ALTERNATIVES = {
   triPushdown:[{name:'Overhead Cable Extension',tag:'Long Head — מתיחה מלאה'},{name:'Dips',tag:'משקל גוף — כל Tricep'},{name:'Kickbacks משקולות',tag:'בידוד — בחינם'}],
   // ── אמות ──
   wristCurl:[{name:'כפיפת פרק עם ריצועית',tag:'Resistance Band Wrist Curl'},{name:'אחיזת בקבוק מים',tag:'ללא ציוד — 3×60 שנ׳'},{name:'Farmer Hold',tag:'אחיזה סטטית — ניהול עומס'}],
+  closeGripBench:[{name:'Diamond Push-up',tag:'ללא ציוד — טריצפס פנימי'},{name:'Dips במקביל',tag:'משקל גוף — כל ראשי הטריצפס'},{name:'Close-Grip Machine Press',tag:'מכונה — בטוח לפרקים'}],
+  ezCurl:[{name:'Barbell Curl',tag:'מוט ישר — Supination מלאה'},{name:'Dumbbell Curl',tag:'כפיפות משקולות — כל יד בנפרד'},{name:'Scott Curl / Preacher',tag:'בידוד מלא — ללא תנופה'}],
+  inclineCurl:[{name:'Concentration Curl',tag:'ריכוז — Long Head בידוד מלא'},{name:'Spider Curl',tag:'נוטה קדימה — Peak Bicep'},{name:'Cable Curl',tag:'כבל — מתח קבוע לאורך כל התנועה'}],
+  ohTricep:[{name:'Overhead DB Extension',tag:'משקולת — Long Head'},{name:'French Press / EZ Overhead',tag:'מוט EZ — מתח בשיא'},{name:'Rope Overhead Extension',tag:'כבל חבל — מתח קבוע'}],
+  bulgSplit:[{name:'Lunge עם משקולות',tag:'Dumbbell Lunge — פחות לחץ על גב'},{name:'Step-up על ספסל',tag:'פונקציונלי — נח יותר על ברך'},{name:'Single-Leg Press',tag:'חד-רגלי במכונה — בטוח למתחילים'}],
 };
 
 function showAlternatives(exKey, exName){
@@ -1036,7 +1044,12 @@ function prefillSettingsForm(){
   document.querySelectorAll('[data-smc]').forEach(b=>b.classList.toggle('sel',b.dataset.smc===String(_sfMealCount)));
   document.getElementById('sf-chol-pill')?.classList.toggle('on',_sfCholesterol);
   const sffreq=document.getElementById('sf-workout-freq'); if(sffreq) sffreq.value=String(u.workout_freq||4);
-  const sfsplit=document.getElementById('sf-workout-split'); if(sfsplit){sfsplit.value=u.workout_split||'3abc';sfsplit.closest('.sf-split-wrap')&&(sfsplit.closest('.sf-split-wrap').style.display=(u.workout_freq===3)?'block':'none');}
+  const sfwrap=document.querySelector('.sf-split-wrap');
+  const sfsplit3=document.getElementById('sf-workout-split-3');
+  const sfsplit4=document.getElementById('sf-workout-split-4');
+  if(sfwrap) sfwrap.style.display=(u.workout_freq===3||u.workout_freq===4)?'block':'none';
+  if(sfsplit3){sfsplit3.value=u.workout_split||'3abc';sfsplit3.style.display=u.workout_freq===3?'block':'none';}
+  if(sfsplit4){sfsplit4.value=u.workout_split||'';sfsplit4.style.display=u.workout_freq===4?'block':'none';}
 
 }
 
@@ -1156,6 +1169,8 @@ function selectObFreq(btn){
   document.querySelectorAll('.ob-freq-btn').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');
   _obFreq=parseInt(btn.dataset.freq);
+  if(_obFreq!==3&&_obFreq!==4) _obSplit=null;
+  if(_obFreq===7) showToast('⚠️ 7 ימים ברצף לא מומלץ — הגוף חייב מנוחה!');
   _updateSplitSelector();
 }
 function selectObSplit(btn){
@@ -1166,10 +1181,19 @@ function selectObSplit(btn){
 function _updateSplitSelector(){
   const wrap=document.getElementById('ob-split-wrap');
   if(!wrap) return;
-  wrap.style.display=_obFreq===3?'block':'none';
+  const show=_obFreq===3||_obFreq===4;
+  wrap.style.display=show?'block':'none';
+  const s3=document.getElementById('ob-split-3');
+  const s4=document.getElementById('ob-split-4');
+  if(s3) s3.style.display=_obFreq===3?'grid':'none';
+  if(s4) s4.style.display=_obFreq===4?'grid':'none';
   if(_obFreq===3&&!_obSplit){
     _obSplit='3abc';
     document.querySelectorAll('.ob-split-btn').forEach(b=>b.classList.toggle('sel',b.dataset.split==='3abc'));
+  }
+  if(_obFreq===4&&!_obSplit){
+    _obSplit=null;
+    document.querySelectorAll('.ob-split-btn').forEach(b=>b.classList.toggle('sel',b.dataset.split==='4'));
   }
 }
 function obFinish(){
@@ -1187,7 +1211,7 @@ function obFinish(){
     workout_time,
     meal_count:_obMealCount||5,
     workout_freq:_obFreq||4,
-    workout_split:_obFreq===3?(_obSplit||'3abc'):null,
+    workout_split:_obFreq===3?(_obSplit||'3abc'):_obFreq===4?(_obSplit||null):null,
   };
   const n=calcNutrition(user);
   user.calories=n.target;
@@ -4126,77 +4150,103 @@ const WORKOUT_PLANS={
   1:{
     days:[
       {id:'push',label:'Full Body — אימון שבועי',shortLabel:'FULL',color:'#22C55E',
-       exercises:['squat','benchPress','bentRow','ohp','rdl','bbCurl','triPushdown']},
+       exercises:['squat','benchPress','pullup','ohp','rdl','facePull','lateralRaise','bbCurl','calfRaise']},
     ],
     schedule:'פעם בשבוע — Full Body (מומלץ: רביעי)'
   },
   2:{
     days:[
       {id:'push',label:'יום A — Full Body',shortLabel:'יום A',color:'#FF375F',
-       exercises:['squat','benchPress','pullup','ohp','rdl','facePull','calfRaise']},
+       exercises:['squat','benchPress','pullup','ohp','hipThrust','facePull','bbCurl','calfRaise']},
       {id:'pull',label:'יום B — Full Body',shortLabel:'יום B',color:'#5AC8FA',
-       exercises:['legPress','inclineBench','bentRow','lateralRaise','legCurl','bbCurl','triPushdown']},
+       exercises:['legPress','rdl','inclineBench','bentRow','lateralRaise','facePull','hammerCurl','legCurl','calfRaise']},
     ],
     schedule:'ב׳ + ה׳ (48–72 שעות מנוחה)'
   },
   '3ab':{
     days:[
       {id:'push',label:'Upper Body',shortLabel:'Upper',color:'#FF375F',
-       exercises:['benchPress','pullup','ohp','bentRow','bbCurl','triPushdown','facePull']},
+       exercises:['benchPress','pullup','ohp','bentRow','inclineBench','bbCurl','facePull','lateralRaise']},
       {id:'pull',label:'Lower Body',shortLabel:'Lower',color:'#BF5AF2',
-       exercises:['squat','rdl','legPress','legCurl','legExt','lunges','calfRaise']},
+       exercises:['squat','rdl','legPress','legCurl','legExt','hipThrust','calfRaise']},
     ],
     schedule:'א׳/Upper | ג׳/Lower | ה׳/Upper (מתחלף שבוע-שבוע)'
   },
   '3abc':{
     days:[
       {id:'push',label:'PUSH — חזה + כתפיים',shortLabel:'PUSH',color:'#FF375F',
-       exercises:['benchPress','inclineBench','ohp','lateralRaise','triPushdown','skullCrusher']},
+       exercises:['benchPress','inclineBench','ohp','lateralRaise','triPushdown','skullCrusher','cableFlye']},
       {id:'pull',label:'PULL — גב + בייסס',shortLabel:'PULL',color:'#5AC8FA',
        exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
       {id:'legs',label:'LEGS — רגליים',shortLabel:'LEGS',color:'#BF5AF2',
-       exercises:['squat','legPress','rdl','legCurl','legExt','lunges','calfRaise']},
+       exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
     ],
     schedule:'א׳ Push | ג׳ Pull | ה׳ Legs'
   },
   4:{
     days:[
-      {id:'push',label:'PUSH + רגליים (קוואדס)',shortLabel:'PUSH',color:'#FF375F',
-       exercises:['benchPress','squat','ohp','inclineBench','lateralRaise','triPushdown']},
-      {id:'pull',label:'PULL + רגליים (אחורי)',shortLabel:'PULL',color:'#5AC8FA',
-       exercises:['rdl','pullup','bentRow','facePull','bbCurl','hammerCurl']},
+      {id:'push',label:'PUSH — חזה + כתפיים',shortLabel:'PUSH',color:'#FF375F',
+       exercises:['benchPress','ohp','inclineBench','cableFlye','lateralRaise','triPushdown']},
+      {id:'pull',label:'PULL — גב + בייסס',shortLabel:'PULL',color:'#5AC8FA',
+       exercises:['rdl','pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
       {id:'legs',label:'LEGS — יום רגליים מלא',shortLabel:'LEGS',color:'#BF5AF2',
-       exercises:['legPress','bulgSplit','legCurl','hipThrust','legExt','calfRaise']},
+       exercises:['squat','legPress','bulgSplit','legCurl','hipThrust','legExt','calfRaise']},
       {id:'arms',label:'ARMS — זרועות',shortLabel:'ARMS',color:'#FFD60A',
-       exercises:['closeGripBench','ezCurl','skullCrusher','inclineCurl','triPushdown','cableCurl']},
+       exercises:['closeGripBench','ezCurl','skullCrusher','inclineCurl','ohTricep','hammerCurl']},
     ],
     schedule:'א׳ Push | ב׳ Pull | ד׳ Legs | ה׳ Arms'
   },
   5:{
     days:[
       {id:'push',label:'PUSH — כבד',shortLabel:'PUSH',color:'#FF375F',
-       exercises:['benchPress','inclineBench','ohp','lateralRaise','triPushdown','skullCrusher']},
+       exercises:['benchPress','inclineBench','ohp','lateralRaise','triPushdown','skullCrusher','cableFlye']},
       {id:'pull',label:'PULL — כבד',shortLabel:'PULL',color:'#5AC8FA',
        exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
       {id:'legs',label:'LEGS',shortLabel:'LEGS',color:'#BF5AF2',
-       exercises:['squat','legPress','rdl','legCurl','lunges','calfRaise']},
-      {id:'arms',label:'Upper + Lower (בינוני)',shortLabel:'EXTRA',color:'#FFD60A',
-       exercises:['inclineBench','cableRow','ohp','legPress','bbCurl','triPushdown','legCurl','calfRaise']},
+       exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
+      {id:'arms',label:'Upper — שחזור בינוני',shortLabel:'BODY',color:'#FFD60A',
+       exercises:['cableRow','lateralRaise','facePull','bbCurl','hammerCurl','triPushdown']},
     ],
-    schedule:'א׳ Push | ב׳ Pull | ד׳ Legs | ה׳ Upper | ו׳ Lower'
+    schedule:'א׳ Push | ב׳ Pull | ד׳ Legs | ה׳ Upper+Lower'
   },
   6:{
     days:[
       {id:'push',label:'PUSH A — כוח',shortLabel:'PUSH A',color:'#FF375F',
-       exercises:['benchPress','ohp','triPushdown','lateralRaise']},
+       exercises:['benchPress','ohp','inclineBench','lateralRaise','triPushdown','skullCrusher','cableFlye']},
       {id:'pull',label:'PULL A — רוחב',shortLabel:'PULL A',color:'#5AC8FA',
-       exercises:['pullup','bentRow','facePull','hammerCurl']},
+       exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
       {id:'legs',label:'LEGS A — ירכיים',shortLabel:'LEGS A',color:'#BF5AF2',
-       exercises:['squat','legPress','legExt','calfRaise']},
-      {id:'arms',label:'PUSH B + PULL B',shortLabel:'B-DAYS',color:'#FFD60A',
-       exercises:['inclineBench','cableFlye','cableRow','bbCurl','rdl','skullCrusher']},
+       exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
+      {id:'arms',label:'PUSH B + PULL B + LEGS B',shortLabel:'B-DAYS',color:'#FFD60A',
+       exercises:['inclineBench','cableFlye','skullCrusher','pullup','cableRow','inclineCurl','rdl','hipThrust']},
     ],
     schedule:'א׳ Push A | ב׳ Pull A | ג׳ Legs A | ד׳ Push B | ה׳ Pull B | ו׳ Legs B'
+  },
+  '4ab':{
+    days:[
+      {id:'push',label:'Upper A — כוח עליון',shortLabel:'UP-A',color:'#FF375F',
+       exercises:['benchPress','pullup','ohp','bentRow','lateralRaise','bbCurl','facePull']},
+      {id:'pull',label:'Lower A — כוח תחתון',shortLabel:'LOW-A',color:'#BF5AF2',
+       exercises:['squat','rdl','legPress','legCurl','legExt','hipThrust','calfRaise']},
+      {id:'legs',label:'Upper B — נפח עליון',shortLabel:'UP-B',color:'#5AC8FA',
+       exercises:['inclineBench','pullup','cableRow','facePull','lateralRaise','hammerCurl','skullCrusher','cableFlye']},
+      {id:'arms',label:'Lower B — נפח תחתון',shortLabel:'LOW-B',color:'#FFD60A',
+       exercises:['legPress','bulgSplit','legExt','legCurl','rdl','hipThrust','calfRaise']},
+    ],
+    schedule:'א׳ Upper A | ב׳ Lower A | ד׳ Upper B | ה׳ Lower B'
+  },
+  7:{
+    days:[
+      {id:'push',label:'PUSH — כוח + נפח',shortLabel:'PUSH',color:'#FF375F',
+       exercises:['benchPress','ohp','inclineBench','lateralRaise','triPushdown','skullCrusher','cableFlye']},
+      {id:'pull',label:'PULL — כוח + נפח',shortLabel:'PULL',color:'#5AC8FA',
+       exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
+      {id:'legs',label:'LEGS — כוח + נפח',shortLabel:'LEGS',color:'#BF5AF2',
+       exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
+      {id:'arms',label:'⚠️ יום 7 — שחזור פעיל בלבד',shortLabel:'REST',color:'#6B7280',
+       exercises:['facePull','lateralRaise','inclineCurl','calfRaise','ezCurl','cableFlye']},
+    ],
+    schedule:'⚠️ א׳-ג׳: Push/Pull/Legs | ד׳-ו׳: Push/Pull/Legs | שבת: שחזור פעיל — הגוף חייב לנוח!'
   }
 };
 
@@ -4232,7 +4282,7 @@ function renderAdaptivePanels(){
   const u=getActiveUser();
   const freq=parseInt(u?.workout_freq)||4;
   const split=u?.workout_split||null;
-  const planKey=freq===3?(split||'3abc'):freq;
+  const planKey=freq===3?(split||'3abc'):freq===4?(split||4):freq;
   const plan=WORKOUT_PLANS[planKey];
   if(!plan){ showToast('תוכנית אימון לא זמינה לתדירות זו'); return; }
   const {days}=plan;
@@ -4258,11 +4308,13 @@ function renderAdaptivePanels(){
 }
 
 function getWorkoutFreqLabel(freq,split){
+  if(freq===1) return '1×/שבוע — Full Body שבועי';
   if(freq===2) return '2×/שבוע — Full Body';
   if(freq===3) return split==='3ab'?'3×/שבוע — Upper/Lower':'3×/שבוע — Push/Pull/Legs';
-  if(freq===4) return '4×/שבוע — PPL+ARMS';
+  if(freq===4) return split==='4ab'?'4×/שבוע — Upper/Lower A/B':'4×/שבוע — PPL+ARMS';
   if(freq===5) return '5×/שבוע — PPL+Upper+Lower';
   if(freq===6) return '6×/שבוע — PPL×2';
+  if(freq===7) return '7×/שבוע — ⚠️ לא מומלץ';
   return `${freq}×/שבוע`;
 }
 
