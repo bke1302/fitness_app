@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <title>ProtocolOS</title>
 
 <!-- PWA -->
@@ -98,7 +98,7 @@
         <span style="font-size:1.5rem;">🔥</span>
         <div>
           <div style="font-size:.68rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;">רצף פעיל</div>
-          <div style="font-size:1.1rem;font-weight:800;color:#F8FAFC;"><span id="streak-num">0</span> ימים · <span id="streak-msg" style="font-size:.75rem;font-weight:600;">מתחילים</span></div>
+          <div style="font-size:1.1rem;font-weight:800;color:var(--text);"><span id="streak-num">0</span> ימים · <span id="streak-msg" style="font-size:.75rem;font-weight:600;">מתחילים</span></div>
           <div id="streak-micro" class="streak-micro-copy"></div>
         </div>
       </div>
@@ -160,7 +160,7 @@
           <div style="width:8px;height:8px;border-radius:50%;background:#22C55E;box-shadow:0 0 6px rgba(34,197,94,.6);flex-shrink:0;"></div>
           <div>
             <div style="font-size:.65rem;color:var(--muted);">קלוריות</div>
-            <div style="font-size:.88rem;font-weight:700;color:#F8FAFC;"><span id="ring-cals-val">—</span></div>
+            <div style="font-size:.88rem;font-weight:700;color:var(--text);"><span id="ring-cals-val">—</span></div>
           </div>
         </div>
         <div style="height:1px;background:rgba(255,255,255,.05);"></div>
@@ -168,7 +168,7 @@
           <div style="width:8px;height:8px;border-radius:50%;background:#3B82F6;box-shadow:0 0 6px rgba(59,130,246,.6);flex-shrink:0;"></div>
           <div>
             <div style="font-size:.65rem;color:var(--muted);">חלבון</div>
-            <div style="font-size:.88rem;font-weight:700;color:#F8FAFC;"><span id="ring-protein-val">—</span></div>
+            <div style="font-size:.88rem;font-weight:700;color:var(--text);"><span id="ring-protein-val">—</span></div>
           </div>
         </div>
         <div style="height:1px;background:rgba(255,255,255,.05);"></div>
@@ -185,7 +185,7 @@
     <!-- ── WEEK CAROUSEL ── -->
     <div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <span style="font-size:.95rem;font-weight:700;color:#F8FAFC;">השבוע שלך</span>
+        <span style="font-size:.95rem;font-weight:700;color:var(--text);">השבוע שלך</span>
         <span id="week-counter" style="font-size:.7rem;color:var(--muted);">4 ימי אימון</span>
       </div>
       <div id="dash-week-row" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;">
@@ -201,7 +201,7 @@
     <!-- ── TODAY'S WORKOUT HERO ── -->
     <div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <span style="font-size:.95rem;font-weight:700;color:#F8FAFC;">התוכנית להיום</span>
+        <span style="font-size:.95rem;font-weight:700;color:var(--text);">התוכנית להיום</span>
         <button onclick="showPanel('schedule')" style="font-size:.7rem;color:#22C55E;font-weight:600;cursor:pointer;background:none;border:none;padding:0;">הצג הכל →</button>
       </div>
       <div id="today-hero" class="today-hero" style="position:relative;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#1A2330,#0F1A24);border:1px solid rgba(239,68,68,.2);padding:20px;">
@@ -213,7 +213,7 @@
         </div>
         <div style="display:flex;justify-content:space-between;align-items:flex-end;">
           <div>
-            <div style="font-size:1.1rem;font-weight:800;color:#F8FAFC;line-height:1.2;">חזה · כתפיים</div>
+            <div style="font-size:1.1rem;font-weight:800;color:var(--text);line-height:1.2;">חזה · כתפיים</div>
             <div style="font-size:.72rem;color:var(--muted);margin-top:4px;">⏱ ~70 דק׳ &nbsp;·&nbsp; 7 תרגילים</div>
           </div>
           <button aria-label="התחל אימון" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#22C55E,#16A34A);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(34,197,94,.35);">
@@ -231,7 +231,7 @@
           <span style="font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;">צעדים</span>
           <span style="font-size:.9rem;">👟</span>
         </div>
-        <div style="font-size:1.35rem;font-weight:800;color:#F8FAFC;line-height:1;">—</div>
+        <div style="font-size:1.35rem;font-weight:800;color:var(--text);line-height:1;">—</div>
         <div style="font-size:.62rem;color:var(--muted);margin-top:3px;">אין נתון</div>
         <div style="height:3px;background:rgba(255,255,255,.06);border-radius:99px;margin-top:10px;overflow:hidden;">
           <div style="width:0%;height:100%;background:linear-gradient(90deg,#8B5CF6,#6D28D9);border-radius:99px;"></div>
@@ -260,7 +260,7 @@
     <!-- ── DISCIPLINE CHECKLIST ── -->
     <div style="background:#1A2330;border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-        <span style="font-size:.9rem;font-weight:700;color:#F8FAFC;">הרגלי היום</span>
+        <span style="font-size:.9rem;font-weight:700;color:var(--text);">הרגלי היום</span>
         <span id="habit-count-badge" style="font-size:.68rem;color:#22C55E;font-weight:700;background:rgba(34,197,94,.1);padding:3px 8px;border-radius:6px;">0/5</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
@@ -289,16 +289,16 @@
 
     <!-- ── NUTRITION PREVIEW ── -->
     <div>
-      <span id="dash-meal-title" style="font-size:.95rem;font-weight:700;color:#F8FAFC;display:block;margin-bottom:10px;">ארוחות יומי</span>
+      <span id="dash-meal-title" style="font-size:.95rem;font-weight:700;color:var(--text);display:block;margin-bottom:10px;">ארוחות יומי</span>
       <div id="dash-nutrition-preview" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:14px;padding:14px;opacity:.75;">
           <span style="font-size:.63rem;color:#22C55E;font-weight:700;">ארוחה 1</span>
-          <div style="font-size:.82rem;font-weight:700;color:#F8FAFC;margin-top:5px;" id="dash-meal-1-name">—</div>
+          <div style="font-size:.82rem;font-weight:700;color:var(--text);margin-top:5px;" id="dash-meal-1-name">—</div>
           <div style="font-size:.68rem;color:var(--muted);margin-top:4px;" id="dash-meal-1-macro">—</div>
         </div>
         <div style="background:#1A2330;border:1px solid rgba(239,68,68,.2);border-radius:14px;padding:14px;position:relative;">
           <span style="font-size:.63rem;color:#EF4444;font-weight:700;">ארוחה 2</span>
-          <div style="font-size:.82rem;font-weight:700;color:#F8FAFC;margin-top:5px;" id="dash-meal-2-name">—</div>
+          <div style="font-size:.82rem;font-weight:700;color:var(--text);margin-top:5px;" id="dash-meal-2-name">—</div>
           <div style="font-size:.68rem;color:var(--muted);margin-top:4px;" id="dash-meal-2-macro">—</div>
         </div>
       </div>
@@ -1833,7 +1833,7 @@
 <div class="voice-toast" id="voice-toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <!-- APP TOAST — accessible, aria-live -->
-<div id="app-toast" role="status" aria-live="polite" aria-atomic="true" style="position:fixed;bottom:calc(92px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:rgba(15,20,30,.96);color:#F8FAFC;padding:10px 22px;border-radius:999px;font-size:.85rem;font-weight:600;z-index:800;opacity:0;transition:opacity .25s ease;pointer-events:none;white-space:nowrap;border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);max-width:90vw;text-align:center;"></div>
+<div id="app-toast" role="status" aria-live="polite" aria-atomic="true" style="position:fixed;bottom:calc(92px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:rgba(15,20,30,.96);color:var(--text);padding:10px 22px;border-radius:999px;font-size:.85rem;font-weight:600;z-index:800;opacity:0;transition:opacity .25s ease;pointer-events:none;white-space:nowrap;border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);max-width:90vw;text-align:center;"></div>
 
 <!-- REST TIMER -->
 <div class="timer-float" id="timer-float">

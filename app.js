@@ -33,7 +33,7 @@ function _safeSet(key,val){
   try{ localStorage.setItem(key,val); }
   catch(e){
     if(e.name==='QuotaExceededError'||e.code===22){
-      console.warn('localStorage quota exceeded for key:',key);
+      _logError('localStorage quota exceeded for key: '+key,'storage-quota',0);
       showToast('אחסון מלא — ייתכן שנתונים ישנים נמחקו');
     }
   }
@@ -55,7 +55,7 @@ const CONFIG = {
 const ERR_KEY='pf_errors';
 function _logError(msg,src,line){
   try{
-    const log=JSON.parse(localStorage.getItem(ERR_KEY)||'[]');
+    const log=_getJSON(ERR_KEY,[]);
     log.unshift({ts:new Date().toISOString(),msg:String(msg).slice(0,200),src:String(src||'').slice(0,100),line});
     localStorage.setItem(ERR_KEY,JSON.stringify(log.slice(0,20)));
   }catch(e){}
@@ -1553,17 +1553,25 @@ function closeCelebration(){
 // ═══════════════════════════════════════════════════
 // STREAK
 // ═══════════════════════════════════════════════════
-const TRAIN_DAYS=[0,1,3,4];
+const TRAIN_DAYS=[0,1,3,4]; // fallback default (4×/week PPL+Arms)
 const HEB_DAYS2=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+
+// Returns train days for user based on their workout frequency
+function _getTrainDays(u){
+  const scheduleMap={1:[4],2:[0,3],'3ab':[0,2,4],'3abc':[0,2,4],4:[0,1,3,4],'4ab':[0,1,3,4],5:[0,1,2,4,5],6:[0,1,2,3,4,5],7:[0,1,2,3,4,5,6]};
+  const key=u?.plan||u?.workout_freq||4;
+  return scheduleMap[key]||TRAIN_DAYS;
+}
 
 function computeStreak(){
   const log=getLog();
+  const trainDays=_getTrainDays(getActiveUser&&getActiveUser());
   let streak=0;
   const today=new Date();
   for(let i=1;i<90;i++){
     const d=new Date(today); d.setDate(today.getDate()-i);
     const dow=d.getDay();
-    if(!TRAIN_DAYS.includes(dow)) continue;
+    if(!trainDays.includes(dow)) continue;
     const ds=d.toISOString().slice(0,10);
     if(log[ds]?.__complete) streak++;
     else break;
@@ -1625,14 +1633,15 @@ function updateStreak(){
   // week workouts count
   const log=getLog();
   const today=new Date();
+  const trainDays=_getTrainDays(getActiveUser&&getActiveUser());
   let done=0;
   for(let i=0;i<7;i++){
     const d=new Date(today);d.setDate(today.getDate()-i);
     const ds=d.toISOString().slice(0,10);
-    if(TRAIN_DAYS.includes(d.getDay())&&log[ds]?.__complete) done++;
+    if(trainDays.includes(d.getDay())&&log[ds]?.__complete) done++;
   }
   const el=document.getElementById('week-workouts-display');
-  if(el) el.textContent=done+' / '+TRAIN_DAYS.length+' אימונים';
+  if(el) el.textContent=done+' / '+trainDays.length+' אימונים';
 }
 
 // ─── HABITS ──────────────────────────────────────────────────────────────
@@ -1995,7 +2004,7 @@ function tickTimer(){
   document.getElementById('timer-btn').textContent=m+':'+(s<10?'0':'')+s;
   document.getElementById('ring-text').textContent=m+':'+(s<10?'0':'')+s;
   const prog=document.getElementById('ring-prog');
-  if(prog) prog.style.strokeDashoffset=CIRC*(1-_timerRemain/_timerTotal);
+  if(prog&&_timerTotal>0) prog.style.strokeDashoffset=CIRC*(1-_timerRemain/_timerTotal);
 }
 
 // ═══════════════════════════════════════════════════
@@ -2416,44 +2425,8 @@ function countUp(el,to,duration=700){
   requestAnimationFrame(frame);
 }
 
-/** @returns {void} */
-function launchConfetti(){
-  const canvas=document.createElement('canvas');
-  canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
-  document.body.appendChild(canvas);
-  const ctx=canvas.getContext('2d');
-  canvas.width=canvas.offsetWidth; canvas.height=canvas.offsetHeight;
-  const COLORS=['#22C55E','#EF4444','#3B82F6','#F59E0B','#8B5CF6','#06B6D4','#ffffff'];
-  const N=CONFIG.CONFETTI_PARTICLES;
-  const particles=Array.from({length:N},()=>({
-    x:Math.random()*canvas.width, y:-10-Math.random()*40,
-    vx:(Math.random()-0.5)*4, vy:2+Math.random()*4,
-    w:6+Math.random()*8, h:3+Math.random()*5,
-    rot:Math.random()*360, rotV:(Math.random()-0.5)*8,
-    color:COLORS[Math.floor(Math.random()*COLORS.length)],
-    alpha:1
-  }));
-  const startT=performance.now();
-  const DUR=CONFIG.CONFETTI_DURATION;
-  function draw(now){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    const elapsed=now-startT;
-    particles.forEach(p=>{
-      p.y+=p.vy; p.x+=p.vx; p.rot+=p.rotV; p.vy+=0.12;
-      p.alpha=Math.max(0,1-(elapsed-DUR*0.6)/(DUR*0.4));
-      ctx.save();
-      ctx.globalAlpha=p.alpha;
-      ctx.translate(p.x,p.y);
-      ctx.rotate(p.rot*Math.PI/180);
-      ctx.fillStyle=p.color;
-      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
-      ctx.restore();
-    });
-    if(elapsed<DUR) requestAnimationFrame(draw);
-    else canvas.remove();
-  }
-  requestAnimationFrame(draw);
-}
+/** @returns {void} — delegates to fireConfetti which uses #confetti-canvas */
+function launchConfetti(){ fireConfetti(); }
 
 /**
  * @param {string} exKey
