@@ -112,31 +112,34 @@
     <div>
       <div style="font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">התחל אימון</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
-        <button onclick="showPanel('push',null);setMobileNav('push');" style="background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(239,68,68,.05));border:1.5px solid rgba(239,68,68,.3);border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;transition:transform .15s;">
-          <div style="font-size:1.5rem;margin-bottom:5px;">💥</div>
-          <div style="font-size:.95rem;font-weight:800;color:#EF4444;letter-spacing:.02em;">PUSH</div>
-          <div style="font-size:.62rem;color:var(--muted);margin-top:3px;">חזה · כתפיים · טרי</div>
+        <button class="workout-card push" onclick="showPanel('push',null);setMobileNav('push');">
+          <div class="workout-card-icon">💥</div>
+          <div class="workout-card-title" style="color:var(--push-c);">PUSH</div>
+          <div class="workout-card-sub">חזה · כתפיים · טריצפסצפס</div>
         </button>
-        <button onclick="showPanel('pull',null);setMobileNav('push');" style="background:linear-gradient(135deg,rgba(6,182,212,.12),rgba(6,182,212,.05));border:1.5px solid rgba(6,182,212,.3);border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;transition:transform .15s;">
-          <div style="font-size:1.5rem;margin-bottom:5px;">🔄</div>
-          <div style="font-size:.95rem;font-weight:800;color:#06B6D4;letter-spacing:.02em;">PULL</div>
-          <div style="font-size:.62rem;color:var(--muted);margin-top:3px;">גב · ביצפס · אמות</div>
+        <button class="workout-card pull" onclick="showPanel('pull',null);setMobileNav('pull');">
+          <div class="workout-card-icon">🔄</div>
+          <div class="workout-card-title" style="color:var(--pull-c);">PULL</div>
+          <div class="workout-card-sub">גב · ביצפס · אמות</div>
         </button>
-        <button onclick="showPanel('legs',null);setMobileNav('push');" style="background:linear-gradient(135deg,rgba(139,92,246,.12),rgba(139,92,246,.05));border:1.5px solid rgba(139,92,246,.3);border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;transition:transform .15s;">
-          <div style="font-size:1.5rem;margin-bottom:5px;">🦵</div>
-          <div style="font-size:.95rem;font-weight:800;color:#8B5CF6;letter-spacing:.02em;">LEGS</div>
-          <div style="font-size:.62rem;color:var(--muted);margin-top:3px;">רגליים מלא</div>
+        <button class="workout-card legs" onclick="showPanel('legs',null);setMobileNav('legs');">
+          <div class="workout-card-icon">🦵</div>
+          <div class="workout-card-title" style="color:var(--legs-c);">LEGS</div>
+          <div class="workout-card-sub">רגליים מלא</div>
         </button>
-        <button onclick="showPanel('arms',null);setMobileNav('push');" style="background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(245,158,11,.05));border:1.5px solid rgba(245,158,11,.3);border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;transition:transform .15s;">
-          <div style="font-size:1.5rem;margin-bottom:5px;">💪</div>
-          <div style="font-size:.95rem;font-weight:800;color:#F59E0B;letter-spacing:.02em;">ARMS</div>
-          <div style="font-size:.62rem;color:var(--muted);margin-top:3px;">ידיים · כתפיים</div>
+        <button class="workout-card arms" onclick="showPanel('arms',null);setMobileNav('arms');">
+          <div class="workout-card-icon">💪</div>
+          <div class="workout-card-title" style="color:var(--arms-c);">ARMS</div>
+          <div class="workout-card-sub">ידיים · כתפיים</div>
         </button>
       </div>
     </div>
 
+    <!-- ── WEEKLY SUMMARY ── -->
+    <div id="weekly-summary"></div>
+
     <!-- ── METRICS: RINGS + STATS ── -->
-    <div style="background:#1A2330;border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:18px;display:flex;align-items:center;gap:16px;">
+    <div style="background:var(--bg4);border:1px solid var(--border);border-radius:20px;padding:18px;display:flex;align-items:center;gap:16px;">
       <!-- Concentric Rings SVG -->
       <div style="position:relative;width:110px;height:110px;flex-shrink:0;">
         <svg style="width:100%;height:100%;transform:rotate(-90deg)" viewBox="0 0 36 36">
@@ -336,22 +339,22 @@
         <button onclick="showPanel('push',null);setMobileNav('push');" style="background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(239,68,68,.06));border:1.5px solid rgba(239,68,68,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="font-size:2rem;margin-bottom:6px;">💥</div>
           <div style="font-size:1.05rem;font-weight:800;color:#EF4444;">PUSH</div>
-          <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">חזה · כתפיים · טרי</div>
+          <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">חזה · כתפיים · טריצפס</div>
           <div style="font-size:.6rem;color:rgba(239,68,68,.6);margin-top:6px;">ראשון | 7 תרגילים | ~70 דק׳</div>
         </button>
-        <button onclick="showPanel('pull',null);setMobileNav('push');" style="background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(6,182,212,.06));border:1.5px solid rgba(6,182,212,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
+        <button onclick="showPanel('pull',null);setMobileNav('pull');" style="background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(6,182,212,.06));border:1.5px solid rgba(6,182,212,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="font-size:2rem;margin-bottom:6px;">🔄</div>
           <div style="font-size:1.05rem;font-weight:800;color:#06B6D4;">PULL</div>
           <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">גב · ביצפס · אמות</div>
           <div style="font-size:.6rem;color:rgba(6,182,212,.6);margin-top:6px;">שני | 7 תרגילים | ~65 דק׳</div>
         </button>
-        <button onclick="showPanel('legs',null);setMobileNav('push');" style="background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(139,92,246,.06));border:1.5px solid rgba(139,92,246,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
+        <button onclick="showPanel('legs',null);setMobileNav('legs');" style="background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(139,92,246,.06));border:1.5px solid rgba(139,92,246,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="font-size:2rem;margin-bottom:6px;">🦵</div>
           <div style="font-size:1.05rem;font-weight:800;color:#8B5CF6;">LEGS</div>
           <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">רגליים מלא</div>
           <div style="font-size:.6rem;color:rgba(139,92,246,.6);margin-top:6px;">רביעי | 7 תרגילים | ~75 דק׳</div>
         </button>
-        <button onclick="showPanel('arms',null);setMobileNav('push');" style="background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.06));border:1.5px solid rgba(245,158,11,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
+        <button onclick="showPanel('arms',null);setMobileNav('arms');" style="background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.06));border:1.5px solid rgba(245,158,11,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="font-size:2rem;margin-bottom:6px;">💪</div>
           <div style="font-size:1.05rem;font-weight:800;color:#F59E0B;">ARMS</div>
           <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">ידיים · כתפיים</div>
@@ -363,7 +366,7 @@
       <div class="card-head"><h2>📅 לוח שבועי</h2><span class="badge badge-blue">4 ימי אימון</span></div>
       <div class="card-body">
         <div class="week-bar">
-          <div class="day-cell" onclick="goDay('push')"><div class="dc-name">ראשון א׳</div><div class="dc-icon">💥</div><div class="dc-type" style="color:var(--red)">PUSH</div><div class="dc-label">חזה · כתף · טרי</div></div>
+          <div class="day-cell" onclick="goDay('push')"><div class="dc-name">ראשון א׳</div><div class="dc-icon">💥</div><div class="dc-type" style="color:var(--red)">PUSH</div><div class="dc-label">חזה · כתף · טריצפס</div></div>
           <div class="day-cell" onclick="goDay('pull')"><div class="dc-name">שני ב׳</div><div class="dc-icon">🔄</div><div class="dc-type" style="color:var(--blue)">PULL</div><div class="dc-label">גב · בייסס</div></div>
           <div class="day-cell rest-day"><div class="dc-name">שלישי ג׳</div><div class="dc-icon">😴</div><div class="dc-type" style="color:var(--green)">מנוחה</div><div class="dc-label">שיקום</div></div>
           <div class="day-cell" onclick="goDay('legs')"><div class="dc-name">רביעי ד׳</div><div class="dc-icon">🦵</div><div class="dc-type" style="color:var(--purple)">LEGS</div><div class="dc-label">רגליים מלא</div></div>

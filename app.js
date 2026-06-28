@@ -1,8 +1,8 @@
-// Migrate API key from localStorage to sessionStorage (security fix)
+// Migrate API key from sessionStorage to localStorage (persist across refresh)
 (function(){
   const k='proFit_apiKey';
-  const old=localStorage.getItem(k);
-  if(old){sessionStorage.setItem(k,old);localStorage.removeItem(k);}
+  const old=sessionStorage.getItem(k);
+  if(old){localStorage.setItem(k,old);sessionStorage.removeItem(k);}
 })();
 
 // HTML escape utility — wrap user-supplied strings before injecting into innerHTML
@@ -226,7 +226,54 @@ const EX = {
     sets:'3×15',rest:'60 שנ׳',lvl:'בידוד',
     desc:'כבל שומר על מתח קבוע לאורך כל טווח התנועה — שאב דם מושלם לסיום.',
     muscles:'ביצפס, ברכיאליס.',
-    tips:['זרוע ישרה לגמרי בתחתית','כיווץ מלא בפסגה','תנועה איטית ומבוקרת','אפשר לעשות חד-צדדי']}
+    tips:['זרוע ישרה לגמרי בתחתית','כיווץ מלא בפסגה','תנועה איטית ומבוקרת','אפשר לעשות חד-צדדי']},
+  inclineDB:{name:'לחיצת דמבל שכיבה',en:'Incline Dumbbell Press',e:'📐',cat:'push',sets:'4×8–12',rest:90,lvl:2,desc:'לחיצת חזה עם דמבלים בשכיבה 30-45 מעלות לדגש על חלק עליון',muscles:['חזה עליון','כתף קדמית','טריצפס'],tips:['כוון 30-45 מעלות — לא יותר','מרפקים 45 מעלות מהגוף','הורד לאט ואל תנעל למעלה']},
+  declineBench:{name:'לחיצת חזה ירידה',en:'Decline Bench Press',e:'📉',cat:'push',sets:'4×8–12',rest:90,lvl:2,desc:'לחיצת חזה בשכיבה יורדת לדגש על חלק תחתון',muscles:['חזה תחתון','טריצפס','כתף קדמית'],tips:['קבע רגליים היטב','קשת טבעית בגב','הורד לאט — 2-3 שניות']},
+  closeGripBenchDB:{name:'לחיצת מוט אחיזה צרה',en:'Close Grip Bench Press',e:'🔧',cat:'push',sets:'4×6–10',rest:90,lvl:2,desc:'לחיצת מוט עם אחיזה צרה לדגש על טריצפס',muscles:['טריצפס','חזה','כתף קדמית'],tips:['אחיזה רוחב כתפיים','מרפקים קרובים לגוף','שליטה מלאה בירידה']},
+  pecDeck:{name:'פק דק',en:'Pec Deck Machine',e:'🦋',cat:'push',sets:'3×12–15',rest:60,lvl:1,desc:'כיווץ חזה במכונה לטווח תנועה מלא',muscles:['חזה','כתף קדמית'],tips:['הרגש כיווץ בפסגה','אל תנעל מרפקים','טווח תנועה מלא']},
+  cableChestFly:{name:'פרפר חזה בכבל',en:'Cable Chest Fly',e:'🔀',cat:'push',sets:'3×12–15',rest:60,lvl:2,desc:'פרפר בכבל בגובה בינוני לטנשן קבוע',muscles:['חזה','כתף קדמית'],tips:['עמוד באמצע המכשיר','תנועת חבוק','שמור על כפיפה קלה במרפק']},
+  arnoldPressDB:{name:'לחיצת ארנולד',en:'Arnold Press',e:'🏆',cat:'push',sets:'3×10–12',rest:75,lvl:2,desc:'לחיצת כתפיים עם סיבוב לכיסוי כל ראשי הדלתא',muscles:['כתף','טריצפס','כתף קדמית'],tips:['התחל עם כפות ידיים פנים','סובב בעלייה','תנועה איטית ושליטה']},
+  seatedDBPress:{name:'לחיצת כתפיים ישיבה',en:'Seated Dumbbell Press',e:'🪑',cat:'push',sets:'4×8–12',rest:90,lvl:1,desc:'לחיצת כתפיים עם דמבלים בישיבה לייצוב מקסימלי',muscles:['כתף','טריצפס','כתף קדמית'],tips:['גב ישר על משענת','מרפקים ב-90 מעלות בתחתית','אל תנעל למעלה']},
+  cableLateral:{name:'הרמה לצד בכבל',en:'Cable Lateral Raise',e:'🔗',cat:'push',sets:'3×12–15',rest:60,lvl:2,desc:'הרמה לצד בכבל לטנשן קבוע לאורך כל התנועה',muscles:['כתף אמצעי'],tips:['כבל מתחת לגוף','תנועה איטית','מרפק מעט כפוף']},
+  machineShoulderPress:{name:'לחיצת כתפיים מכונה',en:'Machine Shoulder Press',e:'🤖',cat:'push',sets:'3×10–15',rest:75,lvl:1,desc:'לחיצת כתפיים במכונה לתנועה בטוחה',muscles:['כתף','טריצפס'],tips:['כוון מושב לגובה הנכון','תנועה מלאה','אל תנעל למעלה']},
+  inclineChestPress:{name:'לחיצת חזה שכיבה מכונה',en:'Incline Chest Press Machine',e:'🎯',cat:'push',sets:'4×10–12',rest:75,lvl:1,desc:'לחיצת חזה עליון במכונה',muscles:['חזה עליון','כתף קדמית','טריצפס'],tips:['כוון גובה מושב','גב על מושב','תנועה מבוקרת']},
+  singleArmRow:{name:'חתירה חד-צדדית',en:'Single Arm Dumbbell Row',e:'💪',cat:'pull',sets:'4×8–12',rest:75,lvl:1,desc:'חתירה עם דמבל יחיד על ספסל לגב חד-צדדי',muscles:['גב רחב','ראמ"ן','ביצפס'],tips:['יד תמיכה על ספסל','משוך למותניים','שלוט בחזרה']},
+  tBarRowV2:{name:'חתירת T-BAR',en:'T-Bar Row',e:'🏗️',cat:'pull',sets:'4×8–10',rest:90,lvl:2,desc:'חתירה עם מוט T לעובי גב מרבי',muscles:['גב עמוד אמצעי','ראמ"ן','ביצפס'],tips:['כפוף 45 מעלות','חזה על הריפוד','משוך לחזה התחתון']},
+  cableRowSeat:{name:'חתירה בכבל ישיבה',en:'Seated Cable Row',e:'🔗',cat:'pull',sets:'4×10–12',rest:75,lvl:1,desc:'חתירה בכבל בישיבה לעובי גב',muscles:['גב עמוד אמצעי','ראמ"ן','ביצפס'],tips:['גב ישר לא כפוף','משוך לטבור','שלוט בחזרה']},
+  chinUp:{name:'מתח אחיזה מחודדת',en:'Chin Up',e:'🔼',cat:'pull',sets:'4×6–10',rest:90,lvl:2,desc:'מתח אחיזה מחודדת להדגשת ביצפס',muscles:['גב רחב','ביצפס'],tips:['אחיזה פנים','משוך חזה לבר','ירידה איטית — 3 שניות']},
+  concentrationCurl:{name:'כפיפת ריכוז',en:'Concentration Curl',e:'🎯',cat:'pull',sets:'3×10–12',rest:60,lvl:1,desc:'כפיפת ביצפס ישיבה לאיזוציה מרבית',muscles:['ביצפס ראש קצר'],tips:['מרפק על ירך פנימית','תנועה מלאה','כיווץ בפסגה 1 שניה']},
+  reverseGripCurl:{name:'כפיפה אחיזה הפוכה',en:'Reverse Grip Curl',e:'🔄',cat:'pull',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפת ביצפס עם כפות ידיים כלפי מטה לברכיאליס',muscles:['ברכיאליס','ברכיו-ראדיאליס'],tips:['אחיזה רוחב כתפיים','מרפקים קרובים לגוף','תנועה שלוטה']},
+  underhandPulldown:{name:'לאת אחיזה מחודדת',en:'Underhand Lat Pulldown',e:'🔃',cat:'pull',sets:'3×10–12',rest:75,lvl:1,desc:'לאת בכבל עם אחיזה מחודדת לדגש ביצפס',muscles:['גב רחב','ביצפס'],tips:['אחיזה רוחב כתפיים','גב ישר','משוך לחזה התחתון']},
+  machineRow:{name:'חתירה במכונה',en:'Machine Row',e:'🤖',cat:'pull',sets:'3×12–15',rest:60,lvl:1,desc:'חתירת גב במכונה לתנועה בטוחה',muscles:['גב עמוד אמצעי','ראמ"ן'],tips:['כוון גובה ידיות','גב ישר','משוך ועצור שניה']},
+  inclineCurlDB:{name:'כפיפת דמבל שכיבה',en:'Incline Dumbbell Curl',e:'📐',cat:'pull',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפת ביצפס עם דמבלים בשכיבה להתמתחות מרבית',muscles:['ביצפס','ברכיאליס'],tips:['ספסל 45-60 מעלות','ידיים תלויות','כפוף לאט']},
+  bulgarianSplit:{name:'סקוואט בולגרי',en:'Bulgarian Split Squat',e:'🏆',cat:'legs',sets:'4×8–10',rest:90,lvl:2,desc:'סקוואט חד-רגלי עם רגל אחורית על ספסל',muscles:['ארבע ראשי','ישבן','ירכיים'],tips:['רגל אחורית על ספסל','ברך קדמית מעל אצבעות','יסוד אנכי']},
+  walkingLunge:{name:'צעדות',en:'Walking Lunges',e:'🚶',cat:'legs',sets:'3×12–16',rest:75,lvl:1,desc:'צעדות קדימה לאימון מלא של הרגל',muscles:['ארבע ראשי','ישבן','ירכיים'],tips:['צעד גדול','ברך אחורית לא נוגעת ברצפה','גב ישר']},
+  sumoSquat:{name:'סקוואט סומו',en:'Sumo Squat',e:'🤼',cat:'legs',sets:'4×10–12',rest:75,lvl:1,desc:'סקוואט פתיחה רחבה לדגש מכייסים',muscles:['מכייס','אדקטורים','ישבן'],tips:['פתיחה 45 מעלות לחוץ','ברכיים בכיוון האצבעות','ירך עד מקביל']},
+  gobletSquat:{name:'סקוואט גביע',en:'Goblet Squat',e:'🏺',cat:'legs',sets:'3×12–15',rest:60,lvl:1,desc:'סקוואט עם דמבל לקידמה — מושלם לטכניקה',muscles:['ארבע ראשי','ישבן','ליבה'],tips:['דמבל ליד חזה','עקבים על הרצפה','ישב עמוק']},
+  singleLegRDL:{name:'RDL חד-רגלי',en:'Single Leg RDL',e:'⚖️',cat:'legs',sets:'3×8–10',rest:75,lvl:2,desc:'RDL על רגל אחת לאיזון ועקמוניים',muscles:['עקמוניים ירכיים','ישבן','עגל'],tips:['עמוד יציב','גב שטוח','הורד עד שמרגיש מתיחה']},
+  gluteBridge:{name:'גשר ישבן',en:'Glute Bridge',e:'🌉',cat:'legs',sets:'4×12–15',rest:60,lvl:1,desc:'גשר על הגב לאקטיבציה מרבית של הישבן',muscles:['ישבן','עקמוניים ירכיים'],tips:['כפות רגליים קרובות לישבן','דחוף ישבן למעלה','כיווץ בפסגה 1 שניה']},
+  abductorMachine:{name:'אבדקטור',en:'Hip Abductor Machine',e:'↗️',cat:'legs',sets:'3×15–20',rest:60,lvl:1,desc:'מכונת אבדקטור לפיתוח ישבן צידי',muscles:['ישבן צידי','גלוטאוס מדיוס'],tips:['כוון גובה מושב','תנועה איטית','עצור בנקודה הרחוקה']},
+  adductorMachine:{name:'אדדקטור',en:'Hip Adductor Machine',e:'↙️',cat:'legs',sets:'3×15–20',rest:60,lvl:1,desc:'מכונת אדדקטור לירכיים פנימיות',muscles:['ירך פנימית','אדקטורים'],tips:['כוון זווית מושב','תנועה שלוטה','אל תגלוש']},
+  boxJump:{name:'קפיצת בוקס',en:'Box Jump',e:'📦',cat:'legs',sets:'4×6–8',rest:90,lvl:2,desc:'קפיצה אתלטית לעוצמה ומהירות',muscles:['ארבע ראשי','עגל','ישבן'],tips:['נחת רך עם ברכיים כפופות','קפוץ בשתי רגליים','ירד בזהירות']},
+  legPressNarrow:{name:'לג פרס אחיזה צרה',en:'Leg Press Narrow Stance',e:'🎯',cat:'legs',sets:'4×10–12',rest:90,lvl:1,desc:'לחיצת רגל צרה לדגש ארבע ראשי קדמי',muscles:['ארבע ראשי'],tips:['פתיחה עד רוחב כתפיים','ירד עמוק','אל תנעל ברכיים']},
+  dbSkullCrusher:{name:'שוברי גולגולת דמבל',en:'DB Skull Crusher',e:'💀',cat:'arms',sets:'3×10–12',rest:75,lvl:2,desc:'שוברי גולגולת עם דמבלים לטווח תנועה טוב',muscles:['טריצפס ראש ארוך'],tips:['מרפקים מעל הפנים','הורד לאט בשליטה','אל תיתן מרפקים לפרוח']},
+  cableTricepOverhead:{name:'טריצפס כבל מעל ראש',en:'Cable Overhead Tricep Ext',e:'🔗',cat:'arms',sets:'3×12–15',rest:60,lvl:2,desc:'הרחבת טריצפס בכבל מעל הראש לראש ארוך',muscles:['טריצפס ראש ארוך'],tips:['עמוד גב לכבל','מרפקים קרובים לאוזניים','תנועה מלאה']},
+  benchDipsArms:{name:'שכיבות סמיכה על ספסל',en:'Bench Dips',e:'🏋️',cat:'arms',sets:'3×12–15',rest:60,lvl:1,desc:'שכיבות סמיכה עם ידיים על ספסל לטריצפס',muscles:['טריצפס','כתף קדמית'],tips:['ידיים קרובות לגוף','ירד עד מתיחה','רגליים מוארכות לקושי']},
+  ropePushdown:{name:'פשיטת טריצפס חבל',en:'Rope Tricep Pushdown',e:'🪢',cat:'arms',sets:'3×12–15',rest:60,lvl:1,desc:'פשיטת טריצפס בכבל עם חבל לכיסוי מלא',muscles:['טריצפס'],tips:['פצל החבל בתחתית','מרפקים קבועים','כיווץ מלא']},
+  spiderCurl:{name:'ספיידר קרל',en:'Spider Curl',e:'🕷️',cat:'arms',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפת ביצפס על ספסל נטוי קדימה לאיזוציה',muscles:['ביצפס'],tips:['שכב עם חזה על ספסל נטוי','ידיים תלויות','כפוף לאט ושלוט']},
+  zottmanCurl:{name:'זוטמן קרל',en:'Zottman Curl',e:'🔄',cat:'arms',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפה עם סיבוב לביצפס וברכיאליס',muscles:['ביצפס','ברכיאליס','ברכיו-ראדיאליס'],tips:['כפוף עם כפות ידיים למעלה','סובב בפסגה','הורד עם כפות ידיים למטה']},
+  reverseCurl:{name:'כפיפה הפוכה',en:'Reverse Curl',e:'↩️',cat:'arms',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפה עם אחיזה הפוכה לברכיו-ראדיאליס',muscles:['ברכיו-ראדיאליס','ברכיאליס'],tips:['אחיזה הפוכה רוחב כתפיים','מרפקים קרובים לגוף','תנועה שלוטה']},
+  wristCurlDB:{name:'כפיפת פרק יד',en:'Wrist Curl',e:'✊',cat:'arms',sets:'3×15–20',rest:45,lvl:1,desc:'חיזוק שרירי האמה עם כפיפת פרק יד',muscles:['שרירי אמה קדמי'],tips:['אמות על ברכיים','תנועה מלאה','משקל קל']},
+  plank:{name:'פלאנק',en:'Plank',e:'🧱',cat:'core',sets:'3×45-60 שניות',rest:45,lvl:1,desc:'החזקת גוף ישר על אמות לחיזוק הליבה',muscles:['ליבה','כתפיים','ישבן'],tips:['גוף קו ישר','טבור פנים','נשום בקביעות']},
+  hangingLegRaise:{name:'הרמת רגליים תלוי',en:'Hanging Leg Raise',e:'🏋️',cat:'core',sets:'4×10–15',rest:60,lvl:2,desc:'הרמת רגליים בתלייה על בר לבטן תחתונה',muscles:['בטן תחתונה','היפ פלקסור'],tips:['תנופה אפסית','הרם עד מקביל','הורד לאט']},
+  cableCrunch:{name:'כפיפת בטן בכבל',en:'Cable Crunch',e:'🔗',cat:'core',sets:'4×12–15',rest:60,lvl:2,desc:'כפיפת בטן בכבל לבטן עליונה',muscles:['בטן עליונה'],tips:['ברכיים על הרצפה','כפוף מהצלעות','כיווץ בפסגה']},
+  russianTwist:{name:'סיבוב רוסי',en:'Russian Twist',e:'🌀',cat:'core',sets:'3×20',rest:45,lvl:1,desc:'סיבוב ישיבה לאלכסוניים',muscles:['בטן אלכסוני','בטן שטוחה'],tips:['הרם רגליים מהרצפה','סובב מהמותניים','משקל קל']},
+  abWheel:{name:'גלגל בטן',en:'Ab Wheel Rollout',e:'⚙️',cat:'core',sets:'3×8–12',rest:60,lvl:3,desc:'גלגול גלגל בטן לליבה מתקדמת',muscles:['בטן שטוחה','ליבה','כתפיים'],tips:['ברכיים על הרצפה','גב שטוח','חזור לאט']},
+  sidePlank:{name:'פלאנק צד',en:'Side Plank',e:'↗️',cat:'core',sets:'3×30-45 שניות',rest:30,lvl:1,desc:'פלאנק צידי לאלכסוניים ויציבות',muscles:['בטן אלכסוני','ליבה','כתף'],tips:['גוף קו ישר','ירך מורמת','נשום בקביעות']},
+  vUp:{name:'V-UP',en:'V-Up',e:'✌️',cat:'core',sets:'3×12–15',rest:45,lvl:2,desc:'כפיפה מלאה לרגליים ופלג עליון',muscles:['בטן שטוחה','היפ פלקסור'],tips:['שמור גב ישר','גע ידיים ברגליים','הורד לאט']},
+  toeTouch:{name:'נגיעת אצבעות',en:'Toe Touch Crunch',e:'👆',cat:'core',sets:'3×15–20',rest:45,lvl:1,desc:'כפיפת בטן עם רגליים אנכיות',muscles:['בטן עליונה'],tips:['רגליים אנכיות לרצפה','גע ידיים לאצבעות','כתפיים מהרצפה']},
+  crunchMachine:{name:'כפיפת בטן מכונה',en:'Crunch Machine',e:'🤖',cat:'core',sets:'3×15–20',rest:45,lvl:1,desc:'כפיפת בטן עם עמסה מכנית',muscles:['בטן עליונה','בטן אמצעי'],tips:['כוון גובה מושב','כפוף מהצלעות','כיווץ מלא']},
+  dragonFlag:{name:'דרגון פלאג',en:'Dragon Flag',e:'🐉',cat:'core',sets:'3×5–8',rest:90,lvl:3,desc:'תרגיל ליבה מתקדם — גוף שלם',muscles:['בטן שטוחה','ליבה','גב תחתון'],tips:['אחוז ספסל מאחורי הראש','גוף קשיח','הורד לאט בשליטה']}
 };
 
 const EX_YT={
@@ -273,10 +320,19 @@ const CAT_STYLE={
   PULL:{grad:'linear-gradient(135deg,rgba(90,200,250,.28),rgba(10,132,255,.08))',color:'#5AC8FA'},
   LEGS:{grad:'linear-gradient(135deg,rgba(191,90,242,.28),rgba(191,90,242,.06))',color:'#BF5AF2'},
   ARMS:{grad:'linear-gradient(135deg,rgba(255,214,10,.28),rgba(255,159,10,.06))',color:'#FFD60A'},
+  CORE:{grad:'linear-gradient(135deg,rgba(50,215,75,.28),rgba(48,209,88,.06))',color:'#30D158'},
 };
 
 let _currentExKey = null;
 let _modalTrapFn = null;
+// Normalize exercise fields — supports both legacy schema (Hebrew cat, string muscles,
+// string rest/lvl) and the expanded schema (English cat, array muscles, numeric rest/lvl)
+function _exMuscles(e){ return Array.isArray(e.muscles)?e.muscles.join(', '):(e.muscles||''); }
+function _exRest(e){ return typeof e.rest==='number'?(e.rest>=120?(e.rest/60).toFixed(e.rest%60?1:0)+' דק׳':e.rest+' שנ׳'):(e.rest||''); }
+function _exLvl(e){ const m={1:'קל',2:'בינוני',3:'כבד'}; return typeof e.lvl==='number'?(m[e.lvl]||'בינוני'):(e.lvl||''); }
+const _CAT_HE={push:'PUSH',pull:'PULL',legs:'LEGS',arms:'ARMS',core:'CORE'};
+function _exCatLabel(e){ return _CAT_HE[e.cat]||e.cat||''; }
+
 function openModal(key){
   const e=EX[key]; if(!e)return;
   _currentExKey = key;
@@ -284,19 +340,20 @@ function openModal(key){
   const _catMap={'ירכיים':'LEGS','ישבן':'LEGS','קוואדס':'LEGS','המסטרינג':'LEGS',
     'טריצפס':'PUSH','כתפיים':'PUSH','חזה':'PUSH',
     'גב':'PULL','בייסס':'PULL','ביצפס':'PULL'};
-  const cs=CAT_STYLE[e.cat]||CAT_STYLE[_catMap[e.cat]]||CAT_STYLE.PUSH;
+  const _catUC=_CAT_HE[e.cat]||e.cat;
+  const cs=CAT_STYLE[_catUC]||CAT_STYLE[_catMap[e.cat]]||CAT_STYLE.PUSH;
   document.getElementById('m-hero-bg').style.background=cs.grad;
   document.getElementById('m-hero-wm').textContent=e.e;
-  document.getElementById('m-hero-cat').textContent=e.cat+' DAY';
+  document.getElementById('m-hero-cat').textContent=_exCatLabel(e)+' DAY';
   document.getElementById('m-hero-name').textContent=e.name;
   document.getElementById('m-hero-en').textContent=e.en;
   document.getElementById('m-title').textContent=e.name;
   document.getElementById('m-desc').textContent=e.desc;
-  document.getElementById('m-muscles').textContent=e.muscles;
+  document.getElementById('m-muscles').textContent=_exMuscles(e);
   document.getElementById('m-info').innerHTML=
     `<div class="info-pill">סטים: <strong>${e.sets}</strong></div>
-     <div class="info-pill">מנוחה: <strong>${e.rest}</strong></div>
-     <div class="info-pill">עצימות: <strong>${e.lvl}</strong></div>`;
+     <div class="info-pill">מנוחה: <strong>${_exRest(e)}</strong></div>
+     <div class="info-pill">עצימות: <strong>${_exLvl(e)}</strong></div>`;
   document.getElementById('m-tips').innerHTML=e.tips.map(t=>`<li><span>✅</span><span>${_esc(t)}</span></li>`).join('');
   // Demo video card
   const demoEl=document.getElementById('m-demo');
@@ -372,10 +429,11 @@ function renderExSearch(query){
   if(!q){ resultsEl.innerHTML=''; resultsEl.style.display='none'; return; }
 
   const matches=Object.entries(EX).filter(([key,ex])=>{
-    return ex.name?.includes(q)||
+    const musc=Array.isArray(ex.muscles)?ex.muscles.join(' '):(ex.muscles||'');
+    return (ex.name||'').includes(q)||
            (ex.en||'').toLowerCase().includes(q)||
-           (ex.cat||'').includes(q)||
-           (ex.muscles||'').toLowerCase().includes(q);
+           (ex.cat||'').toLowerCase().includes(q)||
+           musc.toLowerCase().includes(q);
   }).slice(0,8);
 
   if(matches.length===0){
@@ -389,7 +447,7 @@ function renderExSearch(query){
       <span class="ex-search-icon">${ex.e||'💪'}</span>
       <div class="ex-search-info">
         <div class="ex-search-name">${_esc(ex.name)}</div>
-        <div class="ex-search-meta">${_esc(ex.cat||'')} · ${_esc(ex.sets||'')}</div>
+        <div class="ex-search-meta">${_esc(_exCatLabel(ex))} · ${_esc(ex.sets||'')}</div>
       </div>
     </div>
   `).join('');
@@ -603,7 +661,7 @@ function saveSettingsForm(){
   if(isNaN(age)||age<13||age>100){showToast('ערך לא תקין');return;}
   saveSettings({name,weight,height,age,calories});
   const apiKey=(document.getElementById('sf-apikey')?.value||'').trim();
-  if(apiKey) sessionStorage.setItem('proFit_apiKey',apiKey);
+  if(apiKey) localStorage.setItem('proFit_apiKey',apiKey);
   // Read new profile fields
   const goal=document.getElementById('sf-goal')?.value||'lean_bulk';
   const activity=parseFloat(document.getElementById('sf-activity')?.value)||1.55;
@@ -1037,7 +1095,7 @@ function switchUser(id){
   // Sync settings form and settings key
   const n=calcNutrition(u);
   saveSettings({name:u.name,weight:u.weight,height:u.height,age:u.age,calories:n.target});
-  if(u.apiKey) sessionStorage.setItem('proFit_apiKey',u.apiKey);
+  if(u.apiKey) localStorage.setItem('proFit_apiKey',u.apiKey);
   renderUserList();
   renderNutritionPanel();
   applyUserConditions(u);
@@ -1069,7 +1127,7 @@ function prefillSettingsForm(){
   const sh=document.getElementById('sf-height'); if(sh) sh.value=s.height;
   const sa=document.getElementById('sf-age'); if(sa) sa.value=s.age;
   const sc2=document.getElementById('sf-calories'); if(sc2) sc2.value=s.calories;
-  const sk=document.getElementById('sf-apikey'); if(sk) sk.value=sessionStorage.getItem('proFit_apiKey')||'';
+  const sk=document.getElementById('sf-apikey'); if(sk) sk.value=localStorage.getItem('proFit_apiKey')||'';
   // New fields from user record
   const sg=document.getElementById('sf-goal'); if(sg) sg.value=u.goal||'lean_bulk';
   const act=document.getElementById('sf-activity'); if(act) act.value=String(u.activity||1.55);
@@ -1377,7 +1435,7 @@ function renderSetLogInModal(key){
   section.innerHTML=`<div class="msl-section">
     <div class="msl-header">
       <span class="msl-title">📋 רשום את האימון</span>
-      <span class="msl-subtitle">${ex.sets} · ${ex.rest}</span>
+      <span class="msl-subtitle">${ex.sets} · ${_exRest(ex)}</span>
     </div>
     <div class="msl-sets">${setRows}</div>
     <button class="msl-save-btn" onclick="saveModalSetLog('${key}',${nSets})">✓ שמור אימון</button>
@@ -1609,7 +1667,66 @@ function checkNewAchievements(){
   }
 }
 
+/** Weekly summary widget — workouts done, PRs, total volume over last 7 days */
+function renderWeeklySummary(){
+  const el=document.getElementById('weekly-summary'); if(!el) return;
+  const log=getLog();
+  const setlog=_getJSON(SETLOG_KEY,{});
+  const today=new Date();
+  let workouts=0, volume=0, prs=0;
+  const weekDates=[];
+  for(let i=0;i<7;i++){
+    const d=new Date(today); d.setDate(today.getDate()-i);
+    weekDates.push(d.toISOString().slice(0,10));
+  }
+  // workouts completed this week
+  weekDates.forEach(ds=>{ if(log[ds]&&Object.values(log[ds]).some(v=>v===true||v===1)) workouts++; });
+  // volume + PRs this week from set log
+  Object.values(setlog).forEach(arr=>{
+    if(!Array.isArray(arr)) return;
+    arr.forEach(entry=>{
+      if(entry.date&&weekDates.includes(entry.date)&&Array.isArray(entry.sets)){
+        entry.sets.forEach(s=>{ volume+=(s.kg||0)*(s.reps||0); });
+      }
+    });
+  });
+  // PRs set this week
+  Object.values(getPRs()).forEach(pr=>{ if(pr.date&&weekDates.includes(pr.date)) prs++; });
+
+  if(workouts===0&&volume===0){
+    el.innerHTML=`<div class="empty-state" style="padding:24px 16px;">
+      <div class="empty-state-icon">🏋️</div>
+      <div class="empty-state-title">בוא נתחיל</div>
+      <div class="empty-state-sub">השלם את האימון הראשון שלך השבוע — בחר PUSH, PULL, LEGS או ARMS למעלה</div>
+    </div>`;
+    return;
+  }
+  const volK=volume>=1000?(volume/1000).toFixed(1)+' טון':Math.round(volume)+' ק"ג';
+  const title=workouts>=4?'שבוע מעולה! 🔥':workouts>=2?'בדרך הנכונה 💪':'התחלה טובה ✨';
+  el.innerHTML=`<div class="weekly-summary">
+    <div class="row-between mb-4">
+      <span class="text-h3">${title}</span>
+      <span class="text-meta text-muted">7 ימים אחרונים</span>
+    </div>
+    <div class="weekly-stats">
+      <div style="text-align:center;flex:1;">
+        <div class="weekly-stat-val">${workouts}</div>
+        <div class="weekly-stat-label">אימונים</div>
+      </div>
+      <div style="text-align:center;flex:1;">
+        <div class="weekly-stat-val">${volK}</div>
+        <div class="weekly-stat-label">נפח כולל</div>
+      </div>
+      <div style="text-align:center;flex:1;">
+        <div class="weekly-stat-val">${prs}</div>
+        <div class="weekly-stat-label">שיאים</div>
+      </div>
+    </div>
+  </div>`;
+}
+
 function updateStreak(){
+  renderWeeklySummary();
   const n=computeStreak();
   ['streak-num','streak-num2'].forEach(id=>{const el=document.getElementById(id);if(el){countUp(el,n);}});
   const msgs=[[0,0,'מתחילים'],[1,3,'התחלה טובה'],[4,7,'אחלה קצב'],[8,14,'מכונה'],[15,999,'אגדה']];
@@ -2163,7 +2280,7 @@ window.addEventListener('load',()=>{
       try{
         const s=JSON.parse(old);
         const migrated={id:'u_0',name:s.name||'המשתמש שלי',age:s.age||31,weight:s.weight||60,height:s.height||170,gender:'m',goal:'lean_bulk',activity:1.55,calories:s.calories||2750};
-        const apiKey=sessionStorage.getItem('proFit_apiKey');
+        const apiKey=localStorage.getItem('proFit_apiKey');
         if(apiKey) migrated.apiKey=apiKey;
         saveUsers([migrated]);
         setActiveUserId('u_0');
@@ -2317,9 +2434,27 @@ function saveSetLog(key,nSets){
   arr.unshift({date:todayStr(),sets});
   all[key]=arr.slice(0,20);
   _safeSet(SETLOG_KEY,JSON.stringify(all));
-  if(bestKg>0) saveElogEntry(key,bestKg,bestReps);
+  // PR detection — match modal path so both routes give identical outcomes
+  let isNew=false;
+  if(bestKg>0){
+    const prevPR=(getPRs())[key];
+    isNew=!prevPR||bestKg>prevPR.kg||(bestKg===prevPR.kg&&bestReps>prevPR.reps);
+    savePREntry(key,bestKg,bestReps);
+    saveElogEntry(key,bestKg,bestReps);
+  }
   const saved=document.getElementById('sl-saved-'+key);
   if(saved){saved.classList.add('show');setTimeout(()=>saved.classList.remove('show'),2000);}
+  if(isNew){
+    if(navigator.vibrate) navigator.vibrate([200,100,200,100,400]);
+    launchConfetti();
+    showToast('שיא אישי חדש! '+bestKg+'ק״ג × '+bestReps+' 🏆');
+    if(typeof addXP==='function') addXP(25);
+  } else if(bestKg>0){
+    showToast('✅ סט נשמר — '+bestKg+'ק״ג × '+bestReps);
+    if(typeof addXP==='function') addXP(5);
+    setTimeout(()=>checkProgressiveSuggestion(key,bestKg,bestReps),600);
+  }
+  checkNewAchievements();
 }
 
 // Close timer presets if clicking elsewhere
@@ -2793,7 +2928,7 @@ function renderChatPanel(){
     try{_chatHistory=JSON.parse(localStorage.getItem('pf_chat')||'[]');}catch(e){_chatHistory=[];}
   }
   const s=getSettings();
-  const apiKey=sessionStorage.getItem('proFit_apiKey')||'';
+  const apiKey=localStorage.getItem('proFit_apiKey')||'';
   const foodLog=getFoodLog();
   const totals=foodLog.reduce((a,e)=>({cal:a.cal+e.cal,p:a.p+e.p}),{cal:0,p:0});
 
@@ -2837,7 +2972,7 @@ function renderWelcomeMsg(s,totals){
 }
 
 async function sendChat(){
-  const apiKey=sessionStorage.getItem('proFit_apiKey')||'';
+  const apiKey=localStorage.getItem('proFit_apiKey')||'';
   if(!apiKey){showPanel('settings');return;}
   const inp=document.getElementById('chat-input');
   const msg=(inp?.value||'').trim();
@@ -3854,7 +3989,7 @@ function importData(e){
 // ─── Test API Key ─────────────────────────────────────────────────────────
 async function testApiKey(){
   const key=(document.getElementById('sf-apikey')?.value||'').trim()
-           ||sessionStorage.getItem('proFit_apiKey')||'';
+           ||localStorage.getItem('proFit_apiKey')||'';
   if(!key){showToast('⚠️ הכנס מפתח API קודם');return;}
   const btn=document.getElementById('test-api-btn');
   if(btn){btn.textContent='בודק…';btn.disabled=true;}
@@ -4430,15 +4565,16 @@ const WORKOUT_PLANS={
 function buildExRow(key,num){
   const ex=EX[key];
   if(!ex) return '';
-  const lvlCls=ex.lvl&&ex.lvl.includes('כבד')?'badge-red':ex.lvl&&ex.lvl.includes('בידוד')?'badge-blue':'badge-yellow';
+  const lvlStr=_exLvl(ex);
+  const lvlCls=lvlStr.includes('כבד')?'badge-red':lvlStr.includes('בידוד')?'badge-blue':'badge-yellow';
   return `<tr onclick="openModal('${key}')">
     <td><div class="ex-num-cell">${num}</div></td>
     <td><div class="ex-name-main">${ex.name}</div><div class="ex-name-en" lang="en">${ex.en}</div>
         <div class="ex-why">${ex.desc?ex.desc.slice(0,60)+'…':''}</div></td>
-    <td><span class="muscle-tag">${ex.cat||''}</span></td>
+    <td><span class="muscle-tag">${_exCatLabel(ex)}</span></td>
     <td class="sets-cell">${ex.sets||'3×10'}</td>
-    <td class="rest-cell">${ex.rest||'90 שנ׳'}</td>
-    <td><span class="badge ${lvlCls}">${ex.lvl||''}</span></td>
+    <td class="rest-cell">${_exRest(ex)||'90 שנ׳'}</td>
+    <td><span class="badge ${lvlCls}">${lvlStr}</span></td>
   </tr>`;
 }
 
