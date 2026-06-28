@@ -421,12 +421,54 @@ function showToast(msg,duration=2800){
 }
 
 const TITLES={dashboard:'לוח בקרה',schedule:'לוח שבועי',push:'ראשון — PUSH DAY',pull:'שני — PULL DAY',legs:'רביעי — LEGS DAY',arms:'חמישי — ARMS DAY',nutrition:'תוכנית תזונה',supplements:'תוספי תזונה',tips:'טיפים מהמאמן',timeline:'ציר זמן',elog:'יומן משקלים',food:'מעקב תזונה יומי',chat:'יועץ תזונה AI',progress:'גרף משקל גוף',settings:'הגדרות אישיות'};
-// ─── EXERCISE SEARCH ───────────────────────────────────────────────────────
+// ─── EXERCISE SEARCH + LIBRARY BROWSE ──────────────────────────────────────
+// Classify any exercise (legacy Hebrew cat OR new English cat) into a muscle group
+function _exGroup(ex){
+  const c=ex.cat||'';
+  if(['push','pull','legs','arms','core'].includes(c)) return c;
+  if(/חזה|כתפ|כתף|טריצפס|לחיצ/.test(c)) return 'push';
+  if(/גב|בייסס|ביצפס|בראכ|לאט|חתיר/.test(c)) return 'pull';
+  if(/רגל|ירכ|ירך|ישבן|שוק|עגל|ארבע|המסטר|אדקט/.test(c)) return 'legs';
+  if(/אמות|פרק|אצבע|ליבה|בטן/.test(c)) return c.match(/ליבה|בטן/)?'core':'arms';
+  return 'arms';
+}
+const _GROUP_CHIPS=[['push','💥 PUSH'],['pull','🔄 PULL'],['legs','🦵 LEGS'],['arms','💪 ARMS'],['core','🧱 CORE']];
+
+function _exItemHTML(key,ex){
+  return `<div class="ex-search-item" onclick="openModal('${key}');closeExSearch()">
+      <span class="ex-search-icon">${ex.e||'💪'}</span>
+      <div class="ex-search-info">
+        <div class="ex-search-name">${_esc(ex.name)}</div>
+        <div class="ex-search-meta">${_esc(_exCatLabel(ex))} · ${_esc(ex.sets||'')}</div>
+      </div>
+    </div>`;
+}
+
+/** Browse all exercises in a muscle group (called from category chips) */
+function browseExCategory(group){
+  const resultsEl=document.getElementById('ex-search-results'); if(!resultsEl) return;
+  const list=Object.entries(EX).filter(([,ex])=>_exGroup(ex)===group);
+  const label=(_GROUP_CHIPS.find(c=>c[0]===group)||[,group])[1];
+  resultsEl.innerHTML=`<div class="ex-browse-head">${label} · ${list.length} תרגילים</div>`+
+    _chipsHTML(group)+list.map(([key,ex])=>_exItemHTML(key,ex)).join('');
+  resultsEl.style.display='block';
+}
+function _chipsHTML(active){
+  return `<div class="ex-chips">`+_GROUP_CHIPS.map(([g,lbl])=>
+    `<button class="ex-chip${g===active?' active':''}" onclick="browseExCategory('${g}')">${lbl}</button>`
+  ).join('')+`</div>`;
+}
+
 function renderExSearch(query){
   const q=(query||'').trim().toLowerCase();
   const resultsEl=document.getElementById('ex-search-results');
   if(!resultsEl) return;
-  if(!q){ resultsEl.innerHTML=''; resultsEl.style.display='none'; return; }
+  // Empty query → show category chips so the full library is browsable
+  if(!q){
+    resultsEl.innerHTML=`<div class="ex-browse-head">עיין בספריית התרגילים</div>`+_chipsHTML(null);
+    resultsEl.style.display='block';
+    return;
+  }
 
   const matches=Object.entries(EX).filter(([key,ex])=>{
     const musc=Array.isArray(ex.muscles)?ex.muscles.join(' '):(ex.muscles||'');
@@ -434,23 +476,15 @@ function renderExSearch(query){
            (ex.en||'').toLowerCase().includes(q)||
            (ex.cat||'').toLowerCase().includes(q)||
            musc.toLowerCase().includes(q);
-  }).slice(0,8);
+  }).slice(0,10);
 
   if(matches.length===0){
-    resultsEl.innerHTML=`<div class="ex-search-empty">לא נמצאו תרגילים עבור "${_esc(query)}"</div>`;
+    resultsEl.innerHTML=`<div class="ex-search-empty">לא נמצאו תרגילים עבור "${_esc(query)}"</div>`+_chipsHTML(null);
     resultsEl.style.display='block';
     return;
   }
 
-  resultsEl.innerHTML=matches.map(([key,ex])=>`
-    <div class="ex-search-item" onclick="openModal('${key}');closeExSearch()">
-      <span class="ex-search-icon">${ex.e||'💪'}</span>
-      <div class="ex-search-info">
-        <div class="ex-search-name">${_esc(ex.name)}</div>
-        <div class="ex-search-meta">${_esc(_exCatLabel(ex))} · ${_esc(ex.sets||'')}</div>
-      </div>
-    </div>
-  `).join('');
+  resultsEl.innerHTML=matches.map(([key,ex])=>_exItemHTML(key,ex)).join('');
   resultsEl.style.display='block';
 }
 
@@ -4698,7 +4732,7 @@ function getWorkoutFreqLabel(freq,split){
 // when app.js runs as an ES module (type="module" is function-scoped)
 Object.assign(window,{
   openModal,closeModal,closeModalBg,closeAltModal,
-  showPanel,renderExSearch,closeExSearch,
+  showPanel,renderExSearch,closeExSearch,browseExCategory,
   addWaterCup,removeWaterCup,
   toggleHabit,
   startGymMode,confirmCloseGymMode,gymNext,gymPrev,
