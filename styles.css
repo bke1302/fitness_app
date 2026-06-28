@@ -722,6 +722,9 @@ body{
 .food-option:last-child{border-bottom:none;}
 .food-option:hover{background:var(--glass-h);}
 .food-option .fo-macros{font-size:.72rem;color:var(--muted);margin-top:2px;}
+.food-option .fo-src{font-size:.7rem;margin-inline-start:6px;opacity:.7;}
+.food-option.fo-loading{color:var(--muted);font-size:.78rem;cursor:default;font-style:italic;}
+.food-option.fo-loading:hover{background:none;}
 .food-log-entry{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--glass);border:1px solid var(--glass-b);border-radius:12px;margin-bottom:8px;gap:10px;}
 .fle-name{font-weight:600;font-size:.88rem;flex:1;}
 .fle-amount{font-size:.75rem;color:var(--muted);margin-top:2px;}

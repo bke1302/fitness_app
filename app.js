@@ -2761,6 +2761,8 @@ const FOODS=[
 ];
 
 let _selectedFood=null;
+let _searchResults=[];   // current dropdown results (local + Open Food Facts)
+let _offReqId=0;         // guards against out-of-order async responses
 
 function getFoodLog(){ try{const d=localStorage.getItem(FOOD_KEY+'_'+todayStr());return d?JSON.parse(d):[]}catch(e){return[];} }
 function saveFoodLog(log){ localStorage.setItem(FOOD_KEY+'_'+todayStr(),JSON.stringify(log)); }
@@ -2851,29 +2853,89 @@ function macroBar(label,unit,cur,goal,color){
   </div>`;
 }
 
-function foodSearch(q){
-  const dd=document.getElementById('food-dropdown');
-  if(!q||q.length<1){dd.classList.remove('show');return;}
-  const matches=FOODS.filter(f=>f.name.includes(q)||f.name.toLowerCase().includes(q.toLowerCase())).slice(0,8);
-  if(!matches.length){dd.classList.remove('show');return;}
-  dd.innerHTML=matches.map((f,i)=>`<div class="food-option" onclick="selectFood(${FOODS.indexOf(f)})">
-    ${_esc(f.name)}<div class="fo-macros">${f.cal} קל׳ · P${f.p}g · C${f.c}g · F${f.f}g</div></div>`).join('');
+/** Render the dropdown from the current _searchResults array */
+function _renderFoodDropdown(loading){
+  const dd=document.getElementById('food-dropdown'); if(!dd) return;
+  if(!_searchResults.length&&!loading){dd.classList.remove('show');return;}
+  const rows=_searchResults.map((f,i)=>`<div class="food-option" onclick="selectFoodResult(${i})">
+    ${_esc(f.name)}${f._off?'<span class="fo-src">🌐</span>':''}<div class="fo-macros">${Math.round(f.cal)} קל׳ · P${f.p}g · C${f.c}g · F${f.f}g</div></div>`).join('');
+  dd.innerHTML=rows+(loading?'<div class="food-option fo-loading">מחפש במאגר העולמי… 🌐</div>':'');
   dd.classList.add('show');
 }
+
+/** Search local FOODS first (instant), then enrich with Open Food Facts (free, no key) */
+function foodSearch(q){
+  const dd=document.getElementById('food-dropdown');
+  if(!q||q.trim().length<1){_searchResults=[];if(dd)dd.classList.remove('show');return;}
+  q=q.trim();
+  const ql=q.toLowerCase();
+  // 1) local matches — instant
+  _searchResults=FOODS.filter(f=>f.name.includes(q)||f.name.toLowerCase().includes(ql)).slice(0,6);
+  const reqId=++_offReqId;
+  _renderFoodDropdown(q.length>=2); // show loading only if we'll query OFF
+  if(q.length<2) return;
+  // 2) Open Food Facts — async enrichment
+  fetchOpenFoodFacts(q).then(remote=>{
+    if(reqId!==_offReqId) return; // a newer search superseded this one
+    const seen=new Set(_searchResults.map(f=>f.name));
+    remote.forEach(r=>{ if(!seen.has(r.name)){ _searchResults.push(r); seen.add(r.name); } });
+    _searchResults=_searchResults.slice(0,14);
+    _renderFoodDropdown(false);
+  }).catch(()=>{ if(reqId===_offReqId) _renderFoodDropdown(false); });
+}
+
+/** Query Open Food Facts search API → normalized food objects (per 100g) */
+async function fetchOpenFoodFacts(q){
+  const url='https://world.openfoodfacts.org/cgi/search.pl?search_terms='+encodeURIComponent(q)+
+    '&search_simple=1&action=process&json=1&page_size=20&fields=product_name,product_name_he,brands,nutriments';
+  const ctrl=new AbortController();
+  const to=setTimeout(()=>ctrl.abort(),6000);
+  let res;
+  try{ res=await fetch(url,{signal:ctrl.signal}); } finally { clearTimeout(to); }
+  if(!res.ok) throw new Error('OFF '+res.status);
+  const data=await res.json();
+  const out=[];
+  (data.products||[]).forEach(p=>{
+    const n=p.nutriments||{};
+    const cal=n['energy-kcal_100g'];
+    if(cal==null||cal<=0) return; // skip products without calories
+    let name=(p.product_name_he||p.product_name||'').trim();
+    if(!name) return;
+    if(p.brands) name+=' ('+String(p.brands).split(',')[0].trim()+')';
+    name+=' (100g)';
+    out.push({
+      name,
+      cal:Math.round(cal),
+      p:Math.round((n.proteins_100g||0)*10)/10,
+      c:Math.round((n.carbohydrates_100g||0)*10)/10,
+      f:Math.round((n.fat_100g||0)*10)/10,
+      _off:true
+    });
+  });
+  return out.slice(0,12);
+}
+
 let _foodSearchTimer=null;
 function foodSearchDebounced(q){
   clearTimeout(_foodSearchTimer);
-  _foodSearchTimer=setTimeout(()=>{ foodSearch(q); }, 250);
+  _foodSearchTimer=setTimeout(()=>{ foodSearch(q); }, 300);
 }
 
-function selectFood(idx){
-  _selectedFood=FOODS[idx];
-  document.getElementById('food-search').value=_selectedFood.name;
+/** Select from the unified _searchResults list (local or Open Food Facts) */
+function selectFoodResult(i){
+  const f=_searchResults[i]; if(!f) return;
+  _selectedFood=f;
+  document.getElementById('food-search').value=f.name;
   document.getElementById('food-dropdown').classList.remove('show');
-  document.getElementById('food-selected-name').textContent=_selectedFood.name;
+  document.getElementById('food-selected-name').textContent=f.name;
   document.getElementById('food-selected-wrap').style.display='block';
   document.getElementById('food-qty-label').textContent='מנות';
   updateFoodPreview();
+}
+// Backwards-compat: select directly from the FOODS array by index
+function selectFood(idx){
+  const f=FOODS[idx]; if(!f) return;
+  _searchResults=[f]; selectFoodResult(0);
 }
 
 function updateFoodPreview(){
@@ -4654,7 +4716,7 @@ Object.assign(window,{
   openPlateCalc,closePlateCalc,calcPlates,
   open1RMCalc,close1RMCalc,render1RM,
   addWeightForm,saveMeasurementFull,updateNutritionTiming,
-  elogSave,elogAdjust,swapMeal,selectFood,
+  elogSave,elogAdjust,swapMeal,selectFood,selectFoodResult,foodSearchDebounced,
   selectRecovery,submitRecovery,bossAddProgress,dismissDeload,
   toggleSidebar,openSidebar,closeSidebar,
   switchUser,showAlternatives,savePRFromModal,
