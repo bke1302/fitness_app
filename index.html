@@ -7,7 +7,7 @@
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json"/>
-<meta name="theme-color" content="#0B0F14"/>
+<meta name="theme-color" content="#060608"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -28,8 +28,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Assistant:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Assistant:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap"/></noscript>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body dir="rtl">
@@ -44,8 +44,8 @@
     <svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="app-grad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#22C55E"/>
-          <stop offset="100%" stop-color="#3B82F6"/>
+          <stop offset="0%" stop-color="#FFC53D"/>
+          <stop offset="100%" stop-color="#FF8A3D"/>
         </linearGradient>
         <filter id="app-glow">
           <feGaussianBlur stdDeviation="2" result="blur"/>
@@ -93,7 +93,7 @@
   <div class="panel active flex-1 px-4 space-y-4 overflow-y-auto" id="panel-dashboard">
 
     <!-- ── STREAK BANNER ── -->
-    <div style="background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(59,130,246,.06));border:1px solid rgba(34,197,94,.2);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="background:linear-gradient(135deg,rgba(255,197,61,.12),rgba(255,197,61,.06));border:1px solid rgba(255,197,61,.2);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
       <div style="display:flex;align-items:center;gap:10px;">
         <span style="font-size:1.5rem;">🔥</span>
         <div>
@@ -146,11 +146,11 @@
           <!-- Outer track -->
           <path style="stroke:rgba(255,255,255,.06)" stroke-width="2.8" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
           <!-- Outer fill (calories - green) -->
-          <path id="ring-cals-outer" stroke="#22C55E" style="transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1);filter:drop-shadow(0 0 4px rgba(34,197,94,.5))" stroke-dasharray="100,100" stroke-width="2.8" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+          <path id="ring-cals-outer" stroke="#FFC53D" style="transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1);filter:drop-shadow(0 0 4px rgba(255,197,61,.5))" stroke-dasharray="100,100" stroke-width="2.8" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
           <!-- Inner track -->
           <path style="stroke:rgba(255,255,255,.06)" stroke-width="2.8" stroke="currentColor" fill="none" d="M18 6 a 12 12 0 0 1 0 24 a 12 12 0 0 1 0 -24"/>
           <!-- Inner fill (protein - blue) -->
-          <path id="ring-protein-inner" stroke="#3B82F6" style="transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1) .12s;filter:drop-shadow(0 0 4px rgba(59,130,246,.5))" stroke-dasharray="100,100" stroke-width="2.8" stroke-linecap="round" fill="none" d="M18 6 a 12 12 0 0 1 0 24 a 12 12 0 0 1 0 -24"/>
+          <path id="ring-protein-inner" stroke="#FF8A3D" style="transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1) .12s;filter:drop-shadow(0 0 4px rgba(255,197,61,.5))" stroke-dasharray="100,100" stroke-width="2.8" stroke-linecap="round" fill="none" d="M18 6 a 12 12 0 0 1 0 24 a 12 12 0 0 1 0 -24"/>
         </svg>
         <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
           <span style="font-size:.9rem;font-weight:800;line-height:1;" id="ring-cals-label">—</span>
@@ -160,7 +160,7 @@
       <!-- Stats column -->
       <div style="flex:1;display:flex;flex-direction:column;gap:10px;">
         <div style="display:flex;align-items:center;gap:8px;">
-          <div style="width:8px;height:8px;border-radius:50%;background:#22C55E;box-shadow:0 0 6px rgba(34,197,94,.6);flex-shrink:0;"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#FFC53D;box-shadow:0 0 6px rgba(255,197,61,.6);flex-shrink:0;"></div>
           <div>
             <div style="font-size:.65rem;color:var(--muted);">קלוריות</div>
             <div style="font-size:.88rem;font-weight:700;color:var(--text);"><span id="ring-cals-val">—</span></div>
@@ -168,7 +168,7 @@
         </div>
         <div style="height:1px;background:rgba(255,255,255,.05);"></div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <div style="width:8px;height:8px;border-radius:50%;background:#3B82F6;box-shadow:0 0 6px rgba(59,130,246,.6);flex-shrink:0;"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#FF8A3D;box-shadow:0 0 6px rgba(255,197,61,.6);flex-shrink:0;"></div>
           <div>
             <div style="font-size:.65rem;color:var(--muted);">חלבון</div>
             <div style="font-size:.88rem;font-weight:700;color:var(--text);"><span id="ring-protein-val">—</span></div>
@@ -176,7 +176,7 @@
         </div>
         <div style="height:1px;background:rgba(255,255,255,.05);"></div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <div style="width:8px;height:8px;border-radius:50%;background:#06B6D4;flex-shrink:0;"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#C9B27E;flex-shrink:0;"></div>
           <div>
             <div style="font-size:.65rem;color:var(--muted);">מים</div>
             <div style="font-size:.88rem;font-weight:700;color:var(--text);"><span id="water-dash-display">0</span> <span style="color:var(--muted);font-weight:400;">/ 10 כוסות</span></div>
@@ -207,11 +207,11 @@
         <span style="font-size:.95rem;font-weight:700;color:var(--text);">התוכנית להיום</span>
         <button onclick="showPanel('schedule')" style="font-size:.7rem;color:var(--lime);font-weight:600;cursor:pointer;background:none;border:none;padding:0;">הצג הכל →</button>
       </div>
-      <div id="today-hero" class="today-hero" style="position:relative;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#1A2330,#0F1A24);border:1px solid rgba(239,68,68,.2);padding:20px;">
+      <div id="today-hero" class="today-hero" style="position:relative;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#101014,#16161B);border:1px solid rgba(232,168,124,.2);padding:20px;">
         <!-- Glow orb -->
-        <div style="position:absolute;top:-20px;left:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(239,68,68,.2),transparent 70%);pointer-events:none;"></div>
+        <div style="position:absolute;top:-20px;left:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(232,168,124,.2),transparent 70%);pointer-events:none;"></div>
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
-          <span style="background:rgba(239,68,68,.15);color:#EF4444;border:1px solid rgba(239,68,68,.3);font-size:.68rem;font-weight:800;padding:4px 10px;border-radius:6px;letter-spacing:.06em;">💥 PUSH DAY</span>
+          <span style="background:rgba(232,168,124,.15);color:#E8A87C;border:1px solid rgba(232,168,124,.3);font-size:.68rem;font-weight:800;padding:4px 10px;border-radius:6px;letter-spacing:.06em;">💥 PUSH DAY</span>
           <span style="font-size:.7rem;color:var(--muted);">תוכנית א׳</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:flex-end;">
@@ -219,7 +219,7 @@
             <div style="font-size:1.1rem;font-weight:800;color:var(--text);line-height:1.2;">חזה · כתפיים</div>
             <div style="font-size:.72rem;color:var(--muted);margin-top:4px;">⏱ ~70 דק׳ &nbsp;·&nbsp; 7 תרגילים</div>
           </div>
-          <button aria-label="התחל אימון" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#22C55E,#16A34A);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(34,197,94,.35);">
+          <button aria-label="התחל אימון" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#FFD666,#FFC53D);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(255,197,61,.35);">
             <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;fill:white;margin-right:-2px" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
           </button>
         </div>
@@ -229,7 +229,7 @@
     <!-- ── QUICK STATS ROW: STEPS + WATER ── -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <!-- Steps -->
-      <div style="background:#1A2330;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;">
+      <div style="background:#16161B;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
           <span style="font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;">צעדים</span>
           <span style="font-size:.9rem;">👟</span>
@@ -237,11 +237,11 @@
         <div style="font-size:1.35rem;font-weight:800;color:var(--text);line-height:1;">—</div>
         <div style="font-size:.62rem;color:var(--muted);margin-top:3px;">אין נתון</div>
         <div style="height:3px;background:rgba(255,255,255,.06);border-radius:99px;margin-top:10px;overflow:hidden;">
-          <div style="width:0%;height:100%;background:linear-gradient(90deg,#8B5CF6,#6D28D9);border-radius:99px;"></div>
+          <div style="width:0%;height:100%;background:linear-gradient(90deg,#B99C6B,#99804F);border-radius:99px;"></div>
         </div>
       </div>
       <!-- Water -->
-      <div style="background:#1A2330;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;">
+      <div style="background:#16161B;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
           <span style="font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;">מים</span>
           <span style="font-size:.9rem;">💧</span>
@@ -251,20 +251,20 @@
         </div>
         <div style="font-size:.62rem;color:var(--muted);margin-top:3px;">מתוך 10 מטרה · 2.5 ליטר</div>
         <div style="height:3px;background:rgba(255,255,255,.06);border-radius:99px;margin-top:8px;overflow:hidden;">
-          <div id="water-bar" style="width:0%;height:100%;background:linear-gradient(90deg,#06B6D4,#0891B2);border-radius:99px;transition:width .4s ease;"></div>
+          <div id="water-bar" style="width:0%;height:100%;background:linear-gradient(90deg,#FF8A3D,#FFC53D);border-radius:99px;transition:width .4s ease;"></div>
         </div>
         <div style="display:flex;gap:6px;margin-top:10px;">
           <button onclick="removeWaterCup()" aria-label="הסר כוס מים" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text,#F8FAFC);border-radius:8px;padding:6px 0;font-size:1.1rem;cursor:pointer;font-family:var(--font);transition:background .15s;">−</button>
-          <button onclick="addWaterCup()" aria-label="הוסף כוס מים" style="flex:2;background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.3);color:#22D3EE;border-radius:8px;padding:6px 0;font-size:.78rem;cursor:pointer;font-weight:700;font-family:var(--font);transition:background .15s;">+ כוס</button>
+          <button onclick="addWaterCup()" aria-label="הוסף כוס מים" style="flex:2;background:rgba(201,178,126,.15);border:1px solid rgba(201,178,126,.3);color:#FFC53D;border-radius:8px;padding:6px 0;font-size:.78rem;cursor:pointer;font-weight:700;font-family:var(--font);transition:background .15s;">+ כוס</button>
         </div>
       </div>
     </div>
 
     <!-- ── DISCIPLINE CHECKLIST ── -->
-    <div style="background:#1A2330;border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:16px;">
+    <div style="background:#16161B;border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
         <span style="font-size:.9rem;font-weight:700;color:var(--text);">הרגלי היום</span>
-        <span id="habit-count-badge" style="font-size:.68rem;color:var(--lime);font-weight:700;background:rgba(34,197,94,.1);padding:3px 8px;border-radius:6px;">0/5</span>
+        <span id="habit-count-badge" style="font-size:.68rem;color:var(--lime);font-weight:700;background:rgba(255,197,61,.1);padding:3px 8px;border-radius:6px;">0/5</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
@@ -294,13 +294,13 @@
     <div>
       <span id="dash-meal-title" style="font-size:.95rem;font-weight:700;color:var(--text);display:block;margin-bottom:10px;">ארוחות יומי</span>
       <div id="dash-nutrition-preview" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:14px;padding:14px;opacity:.75;">
+        <div style="background:rgba(255,197,61,.06);border:1px solid rgba(255,197,61,.15);border-radius:14px;padding:14px;opacity:.75;">
           <span style="font-size:.63rem;color:var(--lime);font-weight:700;">ארוחה 1</span>
           <div style="font-size:.82rem;font-weight:700;color:var(--text);margin-top:5px;" id="dash-meal-1-name">—</div>
           <div style="font-size:.68rem;color:var(--muted);margin-top:4px;" id="dash-meal-1-macro">—</div>
         </div>
-        <div style="background:#1A2330;border:1px solid rgba(239,68,68,.2);border-radius:14px;padding:14px;position:relative;">
-          <span style="font-size:.63rem;color:#EF4444;font-weight:700;">ארוחה 2</span>
+        <div style="background:#16161B;border:1px solid rgba(232,168,124,.2);border-radius:14px;padding:14px;position:relative;">
+          <span style="font-size:.63rem;color:#E8A87C;font-weight:700;">ארוחה 2</span>
           <div style="font-size:.82rem;font-weight:700;color:var(--text);margin-top:5px;" id="dash-meal-2-name">—</div>
           <div style="font-size:.68rem;color:var(--muted);margin-top:4px;" id="dash-meal-2-macro">—</div>
         </div>
@@ -308,10 +308,10 @@
     </div>
 
     <!-- ── COACH TIP ── -->
-    <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:14px;padding:14px;display:flex;gap:12px;margin-bottom:8px;">
+    <div style="background:rgba(255,197,61,.06);border:1px solid rgba(255,197,61,.2);border-radius:14px;padding:14px;display:flex;gap:12px;margin-bottom:8px;">
       <span style="font-size:1.2rem;flex-shrink:0;">💡</span>
       <div>
-        <div style="font-size:.65rem;font-weight:800;color:rgba(245,158,11,.8);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">טיפ מהמאמן</div>
+        <div style="font-size:.65rem;font-weight:800;color:rgba(255,197,61,.8);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">טיפ מהמאמן</div>
         <div style="font-size:.78rem;color:#94A3B8;line-height:1.65;">שבוע דה-לוד מומלץ לאחר כל 4 שבועות. הורד 40% ממשקלי העבודה לאפשר שיקום מלא.</div>
       </div>
     </div>
@@ -336,29 +336,29 @@
     <div style="padding:16px 0 4px;">
       <div style="font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">בחר אימון</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
-        <button onclick="showPanel('push',null);setMobileNav('push');" style="background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(239,68,68,.06));border:1.5px solid rgba(239,68,68,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
+        <button onclick="showPanel('push',null);setMobileNav('push');" style="background:linear-gradient(135deg,rgba(232,168,124,.15),rgba(232,168,124,.06));border:1.5px solid rgba(232,168,124,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="font-size:2rem;margin-bottom:6px;">💥</div>
-          <div style="font-size:1.05rem;font-weight:800;color:#EF4444;">PUSH</div>
+          <div style="font-size:1.05rem;font-weight:800;color:#E8A87C;">PUSH</div>
           <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">חזה · כתפיים · טריצפס</div>
-          <div style="font-size:.6rem;color:rgba(239,68,68,.6);margin-top:6px;">ראשון | 7 תרגילים | ~70 דק׳</div>
+          <div style="font-size:.6rem;color:rgba(232,168,124,.6);margin-top:6px;">ראשון | 7 תרגילים | ~70 דק׳</div>
         </button>
-        <button onclick="showPanel('pull',null);setMobileNav('pull');" style="background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(6,182,212,.06));border:1.5px solid rgba(6,182,212,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
+        <button onclick="showPanel('pull',null);setMobileNav('pull');" style="background:linear-gradient(135deg,rgba(201,178,126,.15),rgba(201,178,126,.06));border:1.5px solid rgba(201,178,126,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="font-size:2rem;margin-bottom:6px;">🔄</div>
-          <div style="font-size:1.05rem;font-weight:800;color:#06B6D4;">PULL</div>
+          <div style="font-size:1.05rem;font-weight:800;color:#C9B27E;">PULL</div>
           <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">גב · ביצפס · אמות</div>
-          <div style="font-size:.6rem;color:rgba(6,182,212,.6);margin-top:6px;">שני | 7 תרגילים | ~65 דק׳</div>
+          <div style="font-size:.6rem;color:rgba(201,178,126,.6);margin-top:6px;">שני | 7 תרגילים | ~65 דק׳</div>
         </button>
-        <button onclick="showPanel('legs',null);setMobileNav('legs');" style="background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(139,92,246,.06));border:1.5px solid rgba(139,92,246,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
+        <button onclick="showPanel('legs',null);setMobileNav('legs');" style="background:linear-gradient(135deg,rgba(185,156,107,.15),rgba(185,156,107,.06));border:1.5px solid rgba(185,156,107,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="font-size:2rem;margin-bottom:6px;">🦵</div>
-          <div style="font-size:1.05rem;font-weight:800;color:#8B5CF6;">LEGS</div>
+          <div style="font-size:1.05rem;font-weight:800;color:#B99C6B;">LEGS</div>
           <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">רגליים מלא</div>
-          <div style="font-size:.6rem;color:rgba(139,92,246,.6);margin-top:6px;">רביעי | 7 תרגילים | ~75 דק׳</div>
+          <div style="font-size:.6rem;color:rgba(185,156,107,.6);margin-top:6px;">רביעי | 7 תרגילים | ~75 דק׳</div>
         </button>
-        <button onclick="showPanel('arms',null);setMobileNav('arms');" style="background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.06));border:1.5px solid rgba(245,158,11,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
+        <button onclick="showPanel('arms',null);setMobileNav('arms');" style="background:linear-gradient(135deg,rgba(255,197,61,.15),rgba(255,197,61,.06));border:1.5px solid rgba(255,197,61,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="font-size:2rem;margin-bottom:6px;">💪</div>
-          <div style="font-size:1.05rem;font-weight:800;color:#F59E0B;">ARMS</div>
+          <div style="font-size:1.05rem;font-weight:800;color:#FFC53D;">ARMS</div>
           <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">ידיים · כתפיים</div>
-          <div style="font-size:.6rem;color:rgba(245,158,11,.6);margin-top:6px;">חמישי | 7 תרגילים | ~60 דק׳</div>
+          <div style="font-size:.6rem;color:rgba(255,197,61,.6);margin-top:6px;">חמישי | 7 תרגילים | ~60 דק׳</div>
         </button>
       </div>
     </div>
@@ -631,7 +631,7 @@
               🟣 <strong>Rectus Femoris</strong> — קדמי אמצעי
             </div>
           </div>
-          <div style="background:rgba(230,57,70,.08);border:1px solid rgba(230,57,70,.2);border-radius:10px;padding:12px;">
+          <div style="background:rgba(255,107,94,.08);border:1px solid rgba(255,107,94,.2);border-radius:10px;padding:12px;">
             <div style="font-weight:700;color:var(--red);margin-bottom:8px;font-size:.88rem;">🦵 שוק — 2 שרירים שונים!</div>
             <div style="font-size:.8rem;color:var(--muted2);line-height:1.9;">
               🔴 <strong>Gastrocnemius</strong> — עמידה רגל ישרה<br>
@@ -684,7 +684,7 @@
             </tr>
 
             <!-- HAMSTRINGS + GLUTES -->
-            <tr style="background:rgba(230,57,70,.04);">
+            <tr style="background:rgba(255,107,94,.04);">
               <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--red);letter-spacing:1px;text-transform:uppercase;">── ירך אחורי + ישבן ──</td>
             </tr>
             <tr onclick="openModal('rdl')">
@@ -722,7 +722,7 @@
             </tr>
 
             <!-- CALVES -->
-            <tr style="background:rgba(59,130,246,.04);">
+            <tr style="background:rgba(255,197,61,.04);">
               <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;">── שוק — 2 תרגילים = 2 שרירים שונים! ──</td>
             </tr>
             <tr onclick="openModal('calfRaise')">
@@ -803,7 +803,7 @@
 
         <!-- ARMS MAP -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;">
-          <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:12px;">
+          <div style="background:rgba(255,197,61,.08);border:1px solid rgba(255,197,61,.2);border-radius:10px;padding:12px;">
             <div style="font-weight:700;color:var(--blue);margin-bottom:8px;font-size:.88rem;">💪 בייסס — 3 חלקים</div>
             <div style="font-size:.8rem;color:var(--muted2);line-height:1.9;">
               🔵 <strong>Long Head</strong> — הפיק (גובה הזרוע)<br>
@@ -830,7 +830,7 @@
           <tbody>
 
             <!-- BICEPS SECTION -->
-            <tr style="background:rgba(59,130,246,.04);">
+            <tr style="background:rgba(255,197,61,.04);">
               <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;">── בייסס ──</td>
             </tr>
             <tr onclick="openModal('bbCurl')">
@@ -906,7 +906,7 @@
             </tr>
 
             <!-- SHOULDERS SECTION -->
-            <tr style="background:rgba(245,158,11,.04);">
+            <tr style="background:rgba(255,197,61,.04);">
               <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--yellow);letter-spacing:1px;text-transform:uppercase;">── כתפיים (סיום) ──</td>
             </tr>
             <tr onclick="openModal('facePull')">
@@ -933,7 +933,7 @@
             </tr>
 
             <!-- FOREARMS SECTION -->
-            <tr style="background:rgba(90,200,250,.04);">
+            <tr style="background:rgba(201,178,126,.04);">
               <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--cyan);letter-spacing:1px;text-transform:uppercase;">── אמות (Forearms) ──</td>
             </tr>
             <tr onclick="openModal('wristCurl')">
@@ -1008,7 +1008,7 @@
     </div>
 
     <!-- CHOLESTEROL ALERT -->
-    <div id="cholesterol-banner" style="background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(34,197,94,.08));border:1px solid rgba(245,158,11,.35);border-radius:14px;padding:18px 20px;margin-bottom:20px;">
+    <div id="cholesterol-banner" style="background:linear-gradient(135deg,rgba(255,197,61,.12),rgba(255,197,61,.08));border:1px solid rgba(255,197,61,.35);border-radius:14px;padding:18px 20px;margin-bottom:20px;">
       <div style="font-weight:700;font-size:1rem;margin-bottom:10px;color:var(--yellow);">❤️ תוכנית תזונה מותאמת לכולסטרול</div>
       <div style="font-size:.87rem;color:var(--muted2);line-height:1.9;">
         <strong style="color:var(--green);">✅ מה מורידים:</strong> שומן רווי (בשר אדום, חלמון ביצה מרובה, חלב שומני)<br>
@@ -1035,7 +1035,7 @@
       <div class="card-head"><h2>❤️ מה לאכול ומה להימנע — כולסטרול</h2></div>
       <div class="card-body">
         <div class="grid-2">
-          <div style="background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.25);border-radius:12px;padding:16px;">
+          <div style="background:rgba(255,197,61,.07);border:1px solid rgba(255,197,61,.25);border-radius:12px;padding:16px;">
             <div style="font-weight:700;color:var(--green);margin-bottom:12px;">✅ מומלץ — מוריד כולסטרול</div>
             <div style="font-size:.85rem;color:var(--muted2);line-height:2;">
               🐟 סלמון, מוגרי, סרדינים (3×/שבוע)<br>
@@ -1048,7 +1048,7 @@
               🧄 שום (מוריד LDL)
             </div>
           </div>
-          <div style="background:rgba(230,57,70,.07);border:1px solid rgba(230,57,70,.25);border-radius:12px;padding:16px;">
+          <div style="background:rgba(255,107,94,.07);border:1px solid rgba(255,107,94,.25);border-radius:12px;padding:16px;">
             <div style="font-weight:700;color:var(--red);margin-bottom:12px;">❌ להימנע — מעלה כולסטרול</div>
             <div style="font-size:.85rem;color:var(--muted2);line-height:2;">
               🥩 בשר אדום שמן — מקסימום 1×/שבוע<br>
@@ -1197,7 +1197,7 @@
     </div>
 
     <!-- Workout Journal CTA -->
-    <button type="button" onclick="showPanel('elog',null);setMobileNav('progress');" style="background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(59,130,246,.06));border:1.5px solid rgba(34,197,94,.25);border-radius:16px;padding:16px 18px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;text-align:right;font-family:var(--font);">
+    <button type="button" onclick="showPanel('elog',null);setMobileNav('progress');" style="background:linear-gradient(135deg,rgba(255,197,61,.1),rgba(255,197,61,.06));border:1.5px solid rgba(255,197,61,.25);border-radius:16px;padding:16px 18px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;text-align:right;font-family:var(--font);">
       <div>
         <div style="font-size:.65rem;color:var(--lime);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">יומן אימונים</div>
         <div style="font-size:1rem;font-weight:800;color:var(--text);">משקלים · סטים · חזרות</div>
@@ -1231,7 +1231,7 @@
       <div class="card-head"><h2>🔥 רצף אימונים</h2></div>
       <div class="card-body">
         <div class="grid-2">
-          <div class="stat-box" style="text-align:center;background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(230,57,70,.07));border-color:rgba(245,158,11,.3);">
+          <div class="stat-box" style="text-align:center;background:linear-gradient(135deg,rgba(255,197,61,.1),rgba(255,107,94,.07));border-color:rgba(255,197,61,.3);">
             <div class="val" id="streak-num2" style="color:var(--yellow);font-size:3rem;">0</div>
             <div class="lbl">ימי אימון ברצף</div>
             <div class="streak-msg" id="streak-msg2" style="margin-top:6px;">מתחילים! 🌱</div>
@@ -1436,8 +1436,8 @@
             <button id="theme-btn" onclick="toggleTheme()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text);border-radius:10px;padding:10px 18px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .18s;">☀️ מסך בהיר / 🌑 AMOLED</button>
           </div>
           <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <button onclick="exportData()" class="settings-save" style="background:var(--blue,#3b82f6);">📤 ייצוא נתונים</button>
-            <label class="settings-save" style="background:var(--green,#22c55e);cursor:pointer;">
+            <button onclick="exportData()" class="settings-save" style="background:var(--blue,#FFC53D);">📤 ייצוא נתונים</button>
+            <label class="settings-save" style="background:var(--green,#FFC53D);cursor:pointer;">
               📥 ייבוא נתונים<input type="file" accept=".json" onchange="importData(event)" style="display:none"/>
             </label>
           </div>

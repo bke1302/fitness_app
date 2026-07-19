@@ -7,8 +7,8 @@
   "scope": "/fitness_app/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#0a0c10",
-  "theme_color": "#e63946",
+  "background_color": "#060608",
+  "theme_color": "#FFC53D",
   "lang": "he",
   "dir": "rtl",
   "icons": [
