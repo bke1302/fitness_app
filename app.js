@@ -273,7 +273,117 @@ const EX = {
   vUp:{name:'V-UP',en:'V-Up',e:'✌️',cat:'core',sets:'3×12–15',rest:45,lvl:2,desc:'כפיפה מלאה לרגליים ופלג עליון',muscles:['בטן שטוחה','היפ פלקסור'],tips:['שמור גב ישר','גע ידיים ברגליים','הורד לאט']},
   toeTouch:{name:'נגיעת אצבעות',en:'Toe Touch Crunch',e:'👆',cat:'core',sets:'3×15–20',rest:45,lvl:1,desc:'כפיפת בטן עם רגליים אנכיות',muscles:['בטן עליונה'],tips:['רגליים אנכיות לרצפה','גע ידיים לאצבעות','כתפיים מהרצפה']},
   crunchMachine:{name:'כפיפת בטן מכונה',en:'Crunch Machine',e:'🤖',cat:'core',sets:'3×15–20',rest:45,lvl:1,desc:'כפיפת בטן עם עמסה מכנית',muscles:['בטן עליונה','בטן אמצעי'],tips:['כוון גובה מושב','כפוף מהצלעות','כיווץ מלא']},
-  dragonFlag:{name:'דרגון פלאג',en:'Dragon Flag',e:'🐉',cat:'core',sets:'3×5–8',rest:90,lvl:3,desc:'תרגיל ליבה מתקדם — גוף שלם',muscles:['בטן שטוחה','ליבה','גב תחתון'],tips:['אחוז ספסל מאחורי הראש','גוף קשיח','הורד לאט בשליטה']}
+  dragonFlag:{name:'דרגון פלאג',en:'Dragon Flag',e:'🐉',cat:'core',sets:'3×5–8',rest:90,lvl:3,desc:'תרגיל ליבה מתקדם — גוף שלם',muscles:['בטן שטוחה','ליבה','גב תחתון'],tips:['אחוז ספסל מאחורי הראש','גוף קשיח','הורד לאט בשליטה']},
+
+  // ═══ HOME — משקל גוף (eq:'none') ═══
+  pushup:{name:'שכיבות סמיכה',en:'Push-up',e:'🙌',cat:'חזה',sets:'4×8–20',rest:'90 שנ׳',lvl:'בינוני',eq:'none',
+    desc:'תרגיל הדחיפה הביתי הבסיסי. כשמגיע ל-20 חזרות — עבור לגרסה קשה יותר, לא ליותר חזרות.',
+    muscles:'חזה הגדול, כתפיים קדמיות, טריצפס, ליבה.',
+    tips:['גוף ישר כקרש — אל תשמוט אגן','ידיים מעט רחבות מכתפיים','חזה נוגע ברצפה בכל חזרה','ירידה איטית 2 שנ׳','קשה מדי? ידיים על שולחן. קל מדי? רגליים מוגבהות']},
+  declinePushup:{name:'שכיבות סמיכה רגליים מוגבהות',en:'Decline Push-up',e:'📐',cat:'חזה עליון',sets:'3×8–15',rest:'90 שנ׳',lvl:'קשה',eq:'none',
+    desc:'רגליים על כיסא/ספה — מעביר עומס לחזה העליון ולכתפיים. המקבילה הביתית ללחיצה בנטייה.',
+    muscles:'חזה עליון, כתפיים קדמיות, טריצפס.',
+    tips:['גובה כיסא 40–50 ס"מ','אל תיתן לגב להתקשת','ראש בהמשך לגוף — לא שמוט','ככל שהרגליים גבוהות יותר — קשה יותר']},
+  pikePushup:{name:'שכיבות פייק',en:'Pike Push-up',e:'⛰️',cat:'כתפיים',sets:'3×6–12',rest:'90 שנ׳',lvl:'קשה',eq:'none',
+    desc:'אגן גבוה בצורת V הפוך — הדחיפה אנכית ומדמה לחיצת כתפיים. התחליף הביתי ללחיצת כתפיים.',
+    muscles:'דלטואיד קדמי + אמצעי, טריצפס, טרפז עליון.',
+    tips:['אגן גבוה ככל האפשר','הראש יורד לכיוון הרצפה בין הידיים','מרפקים אחורה — לא לצדדים','שדרוג: רגליים על כיסא']},
+  doorRow:{name:'חתירה אופקית — שולחן/סדין',en:'Inverted Row (Table/Sheet)',e:'🚣',cat:'גב אמצעי',sets:'4×8–15',rest:'90 שנ׳',lvl:'בינוני',eq:'none',
+    desc:'שכיבה מתחת לשולחן יציב ומשיכת החזה אליו, או סדין כרוך בדלת. תרגיל המשיכה הביתי החשוב ביותר.',
+    muscles:'Rhomboids, Lat, Trapezius, בייסס, כתף אחורית.',
+    tips:['גוף ישר — אגן לא שמוט','משוך שכמות יחד לפני שהידיים מושכות','רגליים ישרות = קשה, ברכיים כפופות = קל','ודא שהשולחן יציב לחלוטין']},
+  chinupHome:{name:'מתח על משקוף',en:'Doorframe Pull-up / Chin-up',e:'⬆️',cat:'גב רחב',sets:'4×3–10',rest:'2–3 דק׳',lvl:'כבד',eq:'none',
+    desc:'דורש מוט מתח לדלת (עלות זניחה, שווה כל שקל). אין לו תחליף אמיתי לרוחב הגב בבית.',
+    muscles:'Latissimus Dorsi, בייסס, כתף אחורית.',
+    tips:['לא מצליח חזרה? עשה רק ירידות איטיות 5 שנ׳','אחיזה הפוכה קלה יותר למתחילים','טווח מלא — תלייה מלאה למטה','12 חזרות בסט? הוסף משקל בתיק גב']},
+  bwSquat:{name:'סקוואט משקל גוף',en:'Bodyweight Squat',e:'🦵',cat:'כל הרגל',sets:'4×15–25',rest:'90 שנ׳',lvl:'קל',eq:'none',
+    desc:'הבסיס. כשמגיע ל-25 חזרות נקיות — עבור לגרסאות חד-רגליות, לא ליותר חזרות.',
+    muscles:'Quadriceps, Glutes, Hamstrings, ליבה.',
+    tips:['עקבים על הרצפה כל הזמן','רד עמוק — מתחת ל-90°','טמפו 3 שנ׳ ירידה = קושי כפול','שדרוג: פאוזה 2 שנ׳ למטה']},
+  bulgSplitHome:{name:'פסיעות בולגריות — ביתי',en:'Bulgarian Split Squat (Chair)',e:'🚶',cat:'ישבן + ירכיים',sets:'3×8–15 לצד',rest:'90 שנ׳',lvl:'קשה',eq:'none',
+    desc:'רגל אחורית על כיסא/ספה. תרגיל הרגליים הביתי האפקטיבי ביותר — גם בלי משקל.',
+    muscles:'Glutes, Quadriceps, Hamstrings, שרירי איזון.',
+    tips:['ירידה אנכית — לא קדימה','ברך קדמית בכיוון האצבעות','קל מדי? החזק בקבוקי מים/תיק','ירידה איטית 3 שנ׳']},
+  pistolBox:{name:'סקוואט רגל אחת לכיסא',en:'Box Pistol Squat',e:'🎯',cat:'כל הרגל',sets:'3×5–10 לצד',rest:'2 דק׳',lvl:'כבד',eq:'none',
+    desc:'ירידה על רגל אחת עד ישיבה קלה על כיסא וחזרה. שיא הפרוגרסיה החד-רגלית.',
+    muscles:'Quadriceps, Glutes, ליבה, שיווי משקל.',
+    tips:['שב באיטיות — אל תיפול על הכיסא','ידיים קדימה לאיזון','הנמך את משטח הישיבה ככל שמתחזק','גע-וקום בלי מנוחה למטה']},
+  gluteBridge:{name:'גשר ישבן רגל אחת',en:'Single-Leg Glute Bridge',e:'🍑',cat:'ישבן',sets:'3×10–15 לצד',rest:'60 שנ׳',lvl:'בינוני',eq:'none',
+    desc:'המקבילה הביתית ל-Hip Thrust. רגל אחת באוויר מכפילה את העומס.',
+    muscles:'Gluteus Maximus, Hamstrings, גב תחתון.',
+    tips:['דחוף מהעקב','כווץ ישבן חזק בחלק העליון — החזק שנייה','אגן לא מתעקם הצידה','שדרוג: שכמות על ספה = טווח גדול יותר']},
+  nordicHome:{name:'כפיפת ברך נורדית — ביתי',en:'Nordic Curl (Feet Anchored)',e:'🧎',cat:'ירך אחורי',sets:'3×3–8',rest:'2 דק׳',lvl:'כבד',eq:'none',
+    desc:'עקבים נעוצים מתחת לספה, ירידה איטית קדימה מהברכיים. תרגיל הירך האחורי הקשה ביותר ללא ציוד.',
+    muscles:'Hamstrings — בידוד עצום, גם מונע פציעות.',
+    tips:['רד לאט ככל שאתה יכול — הירידה היא התרגיל','עזור בידיים בדחיפה חזרה','כרית מתחת לברכיים','גוף ישר מברך עד ראש']},
+  calfRaiseHome:{name:'עריסת עגל על מדרגה',en:'Single-Leg Calf Raise',e:'👟',cat:'שוק',sets:'4×12–20 לצד',rest:'45 שנ׳',lvl:'בידוד',eq:'none',
+    desc:'רגל אחת על קצה מדרגה — משקל גוף מלא על שוק אחת מספיק בהחלט.',
+    muscles:'Gastrocnemius, Soleus.',
+    tips:['מתיחה מלאה למטה','החזק שנייה למעלה','יד על קיר לאיזון בלבד','ירידה איטית 3 שנ׳']},
+  plankReach:{name:'פלאנק עם נגיעה בכתף',en:'Plank Shoulder Tap',e:'🧱',cat:'ליבה',sets:'3×30–60 שנ׳',rest:'60 שנ׳',lvl:'בינוני',eq:'none',
+    desc:'פלאנק עם נגיעה בכתף הנגדית — אנטי-רוטציה, שדרוג משמעותי על פלאנק רגיל.',
+    muscles:'ליבה עמוקה, אלכסונים, כתפיים.',
+    tips:['רגליים רחבות = קל, צמודות = קשה','האגן לא זז כשהיד עוזבת','נשום — אל תעצור נשימה','גב ניטרלי']},
+  hollowHold:{name:'הולו הולד',en:'Hollow Body Hold',e:'🛶',cat:'ליבה',sets:'3×20–45 שנ׳',rest:'60 שנ׳',lvl:'קשה',eq:'none',
+    desc:'שכיבה על הגב, גב תחתון צמוד לרצפה, ידיים ורגליים באוויר. תרגיל הליבה של מתעמלים.',
+    muscles:'Rectus Abdominis, ליבה עמוקה.',
+    tips:['גב תחתון חייב להישאר צמוד לרצפה','קשה מדי? כופף ברכיים','ידיים מעל הראש = קשה','איכות לפני זמן']},
+
+  // ═══ HOME — גומיות התנגדות (eq:'band') ═══
+  bandRow:{name:'חתירה עם גומייה',en:'Band Seated Row',e:'🔄',cat:'גב אמצעי',sets:'4×12–20',rest:'75 שנ׳',lvl:'בינוני',eq:'band',
+    desc:'ישיבה על הרצפה, גומייה סביב כפות הרגליים. התחליף הביתי לחתירת כבל.',
+    muscles:'Rhomboids, Lat, Trapezius, בייסס.',
+    tips:['גב זקוף — אל תתגלגל אחורה','שכמות מתקרבות בסוף המשיכה','החזק שנייה בכיווץ','קצר את האחיזה להגברת התנגדות']},
+  bandPulldown:{name:'פולדאון עם גומייה',en:'Band Lat Pulldown',e:'⬇️',cat:'גב רחב',sets:'3×12–20',rest:'75 שנ׳',lvl:'בינוני',eq:'band',
+    desc:'גומייה מעוגנת בחלק העליון של הדלת, משיכה בכריעה. תחליף לט פולדאון למי שאין מוט מתח.',
+    muscles:'Latissimus Dorsi, בייסס.',
+    tips:['משוך מרפקים לכיוון הכיסים','חזה גבוה','האט בחזרה — אל תיתן לגומייה לזרוק','עיגון בטוח לפני שמתחילים']},
+  bandChestPress:{name:'לחיצת חזה עם גומייה',en:'Band Chest Press',e:'💥',cat:'חזה',sets:'3×12–20',rest:'75 שנ׳',lvl:'בינוני',eq:'band',
+    desc:'גומייה מאחורי הגב או מעוגנת בדלת בגובה חזה. מתח עולה בסוף התנועה — משלים מצוין לשכיבות סמיכה.',
+    muscles:'חזה הגדול, כתפיים קדמיות, טריצפס.',
+    tips:['צעד קדימה ליצירת מתח התחלתי','דחוף עד יישור מלא','ליבה אסופה','שלב עם שכיבות סמיכה באותו אימון']},
+  bandFacePull:{name:'Face Pull — גומייה',en:'Band Face Pull',e:'🎯',cat:'כתף אחורית',sets:'4×15–25',rest:'45 שנ׳',lvl:'בידוד',eq:'band',
+    desc:'זהה לגרסת הכבל — קריטי לבריאות הכתף.',
+    muscles:'Rear Deltoid, Rotator Cuff, Trapezius.',
+    tips:['עיגון בגובה פנים','מרפקים גבוהים ופתוחים','משוך לפנים הפנים','חובה בכל אימון ביתי']},
+  bandLateral:{name:'הרמות צד עם גומייה',en:'Band Lateral Raise',e:'↔️',cat:'כתף אמצעית',sets:'3×15–25',rest:'45 שנ׳',lvl:'בידוד',eq:'band',
+    desc:'דריכה על הגומייה והרמה לצד. ההתנגדות בשיא בדיוק בנקודת הכיווץ.',
+    muscles:'Medial Deltoid.',
+    tips:['עד גובה כתפיים','מרפק כפוף קלות','ללא תנופה','חד-צדדי = בקרה טובה יותר']},
+  bandCurl:{name:'כפיפות מרפק עם גומייה',en:'Band Biceps Curl',e:'💪',cat:'בייסס',sets:'3×12–20',rest:'60 שנ׳',lvl:'בידוד',eq:'band',
+    desc:'דריכה על הגומייה. שיא ההתנגדות בכיווץ המלא.',
+    muscles:'Biceps Brachii, Brachialis.',
+    tips:['מרפקים קבועים בצדי הגוף','ירידה איטית — הגומייה מושכת, אתה מתנגד','דריכה רחבה = קשה יותר','אחיזת פטיש = בראכיאליס']},
+  bandTricep:{name:'פשיטת טריצפס עם גומייה',en:'Band Tricep Extension',e:'🔻',cat:'טריצפס',sets:'3×12–20',rest:'60 שנ׳',lvl:'בידוד',eq:'band',
+    desc:'עיגון גבוה בדלת — Pushdown, או מאחורי הגב — פשיטה מעל הראש.',
+    muscles:'Triceps Brachii.',
+    tips:['מרפקים קבועים','פשיטה מלאה + כיווץ','מעל הראש = הראש הארוך','האט בחזרה']},
+  bandGoodMorning:{name:'גוד מורנינג עם גומייה',en:'Band Good Morning',e:'🌅',cat:'גב תחתון + ירך אחורי',sets:'3×15–20',rest:'75 שנ׳',lvl:'בינוני',eq:'band',
+    desc:'גומייה סביב הצוואר-כתפיים ומתחת לרגליים. תבנית ציר הירך הביתית — תחליף RDL קל.',
+    muscles:'Hamstrings, Glutes, Erector Spinae.',
+    tips:['כיפוף מהאגן — לא מהגב','גב ישר לחלוטין','דחוף אגן קדימה בסיום','הרגש מתיחה בירך אחורי']},
+
+  // ═══ HOME — משקולות מתכווננות (eq:'db') ═══
+  dbFloorPress:{name:'לחיצת חזה מהרצפה',en:'Dumbbell Floor Press',e:'🏋️',cat:'חזה',sets:'4×8–12',rest:'90 שנ׳',lvl:'כבד',eq:'db',
+    desc:'שכיבה על הרצפה במקום ספסל. טווח מעט קצר יותר אך בטוח לחלוטין וכבד.',
+    muscles:'חזה הגדול, כתפיים קדמיות, טריצפס.',
+    tips:['מרפקים נוגעים ברצפה בעדינות — לא נוחתים','פאוזה קצרה למטה','שכמות צמודות לרצפה','ברכיים כפופות ליציבות']},
+  dbRow:{name:'חתירת משקולת ביד אחת',en:'One-Arm Dumbbell Row',e:'🚣',cat:'גב עליון + עובי',sets:'4×8–12 לצד',rest:'90 שנ׳',lvl:'כבד',eq:'db',
+    desc:'יד וברך על כיסא/ספה, משיכת המשקולת לאגן. תרגיל הגב הביתי הכבד ביותר.',
+    muscles:'Lat, Rhomboids, Trapezius, בייסס.',
+    tips:['גב ישר — מקביל לרצפה','משוך לכיוון האגן, לא לחזה','אל תסובב את הגו','ירידה איטית ומתיחה מלאה למטה']},
+  dbGobletSquat:{name:'גובלט סקוואט',en:'Goblet Squat',e:'🏆',cat:'כל הרגל',sets:'4×10–15',rest:'2 דק׳',lvl:'בינוני',eq:'db',
+    desc:'משקולת אחת צמודה לחזה. מלמד טכניקת סקוואט מושלמת ומעמיס יפה בבית.',
+    muscles:'Quadriceps, Glutes, ליבה.',
+    tips:['משקולת צמודה לחזה — מרפקים למטה','רד עמוק בין הברכיים','חזה גבוה כל הדרך','כשנגמר המשקל — עבור לבולגריות עם משקולות']},
+  dbRdl:{name:'דד-ליפט רומני — משקולות',en:'Dumbbell Romanian Deadlift',e:'📊',cat:'גב תחתון + ירך אחורי',sets:'3×10–12',rest:'2 דק׳',lvl:'כבד',eq:'db',
+    desc:'זהה לגרסת המוט — המשקולות צמודות לרגליים. תרגיל השרשרת האחורית הביתי המרכזי.',
+    muscles:'Hamstrings, Glutes, Erector Spinae.',
+    tips:['כיפוף מהאגן בלבד','משקולות מחליקות לאורך הרגל','גב ישר — קריטי','עצור במתיחה, לא בכאב']},
+  dbShoulderPress:{name:'לחיצת כתפיים משקולות',en:'DB Shoulder Press',e:'⬆️',cat:'כתפיים',sets:'3×8–12',rest:'90 שנ׳',lvl:'בינוני',eq:'db',
+    desc:'עמידה או ישיבה על כיסא עם גב. תחליף מלא ללחיצת כתפיים במוט.',
+    muscles:'דלטואיד קדמי + אמצעי, טריצפס.',
+    tips:['ליבה אסופה — אל תקשת גב','דחוף עד יישור בלי לנעול','אפשר Arnold Press לגיוון','ירידה עד גובה אוזניים לפחות']}
 };
 
 const EX_YT={
@@ -711,8 +821,10 @@ function saveSettingsForm(){
   if(workout_freq===3) workout_split=document.getElementById('sf-workout-split-3')?.value||'3abc';
   if(workout_freq===4){const s=document.getElementById('sf-workout-split-4')?.value;workout_split=s||null;}
   if(workout_freq===7) showToast('⚠️ 7 ימים ברצף לא מומלץ — הגוף חייב מנוחה!');
+  const workout_location=document.getElementById('sf-workout-location')?.value||'gym';
+  const home_equipment=document.getElementById('sf-home-equipment')?.value||'none';
   if(idx>=0){
-    users[idx]={...users[idx],name,weight,height,age,calories,goal,activity,workout_time,gender,meal_count,cholesterol,workout_freq,workout_split};
+    users[idx]={...users[idx],name,weight,height,age,calories,goal,activity,workout_time,gender,meal_count,cholesterol,workout_freq,workout_split,workout_location,home_equipment};
     saveUsers(users);
     renderUserList();
     renderNutritionPanel();
@@ -1177,6 +1289,10 @@ function prefillSettingsForm(){
   if(sfwrap) sfwrap.style.display=(u.workout_freq===3||u.workout_freq===4)?'block':'none';
   if(sfsplit3){sfsplit3.value=u.workout_split||'3abc';sfsplit3.style.display=u.workout_freq===3?'block':'none';}
   if(sfsplit4){sfsplit4.value=u.workout_split||'';sfsplit4.style.display=u.workout_freq===4?'block':'none';}
+  const sfloc=document.getElementById('sf-workout-location'); if(sfloc) sfloc.value=u.workout_location||'gym';
+  const sfeq=document.getElementById('sf-home-equipment'); if(sfeq) sfeq.value=u.home_equipment||'none';
+  const sfeqwrap=document.querySelector('.sf-homeeq-wrap');
+  if(sfeqwrap) sfeqwrap.style.display=(u.workout_location==='home')?'block':'none';
 
 }
 
@@ -1648,10 +1764,22 @@ function closeCelebration(){
 const TRAIN_DAYS=[0,1,3,4]; // fallback default (4×/week PPL+Arms)
 const HEB_DAYS2=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 
+// Resolves the active plan key: explicit override > home mode (by equipment) > gym freq/split
+function _getPlanKey(u){
+  if(u?.plan) return u.plan;
+  if((u?.workout_location||'gym')==='home'){
+    const eq=u?.home_equipment||'none';
+    return eq==='db'?'home_db4':eq==='band'?'home_band3':'home_bw3';
+  }
+  const freq=parseInt(u?.workout_freq)||4;
+  const split=u?.workout_split||null;
+  return freq===3?(split||'3abc'):freq===4?(split||4):freq;
+}
+
 // Returns train days for user based on their workout frequency
 function _getTrainDays(u){
-  const scheduleMap={1:[4],2:[0,3],'3ab':[0,2,4],'3abc':[0,2,4],4:[0,1,3,4],'4ab':[0,1,3,4],5:[0,1,2,4,5],6:[0,1,2,3,4,5],7:[0,1,2,3,4,5,6]};
-  const key=u?.plan||u?.workout_freq||4;
+  const scheduleMap={1:[4],2:[0,3],'3ab':[0,2,4],'3abc':[0,2,4],4:[0,1,3,4],'4ab':[0,1,3,4],5:[0,1,2,4,5],6:[0,1,2,3,4,5],7:[0,1,2,3,4,5,6],home_bw3:[0,2,4],home_band3:[0,2,4],home_db4:[0,1,3,4]};
+  const key=_getPlanKey(u);
   return scheduleMap[key]||TRAIN_DAYS;
 }
 
@@ -1881,6 +2009,9 @@ function _buildDayCfg(planKey){
     5:[0,1,2,4,5],
     6:[0,1,2,3,4,5],
     7:[0,1,2,3,4,5,6],
+    home_bw3:[0,2,4],
+    home_band3:[0,2,4],
+    home_db4:[0,1,3,4],
   };
   const dows=scheduleMap[planKey]||[0,1,3,4];
   const result={};
@@ -1957,7 +2088,7 @@ function initTodayHero(){
   const hero=document.getElementById('today-hero');
   if(!hero) return;
   const u=getActiveUser();
-  const activeDayCfg=(u&&u.plan)?_buildDayCfg(u.plan):DAY_CFG;
+  const activeDayCfg=u?_buildDayCfg(_getPlanKey(u)):DAY_CFG;
   const cfg=activeDayCfg[d];
   const log=getLog(); const today=todayStr();
   const done=log[today]?.__complete;
@@ -4552,9 +4683,73 @@ function downloadStatsCard(){
 }
 
 // ═══════════════════════════════════════════════════
+// GYM → HOME substitution map (per equipment tier)
+// ═══════════════════════════════════════════════════
+const GYM_TO_HOME={
+  benchPress:  {none:'pushup',        band:'bandChestPress', db:'dbFloorPress'},
+  inclineBench:{none:'declinePushup', band:'bandChestPress', db:'dbFloorPress'},
+  cableFlye:   {none:'pushup',        band:'bandChestPress', db:'dbFloorPress'},
+  ohp:         {none:'pikePushup',    band:'bandLateral',    db:'dbShoulderPress'},
+  pullup:      {none:'chinupHome',    band:'bandPulldown',   db:'chinupHome'},
+  bentRow:     {none:'doorRow',       band:'bandRow',        db:'dbRow'},
+  cableRow:    {none:'doorRow',       band:'bandRow',        db:'dbRow'},
+  tBarRow:     {none:'doorRow',       band:'bandRow',        db:'dbRow'},
+  facePull:    {none:'doorRow',       band:'bandFacePull',   db:'bandFacePull'},
+  squat:       {none:'bwSquat',       band:'bwSquat',        db:'dbGobletSquat'},
+  legPress:    {none:'bulgSplitHome', band:'bulgSplitHome',  db:'dbGobletSquat'},
+  legExt:      {none:'pistolBox',     band:'bwSquat',        db:'dbGobletSquat'},
+  legCurl:     {none:'nordicHome',    band:'bandGoodMorning',db:'dbRdl'},
+  rdl:         {none:'gluteBridge',   band:'bandGoodMorning',db:'dbRdl'},
+  deadlift:    {none:'nordicHome',    band:'bandGoodMorning',db:'dbRdl'},
+  hipThrust:   {none:'gluteBridge',   band:'gluteBridge',    db:'gluteBridge'},
+  lunges:      {none:'bulgSplitHome', band:'bulgSplitHome',  db:'bulgSplitHome'},
+  calfRaise:   {none:'calfRaiseHome', band:'calfRaiseHome',  db:'calfRaiseHome'},
+  seatedCalfRaise:{none:'calfRaiseHome',band:'calfRaiseHome',db:'calfRaiseHome'},
+  bbCurl:      {none:'chinupHome',    band:'bandCurl',       db:'hammerCurl'},
+  triPushdown: {none:'diamondPushup', band:'bandTricep',     db:'ohTricep'},
+  skullCrusher:{none:'diamondPushup', band:'bandTricep',     db:'ohTricep'},
+  arnoldPress: {none:'pikePushup',    band:'bandLateral',    db:'dbShoulderPress'},
+};
+
+// ═══════════════════════════════════════════════════
 // MULTI-FREQUENCY WORKOUT PLANS
 // ═══════════════════════════════════════════════════
 const WORKOUT_PLANS={
+  home_bw3:{
+    days:[
+      {id:'push',label:'Full Body A — ביתי',shortLabel:'בית A',color:'#22C55E',
+       exercises:['pushup','doorRow','bwSquat','gluteBridge','pikePushup','plankReach']},
+      {id:'pull',label:'Full Body B — ביתי',shortLabel:'בית B',color:'#5AC8FA',
+       exercises:['declinePushup','chinupHome','bulgSplitHome','nordicHome','diamondPushup','hollowHold']},
+      {id:'legs',label:'Full Body C — ביתי',shortLabel:'בית C',color:'#BF5AF2',
+       exercises:['pikePushup','doorRow','pistolBox','gluteBridge','pushup','calfRaiseHome','plankReach']},
+    ],
+    schedule:'א׳ A | ג׳ B | ה׳ C — משקל גוף בלבד, 48 שעות מנוחה בין אימונים'
+  },
+  home_band3:{
+    days:[
+      {id:'push',label:'Full Body A — גומיות',shortLabel:'גומי A',color:'#22C55E',
+       exercises:['pushup','bandRow','bwSquat','bandChestPress','bandGoodMorning','bandFacePull']},
+      {id:'pull',label:'Full Body B — גומיות',shortLabel:'גומי B',color:'#5AC8FA',
+       exercises:['bandPulldown','declinePushup','bulgSplitHome','bandLateral','bandCurl','bandTricep']},
+      {id:'legs',label:'Full Body C — גומיות',shortLabel:'גומי C',color:'#BF5AF2',
+       exercises:['bandChestPress','bandRow','pistolBox','gluteBridge','bandFacePull','calfRaiseHome']},
+    ],
+    schedule:'א׳ A | ג׳ B | ה׳ C — גומיות התנגדות + משקל גוף'
+  },
+  home_db4:{
+    days:[
+      {id:'push',label:'Upper A — ביתי',shortLabel:'עליון A',color:'#FF375F',
+       exercises:['dbFloorPress','dbRow','dbShoulderPress','chinupHome','lateralRaise','hammerCurl']},
+      {id:'pull',label:'Lower A — ביתי',shortLabel:'תחתון A',color:'#BF5AF2',
+       exercises:['dbGobletSquat','dbRdl','bulgSplitHome','gluteBridge','calfRaiseHome','plankReach']},
+      {id:'legs',label:'Upper B — ביתי',shortLabel:'עליון B',color:'#5AC8FA',
+       exercises:['pushup','dbRow','pikePushup','bandFacePull','inclineCurl','ohTricep']},
+      {id:'arms',label:'Lower B — ביתי',shortLabel:'תחתון B',color:'#FFD60A',
+       exercises:['dbRdl','pistolBox','dbGobletSquat','nordicHome','calfRaiseHome','hollowHold']},
+    ],
+    schedule:'א׳ עליון A | ב׳ תחתון A | ד׳ עליון B | ה׳ תחתון B'
+  },
   1:{
     days:[
       {id:'push',label:'Full Body — אימון שבועי',shortLabel:'FULL',color:'#22C55E',
@@ -4689,9 +4884,7 @@ function renderWorkoutDay(panelId,dayObj){
 
 function renderAdaptivePanels(){
   const u=getActiveUser();
-  const freq=parseInt(u?.workout_freq)||4;
-  const split=u?.workout_split||null;
-  const planKey=freq===3?(split||'3abc'):freq===4?(split||4):freq;
+  const planKey=_getPlanKey(u);
   const plan=WORKOUT_PLANS[planKey];
   if(!plan){ showToast('תוכנית אימון לא זמינה לתדירות זו'); return; }
   const {days}=plan;

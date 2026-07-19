@@ -1371,6 +1371,23 @@
             </div>
           </div>
 
+          <!-- Workout location -->
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+            <label class="settings-label" for="sf-workout-location">איפה אתה מתאמן?</label>
+            <select id="sf-workout-location" class="settings-input" style="cursor:pointer;" onchange="(function(v){var w=document.querySelector('.sf-homeeq-wrap');if(w)w.style.display=v==='home'?'block':'none';})(this.value)">
+              <option value="gym">מכון כושר</option>
+              <option value="home">אימוני בית</option>
+            </select>
+          </div>
+          <div class="sf-homeeq-wrap" style="display:none;margin-top:10px;">
+            <label class="settings-label" for="sf-home-equipment">איזה ציוד יש לך בבית?</label>
+            <select id="sf-home-equipment" class="settings-input" style="cursor:pointer;">
+              <option value="none">כלום — רק משקל גוף (3 אימונים/שבוע)</option>
+              <option value="band">גומיות התנגדות (3 אימונים/שבוע)</option>
+              <option value="db">משקולות מתכווננות (4 אימונים/שבוע)</option>
+            </select>
+          </div>
+
           <!-- Workout frequency -->
           <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
             <label class="settings-label" for="sf-workout-freq">תדירות אימון בשבוע</label>
