@@ -115,7 +115,7 @@
         <button class="workout-card push" onclick="showPanel('push',null);setMobileNav('push');">
           <div class="workout-card-icon">💥</div>
           <div class="workout-card-title" style="color:var(--push-c);">PUSH</div>
-          <div class="workout-card-sub">חזה · כתפיים · טריצפסצפס</div>
+          <div class="workout-card-sub">חזה · כתפיים · טריצפס</div>
         </button>
         <button class="workout-card pull" onclick="showPanel('pull',null);setMobileNav('pull');">
           <div class="workout-card-icon">🔄</div>
@@ -1874,18 +1874,5 @@
 </div>
 
     <script type="module" src="app.js"></script>
-    <script>
-function setMobileNav(name){
-  document.querySelectorAll('.mbn-item').forEach(b=>b.classList.remove('active'));
-  const el=document.getElementById('mbn-'+name);
-  if(el) el.classList.add('active');
-  else document.getElementById('mbn-dashboard')?.classList.add('active');
-}
-const _origShowPanel=showPanel;
-showPanel=function(name,btn){
-  _origShowPanel(name,btn);
-  setMobileNav(name);
-};
-    </script>
 </body>
 </html>

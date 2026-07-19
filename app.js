@@ -617,92 +617,30 @@ function showPanel(name,btn){
   if(btn)btn.classList.add('active');
   const pt=document.getElementById('page-title');
   if(pt){pt.classList.add('switching');setTimeout(()=>{pt.textContent=TITLES[name]||name;pt.classList.remove('switching');},100);}
-  if(window.innerWidth<=768) closeSidebar();
   window.scrollTo(0,0);
+  // Sync bottom-nav highlight
+  if(typeof setMobileNav==='function'){
+    const navMap={push:'push',pull:'push',legs:'push',arms:'push',schedule:'push',
+      dashboard:'dashboard',nutrition:'nutrition',food:'nutrition',supplements:'nutrition',
+      progress:'progress',elog:'progress',timeline:'progress',settings:'settings'};
+    setMobileNav(navMap[name]||'dashboard');
+  }
   // Lazy-render panels that build their UI dynamically
   if(name==='elog') setTimeout(renderElogPanel,0);
   if(name==='food') setTimeout(renderFoodPanel,0);
   if(name==='chat') setTimeout(renderChatPanel,0);
   if(['push','pull','legs','arms','day-a','day-b','day-c'].includes(name)) setTimeout(injectSparklines,0);
 }
-function openSidebar(){
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('sidebar-overlay').classList.add('show');
-  document.body.style.overflow='hidden';
+// Sidebar was removed from the HTML — keep safe no-ops for any leftover callers
+function openSidebar(){}
+function closeSidebar(){}
+function toggleSidebar(){}
+// Bottom-nav active state
+function setMobileNav(id){
+  document.querySelectorAll('.mbn-item').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('mbn-'+id);
+  if(el) el.classList.add('active');
 }
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebar-overlay').classList.remove('show');
-  document.body.style.overflow='';
-}
-function toggleSidebar(){
-  const open = document.getElementById('sidebar').classList.contains('open');
-  open ? closeSidebar() : openSidebar();
-}
-
-// ── SWIPE GESTURE — right edge → open sidebar, swipe out → close ──
-(function(){
-  const EDGE_ZONE = 32;   // px from right edge that triggers open
-  const THRESHOLD = 55;   // px swipe needed to commit open/close
-  let startX=0, startY=0, tracking=false, didDecide=false;
-
-  function isMobile(){ return window.innerWidth <= 768; }
-
-  document.addEventListener('touchstart', e=>{
-    if(!isMobile()) return;
-    const t=e.touches[0];
-    startX=t.clientX; startY=t.clientY;
-    const sb=document.getElementById('sidebar');
-    const isOpen=sb.classList.contains('open');
-    const fromEdge = startX > window.innerWidth - EDGE_ZONE;
-    tracking = fromEdge || isOpen;
-    didDecide = false;
-    if(tracking && isOpen){
-      // Remove transition for live drag
-      sb.style.transition='none';
-    }
-  }, {passive:true});
-
-  document.addEventListener('touchmove', e=>{
-    if(!tracking || !isMobile()) return;
-    const t=e.touches[0];
-    const dx=t.clientX - startX;
-    const dy=t.clientY - startY;
-    // Decide axis on first significant move
-    if(!didDecide && Math.max(Math.abs(dx),Math.abs(dy)) > 6){
-      if(Math.abs(dy) > Math.abs(dx)){ tracking=false; return; } // vertical scroll
-      didDecide=true;
-    }
-    if(!didDecide) return;
-    const sb=document.getElementById('sidebar');
-    const isOpen=sb.classList.contains('open');
-    if(isOpen && dx > 0){
-      // Dragging open sidebar to the right (closing direction)
-      sb.style.transform=`translateX(${Math.min(dx, sb.offsetWidth)}px)`;
-    } else if(!isOpen && dx < 0){
-      // Dragging from edge to the left (opening direction)
-      const progress=Math.min(-dx, sb.offsetWidth);
-      sb.style.transform=`translateX(${sb.offsetWidth - progress}px)`;
-    }
-  }, {passive:true});
-
-  document.addEventListener('touchend', e=>{
-    if(!tracking || !isMobile()) return;
-    const dx=e.changedTouches[0].clientX - startX;
-    const sb=document.getElementById('sidebar');
-    // Restore transition
-    sb.style.transition='';
-    sb.style.transform='';
-    const isOpen=sb.classList.contains('open');
-    // RTL: sidebar opens from right → swipe right (dx>0) to open, left (dx<0) to close
-    if(!isOpen && dx > THRESHOLD){
-      openSidebar();
-    } else if(isOpen && dx < -THRESHOLD){
-      closeSidebar();
-    }
-    tracking=false;
-  }, {passive:true});
-})();
 
 // ── URL PARAMS: open panel from shortcut ──
 (function(){
@@ -2101,7 +2039,7 @@ function initTodayHero(){
     hero.innerHTML=`
       <div class="hero-top-row">
         <span class="hero-badge">${cfg.badge}${done?' ✓':''}</span>
-        <button class="hero-play" onclick="event.stopPropagation();document.querySelectorAll('.nav-btn').forEach(b=>{if(b.getAttribute('onclick')?.includes('${cfg.panel}'))b.click();});">
+        <button class="hero-play" onclick="event.stopPropagation();showPanel('${cfg.panel}',null);">
           <svg viewBox="0 0 24 24" fill="#000"><polygon points="5,3 19,12 5,21"/></svg>
         </button>
       </div>
@@ -2116,11 +2054,7 @@ function initTodayHero(){
           ${done?'<span class="today-hero-hint">✓ הושלם היום!</span>':''}
         </div>
       </div>`;
-    hero.onclick=()=>{
-      document.querySelectorAll('.nav-btn').forEach(b=>{
-        if(b.getAttribute('onclick')?.includes("'"+cfg.panel+"'")) b.click();
-      });
-    };
+    hero.onclick=()=>{ showPanel(cfg.panel,null); };
   } else {
     hero.style.cssText='';
     hero.style.background='linear-gradient(135deg,rgba(48,209,88,.12),rgba(48,209,88,.04))';
@@ -3560,6 +3494,37 @@ function playBeep(){
 let _gymTimerIv=null;
 let _gymTimerRemain=0;
 let _gymTimerTotal=0;
+let _gymTimerEnd=0;      // absolute deadline (ms) — survives screen lock / tab throttling
+let _gymWakeLock=null;   // screen wake lock while gym mode is open
+
+async function gymRequestWakeLock(){
+  try{ _gymWakeLock=await navigator.wakeLock?.request('screen'); }catch(e){ _gymWakeLock=null; }
+}
+function gymReleaseWakeLock(){
+  try{ _gymWakeLock?.release(); }catch(e){}
+  _gymWakeLock=null;
+}
+// On return to the app: re-acquire wake lock + resync timer from the deadline
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden) return;
+  const gymOpen=document.getElementById('gym-overlay')?.classList.contains('open');
+  if(!gymOpen) return;
+  gymRequestWakeLock();
+  if(_gymTimerEnd>0){
+    _gymTimerRemain=Math.max(0,Math.round((_gymTimerEnd-Date.now())/1000));
+    gymTickTimer();
+    if(_gymTimerRemain<=0&&_gymTimerIv){ clearInterval(_gymTimerIv); _gymTimerIv=null; _gymTimerFinish(); }
+  }
+});
+function _gymTimerFinish(){
+  _gymTimerEnd=0;
+  const msgEl=document.getElementById('gym-rest-msg');
+  if(msgEl) msgEl.textContent='התחל סט! 💪';
+  const timeEl=document.getElementById('gym-ring-text');
+  if(timeEl) timeEl.textContent='GO';
+  if(navigator.vibrate) navigator.vibrate([200,100,200,100,200]);
+  playBeep();
+}
 // GYM_TIMER_CIRC moved to CONFIG.GYM_TIMER_CIRC
 
 function startGymMode(panelName,label,color){
@@ -3580,6 +3545,7 @@ function startGymMode(panelName,label,color){
   renderGymExercise();
   document.getElementById('gym-overlay').classList.add('open');
   document.body.style.overflow='hidden';
+  gymRequestWakeLock();
   // Start stopwatch
   _gymStopwatchStart=Date.now();
   if(_gymStopwatchIv) clearInterval(_gymStopwatchIv);
@@ -3714,6 +3680,7 @@ function gymPrev(){
 function closeGymMode(){
   document.getElementById('gym-overlay').classList.remove('open');
   document.body.style.overflow='';
+  gymReleaseWakeLock();
   if(_tempoTimer){ clearTimeout(_tempoTimer); _tempoTimer=null; }
   if(_gymStopwatchIv){ clearInterval(_gymStopwatchIv); _gymStopwatchIv=null; }
   cancelGymTimer();
@@ -3732,18 +3699,14 @@ function gymPickTimer(sec){
     const v=parseInt(b.textContent.replace(':','').replace('0','').split(':').reduce((m,s)=>+m*60+(+s),0));
     b.classList.toggle('active', parseInt(b.getAttribute('onclick')?.match(/\d+/)?.[0]||0)===sec);
   });
+  _gymTimerEnd=Date.now()+sec*1000;
   gymTickTimer();
   _gymTimerIv=setInterval(()=>{
-    _gymTimerRemain--;
+    _gymTimerRemain=Math.max(0,Math.round((_gymTimerEnd-Date.now())/1000));
     gymTickTimer();
     if(_gymTimerRemain<=0){
       clearInterval(_gymTimerIv); _gymTimerIv=null;
-      const msgEl=document.getElementById('gym-rest-msg');
-      if(msgEl) msgEl.textContent='התחל סט! 💪';
-      const timeEl=document.getElementById('gym-ring-text');
-      if(timeEl) timeEl.textContent='GO';
-      if(navigator.vibrate) navigator.vibrate([200,100,200,100,200]);
-      playBeep();
+      _gymTimerFinish();
     }
   },1000);
 }
@@ -3761,7 +3724,7 @@ function gymTickTimer(){
 }
 function cancelGymTimer(){
   if(_gymTimerIv){ clearInterval(_gymTimerIv); _gymTimerIv=null; }
-  _gymTimerRemain=0; _gymTimerTotal=0;
+  _gymTimerRemain=0; _gymTimerTotal=0; _gymTimerEnd=0;
   const zone=document.getElementById('gym-rest-timer');
   if(zone) zone.style.display='none';
 }
@@ -4890,11 +4853,18 @@ function renderAdaptivePanels(){
   const {days}=plan;
   const allIds=['push','pull','legs','arms'];
   allIds.forEach((pid,i)=>{
-    const navBtn=document.querySelector(`.nav-btn[onclick*="'${pid}'"]`);
+    const card=document.querySelector('.workout-card.'+pid);
+    const schedBtn=document.querySelector(`#panel-schedule button[onclick*="'${pid}'"]`);
     if(i>=days.length){
-      if(navBtn) navBtn.style.display='none';
+      if(card) card.style.display='none';
+      if(schedBtn) schedBtn.style.display='none';
     } else {
-      if(navBtn) navBtn.style.display='';
+      if(card){
+        card.style.display='';
+        const t=card.querySelector('.workout-card-title');
+        if(t) t.textContent=days[i].shortLabel||days[i].label;
+      }
+      if(schedBtn) schedBtn.style.display='';
       renderWorkoutDay(pid,days[i]);
     }
   });
@@ -4925,7 +4895,7 @@ function getWorkoutFreqLabel(freq,split){
 // when app.js runs as an ES module (type="module" is function-scoped)
 Object.assign(window,{
   openModal,closeModal,closeModalBg,closeAltModal,
-  showPanel,renderExSearch,closeExSearch,browseExCategory,
+  showPanel,setMobileNav,renderExSearch,closeExSearch,browseExCategory,
   addWaterCup,removeWaterCup,
   toggleHabit,
   startGymMode,confirmCloseGymMode,gymNext,gymPrev,

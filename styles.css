@@ -1398,8 +1398,8 @@ select:invalid:not(:placeholder-shown){
 /* ─── RPE TRACKER ─── */
 .rpe-wrap{padding:14px 20px;background:rgba(255,255,255,.03);border-top:1px solid var(--border);flex-shrink:0;}
 .rpe-label{font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-.rpe-btns{display:flex;gap:5px;}
-.rpe-btn{background:rgba(255,255,255,.05);border:1px solid var(--border2);color:var(--muted2);border-radius:8px;flex:1;height:36px;cursor:pointer;font-family:var(--font-d);font-weight:800;font-size:.85rem;transition:all .18s;}
+.rpe-btns{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+.rpe-btn{background:rgba(255,255,255,.05);border:1px solid var(--border2);color:var(--muted2);border-radius:8px;height:44px;cursor:pointer;font-family:var(--font-d);font-weight:800;font-size:.95rem;transition:all .18s;}
 .rpe-btn.sel{color:#fff;border-color:transparent;}
 .rpe-btn[data-v="1"].sel,.rpe-btn[data-v="2"].sel,.rpe-btn[data-v="3"].sel{background:var(--green);}
 .rpe-btn[data-v="4"].sel,.rpe-btn[data-v="5"].sel,.rpe-btn[data-v="6"].sel{background:var(--yellow);color:#000;}
@@ -1641,7 +1641,7 @@ select:invalid:not(:placeholder-shown){
 .grt-right{flex:1;display:flex;flex-direction:column;gap:6px;}
 .grt-label{font-family:var(--font-d);font-size:.8rem;font-weight:800;color:var(--muted2);letter-spacing:.5px;}
 .grt-presets{display:flex;gap:6px;flex-wrap:wrap;}
-.grt-presets button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:var(--muted2);font-family:var(--font-d);font-size:.72rem;font-weight:800;padding:4px 8px;cursor:pointer;transition:all .15s;letter-spacing:.3px;}
+.grt-presets button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;color:var(--muted2);font-family:var(--font-d);font-size:.9rem;font-weight:800;padding:10px 12px;min-height:44px;min-width:56px;cursor:pointer;transition:all .15s;letter-spacing:.3px;}
 .grt-presets button:hover,.grt-presets button.active{background:rgba(10,132,255,.18);border-color:var(--blue);color:var(--blue);}
 .grt-skip{background:none;border:none;color:var(--muted);font-size:.72rem;font-weight:700;cursor:pointer;padding:0;font-family:var(--font-d);letter-spacing:.5px;align-self:flex-start;}
 .grt-skip:hover{color:var(--text);}
