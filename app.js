@@ -4898,9 +4898,64 @@ function getWorkoutFreqLabel(freq,split){
 // CROSSFIT — WODs מקצועיים, טיימר, רישום תוצאות
 // ═══════════════════════════════════════════════════
 const CF_SCORES_KEY='pf_wod_scores';
-const CF_CATS=[['home','🏠 בית — ללא ציוד'],['beginner','🌱 מתחילים'],['girls','👧 The Girls'],['hero','🎖️ Hero']];
+const CF_CATS=[['strength','🏋️ כוח — Gains'],['home','🏠 בית — ללא ציוד'],['beginner','🌱 מתחילים'],['girls','👧 The Girls'],['hero','🎖️ Hero']];
 
 const CF_WODS=[
+  // ── כוח — Gains (בניית כוח ומסה בסגנון CrossFit) ──
+  {id:'hybridWeek',name:'התוכנית ההיברידית',cat:'strength',type:'תוכנית',cap:0,icon:'🗓️',scheme:'כוח + מטקון · 3 ימים בשבוע',
+   cols:['יום','כוח (ראשון)','מטקון (אחרי)'],
+   moves:[
+    {n:'יום א׳',rx:'Squat Day — 5×5',sc:'Home Engine או AMRAP 8 קצר'},
+    {n:'יום ג׳',rx:'Press Day — 5×3',sc:'EMOM Builder או Annie מדורגת'},
+    {n:'יום ה׳',rx:'Deadlift Day — 5×3',sc:'Helen מדורגת או 60 Burpees'},
+   ],
+   targets:{elite:'4 ימים: הוסף Oly Skill',good:'3 ימים מלאים',start:'התחל עם כוח בלבד, הוסף מטקון אחרי שבועיים'},
+   desc:'ככה בונים גיין אמיתי בקרוספיט: כוח כבד קודם (כשאתה טרי), מטקון קצר אחרי. לא הפוך. 3 ימים בשבוע מספיקים לחלוטין.',
+   tips:['כוח תמיד לפני מטקון — לעולם לא אחרי','המטקון אחרי כוח: 8–12 דק׳ מקסימום','48 שעות מנוחה בין ימי כוח','דלואוד כל 4–5 שבועות: הורד 40% מהמשקלים']},
+  {id:'squatDay',name:'Squat Day',cat:'strength',type:'Strength',cap:45,icon:'🦵',scheme:'Back Squat 5×5 — Linear Progression',
+   cols:['תרגיל','סכמה','התקדמות'],
+   moves:[
+    {n:'Back Squat',rx:'5×5 @ 75–80%',sc:'+2.5 ק"ג כל אימון מוצלח'},
+    {n:'Front Squat',rx:'3×8 @ 60%',sc:'שמור טכניקה, מרפקים גבוהים'},
+    {n:'Walking Lunges',rx:'3×12 לרגל',sc:'משקולות ביד — הוסף כשקל'},
+    {n:'Plank',rx:'3×45 שנ׳',sc:'הוסף 5 שנ׳ בשבוע'},
+   ],
+   targets:{elite:'סקוואט 1.5× משקל גוף',good:'1.25× משקל גוף',start:'מוט ריק → 60% תוך חודש'},
+   desc:'הבסיס של כל גיין: סקוואט כבד פעם בשבוע עם התקדמות ליניארית. 5×5 = הנוסחה הכי מוכחת בהיסטוריה לכוח ומסה.',
+   tips:['עומק מלא — ירך מתחת לברך, בלי פשרות','נכשלת בסט? נסה שוב אימון הבא באותו משקל','נכשלת פעמיים? הורד 10% ותתקדם מחדש','ברכיים החוצה בקו האצבעות לאורך כל התנועה']},
+  {id:'pressDay',name:'Press Day',cat:'strength',type:'Strength',cap:45,icon:'🙌',scheme:'Strict Press 5×3 + נפח דחיקה',
+   cols:['תרגיל','סכמה','התקדמות'],
+   moves:[
+    {n:'Strict Press',rx:'5×3 @ 80–85%',sc:'+1.25 ק"ג כל אימון (הכי איטי — סבלנות)'},
+    {n:'Push Press',rx:'3×5 כבד',sc:'דחיפה מהרגליים, נעילה מלאה'},
+    {n:'Dips',rx:'3×8–12',sc:'הוסף משקל כשמגיע ל-12'},
+    {n:'Face Pull',rx:'3×15',sc:'איזון כתף אחורית — חובה'},
+   ],
+   targets:{elite:'Strict Press 0.75× משקל גוף',good:'0.6× משקל גוף',start:'מוט ריק → 30 ק"ג'},
+   desc:'כתפיים חזקות = כל תנועות הקרוספיט משתפרות: ת׳ראסטרים, וול-בול, HSPU. הפרס הכי איטי להתקדמות — והכי שווה.',
+   tips:['ישבן וליבה צמודים — בלי קשת בגב','המוט נע בקו ישר, הראש זז אחורה ואז חוזר','אל תדלג על ה-Face Pull — הוא שומר על הכתפיים שלך']},
+  {id:'deadliftDay',name:'Deadlift Day',cat:'strength',type:'Strength',cap:45,icon:'⛓️',scheme:'Deadlift 5×3 + שרשרת אחורית',
+   cols:['תרגיל','סכמה','התקדמות'],
+   moves:[
+    {n:'Deadlift',rx:'5×3 @ 80%',sc:'+5 ק"ג בשבוע — הכי מהיר להתקדם'},
+    {n:'Romanian Deadlift',rx:'3×8 @ 50%',sc:'מתיחה מלאה בהאמסטרינג'},
+    {n:'Pull-ups',rx:'4×מקסימום',sc:'הוסף משקל כשמגיע ל-12'},
+    {n:'Farmer Carry',rx:'3×40 מ׳ כבד',sc:'אחיזה + ליבה — גיין נסתר'},
+   ],
+   targets:{elite:'דדליפט 2× משקל גוף',good:'1.5× משקל גוף',start:'60 ק"ג → 100 תוך 3 חודשים'},
+   desc:'התרגיל שבונה הכי הרבה מסה כוללת: גב, רגליים, אחיזה, ליבה. פעם בשבוע, כבד, מושלם.',
+   tips:['גב ניטרלי — אם הוא מתעגל, המשקל כבד מדי','המוט צמוד לגוף מהרצפה עד הנעילה','אל תעשה דדליפט כבד ומטקון עם דדליפט באותו שבוע']},
+  {id:'olyDay',name:'Oly Skill — Power Clean',cat:'strength',type:'Strength',cap:40,icon:'🥇',scheme:'טכניקה + כוח מתפרץ',
+   cols:['תרגיל','סכמה','התקדמות'],
+   moves:[
+    {n:'Power Clean',rx:'EMOM 10 — 2 חזרות @ 70%',sc:'טכניקה מושלמת לפני משקל'},
+    {n:'Front Squat',rx:'4×6 @ 65%',sc:'מרפקים גבוהים — תומך בקלין'},
+    {n:'Hang High Pull',rx:'3×5',sc:'מתפרץ מהירך — מרפקים גבוהים'},
+    {n:'Hollow Hold',rx:'3×30 שנ׳',sc:'ליבה להרמות אולימפיות'},
+   ],
+   targets:{elite:'Power Clean 1.25× משקל גוף',good:'1× משקל גוף',start:'מוט ריק — טכניקה בלבד שבועיים'},
+   desc:'ההרמות האולימפיות הן הנשק הסודי של גיין קרוספיטי: כוח מתפרץ + מסה + קואורדינציה. Grace תרגיש קלה אחרי חודשיים כאלה.',
+   tips:['הקלין הוא קפיצה עם מוט — הכוח מהירכיים','מרפקים מסתובבים מהר מתחת למוט','2 חזרות בדקה = איכות, לא עייפות — זה סקיל, לא מטקון']},
   // ── בית — ללא ציוד ──
   {id:'burpee100',name:'100 Burpees',cat:'home',type:'For Time',cap:15,icon:'🔥',scheme:'100 חזרות — כמה שיותר מהר',
    moves:[{n:'Burpees',rx:'חזה לרצפה + קפיצה ומחיאת כף מעל הראש',sc:'ללא קפיצה — צעד אחורה וקימה'}],
@@ -4982,7 +5037,7 @@ const CF_WODS=[
    tips:['שבור את הדדליפט 11+1 — החזרה האחרונה הופכת לקלין הראשון','Hook Grip או שאתה מאבד את האחיזה בסבב 3','ג׳רקים ללא שבירה — שם הזמן מתחבא']},
 ];
 
-let _cfActiveCat='home';
+let _cfActiveCat='strength';
 const _cfExpanded=new Set();
 
 function _cfScores(){ return _getJSON(CF_SCORES_KEY,{}); }
@@ -4994,7 +5049,7 @@ function _cfWodOfDay(){
   return CF_WODS[doy%CF_WODS.length];
 }
 
-const _CF_TYPE_CLS={'For Time':'cf-type-ft','AMRAP':'cf-type-amrap','EMOM':'cf-type-emom','Tabata':'cf-type-tabata'};
+const _CF_TYPE_CLS={'For Time':'cf-type-ft','AMRAP':'cf-type-amrap','EMOM':'cf-type-emom','Tabata':'cf-type-tabata','Strength':'cf-type-str','תוכנית':'cf-type-plan'};
 
 function _cfCardHTML(w){
   const open=_cfExpanded.has(w.id);
@@ -5010,7 +5065,7 @@ function _cfCardHTML(w){
     </button>
     ${open?`<div class="cf-card-body">
       <p class="cf-desc">${w.desc}</p>
-      <table class="cf-moves"><thead><tr><th>תנועה</th><th>RX</th><th>Scaled</th></tr></thead>
+      <table class="cf-moves"><thead><tr>${(w.cols||['תנועה','RX','Scaled']).map(c=>`<th>${c}</th>`).join('')}</tr></thead>
         <tbody>${w.moves.map(m=>`<tr><td>${m.n}</td><td>${m.rx}</td><td>${m.sc}</td></tr>`).join('')}</tbody></table>
       <div class="cf-targets">
         <span class="cf-target elite">🥇 עילית: ${w.targets.elite}</span>
@@ -5035,8 +5090,8 @@ function renderCrossfitPanel(){
   const wod=_cfWodOfDay();
   const list=CF_WODS.filter(w=>w.cat===_cfActiveCat);
   wrap.innerHTML=`
-  <div class="trainer-note"><strong>⚡ CrossFit בלי בוקס</strong><br>
-  עזבת את השיעורים? לא עזבת את הקרוספיט. כל ה-WODs כאן מותאמים לאימון עצמאי — בבית או בחדר כושר, בשעות שלך.</div>
+  <div class="trainer-note"><strong>⚡ CrossFit בלי בוקס — כוח + מטקון</strong><br>
+  עזבת את השיעורים? לא עזבת את הקרוספיט. ימי כוח לגיין אמיתי (Squat/Press/Deadlift/Oly) + WODs לקונדישן — הכל מותאם לאימון עצמאי, בשעות שלך.</div>
 
   <div class="card cf-wotd-card">
     <div class="card-head"><h2>🗓️ ה-WOD של היום</h2><span class="badge badge-red">${wod.type}</span></div>

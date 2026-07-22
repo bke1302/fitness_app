@@ -1604,6 +1604,8 @@ select:invalid:not(:placeholder-shown){
 .cf-type-amrap{background:rgba(59,130,246,.15);color:var(--blue);border:1px solid rgba(59,130,246,.3);}
 .cf-type-emom{background:rgba(139,92,246,.15);color:var(--purple);border:1px solid rgba(139,92,246,.3);}
 .cf-type-tabata{background:rgba(245,158,11,.15);color:var(--yellow);border:1px solid rgba(245,158,11,.3);}
+.cf-type-str{background:rgba(249,115,22,.15);color:var(--orange);border:1px solid rgba(249,115,22,.35);}
+.cf-type-plan{background:rgba(34,197,94,.15);color:var(--lime);border:1px solid rgba(34,197,94,.3);}
 .cf-card-body{padding:0 16px 16px;}
 .cf-desc{font-size:.85rem;color:var(--muted2);line-height:1.7;margin:0 0 12px;}
 .cf-moves{width:100%;border-collapse:collapse;font-size:.8rem;margin-bottom:12px;}
