@@ -1184,8 +1184,9 @@ select:invalid:not(:placeholder-shown){
   position:relative;overflow:hidden;
 }
 .boss-card-top::before{
-  content:'⚡';position:absolute;left:-8px;top:50%;transform:translateY(-50%);
-  font-size:6rem;opacity:.06;pointer-events:none;line-height:1;
+  content:'';position:absolute;left:-40px;top:-40px;width:160px;height:160px;
+  background:radial-gradient(circle,rgba(255,138,61,.14),transparent 70%);
+  pointer-events:none;
 }
 .boss-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:0;}
 .boss-week-tag{
@@ -1786,3 +1787,41 @@ button,a,[role="button"],.nav-tab,.panel-tab,.ob-freq-btn,.ob-split-btn,.meal-sw
 @media(max-width:480px){
   .btn,.workout-card{min-height:44px;}
 }
+
+/* ─── ICON SYSTEM (SVG, stroke-based) ─── */
+.ico{width:1.1em;height:1.1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;flex-shrink:0;display:inline-block;}
+.card-head h2::before{content:'';display:inline-block;width:3px;height:14px;border-radius:2px;background:var(--lime);margin-left:9px;vertical-align:-2px;}
+.workout-card-icon .ico{width:22px;height:22px;}
+.workout-card.push .workout-card-icon{color:var(--push-c);}
+.workout-card.pull .workout-card-icon{color:var(--pull-c);}
+.workout-card.legs .workout-card-icon{color:var(--legs-c);}
+.workout-card.arms .workout-card-icon{color:var(--arms-c);}
+.workout-card.crossfit .workout-card-icon{color:var(--orange);}
+.ddc-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.ddc-dot-rest{background:transparent;border:1.5px solid var(--muted2);}
+.dc-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+.day-cell .dc-icon{font-size:0;line-height:1;margin-bottom:8px;}
+.ex-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.ex-dot.push{background:var(--push-c,#E8A87C);}
+.ex-dot.pull{background:var(--pull-c,#C9B27E);}
+.ex-dot.legs{background:var(--legs-c,#B99C6B);}
+.ex-dot.arms{background:var(--arms-c,#FFC53D);}
+.ex-dot.core{background:#30D158;}
+.tip-icon .ico{width:20px;height:20px;}
+.tool-btn .tool-icon .ico{width:20px;height:20px;color:var(--lime);}
+.goal-btn .goal-icon .ico{width:26px;height:26px;color:var(--lime);}
+.act-btn .act-icon .ico{width:20px;height:20px;color:var(--muted);}
+.act-btn.sel .act-icon .ico{color:var(--lime);}
+.empty-state-icon .ico{width:44px;height:44px;color:var(--muted2);}
+.ach-icon .ico{width:20px;height:20px;color:var(--lime);}
+.ct-icon .ico{width:20px;height:20px;}
+.coach-tip--increase .ct-icon{color:var(--green);}
+.coach-tip--almost .ct-icon{color:var(--yellow,#FFC53D);}
+.coach-tip--change .ct-icon{color:var(--cyan,#7EE2F2);}
+.coach-tip--decrease .ct-icon{color:var(--red);}
+.m-tips-check{color:var(--lime);font-weight:800;flex-shrink:0;}
+.fo-src .ico{width:13px;height:13px;color:var(--cyan,#7EE2F2);}
+.hero-wm-ico{width:120px;height:120px;opacity:.9;}
+.demo-bg-ico{position:absolute;width:88px;height:88px;color:rgba(255,255,255,.12);pointer-events:none;}
+.elog-empty-icon .ico{width:38px;height:38px;color:var(--muted2);}
+.boss-icon .ico{width:28px;height:28px;color:var(--orange,#FF8A3D);}
