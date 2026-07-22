@@ -530,7 +530,7 @@ function showToast(msg,duration=2800){
   t._tid=setTimeout(()=>{t.style.opacity='0';},duration);
 }
 
-const TITLES={dashboard:'לוח בקרה',schedule:'לוח שבועי',push:'ראשון — PUSH DAY',pull:'שני — PULL DAY',legs:'רביעי — LEGS DAY',arms:'חמישי — ARMS DAY',nutrition:'תוכנית תזונה',supplements:'תוספי תזונה',tips:'טיפים מהמאמן',timeline:'ציר זמן',elog:'יומן משקלים',food:'מעקב תזונה יומי',chat:'יועץ תזונה AI',progress:'גרף משקל גוף',settings:'הגדרות אישיות'};
+const TITLES={dashboard:'לוח בקרה',schedule:'לוח שבועי',push:'ראשון — PUSH DAY',pull:'שני — PULL DAY',legs:'רביעי — LEGS DAY',arms:'חמישי — ARMS DAY',crossfit:'CrossFit — WOD',nutrition:'תוכנית תזונה',supplements:'תוספי תזונה',tips:'טיפים מהמאמן',timeline:'ציר זמן',elog:'יומן משקלים',food:'מעקב תזונה יומי',chat:'יועץ תזונה AI',progress:'גרף משקל גוף',settings:'הגדרות אישיות'};
 // ─── EXERCISE SEARCH + LIBRARY BROWSE ──────────────────────────────────────
 // Classify any exercise (legacy Hebrew cat OR new English cat) into a muscle group
 function _exGroup(ex){
@@ -629,6 +629,7 @@ function showPanel(name,btn){
   if(name==='elog') setTimeout(renderElogPanel,0);
   if(name==='food') setTimeout(renderFoodPanel,0);
   if(name==='chat') setTimeout(renderChatPanel,0);
+  if(name==='crossfit') setTimeout(renderCrossfitPanel,0);
   if(['push','pull','legs','arms','day-a','day-b','day-c'].includes(name)) setTimeout(injectSparklines,0);
 }
 // Sidebar was removed from the HTML — keep safe no-ops for any leftover callers
@@ -4893,8 +4894,271 @@ function getWorkoutFreqLabel(freq,split){
 // ─── EXPOSE GLOBALS FOR HTML INLINE HANDLERS ────────────────────────────────
 // index.html has 137 inline onclick= handlers — these must remain on window
 // when app.js runs as an ES module (type="module" is function-scoped)
+// ═══════════════════════════════════════════════════
+// CROSSFIT — WODs מקצועיים, טיימר, רישום תוצאות
+// ═══════════════════════════════════════════════════
+const CF_SCORES_KEY='pf_wod_scores';
+const CF_CATS=[['home','🏠 בית — ללא ציוד'],['beginner','🌱 מתחילים'],['girls','👧 The Girls'],['hero','🎖️ Hero']];
+
+const CF_WODS=[
+  // ── בית — ללא ציוד ──
+  {id:'burpee100',name:'100 Burpees',cat:'home',type:'For Time',cap:15,icon:'🔥',scheme:'100 חזרות — כמה שיותר מהר',
+   moves:[{n:'Burpees',rx:'חזה לרצפה + קפיצה ומחיאת כף מעל הראש',sc:'ללא קפיצה — צעד אחורה וקימה'}],
+   targets:{elite:'מתחת 7:00',good:'8:00–12:00',start:'12:00–15:00'},
+   desc:'מבחן הכושר הפשוט והאכזרי ביותר. תנועה אחת, אפס ציוד, מנטליות ברזל.',
+   tips:['קצב אחיד מההתחלה — אל תפתח מהר','חלק ל-10×10 עם 3 נשימות בין סטים','נשימה קבועה: שאיפה בירידה, נשיפה בקפיצה']},
+  {id:'homeAmrap12',name:'Home Engine',cat:'home',type:'AMRAP',cap:12,icon:'⚙️',scheme:'AMRAP 12 דק׳ — כמה שיותר סבבים',
+   moves:[{n:'10 Burpees',rx:'מלא',sc:'ללא קפיצה'},{n:'15 Air Squats',rx:'ירך מתחת לברך',sc:'לכיסא'},{n:'20 Mountain Climbers',rx:'ברך לחזה, קצב ריצה',sc:'איטי ומבוקר'}],
+   targets:{elite:'8+ סבבים',good:'6–7 סבבים',start:'4–5 סבבים'},
+   desc:'מנוע אירובי טהור. שומר על דופק גבוה 12 דקות רצוף — התחליף המושלם לשיעור בבוקס.',
+   tips:['המטרה: אפס עצירות — האט במקום לעצור','ספור סבבים בקול או על הרצפה עם גיר','שבוע הבא: נסה לשפר בחצי סבב']},
+  {id:'emom10Home',name:'EMOM Builder',cat:'home',type:'EMOM',cap:10,icon:'⏱️',scheme:'כל דקה עגולה, 10 דקות',
+   moves:[{n:'דקה זוגית: 12 Push-ups',rx:'חזה לרצפה',sc:'על הברכיים'},{n:'דקה אי-זוגית: 15 Air Squats',rx:'עומק מלא',sc:'טווח חלקי'}],
+   targets:{elite:'כל הסטים ללא שבירה',good:'שבירה אחת-שתיים',start:'הורד ל-8/12 חזרות'},
+   desc:'עבודה-מנוחה מובנית: מסיים את החזרות, נח עד סוף הדקה. ככל שאתה מהיר יותר — נח יותר.',
+   tips:['סיים כל סט תוך 30–35 שניות','אם אין 20 שניות מנוחה — הורד 2 חזרות','מצוין כחימום או כ-Finisher אחרי כוח']},
+  {id:'tabataCore',name:'Tabata Core',cat:'home',type:'Tabata',cap:8,icon:'🧱',scheme:'8 סבבים × (20 שנ׳ עבודה / 10 שנ׳ מנוחה)',
+   moves:[{n:'סבבים 1,3,5,7: Sit-ups',rx:'מהירות מלאה',sc:'קצב נוח'},{n:'סבבים 2,4,6,8: Plank',rx:'סטטי מושלם',sc:'על הברכיים'}],
+   targets:{elite:'15+ סיטאפים לסבב',good:'12–14',start:'8–11'},
+   desc:'פרוטוקול טבטה יפני מקורי — 4 דקות שמרגישות כמו 20. ליבה בוערת.',
+   tips:['20 שניות = ספרינט מלא, לא קצב נוח','השתמש בטיימר למטה — מצב Tabata','רשום את הסבב הכי חלש — הוא הציון שלך']},
+  // ── מתחילים — ציוד בסיסי ──
+  {id:'dbEngine15',name:'Dumbbell Engine',cat:'beginner',type:'AMRAP',cap:15,icon:'🏋️',scheme:'AMRAP 15 דק׳',
+   moves:[{n:'10 DB Thrusters',rx:'2×10 ק"ג',sc:'2×5 ק"ג'},{n:'10 KB/DB Swings',rx:'16 ק"ג',sc:'8–12 ק"ג'},{n:'200מ׳ ריצה / 60 שנ׳ קפיצות',rx:'ריצה',sc:'הליכה מהירה'}],
+   targets:{elite:'7+ סבבים',good:'5–6 סבבים',start:'3–4 סבבים'},
+   desc:'ה-WOD המושלם למי שמתאמן לבד בחדר כושר רגיל — זוג משקולות וזהו.',
+   tips:['ת׳ראסטר = סקוואט מלא + לחיצה בתנועה אחת רציפה','בסווינג הכוח מהירכיים, לא מהידיים','בחר משקל שמאפשר 10 רצופות בסבב ראשון']},
+  {id:'gobletEmom12',name:'Goblet Grinder',cat:'beginner',type:'EMOM',cap:12,icon:'🗿',scheme:'EMOM 12 — מחזור של 3 דקות × 4',
+   moves:[{n:'דקה 1: 10 Goblet Squats',rx:'16–24 ק"ג',sc:'8–12 ק"ג'},{n:'דקה 2: 8 Push Press',rx:'2×10 ק"ג',sc:'2×5 ק"ג'},{n:'דקה 3: 10 KB Swings',rx:'16 ק"ג',sc:'8 ק"ג'}],
+   targets:{elite:'משקלים כבדים, אפס שבירות',good:'כל הסטים הושלמו',start:'הורד חזרה אחת מכל תרגיל'},
+   desc:'כוח + קרדיו בפורמט מסודר. בונה בסיס טכני לפני ה-Girls.',
+   tips:['גב ישר בגובלט — המרפקים בין הברכיים בתחתית','בפוש-פרס: דחיפה קטנה מהרגליים ואז נעילה','אחרי 3 שבועות — עלה משקל, לא חזרות']},
+  // ── The Girls — בנצ'מרקים ──
+  {id:'fran',name:'Fran',cat:'girls',type:'For Time',cap:10,icon:'👑',scheme:'21-15-9',
+   moves:[{n:'Thrusters',rx:'43/30 ק"ג',sc:'30/20 ק"ג · מתחילים: משקולות 2×10'},{n:'Pull-ups',rx:'קיפינג/באטרפליי',sc:'גומייה · מתחילים: חתירה בטבעות'}],
+   targets:{elite:'מתחת 3:00',good:'3:00–6:00',start:'6:00–10:00'},
+   desc:'ה-WOD המפורסם בעולם. קצר, אכזרי, מדיד. זה המבחן שכל קרוספיטר משווה אליו.',
+   tips:['21 ראשונות: חלק 11+10 — אל תלך ל-Failure','נשום בעליון של הת׳ראסטר','ה-9 האחרונות — הכל החוצה, בלי לעצור']},
+  {id:'cindy',name:'Cindy',cat:'girls',type:'AMRAP',cap:20,icon:'🔁',scheme:'AMRAP 20 דק׳',
+   moves:[{n:'5 Pull-ups',rx:'קיפינג',sc:'גומייה / חתירת שולחן'},{n:'10 Push-ups',rx:'חזה לרצפה',sc:'ברכיים'},{n:'15 Air Squats',rx:'עומק מלא',sc:'טווח נוח'}],
+   targets:{elite:'20+ סבבים',good:'15–19 סבבים',start:'10–14 סבבים'},
+   desc:'משקל גוף בלבד — נגיש מכל מקום עם מוט מתח. מבחן סיבולת שרירית אמיתי.',
+   tips:['קצב סבב של דקה = 20 סבבים','שבור את הפוש-אפס מוקדם (5+5) לפני שנשרפים','זה מרתון, לא ספרינט — קצב מהסבב הראשון']},
+  {id:'helen',name:'Helen',cat:'girls',type:'For Time',cap:15,icon:'🏃‍♀️',scheme:'3 סבבים',
+   moves:[{n:'400מ׳ ריצה',rx:'מהיר',sc:'200מ׳'},{n:'21 KB Swings',rx:'24/16 ק"ג',sc:'16/12 ק"ג'},{n:'12 Pull-ups',rx:'קיפינג',sc:'גומייה'}],
+   targets:{elite:'מתחת 8:00',good:'8:00–11:00',start:'11:00–14:00'},
+   desc:'שילוב ריצה-כוח קלאסי. בודק את היכולת לעבוד עם דופק גבוה אחרי ריצה.',
+   tips:['רוץ ב-85% — שמור משהו לסווינגים','21 סווינגים ללא שבירה — זה משנה הכל','המתח אחרי ריצה קשה פי 2 — צפה לזה']},
+  {id:'grace',name:'Grace',cat:'girls',type:'For Time',cap:8,icon:'⚡',scheme:'30 חזרות',
+   moves:[{n:'Clean & Jerk',rx:'61/43 ק"ג',sc:'43/30 ק"ג · מתחילים: 30/20'}],
+   targets:{elite:'מתחת 2:00',good:'2:00–4:00',start:'4:00–7:00'},
+   desc:'30 קלין-אנד-ג׳רק בזמן. וויט-ליפטינג טהור תחת עייפות — טכניקה פוגשת ריאות.',
+   tips:['סינגלים מהירים עדיפים על Touch-and-Go לרוב המתאמנים','אפס שניות מתות — יד על המוט תמיד','שמור מרפקים מהירים בקליעה']},
+  {id:'karen',name:'Karen',cat:'girls',type:'For Time',cap:12,icon:'🎯',scheme:'150 Wall Balls',
+   moves:[{n:'Wall Ball Shots',rx:'9/6 ק"ג ליעד 3מ׳',sc:'6/4 ק"ג · מתחילים: ת׳ראסטר משקולות'}],
+   targets:{elite:'מתחת 6:00',good:'6:00–9:00',start:'9:00–12:00'},
+   desc:'תנועה אחת, 150 חזרות. נשמע פשוט — עד חזרה 70.',
+   tips:['סטים של 15–20 מההתחלה עם מנוחות קצובות','תפוס את הכדור גבוה — חסוך אנרגיה בירידה','נעל את המבט בנקודת המטרה']},
+  {id:'annie',name:'Annie',cat:'girls',type:'For Time',cap:12,icon:'⏭️',scheme:'50-40-30-20-10',
+   moves:[{n:'Double-Unders',rx:'חבל כפול',sc:'×2 קפיצות רגילות'},{n:'Sit-ups',rx:'AbMat',sc:'רגיל'}],
+   targets:{elite:'מתחת 6:00',good:'6:00–9:00',start:'9:00–12:00'},
+   desc:'ה-Girl הידידותית ביותר — קצב ותיאום במקום כוח גס. מושלמת לאימון בית עם חבל.',
+   tips:['דאבל-אנדרס: פרקי ידיים, לא כתפיים','אם אין דאבלים — 100-80-60-40-20 סינגלים','סיטאפים = מנוחה פעילה, נשום שם']},
+  {id:'diane',name:'Diane',cat:'girls',type:'For Time',cap:10,icon:'💎',scheme:'21-15-9',
+   moves:[{n:'Deadlift',rx:'102/70 ק"ג',sc:'70/50 ק"ג'},{n:'Handstand Push-ups',rx:'לקיר',sc:'Pike Push-ups · מתחילים: לחיצת כתפיים'}],
+   targets:{elite:'מתחת 4:00',good:'4:00–7:00',start:'7:00–10:00'},
+   desc:'כוח מקסימלי פוגש התעמלות. הדדליפט חייב להישאר טכני גם כשעייפים.',
+   tips:['דדליפט: גב ניטרלי או שאתה עוצר — אין פשרות','שבור את ה-21 ל-3×7 מסודר','HSPU נשברים מהר — סטים קטנים מוקדם']},
+  // ── Hero WODs ──
+  {id:'murph',name:'Murph',cat:'hero',type:'For Time',cap:60,icon:'🎖️',scheme:'ריצה + 100/200/300 + ריצה',
+   moves:[{n:'1.6 ק"מ ריצה',rx:'עם ווסט 9/6 ק"ג',sc:'ללא ווסט'},{n:'100 Pull-ups',rx:'כל חלוקה',sc:'גומייה / חתירה'},{n:'200 Push-ups',rx:'כל חלוקה',sc:'ברכיים'},{n:'300 Air Squats',rx:'כל חלוקה',sc:'טווח נוח'},{n:'1.6 ק"מ ריצה',rx:'סיום חזק',sc:'הליכה-ריצה'}],
+   targets:{elite:'מתחת 40:00',good:'45:00–60:00',start:'חצי מרף: חצי מהכל'},
+   desc:'לזכר לוטננט מייקל מרפי. ה-Hero WOD המפורסם בעולם — נעשה ב-Memorial Day בכל בוקס.',
+   tips:['פרטישן: 20 סבבים של 5/10/15 (Cindy Style)','התחל ב-Half Murph אם זה ה-Murph הראשון שלך','שמור 30% לריצה השנייה — היא הסיפור האמיתי']},
+  {id:'dt',name:'DT',cat:'hero',type:'For Time',cap:15,icon:'🛡️',scheme:'5 סבבים',
+   moves:[{n:'12 Deadlifts',rx:'70/48 ק"ג',sc:'50/35 ק"ג'},{n:'9 Hang Power Cleans',rx:'70/48 ק"ג',sc:'50/35 ק"ג'},{n:'6 Push Jerks',rx:'70/48 ק"ג',sc:'50/35 ק"ג'}],
+   targets:{elite:'מתחת 6:00',good:'7:00–10:00',start:'10:00–14:00'},
+   desc:'לזכר סמל טימותי דיוויס. מוט אחד, משקל אחד, אחיזה נשרפת. ניהול אחיזה = ניצחון.',
+   tips:['שבור את הדדליפט 11+1 — החזרה האחרונה הופכת לקלין הראשון','Hook Grip או שאתה מאבד את האחיזה בסבב 3','ג׳רקים ללא שבירה — שם הזמן מתחבא']},
+];
+
+let _cfActiveCat='home';
+const _cfExpanded=new Set();
+
+function _cfScores(){ return _getJSON(CF_SCORES_KEY,{}); }
+
+/** WOD of the day — deterministic daily rotation */
+function _cfWodOfDay(){
+  const d=new Date();
+  const doy=Math.floor((d-new Date(d.getFullYear(),0,0))/864e5);
+  return CF_WODS[doy%CF_WODS.length];
+}
+
+const _CF_TYPE_CLS={'For Time':'cf-type-ft','AMRAP':'cf-type-amrap','EMOM':'cf-type-emom','Tabata':'cf-type-tabata'};
+
+function _cfCardHTML(w){
+  const open=_cfExpanded.has(w.id);
+  const scores=(_cfScores())[w.id]||[];
+  return `<div class="cf-card${open?' open':''}" id="cf-card-${w.id}">
+    <button type="button" class="cf-card-head" onclick="cfToggleWod('${w.id}')">
+      <span class="cf-card-icon">${w.icon}</span>
+      <span class="cf-card-titles">
+        <span class="cf-card-name">${w.name}</span>
+        <span class="cf-card-scheme">${w.scheme}</span>
+      </span>
+      <span class="cf-type-badge ${_CF_TYPE_CLS[w.type]||''}">${w.type}</span>
+    </button>
+    ${open?`<div class="cf-card-body">
+      <p class="cf-desc">${w.desc}</p>
+      <table class="cf-moves"><thead><tr><th>תנועה</th><th>RX</th><th>Scaled</th></tr></thead>
+        <tbody>${w.moves.map(m=>`<tr><td>${m.n}</td><td>${m.rx}</td><td>${m.sc}</td></tr>`).join('')}</tbody></table>
+      <div class="cf-targets">
+        <span class="cf-target elite">🥇 עילית: ${w.targets.elite}</span>
+        <span class="cf-target good">💪 טוב: ${w.targets.good}</span>
+        <span class="cf-target start">🌱 התחלה: ${w.targets.start}</span>
+      </div>
+      <ul class="cf-tips">${w.tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+      <div class="cf-score-row">
+        <input class="cf-score-input" id="cf-score-${w.id}" type="text" placeholder="תוצאה (4:32 / 17 סבבים)" maxlength="20"/>
+        <button class="cf-score-save" onclick="cfSaveScore('${w.id}')">שמור</button>
+      </div>
+      ${scores.length?`<div class="cf-history">
+        <span class="cf-best">📜 תוצאות (${scores.length})</span>
+        ${scores.slice(-3).reverse().map(s=>`<span class="cf-hist-item">${s.date.slice(5).replace('-','.')} — ${_esc(s.score)}</span>`).join('')}
+      </div>`:''}
+    </div>`:''}
+  </div>`;
+}
+
+function renderCrossfitPanel(){
+  const wrap=document.getElementById('crossfit-content'); if(!wrap) return;
+  const wod=_cfWodOfDay();
+  const list=CF_WODS.filter(w=>w.cat===_cfActiveCat);
+  wrap.innerHTML=`
+  <div class="trainer-note"><strong>⚡ CrossFit בלי בוקס</strong><br>
+  עזבת את השיעורים? לא עזבת את הקרוספיט. כל ה-WODs כאן מותאמים לאימון עצמאי — בבית או בחדר כושר, בשעות שלך.</div>
+
+  <div class="card cf-wotd-card">
+    <div class="card-head"><h2>🗓️ ה-WOD של היום</h2><span class="badge badge-red">${wod.type}</span></div>
+    <div class="card-body">
+      <div class="cf-wotd-name">${wod.icon} ${wod.name}</div>
+      <div class="cf-wotd-scheme">${wod.scheme}</div>
+      <button class="btn btn-primary cf-wotd-btn" onclick="cfOpenWod('${wod.id}')">פתח את האימון ←</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>⏱️ טיימר WOD</h2></div>
+    <div class="card-body">
+      <div class="cf-timer-display" id="cf-timer-display">00:00</div>
+      <div class="cf-timer-status" id="cf-timer-status">סטופר — For Time</div>
+      <div class="cf-timer-controls">
+        <button class="btn btn-primary" id="cf-timer-toggle" onclick="cfTimerToggle()">▶ התחל</button>
+        <button class="btn btn-ghost" onclick="cfTimerReset()">איפוס</button>
+      </div>
+      <div class="cf-timer-presets">
+        <button class="ex-chip" onclick="cfCountdown(10)">AMRAP 10</button>
+        <button class="ex-chip" onclick="cfCountdown(12)">AMRAP 12</button>
+        <button class="ex-chip" onclick="cfCountdown(15)">AMRAP 15</button>
+        <button class="ex-chip" onclick="cfCountdown(20)">AMRAP 20</button>
+        <button class="ex-chip" onclick="cfTabata()">Tabata 8×20/10</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="ex-chips cf-cat-chips">
+    ${CF_CATS.map(([c,lbl])=>`<button class="ex-chip${c===_cfActiveCat?' active':''}" onclick="cfFilter('${c}')">${lbl}</button>`).join('')}
+  </div>
+  <div class="cf-list">${list.map(_cfCardHTML).join('')}</div>`;
+  _cfPaintTimer();
+}
+
+function cfFilter(cat){ _cfActiveCat=cat; renderCrossfitPanel(); }
+function cfToggleWod(id){
+  if(_cfExpanded.has(id)) _cfExpanded.delete(id); else _cfExpanded.add(id);
+  renderCrossfitPanel();
+}
+function cfOpenWod(id){
+  const w=CF_WODS.find(x=>x.id===id); if(!w) return;
+  _cfActiveCat=w.cat; _cfExpanded.add(id);
+  renderCrossfitPanel();
+  setTimeout(()=>document.getElementById('cf-card-'+id)?.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+function cfSaveScore(id){
+  const inp=document.getElementById('cf-score-'+id);
+  const score=(inp?.value||'').trim();
+  if(!score){ showToast('⚠️ הזן תוצאה קודם'); return; }
+  const all=_cfScores();
+  (all[id]=all[id]||[]).push({date:todayStr(),score});
+  all[id]=all[id].slice(-20);
+  _safeSet(CF_SCORES_KEY,JSON.stringify(all));
+  showToast('✅ התוצאה נשמרה — '+score);
+  if(navigator.vibrate) navigator.vibrate(50);
+  renderCrossfitPanel();
+}
+
+// ── טיימר WOD: סטופר / ספירה לאחור / Tabata ──
+let _cf={int:null,running:false,mode:'up',t0:0,acc:0,total:0};
+function _cfFmt(s){ s=Math.max(0,Math.round(s)); return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+function _cfElapsed(){ return _cf.acc+(_cf.running?(Date.now()-_cf.t0)/1000:0); }
+function _cfPaintTimer(){
+  const d=document.getElementById('cf-timer-display'); if(!d) return;
+  const el=_cfElapsed();
+  if(_cf.mode==='up') d.textContent=_cfFmt(el);
+  else if(_cf.mode==='down'){
+    const rem=_cf.total-el;
+    d.textContent=_cfFmt(rem);
+    if(rem<=0) _cfFinish('⏰ הזמן נגמר! רשום את התוצאה');
+  } else if(_cf.mode==='tabata'){
+    const cyc=30, total=8*cyc, rem=total-el;
+    if(rem<=0){ _cfFinish('🏁 טבטה הושלמה!'); return; }
+    const inCyc=el%cyc, round=Math.floor(el/cyc)+1, work=inCyc<20;
+    d.textContent=_cfFmt(work?20-inCyc:30-inCyc);
+    const st=document.getElementById('cf-timer-status');
+    if(st) st.textContent=(work?'🟢 עבודה':'🔴 מנוחה')+' — סבב '+round+'/8';
+  }
+}
+function _cfFinish(msg){
+  clearInterval(_cf.int); _cf.int=null; _cf.running=false; _cf.acc=0;
+  const b=document.getElementById('cf-timer-toggle'); if(b) b.textContent='▶ התחל';
+  const d=document.getElementById('cf-timer-display'); if(d) d.textContent='00:00';
+  showToast(msg);
+  if(navigator.vibrate) navigator.vibrate([300,150,300,150,500]);
+}
+function cfTimerToggle(){
+  const b=document.getElementById('cf-timer-toggle');
+  if(_cf.running){
+    _cf.acc=_cfElapsed(); _cf.running=false; clearInterval(_cf.int); _cf.int=null;
+    if(b) b.textContent='▶ המשך';
+  } else {
+    _cf.t0=Date.now(); _cf.running=true;
+    if(!_cf.int) _cf.int=setInterval(_cfPaintTimer,250);
+    if(b) b.textContent='⏸ השהה';
+  }
+}
+function cfTimerReset(){
+  clearInterval(_cf.int);
+  _cf={int:null,running:false,mode:'up',t0:0,acc:0,total:0};
+  const d=document.getElementById('cf-timer-display'); if(d) d.textContent='00:00';
+  const st=document.getElementById('cf-timer-status'); if(st) st.textContent='סטופר — For Time';
+  const b=document.getElementById('cf-timer-toggle'); if(b) b.textContent='▶ התחל';
+}
+function cfCountdown(min){
+  cfTimerReset();
+  _cf.mode='down'; _cf.total=min*60;
+  const d=document.getElementById('cf-timer-display'); if(d) d.textContent=_cfFmt(_cf.total);
+  const st=document.getElementById('cf-timer-status'); if(st) st.textContent='AMRAP '+min+' דק׳ — ספירה לאחור';
+}
+function cfTabata(){
+  cfTimerReset();
+  _cf.mode='tabata';
+  const d=document.getElementById('cf-timer-display'); if(d) d.textContent='00:20';
+  const st=document.getElementById('cf-timer-status'); if(st) st.textContent='Tabata — 8×(20 עבודה/10 מנוחה)';
+}
+
 Object.assign(window,{
   openModal,closeModal,closeModalBg,closeAltModal,
+  cfFilter,cfToggleWod,cfOpenWod,cfSaveScore,cfTimerToggle,cfTimerReset,cfCountdown,cfTabata,
   showPanel,setMobileNav,renderExSearch,closeExSearch,browseExCategory,
   addWaterCup,removeWaterCup,
   toggleHabit,

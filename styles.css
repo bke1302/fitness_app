@@ -1578,6 +1578,51 @@ select:invalid:not(:placeholder-shown){
 .ex-chip:hover{background:var(--glass-h);transform:translateY(-1px);}
 .ex-chip.active{background:var(--lime);color:#000;border-color:var(--lime);}
 .ex-search-results{max-height:60vh;overflow-y:auto;}
+
+/* ─── CrossFit panel ─── */
+.workout-card.crossfit{grid-column:1/-1;background:linear-gradient(135deg,rgba(249,115,22,.14),rgba(249,115,22,.05));border:1.5px solid rgba(249,115,22,.35);}
+.cf-wotd-card{border:1px solid rgba(249,115,22,.3);}
+.cf-wotd-name{font-family:var(--font-d);font-size:1.5rem;font-weight:800;}
+.cf-wotd-scheme{font-size:.85rem;color:var(--muted);margin:6px 0 14px;}
+.cf-wotd-btn{width:100%;}
+.cf-timer-display{font-family:var(--font-d);font-size:3.2rem;font-weight:800;text-align:center;letter-spacing:.04em;font-variant-numeric:tabular-nums;direction:ltr;}
+.cf-timer-status{text-align:center;font-size:.8rem;color:var(--muted);margin:4px 0 14px;}
+.cf-timer-controls{display:flex;gap:10px;justify-content:center;margin-bottom:12px;}
+.cf-timer-presets{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
+.cf-cat-chips{padding:4px 0 12px;}
+.cf-list{display:flex;flex-direction:column;gap:10px;}
+.cf-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:border-color .2s;}
+.cf-card.open{border-color:rgba(249,115,22,.4);}
+.cf-card-head{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;background:none;border:none;cursor:pointer;text-align:right;font-family:var(--font);color:var(--text);}
+.cf-card-head:hover{background:var(--glass-h);}
+.cf-card-icon{font-size:1.5rem;flex-shrink:0;}
+.cf-card-titles{flex:1;min-width:0;}
+.cf-card-name{display:block;font-weight:800;font-size:1rem;}
+.cf-card-scheme{display:block;font-size:.73rem;color:var(--muted);margin-top:2px;}
+.cf-type-badge{font-size:.65rem;font-weight:800;padding:4px 10px;border-radius:6px;letter-spacing:.04em;flex-shrink:0;}
+.cf-type-ft{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+.cf-type-amrap{background:rgba(59,130,246,.15);color:var(--blue);border:1px solid rgba(59,130,246,.3);}
+.cf-type-emom{background:rgba(139,92,246,.15);color:var(--purple);border:1px solid rgba(139,92,246,.3);}
+.cf-type-tabata{background:rgba(245,158,11,.15);color:var(--yellow);border:1px solid rgba(245,158,11,.3);}
+.cf-card-body{padding:0 16px 16px;}
+.cf-desc{font-size:.85rem;color:var(--muted2);line-height:1.7;margin:0 0 12px;}
+.cf-moves{width:100%;border-collapse:collapse;font-size:.8rem;margin-bottom:12px;}
+.cf-moves th{text-align:right;color:var(--muted);font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:6px 8px;border-bottom:1px solid var(--border2);}
+.cf-moves td{padding:8px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5;}
+.cf-moves td:first-child{font-weight:700;white-space:nowrap;}
+.cf-targets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.cf-target{font-size:.72rem;font-weight:600;padding:5px 10px;border-radius:8px;background:var(--glass);border:1px solid var(--border);}
+.cf-target.elite{color:var(--yellow);}
+.cf-target.good{color:var(--lime);}
+.cf-target.start{color:var(--cyan);}
+.cf-tips{margin:0 0 14px;padding-inline-start:18px;font-size:.8rem;color:var(--muted2);line-height:1.9;}
+.cf-score-row{display:flex;gap:8px;}
+.cf-score-input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 12px;color:var(--text);font-family:var(--font);font-size:.85rem;}
+.cf-score-input:focus{border-color:var(--orange);}
+.cf-score-save{background:var(--orange);border:none;border-radius:10px;padding:10px 20px;color:#000;font-weight:800;cursor:pointer;font-family:var(--font);font-size:.85rem;}
+.cf-history{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center;}
+.cf-best{font-size:.74rem;font-weight:700;color:var(--yellow);}
+.cf-hist-item{font-size:.72rem;color:var(--muted);background:var(--glass);border:1px solid var(--border);border-radius:6px;padding:3px 8px;}
 @media(max-width:480px){.ex-search-wrap{max-width:140px;}}
 
 /* ─── TOPBAR HEADER (replaces Tailwind CDN) ─── */
