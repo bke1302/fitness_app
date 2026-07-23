@@ -661,8 +661,8 @@ if('serviceWorker' in navigator){
     if(e.data && e.data.type === 'SW_UPDATED'){
       // Show update toast with reload option
       const toastEl = document.createElement('div');
-      toastEl.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:12px 20px;border-radius:12px;font-size:.85rem;font-weight:600;z-index:9999;display:flex;gap:12px;align-items:center;box-shadow:0 8px 32px rgba(0,0,0,.4);';
-      toastEl.innerHTML = '<span>גרסה חדשה זמינה!</span><button onclick="location.reload()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:4px 12px;border-radius:8px;cursor:pointer;font-weight:700;">רענן</button>';
+      toastEl.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--gold,#FFC53D);color:#000;padding:12px 20px;border-radius:12px;font-size:.85rem;font-weight:600;z-index:9999;display:flex;gap:12px;align-items:center;box-shadow:0 8px 32px rgba(0,0,0,.4);';
+      toastEl.innerHTML = '<span>גרסה חדשה זמינה!</span><button onclick="location.reload()" style="background:rgba(0,0,0,.15);border:none;color:#000;padding:4px 12px;border-radius:8px;cursor:pointer;font-weight:700;">רענן</button>';
       document.body.appendChild(toastEl);
       setTimeout(() => toastEl.remove(), 8000);
     }
