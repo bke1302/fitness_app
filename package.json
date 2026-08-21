@@ -1,7 +1,7 @@
 {
   "name": "protocolos",
   "version": "1.0.0",
-  "description": "ProtocolOS — מערכת אימונים חכמה",
+  "description": "KOACH — מערכת אימונים חכמה",
   "main": "app.js",
   "type": "module",
   "scripts": {

@@ -3546,16 +3546,19 @@ function startGymMode(panelName,label,color){
   const panel=document.getElementById('panel-'+panelName);
   if(!panel) return;
   const rows=panel.querySelectorAll('.ex-table tbody tr[onclick]');
-  _gymExercises=Array.from(rows).map(tr=>({
-    name:tr.querySelector('.ex-name-main')?.textContent?.trim()||'תרגיל',
-    nameEn:tr.querySelector('.ex-name-en')?.textContent?.trim()||'',
+  _gymExercises=Array.from(rows).map(tr=>{
+    const k=tr.getAttribute('onclick')?.match(/openModal\('(\w+)'\)/)?.[1]||null;
+    return {
+    name:EX[k]?.name||tr.querySelector('.ex-name-main')?.firstChild?.nodeValue?.trim()||'תרגיל',
+    nameEn:EX[k]?.en||tr.querySelector('.ex-name-en')?.textContent?.trim()||'',
     sets:tr.querySelector('.sets-cell')?.textContent?.trim()||'3×10',
     muscle:tr.querySelector('.muscle-tag')?.textContent?.trim()||'',
-    key:tr.getAttribute('onclick')?.match(/openModal\('(\w+)'\)/)?.[1]||null,
+    key:k,
     ss:tr.dataset.ss||null,
     ssPartner:tr.dataset.ssPartner||null,
     ssPos:tr.dataset.ssPos||null
-  })).filter(e=>e.name&&e.sets);
+  };}).filter(e=>e.name&&e.sets);
+  _gymExercises=_groupGymSupersets(_gymExercises,panelName);
   if(!_gymExercises.length){ showToast('לא נמצאו תרגילים'); return; }
   _gymIdx=0; _gymColor=color.trim(); _gymLabel=label;
   const badge=document.getElementById('gym-badge');
@@ -3579,6 +3582,89 @@ function startGymMode(panelName,label,color){
 function confirmCloseGymMode(){
   if(confirm('לצאת ממצב אימון?')) closeGymMode();
 }
+// A superset is one unit of work, so gym mode runs it as one screen with
+// R rounds of two exercises rather than draining exercise A before starting B.
+function _groupGymSupersets(list,panelName){
+  if(!list.some(e=>e.ss)) return list;
+  const plan=_resolvePlan(getActiveUser());
+  const day=plan?.days?.find(d=>d.id===panelName);
+  const meta={}; (day?.supersets||[]).forEach(s=>meta[s.id]=s);
+  const out=[],seen={};
+  list.forEach(e=>{
+    if(!e.ss){ out.push(e); return; }
+    if(seen[e.ss]){ seen[e.ss].b=e; return; }
+    const m=meta[e.ss]||{};
+    const item={pairKind:true,ss:e.ss,type:m.type,note:m.note,
+      rounds:m.rounds||parseInt(e.sets)||3,
+      restWithin:m.restWithin||20,restBetween:m.restBetween||90,
+      a:e,b:null,name:e.name,sets:e.sets,key:e.key};
+    seen[e.ss]=item; out.push(item);
+  });
+  // a superset whose partner row is missing degrades to a plain exercise
+  return out.map(it=>it.pairKind&&!it.b?it.a:it);
+}
+
+function _renderGymPair(p){
+  const today=todayStr(), log=getLog(), elog=getElog();
+  const pre=e=>{ const l=e.key?elog[e.key]?.[0]:null; return {kg:l?.kg||'',reps:l?.reps||''}; };
+  const pa=pre(p.a), pb=pre(p.b);
+  const side=(e,r,s,fill)=>{
+    const done=log[today]?.[e.name]?.[r]||false;
+    return `<div class="gym-pair-side${done?' done':''}" id="gym-p-${r}-${s}">
+      <div class="gym-pair-nm">${_esc(e.name)}</div>
+      <div class="gym-sr-inputs">
+        <input class="gym-sr-kg" id="gym-p-kg-${r}-${s}" type="number" inputmode="decimal" min="0" step="0.5" placeholder="ק״ג" value="${fill.kg}" ${done?'disabled':''}/>
+        <span class="gym-sr-x">×</span>
+        <input class="gym-sr-reps" id="gym-p-reps-${r}-${s}" type="number" inputmode="numeric" min="1" max="50" placeholder="חז׳" value="${fill.reps}" ${done?'disabled':''}/>
+      </div>
+      <button class="gym-check${done?' done':''}" id="gym-p-chk-${r}-${s}" onclick="gymPairCheck(${r},'${s}')">${done?'✓':''}</button>
+    </div>`;
+  };
+  const rounds=Array.from({length:p.rounds},(_,r)=>`
+    <div class="gym-pair-round">
+      <div class="gym-pair-rn">סבב ${r+1}</div>
+      ${side(p.a,r,'a',pa)}
+      <div class="gym-pair-arrow">↓ ${p.restWithin} שנ׳ מעבר</div>
+      ${side(p.b,r,'b',pb)}
+    </div>`).join('');
+  return `
+    <div class="gym-counter">סופרסט ${_gymIdx+1} מתוך ${_gymExercises.length}</div>
+    <div class="gym-ss"><span class="gym-ss-tag">${p.ss}</span>${_SS_TYPE[p.type]||''} · ${p.rounds} סבבים · ${p.restBetween} שנ׳ בין סבבים</div>
+    <div class="gym-name gym-name-pair" style="color:${_gymColor}">${_esc(p.a.name)} + ${_esc(p.b.name)}</div>
+    <div class="gym-sets-label">${p.a.sets} / ${p.b.sets}</div>
+    ${p.note?`<div class="gym-pair-note">${_esc(p.note)}</div>`:''}
+    <div class="gym-pair-rounds">${rounds}</div>`;
+}
+
+function gymPairCheck(r,s){
+  const p=_gymExercises[_gymIdx];
+  if(!p?.pairKind) return;
+  const ex=s==='a'?p.a:p.b;
+  const btn=document.getElementById(`gym-p-chk-${r}-${s}`);
+  const row=document.getElementById(`gym-p-${r}-${s}`);
+  if(!btn) return;
+  const today=todayStr(); const l=getLog();
+  if(btn.classList.contains('done')){         // untick
+    btn.classList.remove('done'); btn.textContent=''; btn.style.background='';
+    row?.classList.remove('done');
+    row?.querySelectorAll('input').forEach(i=>i.disabled=false);
+    if(l[today]?.[ex.name]) { delete l[today][ex.name][r]; saveLog(l); }
+    return;
+  }
+  const kg=parseFloat(document.getElementById(`gym-p-kg-${r}-${s}`)?.value)||0;
+  const reps=parseInt(document.getElementById(`gym-p-reps-${r}-${s}`)?.value)||0;
+  btn.classList.add('done'); btn.textContent='✓'; btn.style.background=_gymColor;
+  row?.classList.add('done');
+  row?.querySelectorAll('input').forEach(i=>i.disabled=true);
+  if(navigator.vibrate) navigator.vibrate(30);
+  if(ex.key&&kg>0&&reps>0){ saveElogEntry(ex.key,kg,reps); showToast(kg+'ק"ג × '+reps+' ✓'); }
+  if(!l[today]) l[today]={}; if(!l[today][ex.name]) l[today][ex.name]={};
+  l[today][ex.name][r]=true; saveLog(l);
+  // within-pair transition is short; the real rest comes after the round closes
+  gymPickTimer(s==='a'?p.restWithin:p.restBetween);
+  if(_tempoOn) speakTempo();
+}
+
 function renderGymExercise(){
   const body=document.getElementById('gym-body');
   const prev=document.getElementById('gym-prev');
@@ -3599,6 +3685,12 @@ function renderGymExercise(){
     return;
   }
   const ex=_gymExercises[_gymIdx];
+  if(ex.pairKind){
+    body.innerHTML=_renderGymPair(ex);
+    if(prev) prev.disabled=_gymIdx===0;
+    if(next) next.textContent=_gymIdx>=_gymExercises.length-1?'סיים האימון ✓':'הבא →';
+    return;
+  }
   const setsCount=parseInt(ex.sets)||3;
   const today=todayStr(); const log=getLog();
   const checks=Array.from({length:setsCount},(_,i)=>log[today]?.[ex.name]?.[i]||false);
@@ -3669,6 +3761,24 @@ function gymCheckSet(i){
 }
 function _saveGymExToSetlog(){
   const ex=_gymExercises[_gymIdx];
+  if(ex?.pairKind){
+    ['a','b'].forEach(s=>{
+      const e=ex[s]; if(!e?.key) return;
+      const sets=[];
+      for(let r=0;r<ex.rounds;r++){
+        const kg=parseFloat(document.getElementById(`gym-p-kg-${r}-${s}`)?.value)||0;
+        const reps=parseInt(document.getElementById(`gym-p-reps-${r}-${s}`)?.value)||0;
+        if(kg>0) sets.push({kg,reps});
+      }
+      if(!sets.length) return;
+      const all=_getJSON(SETLOG_KEY,{});
+      const arr=(all[e.key]||[]).filter(x=>x.date!==todayStr());
+      arr.unshift({date:todayStr(),sets});
+      all[e.key]=arr.slice(0,20);
+      _setJSON(SETLOG_KEY,all);
+    });
+    return;
+  }
   if(!ex||!ex.key) return;
   const setsCount=parseInt(ex.sets)||3;
   const sets=[];
@@ -3820,7 +3930,7 @@ function drawShareCard(){
   ctx.strokeStyle='rgba(255,255,255,.1)'; ctx.lineWidth=1; ctx.strokeRect(.5,.5,W-1,H-1);
   // Logo
   ctx.font='900 32px "Barlow Condensed",sans-serif';
-  ctx.fillStyle='#CCFF00'; ctx.textAlign='right'; ctx.fillText('ProFit',W-28,48);
+  ctx.fillStyle='#CCFF00'; ctx.textAlign='right'; ctx.fillText('KOACH',W-28,48);
   // Tagline
   ctx.font='400 11px Barlow,sans-serif'; ctx.fillStyle='rgba(255,255,255,.4)';
   ctx.fillText('תוכנית אימונים אישית',W-28,66);
@@ -3862,14 +3972,14 @@ function drawShareCard(){
 function downloadShareCard(){
   const canvas=document.getElementById('share-canvas');
   const a=document.createElement('a');
-  a.download='proFit-stats.png'; a.href=canvas.toDataURL('image/png');
+  a.download='koach-stats.png'; a.href=canvas.toDataURL('image/png');
   a.click();
 }
 async function nativeShare(){
   const canvas=document.getElementById('share-canvas');
   canvas.toBlob(async blob=>{
-    const file=new File([blob],'proFit-stats.png',{type:'image/png'});
-    try{ await navigator.share({files:[file],title:'ProFit Stats',text:'הסטטיסטיקות שלי ב-ProFit'}); }
+    const file=new File([blob],'koach-stats.png',{type:'image/png'});
+    try{ await navigator.share({files:[file],title:'KOACH Stats',text:'הסטטיסטיקות שלי ב-KOACH'}); }
     catch(e){ downloadShareCard(); }
   });
 }
@@ -3987,7 +4097,7 @@ function initTopbar(){
   const nmEl=document.getElementById('tb-name');
   const avEl=document.getElementById('tb-avatar');
   if(grEl) grEl.textContent=name?`${gr}, ${name}`:gr+'';
-  if(nmEl) nmEl.textContent=name||'ProtocolOS';
+  if(nmEl) nmEl.textContent=name||'KOACH';
   if(avEl) avEl.textContent=(name||'I').charAt(0).toUpperCase();
 }
 
@@ -4135,7 +4245,7 @@ async function requestWorkoutNotif(){
     if(btn){btn.textContent='פעיל ✓';btn.disabled=true;}
     const days={0:'ראשון',1:'שני',3:'רביעי',4:'חמישי'};
     const today=new Date().getDay();
-    if(days[today]) new Notification('ProFit — יום אימון!',{
+    if(days[today]) new Notification('KOACH — יום אימון!',{
       body:`היום יום ${days[today]} — זמן אימון. בוא נתחיל!`,
       icon:'/fitness_app/icons/icon-192.png',
       badge:'/fitness_app/icons/icon-72.png'
@@ -4380,7 +4490,7 @@ function openPRShareCard(exKey,kg,reps){
   // User + date
   const s=getSettings();
   ctx.font='400 11px Barlow,sans-serif'; ctx.fillStyle='rgba(255,255,255,.3)';
-  ctx.fillText((s.name||'ProtocolOS')+'  ·  '+todayStr(),W/2,H-14);
+  ctx.fillText((s.name||'KOACH')+'  ·  '+todayStr(),W/2,H-14);
   // Logo
   ctx.font='900 14px "Barlow Condensed",Barlow,sans-serif';
   ctx.fillStyle='rgba(230,57,70,.7)'; ctx.textAlign='right';
@@ -4639,7 +4749,7 @@ function shareWhatsApp(){
   const u=getActiveUser()||{};
   const xp=getXP(); const lvl=getLevelData(xp);
   const streak=parseInt(document.getElementById('streak-num')?.textContent||'0');
-  const text=`*ProtocolOS — האימון שלי*\n\n${u.name||'מתאמן'}\nרמה: ${lvl.badge} ${lvl.name}\nXP: ${xp} נקודות\nרצף: ${streak} ימים\n\nהורד בחינם: https://bke1302.github.io/fitness_app/`;
+  const text=`*KOACH — האימון שלי*\n\n${u.name||'מתאמן'}\nרמה: ${lvl.badge} ${lvl.name}\nXP: ${xp} נקודות\nרצף: ${streak} ימים\n\nהורד בחינם: https://bke1302.github.io/fitness_app/`;
   window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
 }
 function shareNativeOrDownload(){
@@ -4650,7 +4760,7 @@ function shareNativeOrDownload(){
   canvas.toBlob(async blob=>{
     const file=new File([blob],'protocolos-stats.png',{type:'image/png'});
     if(navigator.canShare&&navigator.canShare({files:[file]})){
-      try{ await navigator.share({files:[file],title:'ProtocolOS Stats',text:'הסטטיסטיקות שלי ב-ProtocolOS'}); return; }
+      try{ await navigator.share({files:[file],title:'KOACH Stats',text:'הסטטיסטיקות שלי ב-KOACH'}); return; }
       catch(e){}
     }
     const a=document.createElement('a');
@@ -5394,7 +5504,7 @@ function cfTabata(){
   const st=document.getElementById('cf-timer-status'); if(st) st.textContent='Tabata — 8×(20 עבודה/10 מנוחה)';
 }
 
-Object.assign(window,{
+Object.assign(window,{gymPairCheck,
   openModal,closeModal,closeModalBg,closeAltModal,
   cfFilter,cfToggleWod,cfOpenWod,cfSaveScore,cfTimerToggle,cfTimerReset,cfCountdown,cfTabata,
   showPanel,setMobileNav,renderExSearch,closeExSearch,browseExCategory,

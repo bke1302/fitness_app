@@ -1,7 +1,7 @@
 {
-  "name": "ProtocolOS — תוכנית אימונים אישית",
-  "short_name": "ProtocolOS",
-  "description": "ProtocolOS — מערכת אימונים חכמה עם מעקב תזונה, progressive overload אוטומטי ומאמן AI אישי",
+  "name": "KOACH — מערכת אימונים אישית",
+  "short_name": "KOACH",
+  "description": "KOACH — מערכת אימונים חכמה עם מעקב תזונה, progressive overload אוטומטי ומאמן AI אישי",
   "start_url": "/fitness_app/",
   "id": "/fitness_app/",
   "scope": "/fitness_app/",
@@ -22,8 +22,8 @@
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
   "screenshots": [
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "narrow", "label": "ProtocolOS — Dashboard" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "wide",   "label": "ProtocolOS — Desktop" }
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "narrow", "label": "KOACH — Dashboard" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "wide",   "label": "KOACH — Desktop" }
   ],
   "categories": ["health", "fitness", "sports"],
   "shortcuts": [
