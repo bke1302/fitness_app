@@ -434,7 +434,7 @@ const CAT_STYLE={
   PUSH:{grad:'linear-gradient(135deg,rgba(232,168,124,.28),rgba(232,168,124,.08))',color:'#CCFF00'},
   PULL:{grad:'linear-gradient(135deg,rgba(201,178,126,.28),rgba(201,178,126,.08))',color:'#00D9FF'},
   LEGS:{grad:'linear-gradient(135deg,rgba(185,156,107,.28),rgba(185,156,107,.06))',color:'#B47CFF'},
-  ARMS:{grad:'linear-gradient(135deg,rgba(255,197,61,.28),rgba(255,138,61,.06))',color:'#FF7A45'},
+  ARMS:{grad:'linear-gradient(135deg,rgba(204,255,0,.28),rgba(255,122,69,.06))',color:'#FF7A45'},
   CORE:{grad:'linear-gradient(135deg,rgba(126,242,154,.28),rgba(126,242,154,.06))',color:'#7EF29A'},
 };
 
@@ -668,7 +668,7 @@ if('serviceWorker' in navigator){
     if(e.data && e.data.type === 'SW_UPDATED'){
       // Show update toast with reload option
       const toastEl = document.createElement('div');
-      toastEl.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--gold,#FFC53D);color:#000;padding:12px 20px;border-radius:12px;font-size:.85rem;font-weight:600;z-index:9999;display:flex;gap:12px;align-items:center;box-shadow:0 8px 32px rgba(0,0,0,.4);';
+      toastEl.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--gold,#CCFF00);color:#000;padding:12px 20px;border-radius:12px;font-size:.85rem;font-weight:600;z-index:9999;display:flex;gap:12px;align-items:center;box-shadow:0 8px 32px rgba(0,0,0,.4);';
       toastEl.innerHTML = '<span>גרסה חדשה זמינה!</span><button onclick="location.reload()" style="background:rgba(0,0,0,.15);border:none;color:#000;padding:4px 12px;border-radius:8px;cursor:pointer;font-weight:700;">רענן</button>';
       document.body.appendChild(toastEl);
       setTimeout(() => toastEl.remove(), 8000);
@@ -1265,7 +1265,7 @@ function applyUserConditions(u){
   if(o3){
     if(chol){
       o3.innerHTML='מינון: <strong style="color:var(--green);">3–4g EPA+DHA ביום</strong><br>מפחית טריגליצרידים עד 30%<br>מעלה HDL (כולסטרול טוב)<br><span style="color:var(--green);">חשוב במיוחד עבורך</span>';
-      if(o3card) o3card.style.borderColor='rgba(255,197,61,.4)';
+      if(o3card) o3card.style.borderColor='rgba(204,255,0,.4)';
       if(o3card) o3card.querySelector('div').textContent='אומגה 3 — עדיפות גבוהה!';
     } else {
       o3.innerHTML='מינון: <strong style="color:var(--green);">1–2g EPA+DHA ביום</strong><br>תומך בלב, מוח וירידת דלקת<br><span style="color:var(--green);">מומלץ לכולם</span>';
@@ -1549,7 +1549,7 @@ function renderSetLogInModal(key){
       מקסימום תיאורטי (Epley): <strong id="orm-val">—</strong>
       <span style="font-size:.72rem;color:var(--muted);margin-right:6px;">= משקל × (1 + חזרות/30)</span>
     </div>
-    <button id="pr-share-btn" onclick="openPRShareCard(this.dataset.key,+this.dataset.kg,+this.dataset.reps)" style="display:none;margin-top:10px;width:100%;background:linear-gradient(160deg,#FFD666,#FFC53D);border:none;border-radius:10px;padding:10px;color:#060608;font-weight:800;font-size:.9rem;cursor:pointer;font-family:var(--font);align-items:center;justify-content:center;gap:6px;">
+    <button id="pr-share-btn" onclick="openPRShareCard(this.dataset.key,+this.dataset.kg,+this.dataset.reps)" style="display:none;margin-top:10px;width:100%;background:linear-gradient(160deg,#FFD666,#CCFF00);border:none;border-radius:10px;padding:10px;color:#060608;font-weight:800;font-size:.9rem;cursor:pointer;font-family:var(--font);align-items:center;justify-content:center;gap:6px;">
       שתף את השיא שלך
     </button>
   </div>`;
@@ -2327,8 +2327,8 @@ function renderWChart(){
   const ysV=v=>P.t+(1-(v/maxV))*(H-P.t-P.b);
 
   let h=`<defs>
-    <linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF8A3D"/><stop offset="100%" stop-color="#FFC53D"/></linearGradient>
-    <linearGradient id="ca" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#FFC53D" stop-opacity=".25"/><stop offset="100%" stop-color="#FFC53D" stop-opacity="0"/></linearGradient>
+    <linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF7A45"/><stop offset="100%" stop-color="#CCFF00"/></linearGradient>
+    <linearGradient id="ca" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#CCFF00" stop-opacity=".25"/><stop offset="100%" stop-color="#CCFF00" stop-opacity="0"/></linearGradient>
   </defs>`;
 
   // Grid lines (left axis — weight)
@@ -2337,15 +2337,15 @@ function renderWChart(){
     const v=(maxK-(maxK-minK)*r/3).toFixed(1);
     h+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#1e2433" stroke-width="1"/>`;
     h+=`<text x="${P.l-5}" y="${y+4}" text-anchor="end" fill="#6b7a99" font-size="9" font-family="Barlow,sans-serif">${v}</text>`;
-    if(hasVol){const vv=Math.round(maxV*(1-r/3));h+=`<text x="${W-P.r+5}" y="${y+4}" text-anchor="start" fill="#FF8A3D" font-size="9" font-family="Barlow,sans-serif" opacity=".7">${vv}</text>`;}
+    if(hasVol){const vv=Math.round(maxV*(1-r/3));h+=`<text x="${W-P.r+5}" y="${y+4}" text-anchor="start" fill="#FF7A45" font-size="9" font-family="Barlow,sans-serif" opacity=".7">${vv}</text>`;}
   }
 
   // Volume area + line (red) — behind weight
   if(hasVol){
     const vPts=vols.map((v,i)=>`${xs(i)},${ysV(v)}`).join(' ');
-    h+=`<polygon points="${xs(0)},${H-P.b} ${vPts} ${xs(n-1)},${H-P.b}" fill="rgba(255,138,61,.08)"/>`;
-    h+=`<polyline points="${vPts}" fill="none" stroke="#FF8A3D" stroke-width="1.5" stroke-dasharray="4,3" stroke-linejoin="round" stroke-linecap="round" opacity=".7"/>`;
-    vols.forEach((v,i)=>{if(v>0)h+=`<circle cx="${xs(i)}" cy="${ysV(v)}" r="3" fill="#FF8A3D" opacity=".7"/>`;});
+    h+=`<polygon points="${xs(0)},${H-P.b} ${vPts} ${xs(n-1)},${H-P.b}" fill="rgba(255,122,69,.08)"/>`;
+    h+=`<polyline points="${vPts}" fill="none" stroke="#FF7A45" stroke-width="1.5" stroke-dasharray="4,3" stroke-linejoin="round" stroke-linecap="round" opacity=".7"/>`;
+    vols.forEach((v,i)=>{if(v>0)h+=`<circle cx="${xs(i)}" cy="${ysV(v)}" r="3" fill="#FF7A45" opacity=".7"/>`;});
   }
 
   // Weight area + line (blue) — on top
@@ -2353,7 +2353,7 @@ function renderWChart(){
   h+=`<polygon points="${xs(0)},${H-P.b} ${pts} ${xs(n-1)},${H-P.b}" fill="url(#ca)"/>`;
   h+=`<polyline points="${pts}" fill="none" stroke="url(#cg)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
   log.forEach((e,i)=>{
-    h+=`<circle cx="${xs(i)}" cy="${ysK(e.kg)}" r="4" fill="#FFC53D" stroke="#000" stroke-width="2"/>`;
+    h+=`<circle cx="${xs(i)}" cy="${ysK(e.kg)}" r="4" fill="#CCFF00" stroke="#000" stroke-width="2"/>`;
     if(n<=8||i===0||i===n-1) h+=`<text x="${xs(i)}" y="${ysK(e.kg)-9}" text-anchor="middle" fill="#eaf0fb" font-size="10" font-weight="700" font-family="Barlow,sans-serif">${e.kg}</text>`;
   });
 
@@ -2362,11 +2362,11 @@ function renderWChart(){
   log.forEach((e,i)=>{if(i%step===0||i===n-1)h+=`<text x="${xs(i)}" y="${H-P.b+14}" text-anchor="middle" fill="#6b7a99" font-size="9" font-family="Barlow,sans-serif">${e.date.slice(5).replace('-','/')}</text>`;});
 
   // Legend
-  h+=`<circle cx="${P.l+4}" cy="${H-P.b+28}" r="4" fill="#FFC53D"/>`;
+  h+=`<circle cx="${P.l+4}" cy="${H-P.b+28}" r="4" fill="#CCFF00"/>`;
   h+=`<text x="${P.l+11}" y="${H-P.b+32}" fill="#6b7a99" font-size="9" font-family="Barlow,sans-serif">משקל (ק"ג)</text>`;
   if(hasVol){
-    h+=`<line x1="${P.l+75}" y1="${H-P.b+28}" x2="${P.l+87}" y2="${H-P.b+28}" stroke="#FF8A3D" stroke-width="1.5" stroke-dasharray="4,2"/>`;
-    h+=`<text x="${P.l+91}" y="${H-P.b+32}" fill="#FF8A3D" font-size="9" font-family="Barlow,sans-serif" opacity=".8">נפח שבועי (ק"ג)</text>`;
+    h+=`<line x1="${P.l+75}" y1="${H-P.b+28}" x2="${P.l+87}" y2="${H-P.b+28}" stroke="#FF7A45" stroke-width="1.5" stroke-dasharray="4,2"/>`;
+    h+=`<text x="${P.l+91}" y="${H-P.b+32}" fill="#FF7A45" font-size="9" font-family="Barlow,sans-serif" opacity=".8">נפח שבועי (ק"ג)</text>`;
   }
 
   svg.setAttribute('viewBox',`0 0 ${W} ${H+36}`);
@@ -2453,13 +2453,14 @@ function injectSwapButtons(){
     const key=m[1];
     if(!EX_ALTERNATIVES[key]) return;
     const nameCell=tr.querySelector('.ex-name-main');
-    if(!nameCell||nameCell.querySelector('.ex-swap-btn')) return;
+    const actionCell=tr.querySelector('td:nth-child(3)')||nameCell;
+    if(!nameCell||actionCell.querySelector('.ex-swap-btn')) return;
     const btn=document.createElement('button');
     btn.className='ex-swap-btn';
     btn.textContent='חלופות';
     btn.title='הצג תרגילים חלופיים';
-    btn.onclick=(e)=>{e.stopPropagation();showAlternatives(key,nameCell.textContent.replace('חלופות','').trim());};
-    nameCell.appendChild(btn);
+    btn.onclick=(e)=>{e.stopPropagation();showAlternatives(key,(EX[key]?.name||nameCell.textContent).trim());};
+    actionCell.appendChild(btn);
   });
 }
 
@@ -2472,7 +2473,8 @@ function injectSetLogRows(){
     const setsText=setsCell?.textContent||'3';
     const nSets=parseInt(setsText)||3;
     const nameCell=tr.querySelector('.ex-name-main');
-    if(!nameCell||nameCell.querySelector('.sl-btn')) return;
+    const actionCell=tr.querySelector('td:nth-child(3)')||nameCell;
+    if(!nameCell||actionCell.querySelector('.sl-btn')) return;
     const btn=document.createElement('button');
     btn.className='sl-btn';
     btn.textContent='סטים';
@@ -2486,7 +2488,7 @@ function injectSetLogRows(){
       btn.classList.toggle('open',!open);
       if(!open) prefillSetLog(key,nSets);
     };
-    nameCell.appendChild(btn);
+    actionCell.appendChild(btn);
     const logTr=document.createElement('tr');
     logTr.className='set-log-row';
     logTr.id='slr-'+key;
@@ -3417,7 +3419,7 @@ function renderHeatmap(){
   // Color muscles
   const clr={
     chest:done.push?'rgba(232,168,124,.55)':'rgba(255,255,255,.06)',
-    shoulders:done.push||done.arms?'rgba(255,197,61,.45)':'rgba(255,255,255,.06)',
+    shoulders:done.push||done.arms?'rgba(204,255,0,.45)':'rgba(255,255,255,.06)',
     biceps:done.pull||done.arms?'rgba(201,178,126,.5)':'rgba(255,255,255,.06)',
     triceps:done.push||done.arms?'rgba(185,156,107,.5)':'rgba(255,255,255,.06)',
     quads:done.legs?'rgba(185,156,107,.55)':'rgba(255,255,255,.06)',
@@ -4116,7 +4118,7 @@ function fireConfetti(){
   canvas.width=window.innerWidth; canvas.height=window.innerHeight;
   canvas.style.display='block';
   const ctx=canvas.getContext('2d');
-  const colors=['#CCFF00','#7EF29A','#FF7A45','#B47CFF','#00D9FF','#FF8A3D','#fff'];
+  const colors=['#CCFF00','#7EF29A','#FF7A45','#B47CFF','#00D9FF','#FF7A45','#fff'];
   const ps=Array.from({length:160},()=>({
     x:Math.random()*canvas.width, y:-10-Math.random()*300,
     w:7+Math.random()*9, h:3+Math.random()*5,
@@ -4880,7 +4882,7 @@ const WORKOUT_PLANS={
   },
   '3ss':{
     days:[
-      {id:'push',label:'A · כוח — חזה · גב · סקוואט',shortLabel:'סופרסט א׳',color:'#CCFF00',estMin:52,
+      {id:'push',label:'פול-בודי א׳ — כוח (מוט חופשי)',shortLabel:'פול-בודי א׳',color:'#CCFF00',estMin:52,
        exercises:['benchPress','pullup','squat','facePull','legCurl','cableLateral','triPushdown','cableCurl'],
        supersets:[
          {id:'A1',pair:['benchPress','pullup'],type:'antagonist',rounds:4,restWithin:20,restBetween:120,
@@ -4892,7 +4894,7 @@ const WORKOUT_PLANS={
          {id:'A4',pair:['triPushdown','cableCurl'],type:'antagonist',rounds:3,restWithin:15,restBetween:60,
           note:'אנטגוניסטים במרפק על אותה עמדת כבל. המפרק משותף — לכן 3 סבבים בלבד ובסוף האימון.'}
        ]},
-      {id:'pull',label:'B · נפח — נטייה · חתירה · היפ-הינג',shortLabel:'סופרסט ב׳',color:'#00D9FF',estMin:58,
+      {id:'pull',label:'פול-בודי ב׳ — נפח (דמבל ומכונה)',shortLabel:'פול-בודי ב׳',color:'#00D9FF',estMin:58,
        exercises:['inclineDB','cableRowSeat','rdl','machineShoulderPress','legPress','lateralRaise','skullCrusher','hammerCurl','calfRaise','hangingLegRaise'],
        supersets:[
          {id:'B1',pair:['inclineDB','cableRowSeat'],type:'antagonist',rounds:4,restWithin:25,restBetween:105,
@@ -4906,7 +4908,7 @@ const WORKOUT_PLANS={
          {id:'B5',pair:['calfRaise','hangingLegRaise'],type:'noncompeting',rounds:4,restWithin:15,restBetween:45,
           note:'שוק מול ליבה. אם האחיזה נשברת ראשונה — החלף את הרמת הרגליים בכפיפת בטן בכבל.'}
        ]},
-      {id:'legs',label:'C · פאמפ — מתח · לחיצה · ישבן',shortLabel:'סופרסט ג׳',color:'#B47CFF',estMin:54,
+      {id:'legs',label:'פול-בודי ג׳ — פאמפ (כבל וחד-צדדי)',shortLabel:'פול-בודי ג׳',color:'#B47CFF',estMin:54,
        exercises:['chinUp','ohp','bulgSplit','cableFlye','hipThrust','machineRow','seatedCalfRaise','cableCrunch'],
        supersets:[
          {id:'C1',pair:['chinUp','ohp'],type:'antagonist',rounds:4,restWithin:25,restBetween:105,
@@ -4927,7 +4929,7 @@ const WORKOUT_PLANS={
       {week:4,label:'דילואד',rir:4,note:'2 סבבים בלבד בכל זוג, 60% מהמשקל'}
     ],
     progression:'סופרסטים — מתקדמים על הזוג, לא על התרגיל הבודד. מחזור של 4 שבועות: שבוע 1 צבירה (RIR 3, תחתית הטווח) · שבוע 2 עומס (RIR 2, +2.5 ק״ג בעליון / +5 ק״ג בתחתון בזוג הראשון) · שבוע 3 שיא (RIR 1–2, ראש הטווח בכל הסבבים) · שבוע 4 דילואד (2 סבבים בכל זוג, 60% מהמשקל). כששני התרגילים בזוג הגיעו לראש הטווח בכל הסבבים — הוסף משקל לשניהם והתחל מתחתית הטווח. נכשלת באותו טווח פעמיים ברצף — הורד 10% בתרגיל הכושל בלבד. אל תקצר את המנוחה בין הסבבים כדי לסיים מהר — המנוחה היא חלק מהמינון.',
-    schedule:'א׳ סופרסט א׳ (כוח) | ג׳ סופרסט ב׳ (נפח) | ה׳ סופרסט ג׳ (פאמפ) — פול-בודי, 48 שעות מנוחה'
+    schedule:'כל אימון = כל הגוף. א׳ כוח | ג׳ נפח | ה׳ פאמפ — 48 שעות מנוחה ביניהם'
   },
   '3abc':{
     days:[
@@ -5134,9 +5136,23 @@ function renderAdaptivePanels(){
   const activeId=document.querySelector('.panel.active')?.id?.replace('panel-','');
   if(activeId&&allIds.slice(days.length).includes(activeId)) showPanel(days[0].id);
 
+  // The trainer-note and warm-up cards are hand-written for the classic
+  // PPL/Arms split. On any other plan they describe the wrong workout.
+  const classic=['3abc',4,'4',5,'5',6,'6',7,'7'].includes(_getPlanKey(u));
+  allIds.forEach(pid=>{
+    const panel=document.getElementById('panel-'+pid);
+    if(!panel) return;
+    panel.classList.toggle('plan-generic',!classic);
+  });
+
   // schedule text + train-day counter + dynamic page titles
   const schedEl=document.getElementById('workout-schedule-text');
   if(schedEl) schedEl.textContent=plan.schedule||'';
+  const grid=document.querySelector('.workout-card')?.parentElement;
+  if(grid){
+    const shown=[...grid.querySelectorAll('.workout-card')].filter(c=>c.style.display!=='none'&&!c.classList.contains('crossfit'));
+    shown.forEach((c,i)=>c.classList.toggle('wc-span',shown.length%2===1&&i===shown.length-1));
+  }
   const badge=document.getElementById('sched-days-badge');
   if(badge) badge.textContent=dows.length+' ימי אימון';
   const cfg=_buildDayCfg(u);
