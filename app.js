@@ -612,8 +612,10 @@ document.addEventListener('click', function(e){
 
 function goDay(panelId){ showPanel(panelId,null); }
 function showPanel(name,btn){
+  const _p=document.getElementById('panel-'+name);
+  if(!_p) return;
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-'+name).classList.add('active');
+  _p.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');
   const pt=document.getElementById('page-title');
@@ -627,6 +629,7 @@ function showPanel(name,btn){
     setMobileNav(navMap[name]||'dashboard');
   }
   // Lazy-render panels that build their UI dynamically
+  if(name==='settings') setTimeout(prefillSettingsForm,0);
   if(name==='elog') setTimeout(renderElogPanel,0);
   if(name==='food') setTimeout(renderFoodPanel,0);
   if(name==='chat') setTimeout(renderChatPanel,0);
@@ -754,13 +757,13 @@ function saveSettingsForm(){
   const meal_count=_sfMealCount||5;
   const cholesterol=_sfCholesterol;
   // Sync active user record
-  const users=getUsers(); const aid=getActiveUserId();
+  const users=getUsers(); const aid=getActiveUser()?.id||getActiveUserId();
   const idx=users.findIndex(u=>u.id===aid);
   const workout_freq=parseInt(document.getElementById('sf-workout-freq')?.value)||4;
   let workout_split=null;
   if(workout_freq===3) workout_split=document.getElementById('sf-workout-split-3')?.value||'3abc';
   if(workout_freq===4){const s=document.getElementById('sf-workout-split-4')?.value;workout_split=s||null;}
-  if(workout_freq===7) showToast('7 ימים ברצף לא מומלץ — הגוף חייב מנוחה!');
+  const freqWarn=workout_freq===7?'נשמר — אבל 7 ימים ברצף לא מומלץ, הגוף חייב מנוחה':'';
   const workout_location=document.getElementById('sf-workout-location')?.value||'gym';
   const home_equipment=document.getElementById('sf-home-equipment')?.value||'none';
   if(idx>=0){
@@ -773,8 +776,14 @@ function saveSettingsForm(){
     renderAdaptivePanels();
     injectSwapButtons();
     injectSetLogRows();
+    initCheckboxes();   // renderWorkoutDay wiped the tbody — rebuild the set checkboxes
+    initTodayHero();    // hero + week bar + day chips must reflect the new plan
+    updateStreak();
+  } else {
+    showToast('שגיאה: לא נמצא משתמש פעיל — ההגדרות לא נשמרו');
+    return;
   }
-  showToast('הגדרות נשמרו');
+  showToast(freqWarn||'הגדרות נשמרו');
   const btn=document.querySelector('#settings-form .settings-save');
   if(btn){
     const o=btn.textContent;btn.textContent='נשמר!';
@@ -1226,9 +1235,10 @@ function prefillSettingsForm(){
   const sfwrap=document.querySelector('.sf-split-wrap');
   const sfsplit3=document.getElementById('sf-workout-split-3');
   const sfsplit4=document.getElementById('sf-workout-split-4');
-  if(sfwrap) sfwrap.style.display=(u.workout_freq===3||u.workout_freq===4)?'block':'none';
-  if(sfsplit3){sfsplit3.value=u.workout_split||'3abc';sfsplit3.style.display=u.workout_freq===3?'block':'none';}
-  if(sfsplit4){sfsplit4.value=u.workout_split||'';sfsplit4.style.display=u.workout_freq===4?'block':'none';}
+  const _f=parseInt(u.workout_freq)||4;
+  if(sfwrap) sfwrap.style.display=(_f===3||_f===4)?'block':'none';
+  if(sfsplit3){sfsplit3.value=(u.workout_split==='3ab'||u.workout_split==='3abc')?u.workout_split:'3abc';sfsplit3.style.display=_f===3?'block':'none';}
+  if(sfsplit4){sfsplit4.value=u.workout_split==='4ab'?'4ab':'';sfsplit4.style.display=_f===4?'block':'none';}
   const sfloc=document.getElementById('sf-workout-location'); if(sfloc) sfloc.value=u.workout_location||'gym';
   const sfeq=document.getElementById('sf-home-equipment'); if(sfeq) sfeq.value=u.home_equipment||'none';
   const sfeqwrap=document.querySelector('.sf-homeeq-wrap');
@@ -1704,9 +1714,12 @@ function closeCelebration(){
 const TRAIN_DAYS=[0,1,3,4]; // fallback default (4×/week PPL+Arms)
 const HEB_DAYS2=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 
-// Resolves the active plan key: explicit override > home mode (by equipment) > gym freq/split
+// Optimal day-of-week spread per weekly frequency — used when a plan is
+// re-timed to a frequency it wasn't authored for (home plans ship fixed at 3/4 days)
+const DOWS_BY_FREQ={1:[3],2:[1,4],3:[0,2,4],4:[0,1,3,4],5:[0,1,3,4,5],6:[0,1,2,3,4,5],7:[0,1,2,3,4,5,6]};
+
+// Resolves the active plan key: home mode (by equipment) > gym freq/split
 function _getPlanKey(u){
-  if(u?.plan) return u.plan;
   if((u?.workout_location||'gym')==='home'){
     const eq=u?.home_equipment||'none';
     return eq==='db'?'home_db4':eq==='band'?'home_band3':'home_bw3';
@@ -1716,11 +1729,23 @@ function _getPlanKey(u){
   return freq===3?(split||'3abc'):freq===4?(split||4):freq;
 }
 
-// Returns train days for user based on their workout frequency
+// Returns the plan object, re-timed to the user's chosen frequency when the
+// stock plan's day count doesn't match it
+function _resolvePlan(u){
+  const plan=WORKOUT_PLANS[_getPlanKey(u)];
+  if(!plan) return null;
+  const dows=plan.dows||TRAIN_DAYS;
+  const freq=parseInt(u?.workout_freq)||dows.length;
+  if(freq===dows.length||!DOWS_BY_FREQ[freq]) return plan;
+  const nd=DOWS_BY_FREQ[freq];
+  const HD=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','שבת'];
+  return {...plan,dows:nd,
+    schedule:nd.map((d,i)=>HD[d]+' '+(plan.days[i%plan.days.length].shortLabel||'')).join(' | ')+' — '+freq+' אימונים בשבוע'};
+}
+
+// Returns train days (day-of-week indexes) for the user's active plan
 function _getTrainDays(u){
-  const scheduleMap={1:[4],2:[0,3],'3ab':[0,2,4],'3abc':[0,2,4],4:[0,1,3,4],'4ab':[0,1,3,4],5:[0,1,2,4,5],6:[0,1,2,3,4,5],7:[0,1,2,3,4,5,6],home_bw3:[0,2,4],home_band3:[0,2,4],home_db4:[0,1,3,4]};
-  const key=_getPlanKey(u);
-  return scheduleMap[key]||TRAIN_DAYS;
+  return _resolvePlan(u)?.dows||TRAIN_DAYS;
 }
 
 function computeStreak(){
@@ -1935,29 +1960,15 @@ const DAY_CFG={
   3:{panel:'legs',badge:'LEGS',color:'#B99C6B',label:'ירכיים · ירך אחורי · שוק',sub:'LEGS DAY C',meta:'~65 דק׳ · 7 תרגילים'},
   4:{panel:'arms',badge:'ARMS',color:'#FFC53D',label:'בייסס · טריצפס · כתפיים',sub:'ARMS DAY D',meta:'~50 דק׳ · 7 תרגילים'}
 };
-// Builds a day-of-week→config map dynamically from user's WORKOUT_PLAN
-function _buildDayCfg(planKey){
-  const plan=WORKOUT_PLANS[planKey];
+// Builds a day-of-week→config map from the user's active plan.
+// Days rotate across the plan's dows, so a 2-day plan can fill 3 training days.
+function _buildDayCfg(u){
+  const plan=_resolvePlan(u);
   if(!plan||!plan.days||!plan.days.length) return DAY_CFG;
-  const scheduleMap={
-    1:[5],
-    2:[1,4],
-    '3ab':[0,2,4],
-    '3abc':[0,2,4],
-    4:[0,1,3,4],
-    '4ab':[0,1,3,4],
-    5:[0,1,2,4,5],
-    6:[0,1,2,3,4,5],
-    7:[0,1,2,3,4,5,6],
-    home_bw3:[0,2,4],
-    home_band3:[0,2,4],
-    home_db4:[0,1,3,4],
-  };
-  const dows=scheduleMap[planKey]||[0,1,3,4];
+  const dows=plan.dows||[0,1,3,4];
   const result={};
-  plan.days.forEach((day,idx)=>{
-    if(idx>=dows.length) return;
-    const dow=dows[idx];
+  dows.forEach((dow,i)=>{
+    const day=plan.days[i%plan.days.length];
     const n=day.exercises?day.exercises.length:6;
     result[dow]={
       panel:day.id,
@@ -1980,7 +1991,7 @@ function _renderDashChips(activeDayCfg){
   row.innerHTML=HEB_SHORT.map((ltr,i)=>{
     const cfg=activeDayCfg[i];
     if(cfg){
-      const short=cfg.sub.split(' ')[0];
+      const short=cfg.badge||cfg.sub;
       return `<div class="dash-day-chip">
         <span class="ddc-dot" style="background:${cfg.color}"></span>
         <span class="ddc-name">${ltr}</span>
@@ -2024,7 +2035,7 @@ function initTodayHero(){
   const hero=document.getElementById('today-hero');
   if(!hero) return;
   const u=getActiveUser();
-  const activeDayCfg=u?_buildDayCfg(_getPlanKey(u)):DAY_CFG;
+  const activeDayCfg=u?_buildDayCfg(u):DAY_CFG;
   const cfg=activeDayCfg[d];
   const log=getLog(); const today=todayStr();
   const done=log[today]?.__complete;
@@ -4689,6 +4700,7 @@ const WORKOUT_PLANS={
       {id:'legs',label:'Full Body C — ביתי',shortLabel:'בית C',color:'#B99C6B',
        exercises:['pikePushup','doorRow','pistolBox','gluteBridgeSL','pushup','calfRaiseHome','plankReach']},
     ],
+    dows:[0,2,4],
     schedule:'א׳ A | ג׳ B | ה׳ C — משקל גוף בלבד, 48 שעות מנוחה בין אימונים'
   },
   home_band3:{
@@ -4700,6 +4712,7 @@ const WORKOUT_PLANS={
       {id:'legs',label:'Full Body C — גומיות',shortLabel:'גומי C',color:'#B99C6B',
        exercises:['bandChestPress','bandRow','pistolBox','gluteBridgeSL','bandFacePull','calfRaiseHome']},
     ],
+    dows:[0,2,4],
     schedule:'א׳ A | ג׳ B | ה׳ C — גומיות התנגדות + משקל גוף'
   },
   home_db4:{
@@ -4713,32 +4726,38 @@ const WORKOUT_PLANS={
       {id:'arms',label:'Lower B — ביתי',shortLabel:'תחתון B',color:'#FFC53D',
        exercises:['dbRdl','pistolBox','dbGobletSquat','nordicHome','calfRaiseHome','hollowHold']},
     ],
+    dows:[0,1,3,4],
     schedule:'א׳ עליון A | ב׳ תחתון A | ד׳ עליון B | ה׳ תחתון B'
   },
   1:{
     days:[
       {id:'push',label:'Full Body — אימון שבועי',shortLabel:'FULL',color:'#FFC53D',
-       exercises:['squat','benchPress','pullup','ohp','rdl','facePull','lateralRaise','bbCurl','calfRaise']},
+       exercises:['squat','benchPress','pullup','rdl','bentRow','ohp','triPushdown']},
     ],
-    schedule:'פעם בשבוע — Full Body (מומלץ: רביעי)'
+    dows:[3],
+    progression:'התקדמות ליניארית: כל אימון +2.5 ק״ג בעליון / +5 ק״ג בתחתון. נכשלת פעמיים ברצף — הורד 10% והתחל טיפוס מחדש.',
+    schedule:'רביעי — Full Body (7 מתחמים, ~65 דק׳)'
   },
   2:{
     days:[
-      {id:'push',label:'יום A — Full Body',shortLabel:'יום A',color:'#E8A87C',
-       exercises:['squat','benchPress','pullup','ohp','hipThrust','facePull','bbCurl','calfRaise']},
-      {id:'pull',label:'יום B — Full Body',shortLabel:'יום B',color:'#C9B27E',
-       exercises:['legPress','rdl','inclineBench','bentRow','lateralRaise','facePull','hammerCurl','legCurl','calfRaise']},
+      {id:'push',label:'יום A — Full Body כבד',shortLabel:'יום A',color:'#E8A87C',
+       exercises:['squat','benchPress','pullup','rdl','cableRow','triPushdown','bbCurl','calfRaise']},
+      {id:'pull',label:'יום B — Full Body נפח',shortLabel:'יום B',color:'#C9B27E',
+       exercises:['legPress','ohp','bentRow','inclineBench','underhandPulldown','hipThrust','lateralRaise','legCurl','seatedCalfRaise','hangingLegRaise']},
     ],
-    schedule:'ב׳ + ה׳ (48–72 שעות מנוחה)'
+    dows:[1,4],
+    progression:'התקדמות ליניארית: כל אימון +2.5 ק״ג בעליון / +5 ק״ג בתחתון בתרגיל הראשי. נכשלת בטווח פעמיים ברצף — הורד 10%. בבידודים: הגע לראש הטווח בכל הסטים ואז +2.5 ק״ג. Deload כל 8–10 שבועות.',
+    schedule:'ב׳ + ה׳ (72 / 96 שעות מנוחה — פריסה אופטימלית ל-2 אימונים)'
   },
   '3ab':{
     days:[
       {id:'push',label:'Upper Body',shortLabel:'Upper',color:'#E8A87C',
-       exercises:['benchPress','pullup','ohp','bentRow','inclineBench','bbCurl','facePull','lateralRaise']},
+       exercises:['benchPress','pullup','ohp','bentRow','inclineBench','triPushdown','bbCurl','facePull']},
       {id:'pull',label:'Lower Body',shortLabel:'Lower',color:'#B99C6B',
        exercises:['squat','rdl','legPress','legCurl','legExt','hipThrust','calfRaise']},
     ],
-    schedule:'א׳/Upper | ג׳/Lower | ה׳/Upper (מתחלף שבוע-שבוע)'
+    dows:[0,2,4],
+    schedule:'א׳ Upper | ג׳ Lower | ה׳ Upper — הסבב מתחלף שבוע-שבוע'
   },
   '3abc':{
     days:[
@@ -4749,6 +4768,7 @@ const WORKOUT_PLANS={
       {id:'legs',label:'LEGS — רגליים',shortLabel:'LEGS',color:'#B99C6B',
        exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
     ],
+    dows:[0,2,4],
     schedule:'א׳ Push | ג׳ Pull | ה׳ Legs'
   },
   4:{
@@ -4762,6 +4782,7 @@ const WORKOUT_PLANS={
       {id:'arms',label:'ARMS — זרועות',shortLabel:'ARMS',color:'#FFC53D',
        exercises:['closeGripBench','ezCurl','skullCrusher','inclineCurl','ohTricep','hammerCurl']},
     ],
+    dows:[0,1,3,4],
     schedule:'א׳ Push | ב׳ Pull | ד׳ Legs | ה׳ Arms'
   },
   5:{
@@ -4775,7 +4796,8 @@ const WORKOUT_PLANS={
       {id:'arms',label:'Upper — שחזור בינוני',shortLabel:'BODY',color:'#FFC53D',
        exercises:['cableRow','lateralRaise','facePull','bbCurl','hammerCurl','triPushdown']},
     ],
-    schedule:'א׳ Push | ב׳ Pull | ד׳ Legs | ה׳ Upper+Lower'
+    dows:[0,1,3,4,5],
+    schedule:'א׳ Push | ב׳ Pull | ד׳ Legs | ה׳ Upper | ו׳ Push (סבב חוזר)'
   },
   6:{
     days:[
@@ -4785,10 +4807,9 @@ const WORKOUT_PLANS={
        exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
       {id:'legs',label:'LEGS A — ירכיים',shortLabel:'LEGS A',color:'#B99C6B',
        exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
-      {id:'arms',label:'PUSH B + PULL B + LEGS B',shortLabel:'B-DAYS',color:'#FFC53D',
-       exercises:['inclineBench','cableFlye','skullCrusher','pullup','cableRow','inclineCurl','rdl','hipThrust']},
     ],
-    schedule:'א׳ Push A | ב׳ Pull A | ג׳ Legs A | ד׳ Push B | ה׳ Pull B | ו׳ Legs B'
+    dows:[0,1,2,3,4,5],
+    schedule:'א׳ Push | ב׳ Pull | ג׳ Legs | ד׳ Push | ה׳ Pull | ו׳ Legs — שבת מנוחה מלאה'
   },
   '4ab':{
     days:[
@@ -4801,6 +4822,7 @@ const WORKOUT_PLANS={
       {id:'arms',label:'Lower B — נפח תחתון',shortLabel:'LOW-B',color:'#FFC53D',
        exercises:['legPress','bulgSplit','legExt','legCurl','rdl','hipThrust','calfRaise']},
     ],
+    dows:[0,1,3,4],
     schedule:'א׳ Upper A | ב׳ Lower A | ד׳ Upper B | ה׳ Lower B'
   },
   7:{
@@ -4814,7 +4836,8 @@ const WORKOUT_PLANS={
       {id:'arms',label:'יום 7 — שחזור פעיל בלבד',shortLabel:'REST',color:'#6B7280',
        exercises:['facePull','lateralRaise','inclineCurl','calfRaise','ezCurl','cableFlye']},
     ],
-    schedule:'א׳-ג׳: Push/Pull/Legs | ד׳-ו׳: Push/Pull/Legs | שבת: שחזור פעיל — הגוף חייב לנוח!'
+    dows:[0,1,2,3,4,5,6],
+    schedule:'א׳ Push | ב׳ Pull | ג׳ Legs | ד׳ שחזור פעיל | ה׳ Push | ו׳ Pull | ש׳ Legs — לא מומלץ לאורך זמן'
   }
 };
 
@@ -4849,36 +4872,80 @@ function renderWorkoutDay(panelId,dayObj){
 
 function renderAdaptivePanels(){
   const u=getActiveUser();
-  const planKey=_getPlanKey(u);
-  const plan=WORKOUT_PLANS[planKey];
+  const plan=_resolvePlan(u);
   if(!plan){ showToast('תוכנית אימון לא זמינה לתדירות זו'); return; }
-  const {days}=plan;
+  const days=plan.days;
+  const dows=plan.dows||[0,1,3,4];
+  const HD=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  // first day-of-week each panel is scheduled on, for the "ראשון | 7 תרגילים" line
+  const dayName={};
+  dows.forEach((d,i)=>{ const id=days[i%days.length].id; if(!(id in dayName)) dayName[id]=HD[d]; });
+
   const allIds=['push','pull','legs','arms'];
   allIds.forEach((pid,i)=>{
+    const shown=i<days.length;
     const card=document.querySelector('.workout-card.'+pid);
     const schedBtn=document.querySelector(`#panel-schedule button[onclick*="'${pid}'"]`);
-    if(i>=days.length){
-      if(card) card.style.display='none';
-      if(schedBtn) schedBtn.style.display='none';
-    } else {
-      if(card){
-        card.style.display='';
-        const t=card.querySelector('.workout-card-title');
-        if(t) t.textContent=days[i].shortLabel||days[i].label;
-      }
-      if(schedBtn) schedBtn.style.display='';
-      renderWorkoutDay(pid,days[i]);
+    if(card) card.style.display=shown?'':'none';
+    if(schedBtn) schedBtn.style.display=shown?'':'none';
+    if(!shown){
+      const panel=document.getElementById('panel-'+pid);
+      if(panel) panel.classList.remove('active');
+      return;
     }
+    const day=days[i];
+    const sub=day.label.includes(' — ')?day.label.split(' — ').slice(1).join(' — '):day.label;
+    const n=day.exercises.length;
+    const mins=45+n*5;
+    const short=day.shortLabel||pid.toUpperCase();
+
+    if(card){
+      const t=card.querySelector('.workout-card-title');
+      if(t){ t.textContent=short; t.style.color=day.color; }
+      const cs=card.querySelector('.workout-card-sub');
+      if(cs) cs.textContent=sub;
+    }
+    if(schedBtn){
+      const st=schedBtn.querySelector('.wsel-title');
+      if(st){ st.textContent=short; st.style.color=day.color; }
+      const ss=schedBtn.querySelector('.wsel-sub');
+      if(ss) ss.textContent=sub;
+      const sm=schedBtn.querySelector('.wsel-meta');
+      if(sm) sm.textContent=`${dayName[day.id]||''} | ${n} תרגילים | ~${mins} דק׳`;
+    }
+    // panel day header: title, duration badge, gym-mode label, watermark
+    const head=document.querySelector('#panel-'+pid+' .day-head-card');
+    if(head){
+      head.dataset.wm=short;
+      const h2=head.querySelector('.day-title');
+      if(h2) h2.textContent=`${dayName[day.id]||''} — ${short}`;
+      const badges=head.querySelectorAll('.card-head .badge');
+      const last=badges[badges.length-1];
+      if(last) last.textContent='~'+mins+' דק׳';
+      const gymBtn=head.querySelector('.gym-mode-btn');
+      if(gymBtn) gymBtn.setAttribute('onclick',`startGymMode('${pid}','${short}','${day.color}')`);
+    }
+    renderWorkoutDay(pid,day);
   });
-  // If currently active panel was hidden, switch to first visible panel
-  const activePanelEl=document.querySelector('.panel.active');
-  const activePanelId=activePanelEl?.id?.replace('panel-','');
-  const hiddenPanelIds=allIds.slice(days.length);
-  if(activePanelId&&hiddenPanelIds.includes(activePanelId)){
-    showPanel(days[0].id);
-  }
+
+  // if the visible panel just got hidden, fall back to the plan's first day
+  const activeId=document.querySelector('.panel.active')?.id?.replace('panel-','');
+  if(activeId&&allIds.slice(days.length).includes(activeId)) showPanel(days[0].id);
+
+  // schedule text + train-day counter + dynamic page titles
   const schedEl=document.getElementById('workout-schedule-text');
   if(schedEl) schedEl.textContent=plan.schedule||'';
+  const badge=document.getElementById('sched-days-badge');
+  if(badge) badge.textContent=dows.length+' ימי אימון';
+  const cfg=_buildDayCfg(u);
+  allIds.forEach((pid,i)=>{
+    if(i>=days.length) return;
+    TITLES[pid]=`${dayName[days[i].id]||''} — ${days[i].shortLabel||pid.toUpperCase()}`;
+  });
+  const pt=document.getElementById('page-title');
+  const cur=document.querySelector('.panel.active')?.id?.replace('panel-','');
+  if(pt&&cur&&TITLES[cur]) pt.textContent=TITLES[cur];
+  void cfg;
 }
 
 function getWorkoutFreqLabel(freq,split){

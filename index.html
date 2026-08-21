@@ -381,32 +381,32 @@
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
         <button onclick="showPanel('push',null);setMobileNav('push');" style="background:linear-gradient(135deg,rgba(232,168,124,.15),rgba(232,168,124,.06));border:1.5px solid rgba(232,168,124,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="margin-bottom:6px;color:#E8A87C;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-arrow-up"/></svg></div>
-          <div style="font-size:1.05rem;font-weight:800;color:#E8A87C;">PUSH</div>
-          <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">חזה · כתפיים · טריצפס</div>
-          <div style="font-size:.6rem;color:rgba(232,168,124,.6);margin-top:6px;">ראשון | 7 תרגילים | ~70 דק׳</div>
+          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#E8A87C;">PUSH</div>
+          <div class="wsel-sub" style="font-size:.65rem;color:var(--muted);margin-top:4px;">חזה · כתפיים · טריצפס</div>
+          <div class="wsel-meta" style="font-size:.6rem;color:rgba(232,168,124,.6);margin-top:6px;">ראשון | 7 תרגילים | ~70 דק׳</div>
         </button>
         <button onclick="showPanel('pull',null);setMobileNav('pull');" style="background:linear-gradient(135deg,rgba(201,178,126,.15),rgba(201,178,126,.06));border:1.5px solid rgba(201,178,126,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="margin-bottom:6px;color:#C9B27E;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-arrow-down"/></svg></div>
-          <div style="font-size:1.05rem;font-weight:800;color:#C9B27E;">PULL</div>
-          <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">גב · ביצפס · אמות</div>
-          <div style="font-size:.6rem;color:rgba(201,178,126,.6);margin-top:6px;">שני | 7 תרגילים | ~65 דק׳</div>
+          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#C9B27E;">PULL</div>
+          <div class="wsel-sub" style="font-size:.65rem;color:var(--muted);margin-top:4px;">גב · ביצפס · אמות</div>
+          <div class="wsel-meta" style="font-size:.6rem;color:rgba(201,178,126,.6);margin-top:6px;">שני | 7 תרגילים | ~65 דק׳</div>
         </button>
         <button onclick="showPanel('legs',null);setMobileNav('legs');" style="background:linear-gradient(135deg,rgba(185,156,107,.15),rgba(185,156,107,.06));border:1.5px solid rgba(185,156,107,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="margin-bottom:6px;color:#B99C6B;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-dumbbell"/></svg></div>
-          <div style="font-size:1.05rem;font-weight:800;color:#B99C6B;">LEGS</div>
-          <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">רגליים מלא</div>
-          <div style="font-size:.6rem;color:rgba(185,156,107,.6);margin-top:6px;">רביעי | 7 תרגילים | ~75 דק׳</div>
+          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#B99C6B;">LEGS</div>
+          <div class="wsel-sub" style="font-size:.65rem;color:var(--muted);margin-top:4px;">רגליים מלא</div>
+          <div class="wsel-meta" style="font-size:.6rem;color:rgba(185,156,107,.6);margin-top:6px;">רביעי | 7 תרגילים | ~75 דק׳</div>
         </button>
         <button onclick="showPanel('arms',null);setMobileNav('arms');" style="background:linear-gradient(135deg,rgba(255,197,61,.15),rgba(255,197,61,.06));border:1.5px solid rgba(255,197,61,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="margin-bottom:6px;color:#FFC53D;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-dumbbell"/></svg></div>
-          <div style="font-size:1.05rem;font-weight:800;color:#FFC53D;">ARMS</div>
-          <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">ידיים · כתפיים</div>
-          <div style="font-size:.6rem;color:rgba(255,197,61,.6);margin-top:6px;">חמישי | 7 תרגילים | ~60 דק׳</div>
+          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#FFC53D;">ARMS</div>
+          <div class="wsel-sub" style="font-size:.65rem;color:var(--muted);margin-top:4px;">ידיים · כתפיים</div>
+          <div class="wsel-meta" style="font-size:.6rem;color:rgba(255,197,61,.6);margin-top:6px;">חמישי | 7 תרגילים | ~60 דק׳</div>
         </button>
       </div>
     </div>
     <div class="card">
-      <div class="card-head"><h2>לוח שבועי</h2><span class="badge badge-blue">4 ימי אימון</span></div>
+      <div class="card-head"><h2>לוח שבועי</h2><span class="badge badge-blue" id="sched-days-badge">4 ימי אימון</span></div>
       <div class="card-body">
         <div class="week-bar">
           <div class="day-cell" onclick="goDay('push')"><div class="dc-name">ראשון א׳</div><div class="dc-icon"><span class="dc-dot" style="background:var(--red)"></span></div><div class="dc-type" style="color:var(--red)">PUSH</div><div class="dc-label">חזה · כתף · טריצפס</div></div>
@@ -458,9 +458,9 @@
         <span class="warmup-item">לחיצת חזה ריקה — טכניקה × 10</span>
       </div>
     </div>
-    <div class="card" data-wm="PUSH">
+    <div class="card day-head-card" data-wm="PUSH">
       <div class="card-head">
-        <h2>ראשון — PUSH DAY</h2>
+        <h2 class="day-title">ראשון — PUSH DAY</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
           <span class="badge badge-red">חזה</span>
           <span class="badge badge-cyan">כתפיים</span>
@@ -556,9 +556,9 @@
         <span class="warmup-item">חתירה קלה — טכניקה × 10</span>
       </div>
     </div>
-    <div class="card" data-wm="PULL">
+    <div class="card day-head-card" data-wm="PULL">
       <div class="card-head">
-        <h2>שני — PULL DAY</h2>
+        <h2 class="day-title">שני — PULL DAY</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
           <span class="badge badge-blue">גב</span>
           <span class="badge badge-green">בייסס</span>
@@ -647,9 +647,9 @@
         <span class="warmup-item">Leg Swing × 10 כל רגל</span>
       </div>
     </div>
-    <div class="card" data-wm="LEGS">
+    <div class="card day-head-card" data-wm="LEGS">
       <div class="card-head">
-        <h2>רביעי — LEGS DAY</h2>
+        <h2 class="day-title">רביעי — LEGS DAY</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
           <span class="badge badge-purple">Quads</span>
           <span class="badge badge-red">Hamstrings</span>
@@ -828,9 +828,9 @@
         <span class="warmup-item">סיבובי מרפקים × 10</span>
       </div>
     </div>
-    <div class="card" data-wm="ARMS">
+    <div class="card day-head-card" data-wm="ARMS">
       <div class="card-head">
-        <h2>חמישי — ARMS DAY</h2>
+        <h2 class="day-title">חמישי — ARMS DAY</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
           <span class="badge badge-blue">בייסס</span>
           <span class="badge badge-purple">טריצפס</span>
