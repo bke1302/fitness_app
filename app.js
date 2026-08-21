@@ -119,6 +119,10 @@ const EX = {
     desc:'כבל שומר מתח גם בנקודת ההתחלה — עדיף לבידוד גב אמצעי.',
     muscles:'Rhomboids, Middle Trapezius, Lat, Rear Delt.',
     tips:['שב זקוף — לא כפוף קדימה','שכמות מתקרבות בסוף המשיכה','אל תסחב בתנופה','מרפקים מאחורי הגוף בסיום']},
+  reverseFly:{name:'פרפר הפוך — מכונה',en:'Reverse Pec Deck',e:'',cat:'כתף אחורית',sets:'4×12–15',rest:'45 שנ׳',lvl:'בידוד',
+    desc:'פתיחת זרועות לאחור במכונת פק-דק הפוכה. בידוד נקי לכתף האחורית כמעט ללא מעורבות בייסס — משלים ל-Face Pull ומחליף אותו בסבב הגיוון.',
+    muscles:'Posterior Deltoid (ראשי), Rhomboids, Middle Trapezius.',
+    tips:['כוון את הידיות לגובה הכתפיים בדיוק','מרפקים כפופים קלות וקבועים — זו לא פשיטת מרפק','משוך מהמרפק ולא מכף היד — אם הבייסס עובד, המשקל כבד מדי','עצור שנייה מלאה בכיווץ','משקל קל וחזרות גבוהות — הכתף האחורית קטנה ומתעייפת מהר']},
   facePull:{name:'Face Pull — חבל',en:'Cable Face Pull',e:'',cat:'כתף אחורית',sets:'4×15–20',rest:'45 שנ׳',lvl:'בידוד',
     desc:'קריטי לבריאות הכתף ולמניעת פציעות. עשה אותו כמעט כל אימון.',
     muscles:'Rear Deltoid, Rotator Cuff, Trapezius.',
@@ -1237,7 +1241,7 @@ function prefillSettingsForm(){
   const sfsplit4=document.getElementById('sf-workout-split-4');
   const _f=parseInt(u.workout_freq)||4;
   if(sfwrap) sfwrap.style.display=(_f===3||_f===4)?'block':'none';
-  if(sfsplit3){sfsplit3.value=(u.workout_split==='3ab'||u.workout_split==='3abc')?u.workout_split:'3abc';sfsplit3.style.display=_f===3?'block':'none';}
+  if(sfsplit3){sfsplit3.value=['3ab','3abc','3ss'].includes(u.workout_split)?u.workout_split:'3abc';sfsplit3.style.display=_f===3?'block':'none';}
   if(sfsplit4){sfsplit4.value=u.workout_split==='4ab'?'4ab':'';sfsplit4.style.display=_f===4?'block':'none';}
   const sfloc=document.getElementById('sf-workout-location'); if(sfloc) sfloc.value=u.workout_location||'gym';
   const sfeq=document.getElementById('sf-home-equipment'); if(sfeq) sfeq.value=u.home_equipment||'none';
@@ -1970,13 +1974,14 @@ function _buildDayCfg(u){
   dows.forEach((dow,i)=>{
     const day=plan.days[i%plan.days.length];
     const n=day.exercises?day.exercises.length:6;
+    const mins=day.estMin||45+n*5;
     result[dow]={
       panel:day.id,
       badge:day.shortLabel||day.label.slice(0,6),
       color:day.color||'#CCFF00',
       label:day.label,
       sub:day.shortLabel||day.id.toUpperCase(),
-      meta:`~${45+n*5} דק׳ · ${n} תרגילים`
+      meta:`~${mins} דק׳ · ${n} תרגילים`
     };
   });
   return result;
@@ -3546,7 +3551,10 @@ function startGymMode(panelName,label,color){
     nameEn:tr.querySelector('.ex-name-en')?.textContent?.trim()||'',
     sets:tr.querySelector('.sets-cell')?.textContent?.trim()||'3×10',
     muscle:tr.querySelector('.muscle-tag')?.textContent?.trim()||'',
-    key:tr.getAttribute('onclick')?.match(/openModal\('(\w+)'\)/)?.[1]||null
+    key:tr.getAttribute('onclick')?.match(/openModal\('(\w+)'\)/)?.[1]||null,
+    ss:tr.dataset.ss||null,
+    ssPartner:tr.dataset.ssPartner||null,
+    ssPos:tr.dataset.ssPos||null
   })).filter(e=>e.name&&e.sets);
   if(!_gymExercises.length){ showToast('לא נמצאו תרגילים'); return; }
   _gymIdx=0; _gymColor=color.trim(); _gymLabel=label;
@@ -3613,6 +3621,7 @@ function renderGymExercise(){
   const prBadge=pr?`<div class="gym-pr-badge">PR: ${pr.kg}ק״ג × ${pr.reps}</div>`:'';
   body.innerHTML=`
     <div class="gym-counter">תרגיל ${_gymIdx+1} מתוך ${_gymExercises.length}</div>
+    ${ex.ss?`<div class="gym-ss"><span class="gym-ss-tag">${ex.ss}</span>סופרסט — חלק ${ex.ssPos}${ex.ssPartner?` · מיד אחרי: ${_esc(ex.ssPartner)}`:''}</div>`:''}
     <div class="gym-name" style="color:${_gymColor}">${_esc(ex.name)}</div>
     ${ex.nameEn?`<div class="gym-name-en">${_esc(ex.nameEn)}</div>`:''}
     ${ex.muscle?`<div class="gym-muscle-tag">${_esc(ex.muscle)}</div>`:''}
@@ -4759,6 +4768,57 @@ const WORKOUT_PLANS={
     dows:[0,2,4],
     schedule:'א׳ Upper | ג׳ Lower | ה׳ Upper — הסבב מתחלף שבוע-שבוע'
   },
+  '3ss':{
+    days:[
+      {id:'push',label:'A · כוח — חזה · גב · סקוואט',shortLabel:'סופרסט א׳',color:'#CCFF00',estMin:52,
+       exercises:['benchPress','pullup','squat','facePull','legCurl','cableLateral','triPushdown','cableCurl'],
+       supersets:[
+         {id:'A1',pair:['benchPress','pullup'],type:'antagonist',rounds:4,restWithin:20,restBetween:120,
+          note:'דחיפה אופקית מול משיכה אנכית. אין שריר משותף, אפס עומס על עמוד השדרה, והאחיזה במתח מתאוששת במלואה במהלך סט הלחיצה.'},
+         {id:'A2',pair:['squat','facePull'],type:'noncompeting',rounds:4,restWithin:20,restBetween:120,
+          note:'סקוואט כבד מול בידוד כתף אחורית במשקל זניח. הרץ את ה-Face Pull ב-RPE 6 — הוא מנוחה אקטיבית, לא תרגיל.'},
+         {id:'A3',pair:['legCurl','cableLateral'],type:'noncompeting',rounds:3,restWithin:20,restBetween:60,
+          note:'ירך אחורי בשכיבה מול כתף אמצעית בכבל. אפס חפיפה, אפס גב תחתון, אפס אחיזה.'},
+         {id:'A4',pair:['triPushdown','cableCurl'],type:'antagonist',rounds:3,restWithin:15,restBetween:60,
+          note:'אנטגוניסטים במרפק על אותה עמדת כבל. המפרק משותף — לכן 3 סבבים בלבד ובסוף האימון.'}
+       ]},
+      {id:'pull',label:'B · נפח — נטייה · חתירה · היפ-הינג',shortLabel:'סופרסט ב׳',color:'#00D9FF',estMin:58,
+       exercises:['inclineDB','cableRowSeat','rdl','machineShoulderPress','legPress','lateralRaise','skullCrusher','hammerCurl','calfRaise','hangingLegRaise'],
+       supersets:[
+         {id:'B1',pair:['inclineDB','cableRowSeat'],type:'antagonist',rounds:4,restWithin:25,restBetween:105,
+          note:'דחיפה בנטייה מול חתירה אופקית. שמור על חתירה קפדנית בלי תנופת גו — ה-RDL מגיע מיד אחרי.'},
+         {id:'B2',pair:['rdl','machineShoulderPress'],type:'noncompeting',rounds:3,restWithin:25,restBetween:90,
+          note:'דווקא מכונה ולא לחיצת כתפיים בעמידה: ה-RDL מרוקן זוקפי גב ואחיזה, והמכונה נותנת משענת מלאה. זה מה שהופך את הזוג לבטוח.'},
+         {id:'B3',pair:['legPress','lateralRaise'],type:'noncompeting',rounds:3,restWithin:20,restBetween:90,
+          note:'לג-פרס נתמך מושב (אפס עומס אקסיאלי) מול הרמות צד קלות.'},
+         {id:'B4',pair:['skullCrusher','hammerCurl'],type:'antagonist',rounds:3,restWithin:15,restBetween:60,
+          note:'אנטגוניסטים במרפק, שניהם בידוד, בסוף האימון.'},
+         {id:'B5',pair:['calfRaise','hangingLegRaise'],type:'noncompeting',rounds:4,restWithin:15,restBetween:45,
+          note:'שוק מול ליבה. אם האחיזה נשברת ראשונה — החלף את הרמת הרגליים בכפיפת בטן בכבל.'}
+       ]},
+      {id:'legs',label:'C · פאמפ — מתח · לחיצה · ישבן',shortLabel:'סופרסט ג׳',color:'#B47CFF',estMin:54,
+       exercises:['chinUp','ohp','bulgSplit','cableFlye','hipThrust','machineRow','seatedCalfRaise','cableCrunch'],
+       supersets:[
+         {id:'C1',pair:['chinUp','ohp'],type:'antagonist',rounds:4,restWithin:25,restBetween:105,
+          note:'משיכה אנכית מול דחיפה אנכית. ראשון ביום — הלחיצה בעמידה דורשת זוקפים טריים, לפני ה-Hip Thrust.'},
+         {id:'C2',pair:['bulgSplit','cableFlye'],type:'noncompeting',rounds:3,restWithin:20,restBetween:90,
+          note:'רגל חד-צדדית מול בידוד חזה. שים לב: כל סבב = 2 סטים של רגליים (צד וצד).'},
+         {id:'C3',pair:['hipThrust','machineRow'],type:'noncompeting',rounds:4,restWithin:25,restBetween:90,
+          note:'פשיטת ירך מול חתירה בתמיכת חזה — אפס כיפוף מותני תחת עומס. זה הזוג שבו הגב התחתון מקבל אוויר.'},
+         {id:'C4',pair:['seatedCalfRaise','cableCrunch'],type:'noncompeting',rounds:4,restWithin:15,restBetween:45,
+          note:'סוליאוס בישיבה מול כפיפת בטן בכבל. אפס חפיפה.'}
+       ]}
+    ],
+    dows:[0,2,4],
+    waves:[
+      {week:1,label:'צבירה',rir:3,note:'תחתית טווח החזרות, במשקל של שבוע 3 הקודם'},
+      {week:2,label:'עומס',rir:2,note:'+2.5 ק״ג עליון / +5 ק״ג תחתון בזוג הראשון של כל אימון'},
+      {week:3,label:'שיא',rir:1,note:'ראש הטווח בכל הסבבים — כאן קובעים שיאים'},
+      {week:4,label:'דילואד',rir:4,note:'2 סבבים בלבד בכל זוג, 60% מהמשקל'}
+    ],
+    progression:'סופרסטים — מתקדמים על הזוג, לא על התרגיל הבודד. מחזור של 4 שבועות: שבוע 1 צבירה (RIR 3, תחתית הטווח) · שבוע 2 עומס (RIR 2, +2.5 ק״ג בעליון / +5 ק״ג בתחתון בזוג הראשון) · שבוע 3 שיא (RIR 1–2, ראש הטווח בכל הסבבים) · שבוע 4 דילואד (2 סבבים בכל זוג, 60% מהמשקל). כששני התרגילים בזוג הגיעו לראש הטווח בכל הסבבים — הוסף משקל לשניהם והתחל מתחתית הטווח. נכשלת באותו טווח פעמיים ברצף — הורד 10% בתרגיל הכושל בלבד. אל תקצר את המנוחה בין הסבבים כדי לסיים מהר — המנוחה היא חלק מהמינון.',
+    schedule:'א׳ סופרסט א׳ (כוח) | ג׳ סופרסט ב׳ (נפח) | ה׳ סופרסט ג׳ (פאמפ) — פול-בודי, 48 שעות מנוחה'
+  },
   '3abc':{
     days:[
       {id:'push',label:'PUSH — חזה + כתפיים',shortLabel:'PUSH',color:'#CCFF00',
@@ -4841,7 +4901,7 @@ const WORKOUT_PLANS={
   }
 };
 
-function buildExRow(key,num){
+function buildExRow(key,num,over){
   const ex=EX[key];
   if(!ex) return '';
   const lvlStr=_exLvl(ex);
@@ -4851,8 +4911,8 @@ function buildExRow(key,num){
     <td><div class="ex-name-main">${ex.name}</div><div class="ex-name-en" lang="en">${ex.en}</div>
         <div class="ex-why">${ex.desc?ex.desc.slice(0,60)+'…':''}</div></td>
     <td><span class="muscle-tag">${_exCatLabel(ex)}</span></td>
-    <td class="sets-cell">${ex.sets||'3×10'}</td>
-    <td class="rest-cell">${_exRest(ex)||'90 שנ׳'}</td>
+    <td class="sets-cell">${over?.sets||ex.sets||'3×10'}</td>
+    <td class="rest-cell">${over?.rest||_exRest(ex)||'90 שנ׳'}</td>
     <td><span class="badge ${lvlCls}">${lvlStr}</span></td>
   </tr>`;
 }
@@ -4861,13 +4921,45 @@ function renderWorkoutDay(panelId,dayObj){
   const panel=document.getElementById('panel-'+panelId);
   if(!panel) return;
   let tbl=panel.querySelector('.ex-table tbody');
-  if(tbl) tbl.innerHTML=dayObj.exercises.map((k,i)=>buildExRow(k,i+1)).join('');
+  if(tbl) tbl.innerHTML=dayObj.supersets?_buildSupersetRows(dayObj)
+                                         :dayObj.exercises.map((k,i)=>buildExRow(k,i+1)).join('');
   // Update nav tab label
   const navBtn=document.querySelector(`.nav-btn[onclick*="'${panelId}'"]`);
   if(navBtn){
     const lbl=navBtn.querySelector('.nav-lbl');
     if(lbl) lbl.textContent=dayObj.shortLabel||panelId.toUpperCase();
   }
+}
+
+// Renders a superset day as labelled pairs: a header row per pair, then its
+// two exercises with the pair's round count and rest substituted in.
+const _SS_TYPE={antagonist:'אנטגוניסטי',noncompeting:'לא-מתחרה',compound:'קומפאונד'};
+function _buildSupersetRows(day){
+  let out='',num=0;
+  const paired=new Set();
+  day.supersets.forEach(ss=>{
+    const reps=ss.pair.map(k=>{
+      const s=EX[k]?.sets||'3×10';
+      const r=s.split('×')[1]||s;   // keep the plan's round count, the exercise's rep range
+      return ss.rounds+'×'+r;
+    });
+    out+=`<tr class="ss-head"><td colspan="6">
+      <span class="ss-tag">${ss.id}</span>
+      <span class="ss-type">סופרסט ${_SS_TYPE[ss.type]||''}</span>
+      <span class="ss-meta">${ss.rounds} סבבים · ${ss.restWithin} שנ׳ מעבר · ${ss.restBetween} שנ׳ בין סבבים</span>
+      ${ss.note?`<div class="ss-note">${_esc(ss.note)}</div>`:''}
+    </td></tr>`;
+    ss.pair.forEach((k,j)=>{
+      paired.add(k); num++;
+      const partner=EX[ss.pair[j?0:1]]?.name||'';
+      out+=buildExRow(k,num,{sets:reps[j],rest:j===0?ss.restWithin+' שנ׳':ss.restBetween+' שנ׳'})
+             .replace('<tr ','<tr class="ss-row'+(j?' ss-row-b':'')+'" data-ss="'+ss.id+'" '
+                             +'data-ss-partner="'+_esc(partner)+'" data-ss-pos="'+(j?'ב':'א')+'" ');
+    });
+  });
+  // anything the plan listed but didn't pair still gets a plain row
+  day.exercises.filter(k=>!paired.has(k)).forEach(k=>{ num++; out+=buildExRow(k,num); });
+  return out;
 }
 
 function renderAdaptivePanels(){
@@ -4896,7 +4988,7 @@ function renderAdaptivePanels(){
     const day=days[i];
     const sub=day.label.includes(' — ')?day.label.split(' — ').slice(1).join(' — '):day.label;
     const n=day.exercises.length;
-    const mins=45+n*5;
+    const mins=day.estMin||45+n*5;
     const short=day.shortLabel||pid.toUpperCase();
 
     if(card){
@@ -4951,7 +5043,7 @@ function renderAdaptivePanels(){
 function getWorkoutFreqLabel(freq,split){
   if(freq===1) return '1×/שבוע — Full Body שבועי';
   if(freq===2) return '2×/שבוע — Full Body';
-  if(freq===3) return split==='3ab'?'3×/שבוע — Upper/Lower':'3×/שבוע — Push/Pull/Legs';
+  if(freq===3) return split==='3ab'?'3×/שבוע — Upper/Lower':split==='3ss'?'3×/שבוע — סופרסטים פול-בודי':'3×/שבוע — Push/Pull/Legs';
   if(freq===4) return split==='4ab'?'4×/שבוע — Upper/Lower A/B':'4×/שבוע — PPL+ARMS';
   if(freq===5) return '5×/שבוע — PPL+Upper+Lower';
   if(freq===6) return '6×/שבוע — PPL×2';
