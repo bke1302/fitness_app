@@ -7,7 +7,7 @@
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json"/>
-<meta name="theme-color" content="#060608"/>
+<meta name="theme-color" content="#08090B"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
-<link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body dir="rtl">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -82,7 +82,7 @@
     <svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="app-grad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#FFC53D"/>
+          <stop offset="0%" stop-color="#FF7A45"/>
           <stop offset="100%" stop-color="#FF8A3D"/>
         </linearGradient>
         <filter id="app-glow">
@@ -131,24 +131,24 @@
   <div class="panel active flex-1 px-4 space-y-4 overflow-y-auto" id="panel-dashboard">
 
     <!-- ── STREAK BANNER ── -->
-    <div style="background:linear-gradient(135deg,rgba(255,197,61,.12),rgba(255,197,61,.06));border:1px solid rgba(255,197,61,.2);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="background:var(--bg3);border:1px solid rgba(255,122,69,.2);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
       <div style="display:flex;align-items:center;gap:10px;">
-        <span style="color:var(--lime,#FFC53D);display:flex;"><svg class="ico" style="width:24px;height:24px;"><use href="#i-flame"/></svg></span>
+        <span style="color:var(--lime,#FF7A45);display:flex;"><svg class="ico" style="width:24px;height:24px;"><use href="#i-flame"/></svg></span>
         <div>
-          <div style="font-size:.68rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;">רצף פעיל</div>
-          <div style="font-size:1.1rem;font-weight:800;color:var(--text);"><span id="streak-num">0</span> ימים · <span id="streak-msg" style="font-size:.75rem;font-weight:600;">מתחילים</span></div>
+          <div style="font-size:0.8rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;">רצף פעיל</div>
+          <div style="font-size:1.1rem;font-weight:800;color:var(--text);"><span id="streak-num">0</span> ימים · <span id="streak-msg" style="font-size:0.86rem;font-weight:600;">מתחילים</span></div>
           <div id="streak-micro" class="streak-micro-copy"></div>
         </div>
       </div>
       <div style="text-align:left;">
-        <div style="font-size:.65rem;color:var(--muted);">השבוע</div>
-        <div style="font-size:.85rem;font-weight:700;color:var(--lime);" id="week-workouts-display">0 / 4 אימונים</div>
+        <div style="font-size:0.8rem;color:var(--muted);">השבוע</div>
+        <div style="font-size:0.94rem;font-weight:700;color:var(--lime);" id="week-workouts-display">0 / 4 אימונים</div>
       </div>
     </div>
 
     <!-- ── WORKOUT QUICK-START ── -->
     <div>
-      <div style="font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">התחל אימון</div>
+      <div style="font-size:0.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">התחל אימון</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
         <button class="workout-card push" onclick="showPanel('push',null);setMobileNav('push');">
           <div class="workout-card-icon"><svg class="ico"><use href="#i-arrow-up"/></svg></div>
@@ -189,40 +189,40 @@
           <!-- Outer track -->
           <path style="stroke:rgba(255,255,255,.06)" stroke-width="2.8" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
           <!-- Outer fill (calories - green) -->
-          <path id="ring-cals-outer" stroke="#FFC53D" style="transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1);filter:drop-shadow(0 0 4px rgba(255,197,61,.5))" stroke-dasharray="100,100" stroke-width="2.8" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+          <path id="ring-cals-outer" stroke="#FF7A45" style="transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1);filter:drop-shadow(0 0 4px rgba(255,122,69,.5))" stroke-dasharray="100,100" stroke-width="2.8" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
           <!-- Inner track -->
           <path style="stroke:rgba(255,255,255,.06)" stroke-width="2.8" stroke="currentColor" fill="none" d="M18 6 a 12 12 0 0 1 0 24 a 12 12 0 0 1 0 -24"/>
           <!-- Inner fill (protein - blue) -->
-          <path id="ring-protein-inner" stroke="#FF8A3D" style="transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1) .12s;filter:drop-shadow(0 0 4px rgba(255,197,61,.5))" stroke-dasharray="100,100" stroke-width="2.8" stroke-linecap="round" fill="none" d="M18 6 a 12 12 0 0 1 0 24 a 12 12 0 0 1 0 -24"/>
+          <path id="ring-protein-inner" stroke="#FF8A3D" style="transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1) .12s;filter:drop-shadow(0 0 4px rgba(255,122,69,.5))" stroke-dasharray="100,100" stroke-width="2.8" stroke-linecap="round" fill="none" d="M18 6 a 12 12 0 0 1 0 24 a 12 12 0 0 1 0 -24"/>
         </svg>
         <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-          <span style="font-size:.9rem;font-weight:800;line-height:1;" id="ring-cals-label">—</span>
-          <span style="font-size:.52rem;color:var(--muted);margin-top:2px;">קל׳ יעד</span>
+          <span style="font-size:0.94rem;font-weight:800;line-height:1;" id="ring-cals-label">—</span>
+          <span style="font-size:0.72rem;color:var(--muted);margin-top:2px;">קל׳ יעד</span>
         </div>
       </div>
       <!-- Stats column -->
       <div style="flex:1;display:flex;flex-direction:column;gap:10px;">
         <div style="display:flex;align-items:center;gap:8px;">
-          <div style="width:8px;height:8px;border-radius:50%;background:#FFC53D;box-shadow:0 0 6px rgba(255,197,61,.6);flex-shrink:0;"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#FF7A45;box-shadow:0 0 6px rgba(255,122,69,.6);flex-shrink:0;"></div>
           <div>
-            <div style="font-size:.65rem;color:var(--muted);">קלוריות</div>
-            <div style="font-size:.88rem;font-weight:700;color:var(--text);"><span id="ring-cals-val">—</span></div>
+            <div style="font-size:0.8rem;color:var(--muted);">קלוריות</div>
+            <div style="font-size:0.94rem;font-weight:700;color:var(--text);"><span id="ring-cals-val">—</span></div>
           </div>
         </div>
         <div style="height:1px;background:rgba(255,255,255,.05);"></div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <div style="width:8px;height:8px;border-radius:50%;background:#FF8A3D;box-shadow:0 0 6px rgba(255,197,61,.6);flex-shrink:0;"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#FF8A3D;box-shadow:0 0 6px rgba(255,122,69,.6);flex-shrink:0;"></div>
           <div>
-            <div style="font-size:.65rem;color:var(--muted);">חלבון</div>
-            <div style="font-size:.88rem;font-weight:700;color:var(--text);"><span id="ring-protein-val">—</span></div>
+            <div style="font-size:0.8rem;color:var(--muted);">חלבון</div>
+            <div style="font-size:0.94rem;font-weight:700;color:var(--text);"><span id="ring-protein-val">—</span></div>
           </div>
         </div>
         <div style="height:1px;background:rgba(255,255,255,.05);"></div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <div style="width:8px;height:8px;border-radius:50%;background:#C9B27E;flex-shrink:0;"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#00D9FF;flex-shrink:0;"></div>
           <div>
-            <div style="font-size:.65rem;color:var(--muted);">מים</div>
-            <div style="font-size:.88rem;font-weight:700;color:var(--text);"><span id="water-dash-display">0</span> <span style="color:var(--muted);font-weight:400;">/ 10 כוסות</span></div>
+            <div style="font-size:0.8rem;color:var(--muted);">מים</div>
+            <div style="font-size:0.94rem;font-weight:700;color:var(--text);"><span id="water-dash-display">0</span> <span style="color:var(--muted);font-weight:400;">/ 10 כוסות</span></div>
           </div>
         </div>
       </div>
@@ -232,7 +232,7 @@
     <div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <span style="font-size:.95rem;font-weight:700;color:var(--text);">השבוע שלך</span>
-        <span id="week-counter" style="font-size:.7rem;color:var(--muted);">4 ימי אימון</span>
+        <span id="week-counter" style="font-size:0.8rem;color:var(--muted);">4 ימי אימון</span>
       </div>
       <div id="dash-week-row" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;">
         <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--red)"></span><span class="ddc-name">א׳</span><span class="ddc-type" style="color:var(--red)">PUSH</span></div>
@@ -248,21 +248,21 @@
     <div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <span style="font-size:.95rem;font-weight:700;color:var(--text);">התוכנית להיום</span>
-        <button onclick="showPanel('schedule')" style="font-size:.7rem;color:var(--lime);font-weight:600;cursor:pointer;background:none;border:none;padding:0;">הצג הכל →</button>
+        <button onclick="showPanel('schedule')" style="font-size:0.8rem;color:var(--lime);font-weight:600;cursor:pointer;background:none;border:none;padding:0;">הצג הכל →</button>
       </div>
-      <div id="today-hero" class="today-hero" style="position:relative;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#101014,#16161B);border:1px solid rgba(232,168,124,.2);padding:20px;">
+      <div id="today-hero" class="today-hero" style="position:relative;border-radius:18px;overflow:hidden;background:var(--bg2);border:1px solid rgba(204,255,0,.2);padding:20px;">
         <!-- Glow orb -->
-        <div style="position:absolute;top:-20px;left:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(232,168,124,.2),transparent 70%);pointer-events:none;"></div>
+        <div style="position:absolute;top:-20px;left:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(204,255,0,.2),transparent 70%);pointer-events:none;"></div>
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
-          <span style="background:rgba(232,168,124,.15);color:#E8A87C;border:1px solid rgba(232,168,124,.3);font-size:.68rem;font-weight:800;padding:4px 10px;border-radius:6px;letter-spacing:.06em;">PUSH DAY</span>
-          <span style="font-size:.7rem;color:var(--muted);">תוכנית א׳</span>
+          <span style="background:rgba(204,255,0,.15);color:#CCFF00;border:1px solid rgba(204,255,0,.3);font-size:0.8rem;font-weight:800;padding:4px 10px;border-radius:6px;letter-spacing:.06em;">PUSH DAY</span>
+          <span style="font-size:0.8rem;color:var(--muted);">תוכנית א׳</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:flex-end;">
           <div>
             <div style="font-size:1.1rem;font-weight:800;color:var(--text);line-height:1.2;">חזה · כתפיים</div>
-            <div style="font-size:.72rem;color:var(--muted);margin-top:4px;">~70 דק׳ &nbsp;·&nbsp; 7 תרגילים</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">~70 דק׳ &nbsp;·&nbsp; 7 תרגילים</div>
           </div>
-          <button aria-label="התחל אימון" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#FFD666,#FFC53D);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(255,197,61,.35);">
+          <button aria-label="התחל אימון" style="width:48px;height:48px;border-radius:50%;background:var(--lime);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(204,255,0,.30);">
             <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;fill:white;margin-right:-2px" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
           </button>
         </div>
@@ -274,31 +274,31 @@
       <!-- Steps -->
       <div style="background:#16161B;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;">צעדים</span>
-          <span style="color:#B99C6B;display:flex;"><svg class="ico" style="width:16px;height:16px;"><use href="#i-activity"/></svg></span>
+          <span style="font-size:0.8rem;color:var(--muted);font-weight:600;text-transform:uppercase;">צעדים</span>
+          <span style="color:#B47CFF;display:flex;"><svg class="ico" style="width:16px;height:16px;"><use href="#i-activity"/></svg></span>
         </div>
         <div style="font-size:1.35rem;font-weight:800;color:var(--text);line-height:1;">—</div>
-        <div style="font-size:.62rem;color:var(--muted);margin-top:3px;">אין נתון</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:3px;">אין נתון</div>
         <div style="height:3px;background:rgba(255,255,255,.06);border-radius:99px;margin-top:10px;overflow:hidden;">
-          <div style="width:0%;height:100%;background:linear-gradient(90deg,#B99C6B,#99804F);border-radius:99px;"></div>
+          <div style="width:0%;height:100%;background:var(--lime);border-radius:99px;"></div>
         </div>
       </div>
       <!-- Water -->
       <div style="background:#16161B;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;">מים</span>
-          <span style="color:#FFC53D;display:flex;"><svg class="ico" style="width:16px;height:16px;"><use href="#i-droplet"/></svg></span>
+          <span style="font-size:0.8rem;color:var(--muted);font-weight:600;text-transform:uppercase;">מים</span>
+          <span style="color:#FF7A45;display:flex;"><svg class="ico" style="width:16px;height:16px;"><use href="#i-droplet"/></svg></span>
         </div>
         <div style="font-size:1.35rem;font-weight:800;color:var(--text);line-height:1;">
-          <span id="water-display">0</span><span style="font-size:.75rem;font-weight:500;color:var(--muted);"> כוסות</span>
+          <span id="water-display">0</span><span style="font-size:0.86rem;font-weight:500;color:var(--muted);"> כוסות</span>
         </div>
-        <div style="font-size:.62rem;color:var(--muted);margin-top:3px;">מתוך 10 מטרה · 2.5 ליטר</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:3px;">מתוך 10 מטרה · 2.5 ליטר</div>
         <div style="height:3px;background:rgba(255,255,255,.06);border-radius:99px;margin-top:8px;overflow:hidden;">
-          <div id="water-bar" style="width:0%;height:100%;background:linear-gradient(90deg,#FF8A3D,#FFC53D);border-radius:99px;transition:width .4s ease;"></div>
+          <div id="water-bar" style="width:0%;height:100%;background:var(--lime);border-radius:99px;transition:width .4s ease;"></div>
         </div>
         <div style="display:flex;gap:6px;margin-top:10px;">
           <button onclick="removeWaterCup()" aria-label="הסר כוס מים" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text,#F8FAFC);border-radius:8px;padding:6px 0;font-size:1.1rem;cursor:pointer;font-family:var(--font);transition:background .15s;">−</button>
-          <button onclick="addWaterCup()" aria-label="הוסף כוס מים" style="flex:2;background:rgba(201,178,126,.15);border:1px solid rgba(201,178,126,.3);color:#FFC53D;border-radius:8px;padding:6px 0;font-size:.78rem;cursor:pointer;font-weight:700;font-family:var(--font);transition:background .15s;">+ כוס</button>
+          <button onclick="addWaterCup()" aria-label="הוסף כוס מים" style="flex:2;background:rgba(0,217,255,.15);border:1px solid rgba(0,217,255,.3);color:#FF7A45;border-radius:8px;padding:6px 0;font-size:0.86rem;cursor:pointer;font-weight:700;font-family:var(--font);transition:background .15s;">+ כוס</button>
         </div>
       </div>
     </div>
@@ -306,29 +306,29 @@
     <!-- ── DISCIPLINE CHECKLIST ── -->
     <div style="background:#16161B;border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-        <span style="font-size:.9rem;font-weight:700;color:var(--text);">הרגלי היום</span>
-        <span id="habit-count-badge" style="font-size:.68rem;color:var(--lime);font-weight:700;background:rgba(255,197,61,.1);padding:3px 8px;border-radius:6px;">0/5</span>
+        <span style="font-size:0.94rem;font-weight:700;color:var(--text);">הרגלי היום</span>
+        <span id="habit-count-badge" style="font-size:0.8rem;color:var(--lime);font-weight:700;background:rgba(255,122,69,.1);padding:3px 8px;border-radius:6px;">0/5</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
           <input type="checkbox" id="habit-cb-0" onchange="toggleHabit(0)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
-          <span id="habit-lbl-0" style="font-size:.82rem;color:var(--text,#F8FAFC);">אימון בוצע</span>
+          <span id="habit-lbl-0" style="font-size:0.94rem;color:var(--text,#F8FAFC);">אימון בוצע</span>
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
           <input type="checkbox" id="habit-cb-1" onchange="toggleHabit(1)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
-          <span id="habit-lbl-1" style="font-size:.82rem;color:var(--text,#F8FAFC);">ארוחת חלבון × 4</span>
+          <span id="habit-lbl-1" style="font-size:0.94rem;color:var(--text,#F8FAFC);">ארוחת חלבון × 4</span>
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
           <input type="checkbox" id="habit-cb-2" onchange="toggleHabit(2)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
-          <span id="habit-lbl-2" style="font-size:.82rem;color:var(--text,#F8FAFC);">10 כוסות מים (2.5ל׳)</span>
+          <span id="habit-lbl-2" style="font-size:0.94rem;color:var(--text,#F8FAFC);">10 כוסות מים (2.5ל׳)</span>
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
           <input type="checkbox" id="habit-cb-3" onchange="toggleHabit(3)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
-          <span id="habit-lbl-3" style="font-size:.82rem;color:var(--text,#F8FAFC);">שינה 7+ שעות</span>
+          <span id="habit-lbl-3" style="font-size:0.94rem;color:var(--text,#F8FAFC);">שינה 7+ שעות</span>
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
           <input type="checkbox" id="habit-cb-4" onchange="toggleHabit(4)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
-          <span id="habit-lbl-4" style="font-size:.82rem;color:var(--text,#F8FAFC);">רשמת משקלים</span>
+          <span id="habit-lbl-4" style="font-size:0.94rem;color:var(--text,#F8FAFC);">רשמת משקלים</span>
         </label>
       </div>
     </div>
@@ -337,25 +337,25 @@
     <div>
       <span id="dash-meal-title" style="font-size:.95rem;font-weight:700;color:var(--text);display:block;margin-bottom:10px;">ארוחות יומי</span>
       <div id="dash-nutrition-preview" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div style="background:rgba(255,197,61,.06);border:1px solid rgba(255,197,61,.15);border-radius:14px;padding:14px;opacity:.75;">
-          <span style="font-size:.63rem;color:var(--lime);font-weight:700;">ארוחה 1</span>
-          <div style="font-size:.82rem;font-weight:700;color:var(--text);margin-top:5px;" id="dash-meal-1-name">—</div>
-          <div style="font-size:.68rem;color:var(--muted);margin-top:4px;" id="dash-meal-1-macro">—</div>
+        <div style="background:rgba(255,122,69,.06);border:1px solid rgba(255,122,69,.15);border-radius:14px;padding:14px;opacity:.75;">
+          <span style="font-size:0.8rem;color:var(--lime);font-weight:700;">ארוחה 1</span>
+          <div style="font-size:0.94rem;font-weight:700;color:var(--text);margin-top:5px;" id="dash-meal-1-name">—</div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;" id="dash-meal-1-macro">—</div>
         </div>
-        <div style="background:#16161B;border:1px solid rgba(232,168,124,.2);border-radius:14px;padding:14px;position:relative;">
-          <span style="font-size:.63rem;color:#E8A87C;font-weight:700;">ארוחה 2</span>
-          <div style="font-size:.82rem;font-weight:700;color:var(--text);margin-top:5px;" id="dash-meal-2-name">—</div>
-          <div style="font-size:.68rem;color:var(--muted);margin-top:4px;" id="dash-meal-2-macro">—</div>
+        <div style="background:#16161B;border:1px solid rgba(204,255,0,.2);border-radius:14px;padding:14px;position:relative;">
+          <span style="font-size:0.8rem;color:#CCFF00;font-weight:700;">ארוחה 2</span>
+          <div style="font-size:0.94rem;font-weight:700;color:var(--text);margin-top:5px;" id="dash-meal-2-name">—</div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;" id="dash-meal-2-macro">—</div>
         </div>
       </div>
     </div>
 
     <!-- ── COACH TIP ── -->
-    <div style="background:rgba(255,197,61,.06);border:1px solid rgba(255,197,61,.2);border-radius:14px;padding:14px;display:flex;gap:12px;margin-bottom:8px;">
-      <span style="flex-shrink:0;color:var(--lime,#FFC53D);"><svg class="ico" style="width:20px;height:20px;"><use href="#i-bulb"/></svg></span>
+    <div style="background:rgba(255,122,69,.06);border:1px solid rgba(255,122,69,.2);border-radius:14px;padding:14px;display:flex;gap:12px;margin-bottom:8px;">
+      <span style="flex-shrink:0;color:var(--lime,#FF7A45);"><svg class="ico" style="width:20px;height:20px;"><use href="#i-bulb"/></svg></span>
       <div>
-        <div style="font-size:.65rem;font-weight:800;color:rgba(255,197,61,.8);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">טיפ מהמאמן</div>
-        <div style="font-size:.78rem;color:#94A3B8;line-height:1.65;">שבוע דה-לוד מומלץ לאחר כל 4 שבועות. הורד 40% ממשקלי העבודה לאפשר שיקום מלא.</div>
+        <div style="font-size:0.8rem;font-weight:800;color:rgba(255,122,69,.8);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">טיפ מהמאמן</div>
+        <div style="font-size:0.86rem;color:#94A3B8;line-height:1.65;">שבוע דה-לוד מומלץ לאחר כל 4 שבועות. הורד 40% ממשקלי העבודה לאפשר שיקום מלא.</div>
       </div>
     </div>
 
@@ -377,31 +377,31 @@
   <div class="panel" id="panel-schedule">
     <!-- Workout type selector -->
     <div style="padding:16px 0 4px;">
-      <div style="font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">בחר אימון</div>
+      <div style="font-size:0.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">בחר אימון</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
-        <button onclick="showPanel('push',null);setMobileNav('push');" style="background:linear-gradient(135deg,rgba(232,168,124,.15),rgba(232,168,124,.06));border:1.5px solid rgba(232,168,124,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
-          <div style="margin-bottom:6px;color:#E8A87C;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-arrow-up"/></svg></div>
-          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#E8A87C;">PUSH</div>
-          <div class="wsel-sub" style="font-size:.65rem;color:var(--muted);margin-top:4px;">חזה · כתפיים · טריצפס</div>
-          <div class="wsel-meta" style="font-size:.6rem;color:rgba(232,168,124,.6);margin-top:6px;">ראשון | 7 תרגילים | ~70 דק׳</div>
+        <button onclick="showPanel('push',null);setMobileNav('push');" style="background:var(--bg3);border:1.5px solid rgba(204,255,0,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
+          <div style="margin-bottom:6px;color:#CCFF00;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-arrow-up"/></svg></div>
+          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#CCFF00;">PUSH</div>
+          <div class="wsel-sub" style="font-size:0.8rem;color:var(--muted);margin-top:4px;">חזה · כתפיים · טריצפס</div>
+          <div class="wsel-meta" style="font-size:0.72rem;color:rgba(204,255,0,.6);margin-top:6px;">ראשון | 7 תרגילים | ~70 דק׳</div>
         </button>
-        <button onclick="showPanel('pull',null);setMobileNav('pull');" style="background:linear-gradient(135deg,rgba(201,178,126,.15),rgba(201,178,126,.06));border:1.5px solid rgba(201,178,126,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
-          <div style="margin-bottom:6px;color:#C9B27E;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-arrow-down"/></svg></div>
-          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#C9B27E;">PULL</div>
-          <div class="wsel-sub" style="font-size:.65rem;color:var(--muted);margin-top:4px;">גב · ביצפס · אמות</div>
-          <div class="wsel-meta" style="font-size:.6rem;color:rgba(201,178,126,.6);margin-top:6px;">שני | 7 תרגילים | ~65 דק׳</div>
+        <button onclick="showPanel('pull',null);setMobileNav('pull');" style="background:var(--bg3);border:1.5px solid rgba(0,217,255,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
+          <div style="margin-bottom:6px;color:#00D9FF;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-arrow-down"/></svg></div>
+          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#00D9FF;">PULL</div>
+          <div class="wsel-sub" style="font-size:0.8rem;color:var(--muted);margin-top:4px;">גב · ביצפס · אמות</div>
+          <div class="wsel-meta" style="font-size:0.72rem;color:rgba(0,217,255,.6);margin-top:6px;">שני | 7 תרגילים | ~65 דק׳</div>
         </button>
-        <button onclick="showPanel('legs',null);setMobileNav('legs');" style="background:linear-gradient(135deg,rgba(185,156,107,.15),rgba(185,156,107,.06));border:1.5px solid rgba(185,156,107,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
-          <div style="margin-bottom:6px;color:#B99C6B;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-dumbbell"/></svg></div>
-          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#B99C6B;">LEGS</div>
-          <div class="wsel-sub" style="font-size:.65rem;color:var(--muted);margin-top:4px;">רגליים מלא</div>
-          <div class="wsel-meta" style="font-size:.6rem;color:rgba(185,156,107,.6);margin-top:6px;">רביעי | 7 תרגילים | ~75 דק׳</div>
+        <button onclick="showPanel('legs',null);setMobileNav('legs');" style="background:var(--bg3);border:1.5px solid rgba(180,124,255,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
+          <div style="margin-bottom:6px;color:#B47CFF;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-dumbbell"/></svg></div>
+          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#B47CFF;">LEGS</div>
+          <div class="wsel-sub" style="font-size:0.8rem;color:var(--muted);margin-top:4px;">רגליים מלא</div>
+          <div class="wsel-meta" style="font-size:0.72rem;color:rgba(180,124,255,.6);margin-top:6px;">רביעי | 7 תרגילים | ~75 דק׳</div>
         </button>
-        <button onclick="showPanel('arms',null);setMobileNav('arms');" style="background:linear-gradient(135deg,rgba(255,197,61,.15),rgba(255,197,61,.06));border:1.5px solid rgba(255,197,61,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
-          <div style="margin-bottom:6px;color:#FFC53D;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-dumbbell"/></svg></div>
-          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#FFC53D;">ARMS</div>
-          <div class="wsel-sub" style="font-size:.65rem;color:var(--muted);margin-top:4px;">ידיים · כתפיים</div>
-          <div class="wsel-meta" style="font-size:.6rem;color:rgba(255,197,61,.6);margin-top:6px;">חמישי | 7 תרגילים | ~60 דק׳</div>
+        <button onclick="showPanel('arms',null);setMobileNav('arms');" style="background:var(--bg3);border:1.5px solid rgba(255,122,69,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
+          <div style="margin-bottom:6px;color:#FF7A45;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-dumbbell"/></svg></div>
+          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#FF7A45;">ARMS</div>
+          <div class="wsel-sub" style="font-size:0.8rem;color:var(--muted);margin-top:4px;">ידיים · כתפיים</div>
+          <div class="wsel-meta" style="font-size:0.72rem;color:rgba(255,122,69,.6);margin-top:6px;">חמישי | 7 תרגילים | ~60 דק׳</div>
         </button>
       </div>
     </div>
@@ -417,8 +417,8 @@
           <div class="day-cell rest-day"><div class="dc-name">שישי ו׳</div><div class="dc-icon"><span class="dc-dot" style="background:var(--cyan)"></span></div><div class="dc-type" style="color:var(--cyan)">אקטיב</div><div class="dc-label">הליכה/שחייה</div></div>
           <div class="day-cell rest-day"><div class="dc-name">שבת</div><div class="dc-icon"><span class="dc-dot" style="background:transparent;border:1.5px solid var(--muted2)"></span></div><div class="dc-type" style="color:var(--green)">מנוחה</div><div class="dc-label">מנוחה מלאה</div></div>
         </div>
-        <div id="workout-schedule-text" style="font-size:.78rem;color:var(--cyan);font-weight:600;margin-bottom:4px;"></div>
-        <div style="font-size:.82rem;color:var(--muted);">לחץ על יום אימון לצפייה בתוכנית המלאה</div>
+        <div id="workout-schedule-text" style="font-size:0.86rem;color:var(--cyan);font-weight:600;margin-bottom:4px;"></div>
+        <div style="font-size:0.94rem;color:var(--muted);">לחץ על יום אימון לצפייה בתוכנית המלאה</div>
       </div>
     </div>
 
@@ -426,11 +426,11 @@
       <div class="card-head"><h2>כללי כל האימונים</h2></div>
       <div class="card-body">
         <div class="grid-3">
-          <div class="stat-box cyan"><div class="val">8–10</div><div class="lbl">דק׳ חימום — חובה</div></div>
-          <div class="stat-box blue"><div class="val">90–120</div><div class="lbl">שנ׳ מנוחה (תרגיל כבד)</div></div>
-          <div class="stat-box green"><div class="val">60</div><div class="lbl">שנ׳ מנוחה (בידוד)</div></div>
+          <div class="stat-box cyan"><div class="val" dir="ltr">8–10</div><div class="lbl">דק׳ חימום — חובה</div></div>
+          <div class="stat-box blue"><div class="val" dir="ltr">90–120</div><div class="lbl">שנ׳ מנוחה (תרגיל כבד)</div></div>
+          <div class="stat-box green"><div class="val" dir="ltr">60</div><div class="lbl">שנ׳ מנוחה (בידוד)</div></div>
         </div>
-        <div style="margin-top:16px;font-size:.88rem;color:var(--muted2);line-height:1.8;">
+        <div style="margin-top:16px;font-size:0.94rem;color:var(--muted2);line-height:1.8;">
           <strong style="color:var(--text)">חימום ספציפי:</strong> לפני כל תרגיל ראשי — סט אחד קל עם 50% מהמשקל<br>
           <strong style="color:var(--text)">Progressive Overload:</strong> כשאתה מסיים 3 סטים עם טכניקה מושלמת — הוסף 2.5 ק"ג<br>
           <strong style="color:var(--text)">RPE:</strong> הסיום של כל סט צריך להרגיש כמו 8/10 — לא להיכנע, לא להישבר<br>
@@ -667,16 +667,16 @@
         <!-- LEGS MAP -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;">
           <div style="background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:12px;">
-            <div style="font-weight:700;color:var(--purple);margin-bottom:8px;font-size:.88rem;">Quadriceps — 4 ראשים</div>
-            <div style="font-size:.8rem;color:var(--muted2);line-height:1.9;">
+            <div style="font-weight:700;color:var(--purple);margin-bottom:8px;font-size:0.94rem;">Quadriceps — 4 ראשים</div>
+            <div style="font-size:0.86rem;color:var(--muted2);line-height:1.9;">
               <strong>Vastus Lateralis</strong> — רוחב חיצוני<br>
               <strong>VMO / Teardrop</strong> — טיפה מעל ברך<br>
               <strong>Rectus Femoris</strong> — קדמי אמצעי
             </div>
           </div>
           <div style="background:rgba(255,107,94,.08);border:1px solid rgba(255,107,94,.2);border-radius:10px;padding:12px;">
-            <div style="font-weight:700;color:var(--red);margin-bottom:8px;font-size:.88rem;">שוק — 2 שרירים שונים!</div>
-            <div style="font-size:.8rem;color:var(--muted2);line-height:1.9;">
+            <div style="font-weight:700;color:var(--red);margin-bottom:8px;font-size:0.94rem;">שוק — 2 שרירים שונים!</div>
+            <div style="font-size:0.86rem;color:var(--muted2);line-height:1.9;">
               <strong>Gastrocnemius</strong> — עמידה רגל ישרה<br>
               <strong>Soleus</strong> — ישיבה ברך כפופה<br>
               <em>רוב האנשים עובדים רק על אחד!</em>
@@ -690,7 +690,7 @@
 
             <!-- QUADS -->
             <tr style="background:rgba(168,85,247,.04);">
-              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--purple);letter-spacing:1px;text-transform:uppercase;">── ירכיים קדמיות (Quads) ──</td>
+              <td colspan="6" style="padding:8px 12px;font-size:0.8rem;font-weight:700;color:var(--purple);letter-spacing:1px;text-transform:uppercase;">── ירכיים קדמיות (Quads) ──</td>
             </tr>
             <tr onclick="openModal('squat')">
               <td><div class="ex-num-cell">1</div></td>
@@ -728,7 +728,7 @@
 
             <!-- HAMSTRINGS + GLUTES -->
             <tr style="background:rgba(255,107,94,.04);">
-              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--red);letter-spacing:1px;text-transform:uppercase;">── ירך אחורי + ישבן ──</td>
+              <td colspan="6" style="padding:8px 12px;font-size:0.8rem;font-weight:700;color:var(--red);letter-spacing:1px;text-transform:uppercase;">── ירך אחורי + ישבן ──</td>
             </tr>
             <tr onclick="openModal('rdl')">
               <td><div class="ex-num-cell">4</div></td>
@@ -765,8 +765,8 @@
             </tr>
 
             <!-- CALVES -->
-            <tr style="background:rgba(255,197,61,.04);">
-              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;">── שוק — 2 תרגילים = 2 שרירים שונים! ──</td>
+            <tr style="background:rgba(255,122,69,.04);">
+              <td colspan="6" style="padding:8px 12px;font-size:0.8rem;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;">── שוק — 2 תרגילים = 2 שרירים שונים! ──</td>
             </tr>
             <tr onclick="openModal('calfRaise')">
               <td><div class="ex-num-cell">7</div></td>
@@ -794,7 +794,7 @@
           </tbody>
         </table>
 
-        <div style="margin-top:16px;background:var(--bg3);border-radius:10px;padding:14px;font-size:.82rem;color:var(--muted2);line-height:1.8;">
+        <div style="margin-top:16px;background:var(--bg3);border-radius:10px;padding:14px;font-size:0.94rem;color:var(--muted2);line-height:1.8;">
           <strong style="color:var(--text);">זמן משוער:</strong> ~85 דק׳ &nbsp;|&nbsp;
           <strong style="color:var(--text);">Quads:</strong> 10 סטים &nbsp;|&nbsp;
           <strong style="color:var(--text);">Hamstrings:</strong> 6 סטים &nbsp;|&nbsp;
@@ -846,17 +846,17 @@
 
         <!-- ARMS MAP -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;">
-          <div style="background:rgba(255,197,61,.08);border:1px solid rgba(255,197,61,.2);border-radius:10px;padding:12px;">
-            <div style="font-weight:700;color:var(--blue);margin-bottom:8px;font-size:.88rem;">בייסס — 3 חלקים</div>
-            <div style="font-size:.8rem;color:var(--muted2);line-height:1.9;">
+          <div style="background:rgba(255,122,69,.08);border:1px solid rgba(255,122,69,.2);border-radius:10px;padding:12px;">
+            <div style="font-weight:700;color:var(--blue);margin-bottom:8px;font-size:0.94rem;">בייסס — 3 חלקים</div>
+            <div style="font-size:0.86rem;color:var(--muted2);line-height:1.9;">
               <strong>Long Head</strong> — הפיק (גובה הזרוע)<br>
               <strong>Short Head</strong> — הרוחב<br>
               <strong>Brachialis</strong> — מתחת לבייסס, <em>מרים אותה</em>
             </div>
           </div>
           <div style="background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:12px;">
-            <div style="font-weight:700;color:var(--purple);margin-bottom:8px;font-size:.88rem;">טריצפס — 3 חלקים</div>
-            <div style="font-size:.8rem;color:var(--muted2);line-height:1.9;">
+            <div style="font-weight:700;color:var(--purple);margin-bottom:8px;font-size:0.94rem;">טריצפס — 3 חלקים</div>
+            <div style="font-size:0.86rem;color:var(--muted2);line-height:1.9;">
               <strong>Long Head</strong> — 60% מהזרוע!<br>
               <strong>Lateral Head</strong> — הפרסה הצדדית<br>
               <strong>Medial Head</strong> — בסיס הזרוע
@@ -864,7 +864,7 @@
           </div>
         </div>
 
-        <div style="font-size:.82rem;color:var(--purple);margin-bottom:14px;font-weight:600;background:rgba(168,85,247,.08);padding:10px 14px;border-radius:8px;">
+        <div style="font-size:0.94rem;color:var(--purple);margin-bottom:14px;font-weight:600;background:rgba(168,85,247,.08);padding:10px 14px;border-radius:8px;">
           SS = Superset — בצע שני התרגילים ברצף ללא מנוחה, אז נוח 75 שנ׳. פחות זמן, יותר pump.
         </div>
 
@@ -873,8 +873,8 @@
           <tbody>
 
             <!-- BICEPS SECTION -->
-            <tr style="background:rgba(255,197,61,.04);">
-              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;">── בייסס ──</td>
+            <tr style="background:rgba(255,122,69,.04);">
+              <td colspan="6" style="padding:8px 12px;font-size:0.8rem;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;">── בייסס ──</td>
             </tr>
             <tr onclick="openModal('bbCurl')">
               <td><div class="ex-num-cell">1A</div></td>
@@ -912,7 +912,7 @@
 
             <!-- TRICEPS SECTION -->
             <tr style="background:rgba(168,85,247,.04);">
-              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--purple);letter-spacing:1px;text-transform:uppercase;">── טריצפס ──</td>
+              <td colspan="6" style="padding:8px 12px;font-size:0.8rem;font-weight:700;color:var(--purple);letter-spacing:1px;text-transform:uppercase;">── טריצפס ──</td>
             </tr>
             <tr onclick="openModal('skullCrusher')">
               <td><div class="ex-num-cell">3A</div></td>
@@ -949,8 +949,8 @@
             </tr>
 
             <!-- SHOULDERS SECTION -->
-            <tr style="background:rgba(255,197,61,.04);">
-              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--yellow);letter-spacing:1px;text-transform:uppercase;">── כתפיים (סיום) ──</td>
+            <tr style="background:rgba(255,122,69,.04);">
+              <td colspan="6" style="padding:8px 12px;font-size:0.8rem;font-weight:700;color:var(--yellow);letter-spacing:1px;text-transform:uppercase;">── כתפיים (סיום) ──</td>
             </tr>
             <tr onclick="openModal('facePull')">
               <td><div class="ex-num-cell">5</div></td>
@@ -976,8 +976,8 @@
             </tr>
 
             <!-- FOREARMS SECTION -->
-            <tr style="background:rgba(201,178,126,.04);">
-              <td colspan="6" style="padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--cyan);letter-spacing:1px;text-transform:uppercase;">── אמות (Forearms) ──</td>
+            <tr style="background:rgba(0,217,255,.04);">
+              <td colspan="6" style="padding:8px 12px;font-size:0.8rem;font-weight:700;color:var(--cyan);letter-spacing:1px;text-transform:uppercase;">── אמות (Forearms) ──</td>
             </tr>
             <tr onclick="openModal('wristCurl')">
               <td><div class="ex-num-cell">7</div></td>
@@ -1015,7 +1015,7 @@
           </tbody>
         </table>
 
-        <div style="margin-top:16px;background:var(--bg3);border-radius:10px;padding:14px;font-size:.82rem;color:var(--muted2);line-height:1.8;">
+        <div style="margin-top:16px;background:var(--bg3);border-radius:10px;padding:14px;font-size:0.94rem;color:var(--muted2);line-height:1.8;">
           <strong style="color:var(--text);">זמן משוער:</strong> ~85 דק׳ &nbsp;|&nbsp;
           <strong style="color:var(--text);">סטים לבייסס:</strong> 9 &nbsp;|&nbsp;
           <strong style="color:var(--text);">סטים לטריצפס:</strong> 9 &nbsp;|&nbsp;
@@ -1042,7 +1042,7 @@
     <div class="timing-card">
       <div class="timing-head">תזמון תזונה לפי שעת אימון</div>
       <div class="timing-input-row">
-        <label style="font-size:.78rem;color:var(--muted2);">שעת אימון:</label>
+        <label style="font-size:0.86rem;color:var(--muted2);">שעת אימון:</label>
         <input type="time" class="timing-time-input" id="workout-time-input" onchange="updateNutritionTiming()" value="18:00"/>
       </div>
       <div class="timing-rows" id="timing-rows">
@@ -1051,9 +1051,9 @@
     </div>
 
     <!-- CHOLESTEROL ALERT -->
-    <div id="cholesterol-banner" style="background:linear-gradient(135deg,rgba(255,197,61,.12),rgba(255,197,61,.08));border:1px solid rgba(255,197,61,.35);border-radius:14px;padding:18px 20px;margin-bottom:20px;">
+    <div id="cholesterol-banner" style="background:var(--bg3);border:1px solid rgba(255,122,69,.35);border-radius:14px;padding:18px 20px;margin-bottom:20px;">
       <div style="font-weight:700;font-size:1rem;margin-bottom:10px;color:var(--yellow);">תוכנית תזונה מותאמת לכולסטרול</div>
-      <div style="font-size:.87rem;color:var(--muted2);line-height:1.9;">
+      <div style="font-size:0.94rem;color:var(--muted2);line-height:1.9;">
         <strong style="color:var(--green);">מה מורידים:</strong> שומן רווי (בשר אדום, חלמון ביצה מרובה, חלב שומני)<br>
         <strong style="color:var(--cyan);">מה מוסיפים:</strong> אומגה 3 (סלמון, סרדינים, אגוזי מלך), שמן זית, שיבולת שועל (Beta-Glucan)<br>
         <strong style="color:var(--blue);">עדיין בונים מסה:</strong> החלפנו מקורות שומן רעים בשומן בריא — הקלוריות נשמרות
@@ -1064,7 +1064,7 @@
       <div class="card-head"><h2>יעדי מאקרו יומיים</h2><span class="badge badge-green" id="macro-goal-badge">Lean Bulk</span></div>
       <div class="card-body">
         <div class="grid-4" id="macro-stats-grid"><!-- filled by JS --></div>
-        <div style="margin-top:14px;font-size:.82rem;color:var(--muted);line-height:1.8;" id="macro-fat-note"><!-- filled by JS --></div>
+        <div style="margin-top:14px;font-size:0.94rem;color:var(--muted);line-height:1.8;" id="macro-fat-note"><!-- filled by JS --></div>
       </div>
     </div>
 
@@ -1078,9 +1078,9 @@
       <div class="card-head"><h2>מה לאכול ומה להימנע — כולסטרול</h2></div>
       <div class="card-body">
         <div class="grid-2">
-          <div style="background:rgba(255,197,61,.07);border:1px solid rgba(255,197,61,.25);border-radius:12px;padding:16px;">
+          <div style="background:rgba(255,122,69,.07);border:1px solid rgba(255,122,69,.25);border-radius:12px;padding:16px;">
             <div style="font-weight:700;color:var(--green);margin-bottom:12px;">מומלץ — מוריד כולסטרול</div>
-            <div style="font-size:.85rem;color:var(--muted2);line-height:2;">
+            <div style="font-size:0.94rem;color:var(--muted2);line-height:2;">
               סלמון, מוגרי, סרדינים (3×/שבוע)<br>
               שיבולת שועל (Beta-Glucan)<br>
               אבוקדו (שומן חד בלתי רווי)<br>
@@ -1093,7 +1093,7 @@
           </div>
           <div style="background:rgba(255,107,94,.07);border:1px solid rgba(255,107,94,.25);border-radius:12px;padding:16px;">
             <div style="font-weight:700;color:var(--red);margin-bottom:12px;">להימנע — מעלה כולסטרול</div>
-            <div style="font-size:.85rem;color:var(--muted2);line-height:2;">
+            <div style="font-size:0.94rem;color:var(--muted2);line-height:2;">
               בשר אדום שמן — מקסימום 1×/שבוע<br>
               חמאה, שמנת, גהי<br>
               גבינות שמנות (צהובה, קשה)<br>
@@ -1120,19 +1120,19 @@
         <div class="grid-2">
           <div style="background:var(--bg3);border-radius:12px;padding:18px;border:1px solid var(--border2);">
             <div style="font-size:1.2rem;margin-bottom:8px;">Whey Protein</div>
-            <div style="font-size:.84rem;color:var(--muted2);line-height:1.8;">מינון: 25–30g אחרי אימון<br>מיתוס: לא צריך לשתות "מיד" — חלון 45 דק׳ מספיק<br><span style="color:var(--green);">מומלץ מאוד</span></div>
+            <div style="font-size:0.94rem;color:var(--muted2);line-height:1.8;">מינון: 25–30g אחרי אימון<br>מיתוס: לא צריך לשתות "מיד" — חלון 45 דק׳ מספיק<br><span style="color:var(--green);">מומלץ מאוד</span></div>
           </div>
           <div style="background:var(--bg3);border-radius:12px;padding:18px;border:1px solid var(--border2);">
             <div style="font-size:1.2rem;margin-bottom:8px;">קריאטין מונוהידראט</div>
-            <div style="font-size:.84rem;color:var(--muted2);line-height:1.8;">מינון: 5g כל יום — גם מנוחה<br>אין צורך ב-loading phase<br><span style="color:var(--green);">הכי מחקר שיש</span></div>
+            <div style="font-size:0.94rem;color:var(--muted2);line-height:1.8;">מינון: 5g כל יום — גם מנוחה<br>אין צורך ב-loading phase<br><span style="color:var(--green);">הכי מחקר שיש</span></div>
           </div>
           <div style="background:var(--bg3);border-radius:12px;padding:18px;border:1px solid var(--border2);">
             <div style="font-size:1.2rem;margin-bottom:8px;">ויטמין D3 + K2</div>
-            <div style="font-size:.84rem;color:var(--muted2);line-height:1.8;">מינון: 2,000–4,000 IU D3 + 100mcg K2<br>K2 מכוון את הסידן לעצמות<br><span style="color:var(--green);">חשוב לטסטוסטרון</span></div>
+            <div style="font-size:0.94rem;color:var(--muted2);line-height:1.8;">מינון: 2,000–4,000 IU D3 + 100mcg K2<br>K2 מכוון את הסידן לעצמות<br><span style="color:var(--green);">חשוב לטסטוסטרון</span></div>
           </div>
           <div id="omega3-card" style="background:var(--bg3);border-radius:12px;padding:18px;border:1px solid var(--border2);">
             <div style="font-size:1.2rem;margin-bottom:8px;">אומגה 3</div>
-            <div style="font-size:.84rem;color:var(--muted2);line-height:1.8;" id="omega3-text">מינון: <strong style="color:var(--green);">1–2g EPA+DHA ביום</strong><br>תומך בלב, מוח וירידת דלקת<br><span style="color:var(--green);">מומלץ לכולם</span></div>
+            <div style="font-size:0.94rem;color:var(--muted2);line-height:1.8;" id="omega3-text">מינון: <strong style="color:var(--green);">1–2g EPA+DHA ביום</strong><br>תומך בלב, מוח וירידת דלקת<br><span style="color:var(--green);">מומלץ לכולם</span></div>
           </div>
         </div>
       </div>
@@ -1174,19 +1174,19 @@
 
         <div class="tl-item"><div class="tl-dot" style="background:var(--cyan);"></div>
           <div><div style="font-weight:700;margin-bottom:4px;">חודש 1–2 <span class="badge badge-cyan">עכשיו</span></div>
-          <div style="font-size:.87rem;color:var(--muted2);line-height:1.7;">עלייה עצבית-שרירית — הגוף לומד תנועות. הכוח עולה מהר אבל לא מסת שריר ממשית עדיין. <strong>זה נורמלי.</strong> תמשיך.</div></div>
+          <div style="font-size:0.94rem;color:var(--muted2);line-height:1.7;">עלייה עצבית-שרירית — הגוף לומד תנועות. הכוח עולה מהר אבל לא מסת שריר ממשית עדיין. <strong>זה נורמלי.</strong> תמשיך.</div></div>
         </div>
         <div class="tl-item"><div class="tl-dot" style="background:var(--blue);"></div>
           <div><div style="font-weight:700;margin-bottom:4px;">חודש 3–4</div>
-          <div style="font-size:.87rem;color:var(--muted2);line-height:1.7;">שינויים ויזואליים ברורים. <strong>+1.5–2.5 ק"ג שריר נטו.</strong> האנשים מתחילים להבחין.</div></div>
+          <div style="font-size:0.94rem;color:var(--muted2);line-height:1.7;">שינויים ויזואליים ברורים. <strong>+1.5–2.5 ק"ג שריר נטו.</strong> האנשים מתחילים להבחין.</div></div>
         </div>
         <div class="tl-item"><div class="tl-dot" style="background:var(--yellow);"></div>
           <div><div style="font-weight:700;margin-bottom:4px;">חודש 5–8</div>
-          <div id="tl-m5" style="font-size:.87rem;color:var(--muted2);line-height:1.7;">שינוי דרמטי. <strong>+4–6 ק"ג שריר נטו.</strong> כוח גבוה. גוף מוצק.</div></div>
+          <div id="tl-m5" style="font-size:0.94rem;color:var(--muted2);line-height:1.7;">שינוי דרמטי. <strong>+4–6 ק"ג שריר נטו.</strong> כוח גבוה. גוף מוצק.</div></div>
         </div>
         <div class="tl-item" style="margin-bottom:0;"><div class="tl-dot" style="background:var(--red);"></div>
           <div><div style="font-weight:700;margin-bottom:4px;">חודש 9–12</div>
-          <div id="tl-m9" style="font-size:.87rem;color:var(--muted2);line-height:1.7;"><strong>+6–9 ק"ג שריר נטו</strong> — גוף שנבנה מחדש. שקול לעבור ל-Cut לחצי שנה לחשוף את השריר.</div></div>
+          <div id="tl-m9" style="font-size:0.94rem;color:var(--muted2);line-height:1.7;"><strong>+6–9 ק"ג שריר נטו</strong> — גוף שנבנה מחדש. שקול לעבור ל-Cut לחצי שנה לחשוף את השריר.</div></div>
         </div>
       </div>
     </div>
@@ -1194,9 +1194,9 @@
       <div class="card-head"><h2>יעדי כוח ריאליסטיים לאחר שנה</h2></div>
       <div class="card-body">
         <div class="grid-3">
-          <div class="stat-box red"><div class="val">80–90</div><div class="lbl">ק"ג Bench Press</div></div>
-          <div class="stat-box purple"><div class="val">100–120</div><div class="lbl">ק"ג Squat</div></div>
-          <div class="stat-box blue"><div class="val">130+</div><div class="lbl">ק"ג Deadlift</div></div>
+          <div class="stat-box red"><div class="val" dir="ltr">80–90</div><div class="lbl">ק"ג Bench Press</div></div>
+          <div class="stat-box purple"><div class="val" dir="ltr">100–120</div><div class="lbl">ק"ג Squat</div></div>
+          <div class="stat-box blue"><div class="val" dir="ltr">130+</div><div class="lbl">ק"ג Deadlift</div></div>
         </div>
       </div>
     </div>
@@ -1234,7 +1234,7 @@
     <div class="card">
       <div class="card-head"><h2>דוח שבועי</h2><span class="badge badge-lime">השבוע</span></div>
       <div class="card-body" id="weekly-report-body">
-        <div style="color:var(--muted);font-size:.85rem;">טוען...</div>
+        <div style="color:var(--muted);font-size:0.94rem;">טוען...</div>
       </div>
     </div>
 
@@ -1242,16 +1242,16 @@
     <div class="card" id="recovery-card">
       <div class="card-head"><h2>ריקברי יומי</h2><span class="badge badge-purple">צ'ק-אין</span></div>
       <div class="card-body" id="recovery-card-body">
-        <div style="color:var(--muted);font-size:.85rem;">טוען...</div>
+        <div style="color:var(--muted);font-size:0.94rem;">טוען...</div>
       </div>
     </div>
 
     <!-- Workout Journal CTA -->
-    <button type="button" onclick="showPanel('elog',null);setMobileNav('progress');" style="background:linear-gradient(135deg,rgba(255,197,61,.1),rgba(255,197,61,.06));border:1.5px solid rgba(255,197,61,.25);border-radius:16px;padding:16px 18px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;text-align:right;font-family:var(--font);">
+    <button type="button" onclick="showPanel('elog',null);setMobileNav('progress');" style="background:var(--bg3);border:1.5px solid rgba(255,122,69,.25);border-radius:16px;padding:16px 18px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;text-align:right;font-family:var(--font);">
       <div>
-        <div style="font-size:.65rem;color:var(--lime);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">יומן אימונים</div>
+        <div style="font-size:0.8rem;color:var(--lime);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">יומן אימונים</div>
         <div style="font-size:1rem;font-weight:800;color:var(--text);">משקלים · סטים · חזרות</div>
-        <div style="font-size:.72rem;color:var(--muted);margin-top:3px;">מעקב PR לכל תרגיל לאורך זמן</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">מעקב PR לכל תרגיל לאורך זמן</div>
       </div>
       <div style="color:var(--muted2);"><svg class="ico" style="width:28px;height:28px;"><use href="#i-book"/></svg></div>
     </button>
@@ -1274,26 +1274,26 @@
     <div class="card">
       <div class="card-head"><h2>היסטוריית מדידות</h2></div>
       <div class="card-body">
-        <div id="weight-log-list"><div style="color:var(--muted);font-size:.85rem;padding:6px 0;">אין רשומות עדיין — הוסף מדידה ראשונה למעלה!</div></div>
+        <div id="weight-log-list"><div style="color:var(--muted);font-size:0.94rem;padding:6px 0;">אין רשומות עדיין — הוסף מדידה ראשונה למעלה!</div></div>
       </div>
     </div>
     <div class="card">
       <div class="card-head"><h2>רצף אימונים</h2></div>
       <div class="card-body">
         <div class="grid-2">
-          <div class="stat-box" style="text-align:center;background:linear-gradient(135deg,rgba(255,197,61,.1),rgba(255,107,94,.07));border-color:rgba(255,197,61,.3);">
+          <div class="stat-box" style="text-align:center;background:var(--bg3);border-color:rgba(255,122,69,.3);">
             <div class="val" id="streak-num2" style="color:var(--yellow);font-size:3rem;">0</div>
             <div class="lbl">ימי אימון ברצף</div>
             <div class="streak-msg" id="streak-msg2" style="margin-top:6px;">מתחילים!</div>
           </div>
-          <div style="font-size:.85rem;color:var(--muted2);line-height:2;padding:16px 0;">
+          <div style="font-size:0.94rem;color:var(--muted2);line-height:2;padding:16px 0;">
             <strong style="color:var(--text)">0–3 ימים:</strong> מתחילים!<br>
             <strong style="color:var(--text)">4–7 ימים:</strong> התחלה טובה!<br>
             <strong style="color:var(--text)">8–14 ימים:</strong> אחלה קצב!<br>
             <strong style="color:var(--text)">15+ ימים:</strong> מכונה!
           </div>
         </div>
-        <div style="font-size:.8rem;color:var(--muted);margin-top:12px;">* הרצף מחושב לפי ימי אימון (א׳ ב׳ ד׳ ה׳) שבהם סימנת את כל התרגילים כהושלמו.</div>
+        <div style="font-size:0.86rem;color:var(--muted);margin-top:12px;">* הרצף מחושב לפי ימי אימון (א׳ ב׳ ד׳ ה׳) שבהם סימנת את כל התרגילים כהושלמו.</div>
       </div>
     </div>
     <div class="card">
@@ -1313,7 +1313,7 @@
             <text x="50%" y="50%" text-anchor="middle" fill="var(--muted)" font-size="12">הוסף 2+ מדידות לגרף</text>
           </svg>
         </div>
-        <div id="meas-list"><div style="color:var(--muted);font-size:.85rem;">אין מדידות עדיין</div></div>
+        <div id="meas-list"><div style="color:var(--muted);font-size:0.94rem;">אין מדידות עדיין</div></div>
       </div>
     </div>
   </div>
@@ -1477,17 +1477,17 @@
             <label class="settings-label" for="sf-apikey">מפתח API — Claude AI</label>
             <input id="sf-apikey" class="settings-input" type="password" placeholder="sk-ant-..." autocomplete="off" aria-label="מפתח API"/>
             <div style="display:flex;align-items:center;gap:10px;margin-top:7px;">
-              <span style="font-size:.75rem;color:var(--muted);">נשמר רק במכשיר שלך.</span>
-              <button type="button" onclick="testApiKey()" style="background:none;border:1px solid var(--border2);color:var(--muted2);border-radius:8px;padding:4px 12px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;" id="test-api-btn">בדוק מפתח</button>
+              <span style="font-size:0.86rem;color:var(--muted);">נשמר רק במכשיר שלך.</span>
+              <button type="button" onclick="testApiKey()" style="background:none;border:1px solid var(--border2);color:var(--muted2);border-radius:8px;padding:4px 12px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;" id="test-api-btn">בדוק מפתח</button>
             </div>
           </div>
           <div style="margin-top:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
             <button id="btn-save-settings" class="settings-save" onclick="saveSettingsForm()">שמור הגדרות</button>
-            <button id="theme-btn" onclick="toggleTheme()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text);border-radius:10px;padding:10px 18px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .18s;">החלף ערכת נושא</button>
+            <button id="theme-btn" onclick="toggleTheme()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text);border-radius:10px;padding:10px 18px;font-size:0.94rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .18s;">החלף ערכת נושא</button>
           </div>
           <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <button onclick="exportData()" class="settings-save" style="background:var(--blue,#FFC53D);">ייצוא נתונים</button>
-            <label class="settings-save" style="background:var(--green,#FFC53D);cursor:pointer;">
+            <button onclick="exportData()" class="settings-save" style="background:var(--blue,#FF7A45);">ייצוא נתונים</button>
+            <label class="settings-save" style="background:var(--green,#FF7A45);cursor:pointer;">
               ייבוא נתונים<input type="file" accept=".json" onchange="importData(event)" style="display:none"/>
             </label>
           </div>
@@ -1664,29 +1664,29 @@
 <div id="share-options-modal" role="dialog" aria-modal="true" aria-label="אפשרויות שיתוף" onclick="if(event.target.id==='share-options-modal')closeShareOptions()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:900;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px);">
   <div style="background:var(--bg);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:500px;">
     <div style="text-align:center;margin-bottom:20px;">
-      <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;">שיתוף</div>
+      <div style="font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;">שיתוף</div>
       <h2 style="font-size:1.1rem;font-weight:800;color:var(--text);margin:0;">מה תרצה לשתף?</h2>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
       <button onclick="shareStatsCard()" style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;font-family:var(--font);transition:background .2s;" onmouseover="this.style.background='var(--border)'" onmouseout="this.style.background='var(--bg2)'">
-        <div style="margin-bottom:6px;color:var(--lime,#FFC53D);"><svg class="ico" style="width:22px;height:22px;"><use href="#i-chart"/></svg></div>
-        <div style="font-weight:700;color:var(--text);font-size:.88rem;">תמונת מצב</div>
-        <div style="font-size:.7rem;color:var(--muted);margin-top:2px;">Stats + רמה + רצף</div>
+        <div style="margin-bottom:6px;color:var(--lime,#FF7A45);"><svg class="ico" style="width:22px;height:22px;"><use href="#i-chart"/></svg></div>
+        <div style="font-weight:700;color:var(--text);font-size:0.94rem;">תמונת מצב</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:2px;">Stats + רמה + רצף</div>
       </button>
       <button onclick="shareWhatsApp()" style="background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;font-family:var(--font);transition:background .2s;" onmouseover="this.style.background='rgba(37,211,102,.2)'" onmouseout="this.style.background='rgba(37,211,102,.1)'">
-        <div style="margin-bottom:6px;color:var(--lime,#FFC53D);"><svg class="ico" style="width:22px;height:22px;"><use href="#i-chat"/></svg></div>
-        <div style="font-weight:700;color:#25D366;font-size:.88rem;">WhatsApp</div>
-        <div style="font-size:.7rem;color:var(--muted);margin-top:2px;">שתף ישירות</div>
+        <div style="margin-bottom:6px;color:var(--lime,#FF7A45);"><svg class="ico" style="width:22px;height:22px;"><use href="#i-chat"/></svg></div>
+        <div style="font-weight:700;color:#25D366;font-size:0.94rem;">WhatsApp</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:2px;">שתף ישירות</div>
       </button>
       <button onclick="shareNativeOrDownload()" style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;font-family:var(--font);transition:background .2s;" onmouseover="this.style.background='var(--border)'" onmouseout="this.style.background='var(--bg2)'">
-        <div style="margin-bottom:6px;color:var(--lime,#FFC53D);"><svg class="ico" style="width:22px;height:22px;"><use href="#i-phone"/></svg></div>
-        <div style="font-weight:700;color:var(--text);font-size:.88rem;">שתף לאינסטגרם</div>
-        <div style="font-size:.7rem;color:var(--muted);margin-top:2px;">שמור + שתף</div>
+        <div style="margin-bottom:6px;color:var(--lime,#FF7A45);"><svg class="ico" style="width:22px;height:22px;"><use href="#i-phone"/></svg></div>
+        <div style="font-weight:700;color:var(--text);font-size:0.94rem;">שתף לאינסטגרם</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:2px;">שמור + שתף</div>
       </button>
       <button onclick="downloadStatsCard()" style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;font-family:var(--font);transition:background .2s;" onmouseover="this.style.background='var(--border)'" onmouseout="this.style.background='var(--bg2)'">
-        <div style="margin-bottom:6px;color:var(--lime,#FFC53D);"><svg class="ico" style="width:22px;height:22px;"><use href="#i-download"/></svg></div>
-        <div style="font-weight:700;color:var(--text);font-size:.88rem;">שמור תמונה</div>
-        <div style="font-size:.7rem;color:var(--muted);margin-top:2px;">לגלריה</div>
+        <div style="margin-bottom:6px;color:var(--lime,#FF7A45);"><svg class="ico" style="width:22px;height:22px;"><use href="#i-download"/></svg></div>
+        <div style="font-weight:700;color:var(--text);font-size:0.94rem;">שמור תמונה</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:2px;">לגלריה</div>
       </button>
     </div>
     <button onclick="closeShareOptions()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--muted);font-weight:600;cursor:pointer;font-family:var(--font);">ביטול</button>
@@ -1702,16 +1702,16 @@
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
       <div>
-        <label style="font-size:.72rem;color:var(--muted);display:block;margin-bottom:4px;">משקל יעד (ק"ג)</label>
+        <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:4px;">משקל יעד (ק"ג)</label>
         <input id="pc-target" type="number" min="0" max="500" step="2.5" placeholder="100" oninput="calcPlates()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:1rem;font-family:var(--font);box-sizing:border-box;"/>
       </div>
       <div>
-        <label style="font-size:.72rem;color:var(--muted);display:block;margin-bottom:4px;">משקל מוט (ק"ג)</label>
+        <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:4px;">משקל מוט (ק"ג)</label>
         <input id="pc-bar" type="number" min="10" max="30" step="1" value="20" oninput="calcPlates()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:1rem;font-family:var(--font);box-sizing:border-box;"/>
       </div>
     </div>
     <div id="pc-result" style="min-height:60px;background:var(--bg2);border-radius:12px;padding:12px;">
-      <div style="color:var(--muted);font-size:.85rem;text-align:center;padding:8px 0;">הכנס משקל יעד לחישוב</div>
+      <div style="color:var(--muted);font-size:0.94rem;text-align:center;padding:8px 0;">הכנס משקל יעד לחישוב</div>
     </div>
   </div>
 </div>
@@ -1724,25 +1724,25 @@
       <button onclick="close1RMCalc()" aria-label="סגור מחשבון 1RM" style="background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;padding:4px;">✕</button>
     </div>
     <div style="margin-bottom:12px;">
-      <label style="font-size:.72rem;color:var(--muted);display:block;margin-bottom:4px;">תרגיל (מהיסטוריה)</label>
-      <select id="orm-ex-select" onchange="render1RM()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:.9rem;font-family:var(--font);box-sizing:border-box;">
+      <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:4px;">תרגיל (מהיסטוריה)</label>
+      <select id="orm-ex-select" onchange="render1RM()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:0.94rem;font-family:var(--font);box-sizing:border-box;">
         <option value="">— בחר תרגיל —</option>
       </select>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
       <div>
-        <label style="font-size:.72rem;color:var(--muted);display:block;margin-bottom:4px;">משקל (ק"ג)</label>
+        <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:4px;">משקל (ק"ג)</label>
         <input id="orm-kg" type="number" min="0" step="0.5" placeholder="80" oninput="render1RM()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:1rem;font-family:var(--font);box-sizing:border-box;"/>
       </div>
       <div>
-        <label style="font-size:.72rem;color:var(--muted);display:block;margin-bottom:4px;">חזרות</label>
+        <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:4px;">חזרות</label>
         <input id="orm-reps" type="number" min="1" max="30" placeholder="8" oninput="render1RM()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:1rem;font-family:var(--font);box-sizing:border-box;"/>
       </div>
     </div>
     <div id="orm-result" style="background:var(--bg2);border-radius:12px;padding:12px;min-height:60px;">
       <div style="color:var(--muted);text-align:center;padding:8px;">הזן נתונים לחישוב</div>
     </div>
-    <div style="font-size:.65rem;color:var(--muted);margin-top:8px;text-align:center;">נוסחת Epley: 1RM = משקל × (1 + חזרות ÷ 30)</div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-top:8px;text-align:center;">נוסחת Epley: 1RM = משקל × (1 + חזרות ÷ 30)</div>
   </div>
 </div>
 
@@ -1797,7 +1797,7 @@
         <button class="goal-btn" data-goal="maintain" onclick="selectGoal(this)"><div class="goal-icon"><svg class="ico"><use href="#i-target"/></svg></div><div class="goal-name">שמירה</div><div class="goal-desc">תחזוקה + בריאות</div></button>
       </div>
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
-        <div style="font-size:.78rem;color:var(--muted);margin-bottom:8px;">כמה ארוחות ביום?</div>
+        <div style="font-size:0.86rem;color:var(--muted);margin-bottom:8px;">כמה ארוחות ביום?</div>
         <div class="meal-count-grid">
           <button class="mc-btn" data-mc="3" onclick="selectMealCount(this)"><div class="mc-num">3</div><div class="mc-lbl">ארוחות</div></button>
           <button class="mc-btn" data-mc="4" onclick="selectMealCount(this)"><div class="mc-num">4</div><div class="mc-lbl">ארוחות</div></button>
@@ -1822,60 +1822,60 @@
     <!-- STEP 4: Workout Frequency -->
     <div class="onboard-step" id="ob-step-4">
       <div class="onboard-step-title">כמה פעמים בשבוע?</div>
-      <div style="font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:16px;">התוכנית תותאם אוטומטית לתדירות שלך</div>
+      <div style="font-size:0.86rem;color:var(--muted);text-align:center;margin-bottom:16px;">התוכנית תותאם אוטומטית לתדירות שלך</div>
       <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:20px;">
         <button class="ob-freq-btn" data-freq="1" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
           <div style="font-size:1.4rem;font-weight:900;color:var(--text);">1</div>
-          <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
+          <div style="font-size:0.8rem;color:var(--muted);">פעמים</div>
         </button>
         <button class="ob-freq-btn" data-freq="2" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
           <div style="font-size:1.4rem;font-weight:900;color:var(--text);">2</div>
-          <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
+          <div style="font-size:0.8rem;color:var(--muted);">פעמים</div>
         </button>
         <button class="ob-freq-btn" data-freq="3" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
           <div style="font-size:1.4rem;font-weight:900;color:var(--text);">3</div>
-          <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
+          <div style="font-size:0.8rem;color:var(--muted);">פעמים</div>
         </button>
         <button class="ob-freq-btn sel" data-freq="4" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
           <div style="font-size:1.4rem;font-weight:900;color:var(--red);">4</div>
-          <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
+          <div style="font-size:0.8rem;color:var(--muted);">פעמים</div>
         </button>
         <button class="ob-freq-btn" data-freq="5" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
           <div style="font-size:1.4rem;font-weight:900;color:var(--text);">5</div>
-          <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
+          <div style="font-size:0.8rem;color:var(--muted);">פעמים</div>
         </button>
         <button class="ob-freq-btn" data-freq="6" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
           <div style="font-size:1.4rem;font-weight:900;color:var(--text);">6</div>
-          <div style="font-size:.65rem;color:var(--muted);">פעמים</div>
+          <div style="font-size:0.8rem;color:var(--muted);">פעמים</div>
         </button>
         <button class="ob-freq-btn" data-freq="7" onclick="selectObFreq(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 4px;cursor:pointer;font-family:var(--font);text-align:center;">
           <div style="font-size:1.4rem;font-weight:900;color:var(--muted);">7</div>
-          <div style="font-size:.55rem;color:var(--muted);">לא מומלץ</div>
+          <div style="font-size:0.72rem;color:var(--muted);">לא מומלץ</div>
         </button>
       </div>
       <!-- Split selector — visible for 3x/week and 4x/week -->
       <div id="ob-split-wrap" style="display:none;margin-bottom:4px;">
-        <div style="font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:10px;">בחר סגנון:</div>
+        <div style="font-size:0.86rem;color:var(--muted);text-align:center;margin-bottom:10px;">בחר סגנון:</div>
         <!-- 3-day splits -->
         <div id="ob-split-3" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <button class="ob-split-btn" data-split="3ab" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
-            <div style="font-weight:800;color:var(--text);font-size:.9rem;">Upper / Lower</div>
-            <div style="font-size:.7rem;color:var(--muted);margin-top:3px;">גוף עליון / גוף תחתון</div>
+            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">Upper / Lower</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">גוף עליון / גוף תחתון</div>
           </button>
           <button class="ob-split-btn sel" data-split="3abc" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
-            <div style="font-weight:800;color:var(--red);font-size:.9rem;">Push / Pull / Legs</div>
-            <div style="font-size:.7rem;color:var(--muted);margin-top:3px;">3 אימונים שונים</div>
+            <div style="font-weight:800;color:var(--red);font-size:0.94rem;">Push / Pull / Legs</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">3 אימונים שונים</div>
           </button>
         </div>
         <!-- 4-day splits -->
         <div id="ob-split-4" style="display:none;grid-template-columns:1fr 1fr;gap:8px;">
           <button class="ob-split-btn sel" data-split="4" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
-            <div style="font-weight:800;color:var(--red);font-size:.85rem;">Push/Pull/Legs/Arms</div>
-            <div style="font-size:.7rem;color:var(--muted);margin-top:3px;">PPL קלאסי</div>
+            <div style="font-weight:800;color:var(--red);font-size:0.94rem;">Push/Pull/Legs/Arms</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">PPL קלאסי</div>
           </button>
           <button class="ob-split-btn" data-split="4ab" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
-            <div style="font-weight:800;color:var(--text);font-size:.85rem;">Upper/Lower A/B</div>
-            <div style="font-size:.7rem;color:var(--muted);margin-top:3px;">כוח + נפח</div>
+            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">Upper/Lower A/B</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">כוח + נפח</div>
           </button>
         </div>
       </div>
@@ -1903,7 +1903,7 @@
 <div class="voice-toast" id="voice-toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <!-- APP TOAST — accessible, aria-live -->
-<div id="app-toast" role="status" aria-live="polite" aria-atomic="true" style="position:fixed;bottom:calc(92px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:rgba(15,20,30,.96);color:var(--text);padding:10px 22px;border-radius:999px;font-size:.85rem;font-weight:600;z-index:800;opacity:0;transition:opacity .25s ease;pointer-events:none;white-space:nowrap;border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);max-width:90vw;text-align:center;"></div>
+<div id="app-toast" role="status" aria-live="polite" aria-atomic="true" style="position:fixed;bottom:calc(92px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:rgba(15,20,30,.96);color:var(--text);padding:10px 22px;border-radius:999px;font-size:0.94rem;font-weight:600;z-index:800;opacity:0;transition:opacity .25s ease;pointer-events:none;white-space:nowrap;border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);max-width:90vw;text-align:center;"></div>
 
 <!-- REST TIMER -->
 <div class="timer-float" id="timer-float">
@@ -1923,6 +1923,6 @@
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">מנוחה</button>
 </div>
 
-    <script type="module" src="app.js?v=4"></script>
+    <script type="module" src="app.js?v=5"></script>
 </body>
 </html>
