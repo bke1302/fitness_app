@@ -1192,7 +1192,7 @@ function renderUserList(){
       <div class="user-avatar-sm">${_esc((u.name||'?').charAt(0))}</div>
       <div class="user-item-info">
         <div class="user-item-name">${_esc(u.name)}</div>
-        <div class="user-item-sub">${u.weight}ק"ג · ${u.height}ס"מ · ${GOAL_LABELS[u.goal]||u.goal} · ${n.target.toLocaleString()} קל׳</div>
+        <div class="user-item-sub">${u.weight} ק״ג · ${u.height} ס״מ · ${GOAL_LABELS[u.goal]||u.goal} · ${n.target.toLocaleString()} קל׳</div>
       </div>
       ${isActive?'<div class="user-item-active-badge">פעיל</div>':''}
     </div>`;
@@ -2034,7 +2034,7 @@ function _renderWeekBar(activeDayCfg){
       return `<button class="day-cell" onclick="goDay('${cfg.panel}')" data-type="${cfg.panel}" aria-label="${name}: ${cfg.label}">
         <div class="dc-name">${name} ${letter}</div>
         <div class="dc-icon"><span class="dc-dot" style="background:${cfg.color}"></span></div>
-        <div class="dc-type" style="color:${cfg.color}">${cfg.sub}</div>
+        <div class="dc-type" style="color:${cfg.color}">${cfg.badge}</div>
         <div class="dc-label">${label}</div>
       </button>`;
     }
@@ -2138,7 +2138,8 @@ function initTodayHero(){
   const wc=document.getElementById('week-counter');
   if(wc){
     const color=weekDone>=totalWorkoutDays?'var(--green)':weekDone>=Math.ceil(totalWorkoutDays/2)?'var(--yellow)':'var(--muted)';
-    wc.innerHTML=`<span style="color:${color}">${weekDone}</span><span style="color:var(--muted);font-size:.72rem;font-weight:600;"> / ${totalWorkoutDays} אימונים</span>`;
+    wc.innerHTML=`<span class="wk-frac" style="color:${color}">${weekDone} / ${totalWorkoutDays}</span>`
+                +`<span style="color:var(--muted);font-size:.72rem;font-weight:600;"> אימונים</span>`;
   }
 }
 
@@ -2848,7 +2849,7 @@ function injectLastLogChips(elog){
       const chip=document.createElement('div');
       chip.className='ex-last-log';
       const e=hist[0];
-      chip.innerHTML=`<span>פעם קודמת: ${e.kg}ק"ג × ${e.reps} (${e.date.slice(5)})</span>`;
+      chip.innerHTML=`<span>פעם קודמת: <span class="ell-num">${e.kg} ק״ג × ${e.reps}</span> · ${e.date.slice(5)}</span>`;
       nameCell.after(chip);
     }
   });

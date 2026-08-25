@@ -58,7 +58,11 @@
 :focus-visible{outline:2px solid var(--lime);outline-offset:2px;border-radius:4px;}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible,label:focus-visible{outline:2px solid var(--lime);outline-offset:2px;}
 /* ── RTL text inputs — auto direction per-character ── */
-input[type="text"],input[type="email"],input[type="search"],textarea{direction:auto;unicode-bidi:bidi-override;}
+/* `direction:auto` is not a CSS value (it is an HTML dir attribute), so the
+   declaration was dropped and bidi-override reversed Latin input against the
+   inherited rtl. `plaintext` is the property that actually does what was
+   intended: pick each paragraph's direction from its first strong character. */
+input[type="text"],input[type="email"],input[type="search"],textarea{unicode-bidi:plaintext;}
 /* ── Notif dot — hidden by default, shown via JS ── */
 .topbar-notif-dot{display:none;}
 
@@ -1936,7 +1940,11 @@ body{font-size:var(--fs-body);line-height:var(--lh-normal);-webkit-font-smoothin
 
 /* ── Numerals render LTR even inside an RTL column ── */
 .stat-box .val,.hero-stat-val,.gym-sr-kg,.gym-sr-reps,.gym-stopwatch,.ring-text,.grt-time,
-.sets-cell,.rest-cell,.ex-sets,.wsel-meta{direction:ltr;unicode-bidi:isolate;}
+/* "4x6-8" is pure ltr content and belongs here. "20 שנ׳" and
+   "ראשון | 8 תרגילים | ~52 דק׳" are Hebrew, and forcing them ltr made a
+   Hebrew reader meet the unit before the number. */
+.sets-cell,.ex-sets{direction:ltr;unicode-bidi:isolate;}
+.rest-cell,.wsel-meta{direction:rtl;unicode-bidi:isolate;}
 .card-head .badge,.dash-day-chip,.dc-label{unicode-bidi:isolate;}
 
 /* ── Surfaces need a visible edge to read as cards on near-black ── */
@@ -2343,3 +2351,84 @@ body[data-panel="crossfit"] .timer-float{display:flex;}
 .workout-picker .workout-card-sub{margin:0;font-size:.82rem;color:var(--muted);}
 .workout-picker .workout-card > div:not(.workout-card-icon){text-align:right;}
 .workout-picker .wc-span{grid-column:auto;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   RTL, CONTRAST, AND TOUCH
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* A section heading is a marker and a title, together. space-between with
+   three children threw the marker to one edge and the badge to the other,
+   leaving the title floating in the middle of its own row. */
+.card-head{justify-content:flex-start !important;gap:10px;}
+.card-head > :last-child:not(h2){margin-inline-start:auto;}
+
+/* Hebrew has no case, so uppercase does nothing to it - but it does reach the
+   Latin fragments inside, turning "(2.5g/kg)" into "(2.5G/KG)" and
+   "Bench Press" into "BENCH PRESS". */
+.stat-box .lbl,.day-cell .dc-name,.ex-table th,.m-section,
+.elog-section-title,.today-hero-info .today-hero-day{text-transform:none;}
+
+/* Rest days were dimmed twice: muted2 text at .32 opacity lands near 1.6:1.
+   Dim them with one step, not two. */
+.day-cell.rest-day{opacity:.62;}
+.dash-day-chip.ddc-rest{opacity:.62;}
+
+/* The nav sat at 82% opacity over a scrolling list, so exercise rows smeared
+   through it and read as dirt along the bottom of every screen. */
+.mobile-bottom-nav{background:rgba(8,9,11,.985);}
+.mbn-label{font-size:.66rem;}
+
+/* Logical properties: these were physical, so they hugged the wrong side */
+.ex-swap-btn{margin-right:0;margin-inline-start:4px;}
+.sl-btn{margin-right:0;margin-inline-start:6px;}
+.ss-tag{margin-left:0;}
+.ex-table tr[onclick] > td:nth-child(4),
+.ex-table tr[onclick] > td:nth-child(5){text-align:left;}
+
+/* A fraction is read left-to-right even inside Hebrew */
+.wk-frac,.ell-num{direction:ltr;unicode-bidi:isolate;display:inline-block;}
+
+/* Last session's weight belongs on the meta line, not wrapped under the name */
+@media (max-width:680px){
+  .ex-last-log{
+    grid-area:meta;font-size:.76rem;color:var(--lime);opacity:.85;
+    margin:0;padding:0;background:none;border:none;
+  }
+  .ex-table tr[onclick]:has(.ex-last-log){
+    grid-template-areas:"num name sets" "num meta rest" "num last last";
+  }
+  .ex-table tr[onclick] .ex-last-log{grid-area:last;margin-top:3px;}
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   WEEK BAR — seven columns of ~45px. Only a day and a word fit.
+   ══════════════════════════════════════════════════════════════════════ */
+@media (max-width:680px){
+  .week-bar{gap:5px;}
+  .day-cell{padding:10px 3px;min-width:0;}
+  .day-cell .dc-name{font-size:.62rem;line-height:1.25;letter-spacing:0;}
+  .day-cell .dc-type{
+    font-size:.6rem;line-height:1.2;font-weight:700;
+    overflow:hidden;text-overflow:ellipsis;
+  }
+  .day-cell .dc-label{display:none;}   /* the sub never fit; it wrapped to five lines */
+}
+
+/* The schedule tab's picker gets the same list shape as the dashboard's,
+   rather than two tiles plus a lone third.
+   No !important on display: renderAdaptivePanels hides unused days with an
+   inline style:none, and !important would override it back into view. */
+.workout-picker > button{
+  display:grid;grid-template-columns:auto 1fr;align-items:center;
+  column-gap:13px;row-gap:2px;
+  width:100%;text-align:right !important;padding:14px 16px !important;
+}
+.workout-picker > button > div:first-child{grid-row:1/3;margin:0 !important;}
+.workout-picker .wsel-title{margin:0 !important;font-size:1rem !important;white-space:nowrap;}
+.workout-picker .wsel-sub{
+  margin:0 !important;font-size:.8rem !important;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.workout-picker .wsel-meta{display:none;}   /* the day panel repeats it on arrival */
