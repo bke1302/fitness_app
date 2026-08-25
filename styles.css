@@ -2012,7 +2012,7 @@ body{font-size:var(--fs-body);line-height:var(--lh-normal);-webkit-font-smoothin
 
 /* The day's exercises are what the user opened the panel for — they lead.
    Warm-up and the coach's note are reference, so they follow. */
-.panel[id^="panel-p"],#panel-legs,#panel-arms{display:flex;flex-direction:column;}
+.panel.active[id^="panel-p"],.panel.active#panel-legs,.panel.active#panel-arms{display:flex;flex-direction:column;}
 .day-head-card{order:1;}
 .warmup-card{order:2;}
 .trainer-note{order:3;}
@@ -2165,3 +2165,181 @@ body{font-size:var(--fs-body);line-height:var(--lh-normal);-webkit-font-smoothin
 /* Today-hero on a rest day: informative, not a billboard */
 #today-hero{padding:16px 18px !important;}
 #today-hero .th-title,#today-hero > div > div:nth-child(3){font-size:1.5rem !important;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   CHROME — what is allowed to be on screen at all times.
+   Previously: avatar + greeting + duplicated name + search field + level
+   badge + bell in the header, plus a fixed rest-timer pill. That is six
+   permanent things competing with the content of every one of 16 panels.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* The rest timer belongs to a workout, not to the settings form */
+.timer-float{display:none;}
+body[data-panel="push"]  .timer-float,
+body[data-panel="pull"]  .timer-float,
+body[data-panel="legs"]  .timer-float,
+body[data-panel="arms"]  .timer-float,
+body[data-panel="crossfit"] .timer-float{display:flex;}
+
+/* Search: a disclosure below the header instead of a permanent field inside it */
+.ex-search-wrap{display:none;position:relative;flex:none;max-width:none;margin:0;padding:0 16px 10px;}
+.ex-search-wrap.open{display:block;}
+.ex-search-input{width:100%;}
+.topbar-icon-btn.active{color:var(--lime);border-color:var(--lime);}
+
+.topbar-header{padding:14px 16px 10px;padding-top:calc(14px + env(safe-area-inset-top,0px));}
+.topbar-greeting{font-size:.72rem;}
+.topbar-appname{font-size:1rem;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   WORKOUT HEADER — the day, its size, and one action.
+   It used to be a row of four identical pills: three naming muscles and a
+   fourth naming a duration. Same shape, different meaning, and the muscle
+   ones were stale markup that contradicted the exercises below them.
+   ══════════════════════════════════════════════════════════════════════ */
+.day-head-card > .card-head{
+  display:block;padding:0 0 14px !important;margin-bottom:16px;
+}
+.day-title{font-size:1.375rem !important;font-weight:800;line-height:1.2;margin:0;}
+.day-meta{display:block;margin-top:5px;font-size:.86rem;color:var(--muted);}
+
+/* Starting the workout is the point of this screen, so it looks like it */
+.day-head-card .gym-mode-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;margin-top:14px;padding:15px;
+  background:var(--lime);color:#08090B;border:none;border-radius:var(--radius-md);
+  font-family:var(--font-d);font-size:1rem;font-weight:800;letter-spacing:.01em;
+  cursor:pointer;transition:transform .15s var(--ease-out),filter .15s;
+}
+.day-head-card .gym-mode-btn:active{transform:scale(.985);filter:brightness(.92);}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   TODAY CARD — one frame, one name, one action.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* Written when the streak banner led the dashboard; it now wraps the today
+   card and produces a box inside a box. */
+#panel-dashboard > div:first-child{
+  background:none;border:none;border-radius:0;padding:0;
+}
+
+.today-hero{padding:18px !important;}
+.today-hero-title{
+  font-size:1.5rem !important;font-weight:800;line-height:1.15;
+  color:var(--text);margin:0;
+}
+.today-hero-day{
+  font-size:.88rem;color:var(--muted);margin-top:4px;font-weight:500;
+  letter-spacing:0;
+}
+.hero-badge{font-size:.72rem;padding:4px 10px;}
+.hero-bottom{display:block;}
+.hero-wk-meta{display:flex;gap:14px;margin-top:14px;}
+.hero-meta-chip{font-size:.82rem;color:var(--muted);}
+
+/* The week strip runs off the right edge of the panel because the panel's
+   own inset is applied twice on a horizontally scrolling child. */
+.week-carousel,.dash-week-row{padding-right:0;padding-left:0;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   EXERCISE ROW — number, name, prescription. Two lines, no controls.
+   ══════════════════════════════════════════════════════════════════════ */
+@media (max-width:680px){
+  .ex-table tr[onclick]{
+    grid-template-columns:32px 1fr auto;
+    grid-template-areas:"num name sets" "num meta rest";
+    column-gap:12px;row-gap:2px;padding:13px 14px;margin-bottom:8px;
+  }
+  .ex-table tr[onclick] > td:nth-child(3){grid-area:meta;}
+  .ex-table tr[onclick] > td:nth-child(5){grid-area:rest;display:block;text-align:left;}
+  .ex-table tr[onclick] > td:nth-child(6){display:none;}
+  .muscle-tag::after{content:none;}
+  .rest-cell{font-size:.78rem;color:var(--muted2);white-space:nowrap;}
+  .sets-cell{font-size:.94rem;}
+}
+
+/* The alternatives control, now in the modal beside the exercise */
+.m-alt-btn{
+  width:100%;margin:2px 0 6px;padding:11px;
+  background:none;border:1px solid var(--border2);border-radius:var(--radius-md);
+  color:var(--text);font-family:var(--font);font-size:.9rem;font-weight:600;cursor:pointer;
+  transition:border-color .18s,color .18s;
+}
+.m-alt-btn:hover{border-color:var(--lime);color:var(--lime);}
+
+/* The rest timer duplicated gym mode's own timer while covering live content
+   on whatever screen it floated over. Gym mode keeps its one. */
+.timer-float{display:none !important;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   SUPERSET HEADER — one line. The "why" is a disclosure, not a preamble.
+   ══════════════════════════════════════════════════════════════════════ */
+.ss-line{display:flex;align-items:center;gap:9px;}
+.ss-tag{
+  flex-shrink:0;background:none;color:var(--lime);border:1px solid var(--lime);
+  font-family:var(--font-d);font-size:.72rem;font-weight:800;
+  padding:3px 9px;border-radius:999px;letter-spacing:.02em;
+}
+.ss-type{display:none;}   /* antagonist vs non-competing changes nothing for the lifter */
+.ss-meta{font-size:.8rem;color:var(--muted);flex:1;min-width:0;}
+.ss-why{
+  flex-shrink:0;width:22px;height:22px;border-radius:50%;
+  background:none;border:1px solid var(--border2);color:var(--muted);
+  font-size:.78rem;font-weight:700;cursor:pointer;line-height:1;
+  transition:border-color .18s,color .18s;
+}
+.ss-why:hover{border-color:var(--lime);color:var(--lime);}
+.ss-note{
+  margin-top:9px;font-size:.84rem;line-height:1.6;color:var(--muted2);
+  border-right:2px solid var(--border2);padding-right:11px;
+}
+.ss-head > td{padding:18px 0 10px !important;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   WEEK STRIP — six days, all visible, no sideways scroll.
+   Each chip used to carry the full workout name ("פול-בודי ב׳"). Six of
+   those overflow 358px, so the row scrolled and the last day was cut. The
+   today card above already names the workout; here the dot is enough.
+   ══════════════════════════════════════════════════════════════════════ */
+#dash-week-row{
+  display:grid !important;grid-template-columns:repeat(6,1fr);
+  gap:6px;overflow:visible !important;padding-bottom:0 !important;
+}
+.dash-day-chip{
+  min-width:0;padding:11px 2px 10px;display:flex;flex-direction:column;
+  align-items:center;gap:7px;border-radius:var(--radius-md);
+  background:var(--bg2);border:1px solid transparent;
+}
+.dash-day-chip .ddc-type{display:none;}          /* the card above says it */
+.dash-day-chip .ddc-name{font-size:.8rem;font-weight:700;color:var(--muted);}
+.dash-day-chip .ddc-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.dash-day-chip.ddc-rest .ddc-name{color:var(--muted2);font-weight:500;}
+.dash-day-chip.ddc-rest .ddc-dot{background:none;border:1px solid var(--muted2);}
+.dash-day-chip.ddc-active{border-color:var(--lime);background:var(--bg3);}
+.dash-day-chip.ddc-active .ddc-name{color:var(--lime);}
+.dash-day-chip.ddc-done .ddc-dot{background:var(--green) !important;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   WORKOUT PICKER — three identical rows.
+   A 2-column grid leaves an odd third card in a shape of its own: two
+   centred tiles above, one wide row below, same purpose, different form.
+   The card above already offers today, so this list is only "give me a
+   different day" — a list is the honest shape for that.
+   ══════════════════════════════════════════════════════════════════════ */
+.workout-picker{display:flex;flex-direction:column;gap:8px;}
+.workout-picker .workout-card{
+  display:flex;align-items:center;gap:13px;
+  width:100%;padding:14px 16px;text-align:right;
+}
+.workout-picker .workout-card-icon{margin:0;flex-shrink:0;}
+.workout-picker .workout-card-title{margin:0;font-size:1rem;}
+.workout-picker .workout-card-sub{margin:0;font-size:.82rem;color:var(--muted);}
+.workout-picker .workout-card > div:not(.workout-card-icon){text-align:right;}
+.workout-picker .wc-span{grid-column:auto;}

@@ -488,6 +488,14 @@ function openModal(key){
     </a>`;
   }
   renderSetLogInModal(key);
+  // Alternatives used to be a button on every table row; it belongs here,
+  // next to the exercise it would replace.
+  const altWrap=document.getElementById('m-alt-wrap');
+  if(altWrap){
+    altWrap.innerHTML=EX_ALTERNATIVES[key]
+      ? `<button class="m-alt-btn" onclick="showAlternatives('${key}',${JSON.stringify(e.name)})">החלף תרגיל</button>`
+      : '';
+  }
   // Coach tip
   const coachEl=document.getElementById('m-coach-tip');
   if(coachEl){
@@ -620,6 +628,10 @@ function showPanel(name,btn){
   if(!_p) return;
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   _p.classList.add('active');
+  // The rest timer is only meaningful mid-workout; CSS keys off this.
+  document.body.dataset.panel=name;
+  document.getElementById('ex-search-wrap')?.classList.remove('open');
+  document.getElementById('ex-search-toggle')?.classList.remove('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');
   const pt=document.getElementById('page-title');
@@ -1980,7 +1992,7 @@ function _buildDayCfg(u){
       badge:day.shortLabel||day.label.slice(0,6),
       color:day.color||'#CCFF00',
       label:day.label,
-      sub:day.shortLabel||day.id.toUpperCase(),
+      sub:(day.label||'').split('—').slice(1).join('—').trim()||day.shortLabel||'',
       meta:`~${mins} דק׳ · ${n} תרגילים`
     };
   });
@@ -2052,15 +2064,15 @@ function initTodayHero(){
     const exSvg=`<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
     hero.innerHTML=`
       <div class="hero-top-row">
-        <span class="hero-badge">${cfg.badge}${done?' ✓':''}</span>
+        <span class="hero-badge">היום · יום ${HEB_DAYS3[d]}${done?' ✓':''}</span>
         <button class="hero-play" onclick="event.stopPropagation();showPanel('${cfg.panel}',null);">
           <svg viewBox="0 0 24 24" fill="#000"><polygon points="5,3 19,12 5,21"/></svg>
         </button>
       </div>
       <div class="hero-bottom">
         <div class="today-hero-info">
-          <div class="today-hero-day">יום ${HEB_DAYS3[d]} — ${cfg.sub}</div>
-          <div class="today-hero-title">${cfg.label}</div>
+          <div class="today-hero-title">${cfg.badge}</div>
+          <div class="today-hero-day">${cfg.sub}</div>
         </div>
         <div class="hero-wk-meta">
           <span class="hero-meta-chip">${timeSvg}${cfg.meta.split(' · ')[0]}</span>
@@ -2115,13 +2127,7 @@ function initTodayHero(){
   const dashChips=document.querySelectorAll('#dash-week-row .dash-day-chip');
   dashChips.forEach((c,i)=>{
     c.classList.remove('ddc-active','ddc-done');
-    c.querySelector('.ddc-dot')?.remove();
-    if(i===d){
-      c.classList.add('ddc-active');
-      const dot=document.createElement('span');
-      dot.className='ddc-dot';
-      c.prepend(dot);
-    }
+    if(i===d) c.classList.add('ddc-active');
   });
   // mark done days in dash carousel too
   document.querySelectorAll('.week-bar .day-cell.done-day').forEach((c,i)=>{
@@ -2445,7 +2451,11 @@ window.addEventListener('load',()=>{
   injectSetLogRows();
 });
 
-function injectSwapButtons(){
+// Rows are data. The two controls that used to live here (alternatives, set
+// log) are both in the modal that a row tap opens, so injecting them into the
+// muscle cell only made every row louder than the exercise it described.
+function injectSwapButtons(){ /* superseded by the modal's "החלף תרגיל" */ }
+function _injectSwapButtons_unused(){
   // Map onclick attr to key
   document.querySelectorAll('.ex-table tbody tr[onclick]').forEach(tr=>{
     const m=tr.getAttribute('onclick')?.match(/openModal\('(\w+)'\)/);
@@ -2464,7 +2474,8 @@ function injectSwapButtons(){
   });
 }
 
-function injectSetLogRows(){
+function injectSetLogRows(){ /* superseded by renderSetLogInModal */ }
+function _injectSetLogRows_unused(){
   document.querySelectorAll('.ex-table tbody tr[onclick]').forEach(tr=>{
     const m=tr.getAttribute('onclick')?.match(/openModal\('(\w+)'\)/);
     if(!m) return;
@@ -4060,6 +4071,8 @@ window.addEventListener('load',()=>{
   // Count-up animation for stat numbers
   setTimeout(()=>{
     document.querySelectorAll('.stat-box .val').forEach(el=>{
+      // "80-90" is a range, not a quantity - counting it up yields "8,090"
+      if(/[\u2013\u2014-]\s*\d/.test(el.textContent)) return;
       const raw=el.textContent.replace(/[^\d.]/g,'');
       const target=parseFloat(raw); if(!target||isNaN(target)) return;
       const suffix=el.textContent.replace(/[\d.,]/g,'').trim();
@@ -4098,9 +4111,23 @@ function initTopbar(){
   const grEl=document.getElementById('tb-greeting');
   const nmEl=document.getElementById('tb-name');
   const avEl=document.getElementById('tb-avatar');
-  if(grEl) grEl.textContent=name?`${gr}, ${name}`:gr+'';
+  if(grEl) grEl.textContent=gr;
   if(nmEl) nmEl.textContent=name||'KOACH';
   if(avEl) avEl.textContent=(name||'I').charAt(0).toUpperCase();
+}
+
+// Exercise search is a disclosure now — it used to sit in the header on all
+// 16 panels, costing width on every screen to serve an occasional lookup.
+function toggleExSearch(){
+  const w=document.getElementById('ex-search-wrap');
+  if(!w) return;
+  const open=w.classList.toggle('open');
+  document.getElementById('ex-search-toggle')?.classList.toggle('active',open);
+  if(open) document.getElementById('ex-search-input')?.focus();
+  else{
+    const r=document.getElementById('ex-search-results');
+    if(r) r.style.display='none';
+  }
 }
 
 // LIGHT / DARK / AMOLED THEME — defined below in AMOLED section
@@ -5047,7 +5074,7 @@ function renderWorkoutDay(panelId,dayObj){
 // two exercises with the pair's round count and rest substituted in.
 const _SS_TYPE={antagonist:'אנטגוניסטי',noncompeting:'לא-מתחרה',compound:'קומפאונד'};
 function _buildSupersetRows(day){
-  let out='',num=0;
+  let out='',num=0,_ssNum=0;
   const paired=new Set();
   day.supersets.forEach(ss=>{
     const reps=ss.pair.map(k=>{
@@ -5055,11 +5082,17 @@ function _buildSupersetRows(day){
       const r=s.split('×')[1]||s;   // keep the plan's round count, the exercise's rep range
       return ss.rounds+'×'+r;
     });
+    _ssNum++;
+    const restTxt=ss.restBetween>=60
+      ? (ss.restBetween%60?(ss.restBetween/60).toFixed(1):ss.restBetween/60)+' דק׳'
+      : ss.restBetween+' שנ׳';
     out+=`<tr class="ss-head"><td colspan="6">
-      <span class="ss-tag">${ss.id}</span>
-      <span class="ss-type">סופרסט ${_SS_TYPE[ss.type]||''}</span>
-      <span class="ss-meta">${ss.rounds} סבבים · ${ss.restWithin} שנ׳ מעבר · ${ss.restBetween} שנ׳ בין סבבים</span>
-      ${ss.note?`<div class="ss-note">${_esc(ss.note)}</div>`:''}
+      <div class="ss-line">
+        <span class="ss-tag">זוג ${_ssNum}</span>
+        <span class="ss-meta">${ss.rounds} סבבים ברצף · מנוחה ${restTxt}</span>
+        ${ss.note?`<button class="ss-why" aria-label="למה" onclick="this.closest('td').querySelector('.ss-note').hidden=!this.closest('td').querySelector('.ss-note').hidden">?</button>`:''}
+      </div>
+      ${ss.note?`<div class="ss-note" hidden>${_esc(ss.note)}</div>`:''}
     </td></tr>`;
     ss.pair.forEach((k,j)=>{
       paired.add(k); num++;
@@ -5123,9 +5156,8 @@ function renderAdaptivePanels(){
       head.dataset.wm=short;
       const h2=head.querySelector('.day-title');
       if(h2) h2.textContent=`${dayName[day.id]||''} — ${short}`;
-      const badges=head.querySelectorAll('.card-head .badge');
-      const last=badges[badges.length-1];
-      if(last) last.textContent='~'+mins+' דק׳';
+      const meta=head.querySelector('.day-meta');
+      if(meta) meta.textContent=`${n} תרגילים · ~${mins} דק׳`;
       const gymBtn=head.querySelector('.gym-mode-btn');
       if(gymBtn) gymBtn.setAttribute('onclick',`startGymMode('${pid}','${short}','${day.color}')`);
     }
@@ -5520,7 +5552,7 @@ function cfTabata(){
   const st=document.getElementById('cf-timer-status'); if(st) st.textContent='Tabata — 8×(20 עבודה/10 מנוחה)';
 }
 
-Object.assign(window,{gymPairCheck,
+Object.assign(window,{gymPairCheck,toggleExSearch,
   openModal,closeModal,closeModalBg,closeAltModal,
   cfFilter,cfToggleWod,cfOpenWod,cfSaveScore,cfTimerToggle,cfTimerReset,cfCountdown,cfTabata,
   showPanel,setMobileNav,renderExSearch,closeExSearch,browseExCategory,

@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
-<link rel="stylesheet" href="styles.css?v=5">
+<link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body dir="rtl">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -109,26 +109,65 @@
       <h1 id="tb-name" class="topbar-appname">KOACH</h1>
     </div>
   </div>
-  <div id="ex-search-wrap" class="ex-search-wrap">
-    <input id="ex-search-input" class="ex-search-input" type="search" placeholder="חפש או עיין בתרגילים..." autocomplete="off" oninput="renderExSearch(this.value)" onfocus="renderExSearch(this.value)" aria-label="חיפוש תרגיל"/>
-    <div id="ex-search-results" class="ex-search-results" style="display:none"></div>
-  </div>
   <div class="topbar-right">
-    <span class="topbar-level-badge" id="topbar-level">LV 1 • מתחיל</span>
-    <button aria-label="התראות" class="topbar-icon-btn" id="notif-btn">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+    <button aria-label="חפש תרגיל" class="topbar-icon-btn" id="ex-search-toggle" onclick="toggleExSearch()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke-linecap="round"/>
       </svg>
-      <span class="topbar-notif-dot"></span>
     </button>
   </div>
 </header>
+<div id="ex-search-wrap" class="ex-search-wrap">
+  <input id="ex-search-input" class="ex-search-input" type="search" placeholder="חפש תרגיל..." autocomplete="off" oninput="renderExSearch(this.value)" onfocus="renderExSearch(this.value)" aria-label="חיפוש תרגיל"/>
+  <div id="ex-search-results" class="ex-search-results" style="display:none"></div>
+</div>
 <div class="content" id="main-content" role="main">
 
   <!-- ══════════════════════════════════
        DASHBOARD
   ══════════════════════════════════ -->
-  <div class="panel active flex-1 px-4 space-y-4 overflow-y-auto" id="panel-dashboard">
+  <div class="panel active flex-1 space-y-4 overflow-y-auto" id="panel-dashboard">
+
+    <!-- ── TODAY'S WORKOUT HERO ── -->
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span style="font-size:.95rem;font-weight:700;color:var(--text);">התוכנית להיום</span>
+        <button onclick="showPanel('schedule')" style="font-size:0.8rem;color:var(--lime);font-weight:600;cursor:pointer;background:none;border:none;padding:0;">הצג הכל →</button>
+      </div>
+      <div id="today-hero" class="today-hero" style="position:relative;border-radius:18px;overflow:hidden;background:var(--bg2);border:1px solid rgba(204,255,0,.2);padding:20px;">
+        <!-- Glow orb -->
+        <div style="position:absolute;top:-20px;left:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(204,255,0,.2),transparent 70%);pointer-events:none;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+          <span style="background:rgba(204,255,0,.15);color:#CCFF00;border:1px solid rgba(204,255,0,.3);font-size:0.8rem;font-weight:800;padding:4px 10px;border-radius:6px;letter-spacing:.06em;">PUSH DAY</span>
+          <span style="font-size:0.8rem;color:var(--muted);">תוכנית א׳</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+          <div>
+            <div style="font-size:1.1rem;font-weight:800;color:var(--text);line-height:1.2;">חזה · כתפיים</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">~70 דק׳ &nbsp;·&nbsp; 7 תרגילים</div>
+          </div>
+          <button aria-label="התחל אימון" style="width:48px;height:48px;border-radius:50%;background:var(--lime);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(204,255,0,.30);">
+            <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;fill:white;margin-right:-2px" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── WEEK CAROUSEL ── -->
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span style="font-size:.95rem;font-weight:700;color:var(--text);">השבוע שלך</span>
+        <span id="week-counter" style="font-size:0.8rem;color:var(--muted);">4 ימי אימון</span>
+      </div>
+      <div id="dash-week-row" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;">
+        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--red)"></span><span class="ddc-name">א׳</span><span class="ddc-type" style="color:var(--red)">PUSH</span></div>
+        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--cyan)"></span><span class="ddc-name">ב׳</span><span class="ddc-type" style="color:var(--cyan)">PULL</span></div>
+        <div class="dash-day-chip ddc-rest"><span class="ddc-dot ddc-dot-rest"></span><span class="ddc-name">ג׳</span><span class="ddc-type">מנוחה</span></div>
+        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--purple)"></span><span class="ddc-name">ד׳</span><span class="ddc-type" style="color:var(--purple)">LEGS</span></div>
+        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--yellow)"></span><span class="ddc-name">ה׳</span><span class="ddc-type" style="color:var(--yellow)">ARMS</span></div>
+        <div class="dash-day-chip ddc-rest"><span class="ddc-dot ddc-dot-rest"></span><span class="ddc-name">ו׳</span><span class="ddc-type">אקטיב</span></div>
+      </div>
+    </div>
 
     <!-- ── STREAK BANNER ── -->
     <div style="background:var(--bg3);border:1px solid rgba(255,122,69,.2);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
@@ -140,16 +179,13 @@
           <div id="streak-micro" class="streak-micro-copy"></div>
         </div>
       </div>
-      <div style="text-align:left;">
-        <div style="font-size:0.8rem;color:var(--muted);">השבוע</div>
-        <div style="font-size:0.94rem;font-weight:700;color:var(--lime);" id="week-workouts-display">0 / 4 אימונים</div>
-      </div>
+      <div style="font-size:0.94rem;font-weight:700;color:var(--lime);display:none;" id="week-workouts-display">0 / 4 אימונים</div>
     </div>
 
     <!-- ── WORKOUT QUICK-START ── -->
     <div>
       <div style="font-size:0.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">התחל אימון</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+      <div class="workout-picker">
         <button class="workout-card push" onclick="showPanel('push',null);setMobileNav('push');">
           <div class="workout-card-icon"><svg class="ico"><use href="#i-arrow-up"/></svg></div>
           <div class="workout-card-title" style="color:var(--push-c);">PUSH</div>
@@ -175,6 +211,53 @@
           <div class="workout-card-title" style="color:var(--orange);">CROSSFIT — WOD</div>
           <div class="workout-card-sub">ימי כוח לגיין · WODs · בנצ'מרקים · טיימר מובנה</div>
         </button>
+      </div>
+    </div>
+
+    <!-- ── DISCIPLINE CHECKLIST ── -->
+    <div style="background:#16161B;border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <span style="font-size:0.94rem;font-weight:700;color:var(--text);">הרגלי היום</span>
+        <span id="habit-count-badge" style="font-size:0.8rem;color:var(--lime);font-weight:700;background:rgba(255,122,69,.1);padding:3px 8px;border-radius:6px;">0/5</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+          <input type="checkbox" id="habit-cb-0" onchange="toggleHabit(0)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
+          <span id="habit-lbl-0" style="font-size:0.94rem;color:var(--text,#F8FAFC);">אימון בוצע</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+          <input type="checkbox" id="habit-cb-1" onchange="toggleHabit(1)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
+          <span id="habit-lbl-1" style="font-size:0.94rem;color:var(--text,#F8FAFC);">ארוחת חלבון × 4</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+          <input type="checkbox" id="habit-cb-2" onchange="toggleHabit(2)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
+          <span id="habit-lbl-2" style="font-size:0.94rem;color:var(--text,#F8FAFC);">10 כוסות מים (2.5ל׳)</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+          <input type="checkbox" id="habit-cb-3" onchange="toggleHabit(3)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
+          <span id="habit-lbl-3" style="font-size:0.94rem;color:var(--text,#F8FAFC);">שינה 7+ שעות</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+          <input type="checkbox" id="habit-cb-4" onchange="toggleHabit(4)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
+          <span id="habit-lbl-4" style="font-size:0.94rem;color:var(--text,#F8FAFC);">רשמת משקלים</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- ── NUTRITION PREVIEW ── -->
+    <div>
+      <span id="dash-meal-title" style="font-size:.95rem;font-weight:700;color:var(--text);display:block;margin-bottom:10px;">ארוחות יומי</span>
+      <div id="dash-nutrition-preview" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:rgba(255,122,69,.06);border:1px solid rgba(255,122,69,.15);border-radius:14px;padding:14px;opacity:.75;">
+          <span style="font-size:0.8rem;color:var(--lime);font-weight:700;">ארוחה 1</span>
+          <div style="font-size:0.94rem;font-weight:700;color:var(--text);margin-top:5px;" id="dash-meal-1-name">—</div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;" id="dash-meal-1-macro">—</div>
+        </div>
+        <div style="background:#16161B;border:1px solid rgba(204,255,0,.2);border-radius:14px;padding:14px;position:relative;">
+          <span style="font-size:0.8rem;color:#CCFF00;font-weight:700;">ארוחה 2</span>
+          <div style="font-size:0.94rem;font-weight:700;color:var(--text);margin-top:5px;" id="dash-meal-2-name">—</div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;" id="dash-meal-2-macro">—</div>
+        </div>
       </div>
     </div>
 
@@ -228,47 +311,6 @@
       </div>
     </div>
 
-    <!-- ── WEEK CAROUSEL ── -->
-    <div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <span style="font-size:.95rem;font-weight:700;color:var(--text);">השבוע שלך</span>
-        <span id="week-counter" style="font-size:0.8rem;color:var(--muted);">4 ימי אימון</span>
-      </div>
-      <div id="dash-week-row" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;">
-        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--red)"></span><span class="ddc-name">א׳</span><span class="ddc-type" style="color:var(--red)">PUSH</span></div>
-        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--cyan)"></span><span class="ddc-name">ב׳</span><span class="ddc-type" style="color:var(--cyan)">PULL</span></div>
-        <div class="dash-day-chip ddc-rest"><span class="ddc-dot ddc-dot-rest"></span><span class="ddc-name">ג׳</span><span class="ddc-type">מנוחה</span></div>
-        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--purple)"></span><span class="ddc-name">ד׳</span><span class="ddc-type" style="color:var(--purple)">LEGS</span></div>
-        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--yellow)"></span><span class="ddc-name">ה׳</span><span class="ddc-type" style="color:var(--yellow)">ARMS</span></div>
-        <div class="dash-day-chip ddc-rest"><span class="ddc-dot ddc-dot-rest"></span><span class="ddc-name">ו׳</span><span class="ddc-type">אקטיב</span></div>
-      </div>
-    </div>
-
-    <!-- ── TODAY'S WORKOUT HERO ── -->
-    <div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <span style="font-size:.95rem;font-weight:700;color:var(--text);">התוכנית להיום</span>
-        <button onclick="showPanel('schedule')" style="font-size:0.8rem;color:var(--lime);font-weight:600;cursor:pointer;background:none;border:none;padding:0;">הצג הכל →</button>
-      </div>
-      <div id="today-hero" class="today-hero" style="position:relative;border-radius:18px;overflow:hidden;background:var(--bg2);border:1px solid rgba(204,255,0,.2);padding:20px;">
-        <!-- Glow orb -->
-        <div style="position:absolute;top:-20px;left:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(204,255,0,.2),transparent 70%);pointer-events:none;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
-          <span style="background:rgba(204,255,0,.15);color:#CCFF00;border:1px solid rgba(204,255,0,.3);font-size:0.8rem;font-weight:800;padding:4px 10px;border-radius:6px;letter-spacing:.06em;">PUSH DAY</span>
-          <span style="font-size:0.8rem;color:var(--muted);">תוכנית א׳</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
-          <div>
-            <div style="font-size:1.1rem;font-weight:800;color:var(--text);line-height:1.2;">חזה · כתפיים</div>
-            <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">~70 דק׳ &nbsp;·&nbsp; 7 תרגילים</div>
-          </div>
-          <button aria-label="התחל אימון" style="width:48px;height:48px;border-radius:50%;background:var(--lime);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(204,255,0,.30);">
-            <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;fill:white;margin-right:-2px" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- ── QUICK STATS ROW: STEPS + WATER ── -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <!-- Steps -->
@@ -299,53 +341,6 @@
         <div style="display:flex;gap:6px;margin-top:10px;">
           <button onclick="removeWaterCup()" aria-label="הסר כוס מים" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text,#F8FAFC);border-radius:8px;padding:6px 0;font-size:1.1rem;cursor:pointer;font-family:var(--font);transition:background .15s;">−</button>
           <button onclick="addWaterCup()" aria-label="הוסף כוס מים" style="flex:2;background:rgba(0,217,255,.15);border:1px solid rgba(0,217,255,.3);color:#FF7A45;border-radius:8px;padding:6px 0;font-size:0.86rem;cursor:pointer;font-weight:700;font-family:var(--font);transition:background .15s;">+ כוס</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── DISCIPLINE CHECKLIST ── -->
-    <div style="background:#16161B;border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-        <span style="font-size:0.94rem;font-weight:700;color:var(--text);">הרגלי היום</span>
-        <span id="habit-count-badge" style="font-size:0.8rem;color:var(--lime);font-weight:700;background:rgba(255,122,69,.1);padding:3px 8px;border-radius:6px;">0/5</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" id="habit-cb-0" onchange="toggleHabit(0)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
-          <span id="habit-lbl-0" style="font-size:0.94rem;color:var(--text,#F8FAFC);">אימון בוצע</span>
-        </label>
-        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" id="habit-cb-1" onchange="toggleHabit(1)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
-          <span id="habit-lbl-1" style="font-size:0.94rem;color:var(--text,#F8FAFC);">ארוחת חלבון × 4</span>
-        </label>
-        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" id="habit-cb-2" onchange="toggleHabit(2)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
-          <span id="habit-lbl-2" style="font-size:0.94rem;color:var(--text,#F8FAFC);">10 כוסות מים (2.5ל׳)</span>
-        </label>
-        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" id="habit-cb-3" onchange="toggleHabit(3)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
-          <span id="habit-lbl-3" style="font-size:0.94rem;color:var(--text,#F8FAFC);">שינה 7+ שעות</span>
-        </label>
-        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-          <input type="checkbox" id="habit-cb-4" onchange="toggleHabit(4)" style="accent-color:var(--lime);width:16px;height:16px;cursor:pointer;"/>
-          <span id="habit-lbl-4" style="font-size:0.94rem;color:var(--text,#F8FAFC);">רשמת משקלים</span>
-        </label>
-      </div>
-    </div>
-
-    <!-- ── NUTRITION PREVIEW ── -->
-    <div>
-      <span id="dash-meal-title" style="font-size:.95rem;font-weight:700;color:var(--text);display:block;margin-bottom:10px;">ארוחות יומי</span>
-      <div id="dash-nutrition-preview" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div style="background:rgba(255,122,69,.06);border:1px solid rgba(255,122,69,.15);border-radius:14px;padding:14px;opacity:.75;">
-          <span style="font-size:0.8rem;color:var(--lime);font-weight:700;">ארוחה 1</span>
-          <div style="font-size:0.94rem;font-weight:700;color:var(--text);margin-top:5px;" id="dash-meal-1-name">—</div>
-          <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;" id="dash-meal-1-macro">—</div>
-        </div>
-        <div style="background:#16161B;border:1px solid rgba(204,255,0,.2);border-radius:14px;padding:14px;position:relative;">
-          <span style="font-size:0.8rem;color:#CCFF00;font-weight:700;">ארוחה 2</span>
-          <div style="font-size:0.94rem;font-weight:700;color:var(--text);margin-top:5px;" id="dash-meal-2-name">—</div>
-          <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;" id="dash-meal-2-macro">—</div>
         </div>
       </div>
     </div>
@@ -461,17 +456,9 @@
     <div class="card day-head-card" data-wm="PUSH">
       <div class="card-head">
         <h2 class="day-title">ראשון — PUSH DAY</h2>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-          <span class="badge badge-red">חזה</span>
-          <span class="badge badge-cyan">כתפיים</span>
-          <span class="badge badge-purple">טריצפס</span>
-          <span class="badge badge-yellow">~70 דק׳</span>
-          <button class="gym-mode-btn" onclick="startGymMode('push','PUSH',getComputedStyle(document.documentElement).getPropertyValue('--red'))">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            מצב אימון
-          </button>
+        <span class="day-meta"></span>
         </div>
-      </div>
+      <button class="gym-mode-btn" onclick="startGymMode('push','','')"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>התחל אימון</button>
       <div class="card-body">
         <table class="ex-table">
           <thead><tr><th>#</th><th>תרגיל</th><th>שריר</th><th>סטים × חזרות</th><th>מנוחה</th><th>עצימות</th></tr></thead>
@@ -559,17 +546,9 @@
     <div class="card day-head-card" data-wm="PULL">
       <div class="card-head">
         <h2 class="day-title">שני — PULL DAY</h2>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-          <span class="badge badge-blue">גב</span>
-          <span class="badge badge-green">בייסס</span>
-          <span class="badge badge-cyan">כתף אחורית</span>
-          <span class="badge badge-yellow">~70 דק׳</span>
-          <button class="gym-mode-btn" onclick="startGymMode('pull','PULL',getComputedStyle(document.documentElement).getPropertyValue('--cyan'))">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            מצב אימון
-          </button>
+        <span class="day-meta"></span>
         </div>
-      </div>
+      <button class="gym-mode-btn" onclick="startGymMode('pull','','')"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>התחל אימון</button>
       <div class="card-body">
         <table class="ex-table">
           <thead><tr><th>#</th><th>תרגיל</th><th>שריר</th><th>סטים × חזרות</th><th>מנוחה</th><th>עצימות</th></tr></thead>
@@ -650,18 +629,9 @@
     <div class="card day-head-card" data-wm="LEGS">
       <div class="card-head">
         <h2 class="day-title">רביעי — LEGS DAY</h2>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-          <span class="badge badge-purple">Quads</span>
-          <span class="badge badge-red">Hamstrings</span>
-          <span class="badge badge-yellow">ישבן</span>
-          <span class="badge badge-blue">שוק</span>
-          <span class="badge badge-yellow">~85 דק׳</span>
-          <button class="gym-mode-btn" onclick="startGymMode('legs','LEGS',getComputedStyle(document.documentElement).getPropertyValue('--purple'))">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            מצב אימון
-          </button>
+        <span class="day-meta"></span>
         </div>
-      </div>
+      <button class="gym-mode-btn" onclick="startGymMode('legs','','')"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>התחל אימון</button>
       <div class="card-body">
 
         <!-- LEGS MAP -->
@@ -831,17 +801,9 @@
     <div class="card day-head-card" data-wm="ARMS">
       <div class="card-head">
         <h2 class="day-title">חמישי — ARMS DAY</h2>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-          <span class="badge badge-blue">בייסס</span>
-          <span class="badge badge-purple">טריצפס</span>
-          <span class="badge badge-cyan">כתף</span>
-          <span class="badge badge-yellow">~75 דק׳</span>
-          <button class="gym-mode-btn" onclick="startGymMode('arms','ARMS',getComputedStyle(document.documentElement).getPropertyValue('--yellow'))">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            מצב אימון
-          </button>
+        <span class="day-meta"></span>
         </div>
-      </div>
+      <button class="gym-mode-btn" onclick="startGymMode('arms','','')"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>התחל אימון</button>
       <div class="card-body">
 
         <!-- ARMS MAP -->
@@ -1515,6 +1477,7 @@
     <div class="modal-body">
       <div class="modal-head"><div class="modal-title" id="m-title"></div></div>
       <div class="info-row" id="m-info"></div>
+      <div id="m-alt-wrap"></div>
       <div id="m-coach-tip"></div>
       <div class="demo-wrap" id="m-demo"></div>
       <div class="m-section">תיאור</div>
@@ -1928,6 +1891,6 @@
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">מנוחה</button>
 </div>
 
-    <script type="module" src="app.js?v=5"></script>
+    <script type="module" src="app.js?v=6"></script>
 </body>
 </html>
