@@ -3014,7 +3014,10 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
 
 /* Hover lift sticks on touch, where there is no pointer to leave */
 @media (hover:none){
-  .stat-box:hover,.workout-card:hover,.day-cell:not(.rest-day):hover{
+  /* :not(:active) here too — this older block was missed, and it was killing
+     .workout-card:active{transform:scale(.97)} on the dashboard picker */
+  .stat-box:hover:not(:active),.workout-card:hover:not(:active),
+  .day-cell:not(.rest-day):hover:not(:active){
     transform:none !important;box-shadow:none !important;
   }
 }
@@ -3093,7 +3096,6 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
   .tip-card:hover:not(:active),.supp-card:hover:not(:active),
   .day-cell:hover:not(:active),.workout-card:hover:not(:active){
     border-color:var(--border) !important;
-    background-color:inherit;
   }
   .ss-why:hover:not(:active)::before{border-color:var(--border2);color:var(--muted);}
 }
@@ -3114,4 +3116,15 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
   .week-bar .day-cell .dc-name{
     text-overflow:unset;font-size:.68rem;letter-spacing:-.2px;
   }
+}
+
+
+/* Press must beat hover. `.workout-card:hover` at line 1856 sits after
+   `.workout-card:active` at 279 with equal specificity, so the lift won and
+   the press animation never showed — on any device, not just touch. */
+.workout-card:active,.workout-picker > button:active{
+  transform:scale(.97) !important;box-shadow:none !important;
+}
+.card:active,.day-cell:not(.rest-day):active,.stat-box:active{
+  transform:scale(.995) !important;
 }
