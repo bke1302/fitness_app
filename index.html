@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
-<link rel="stylesheet" href="styles.css?v=21">
+<link rel="stylesheet" href="styles.css?v=22">
 </head>
 <body dir="rtl">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -218,7 +218,7 @@
     <div style="background:#16161B;border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:16px;">
       <div class="card-head">
         <h2>הרגלי היום</h2>
-        <span id="habit-count-badge" style="font-size:0.8rem;color:var(--lime);font-weight:700;background:rgba(255,122,69,.1);padding:3px 8px;border-radius:6px;">0/5</span>
+        <span id="habit-count-badge" style="font-size:0.8rem;color:var(--lime);font-weight:700;background:var(--bg2);border:1px solid var(--border);padding:3px 8px;border-radius:6px;">0/5</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
@@ -248,7 +248,7 @@
     <div>
       <div class="card-head"><h2 id="dash-meal-title">ארוחות יומי</h2></div>
       <div id="dash-nutrition-preview" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div style="background:rgba(255,122,69,.06);border:1px solid rgba(255,122,69,.15);border-radius:14px;padding:14px;opacity:.75;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px;opacity:.75;">
           <span style="font-size:0.8rem;color:var(--lime);font-weight:700;">ארוחה 1</span>
           <div style="font-size:0.94rem;font-weight:700;color:var(--text);margin-top:5px;" id="dash-meal-1-name">—</div>
           <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;" id="dash-meal-1-macro">—</div>
@@ -327,8 +327,8 @@
           <div id="water-bar" style="width:0%;height:100%;background:var(--lime);border-radius:99px;transition:width .4s ease;"></div>
         </div>
         <div style="display:flex;gap:6px;margin-top:10px;">
-          <button onclick="removeWaterCup()" aria-label="הסר כוס מים" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text,#F8FAFC);border-radius:8px;padding:6px 0;font-size:1.1rem;cursor:pointer;font-family:var(--font);transition:background .15s;">−</button>
-          <button onclick="addWaterCup()" aria-label="הוסף כוס מים" style="flex:2;background:rgba(0,217,255,.15);border:1px solid rgba(0,217,255,.3);color:#FF7A45;border-radius:8px;padding:6px 0;font-size:0.86rem;cursor:pointer;font-weight:700;font-family:var(--font);transition:background .15s;">+ כוס</button>
+          <button onclick="removeWaterCup()" aria-label="הסר כוס מים" style="flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text,#F8FAFC);border-radius:8px;padding:6px 0;font-size:1.1rem;cursor:pointer;font-family:var(--font);transition:background .15s;">−</button>
+          <button onclick="addWaterCup()" aria-label="הוסף כוס מים" style="flex:2;background:var(--bg3);border:1px solid var(--border);color:#FF7A45;border-radius:8px;padding:6px 0;font-size:0.86rem;cursor:pointer;font-weight:700;font-family:var(--font);transition:background .15s;">+ כוס</button>
         </div>
       </div>
     </div>
@@ -577,7 +577,7 @@
             </tr>
             <tr onclick="openModal('hammerCurl')">
               <td><div class="ex-num-cell">7</div></td>
-              <td><div class="ex-name-main">פטיש — משקולות</div><div class="ex-name-en" lang="en">Alternating Hammer Curl</div><div class="ex-why">Brachialis מרים את הבייסס — נראית גדולה יותר</div></td>
+              <td><div class="ex-name-main">פטיש — משקולות</div><div class="ex-name-en" lang="en">Alternating Hammer Curl</div><div class="ex-why">ברכיאליס מרים את הבייסס — נראית גדולה יותר</div></td>
               <td><span class="muscle-tag">ברכיאליס</span></td>
               <td class="sets-cell">3 × 12</td><td class="rest-cell">60 שנ׳</td>
               <td><span class="badge badge-green">בידוד</span></td>
@@ -616,16 +616,16 @@
 
         <!-- LEGS MAP -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;">
-          <div style="background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:12px;">
-            <div style="font-weight:700;color:var(--purple);margin-bottom:8px;font-size:0.94rem;">Quadriceps — 4 ראשים</div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:0.94rem;">ארבע ראשי — 4 ראשים</div>
             <div style="font-size:0.86rem;color:var(--muted2);line-height:1.9;">
               <strong>רחב חיצוני</strong> — רוחב חיצוני<br>
-              <strong>VMO / Teardrop</strong> — טיפה מעל ברך<br>
+              <strong>רחב פנימי</strong> — טיפה מעל ברך<br>
               <strong>ישר הירך</strong> — קדמי אמצעי
             </div>
           </div>
-          <div style="background:rgba(255,107,94,.08);border:1px solid rgba(255,107,94,.2);border-radius:10px;padding:12px;">
-            <div style="font-weight:700;color:var(--red);margin-bottom:8px;font-size:0.94rem;">שוק — 2 שרירים שונים!</div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:0.94rem;">שוק — 2 שרירים שונים!</div>
             <div style="font-size:0.86rem;color:var(--muted2);line-height:1.9;">
               <strong>תאומים</strong> — עמידה רגל ישרה<br>
               <strong>סוליאוס</strong> — ישיבה ברך כפופה<br>
@@ -658,7 +658,7 @@
               <td>
                 <div class="ex-name-main">לחיצת רגליים — רגל צרה</div>
                 <div class="ex-name-en" lang="en">Leg Press — Feet Close &amp; Low</div>
-                <div class="ex-why">רגליים צמודות ונמוכות = Vastus Lateralis (רוחב חיצוני)</div>
+                <div class="ex-why">רגליים צמודות ונמוכות = רחב חיצוני (רוחב חיצוני)</div>
               </td>
               <td><span class="muscle-tag">רחב חיצוני</span><br><span class="part-tag">רוחב חיצוני</span></td>
               <td class="sets-cell">3 × 10–12</td><td class="rest-cell">2 דק׳</td>
@@ -669,9 +669,9 @@
               <td>
                 <div class="ex-name-main">פשיטות רגליים + עצירה</div>
                 <div class="ex-name-en" lang="en">Leg Extension — 2sec Pause</div>
-                <div class="ex-why">החזק 2 שנ׳ בפשיטה = VMO "טיפה" מעל הברך</div>
+                <div class="ex-why">החזק 2 שנ׳ בפשיטה = רחב פנימי "טיפה" מעל הברך</div>
               </td>
-              <td><span class="muscle-tag">VMO Teardrop</span><br><span class="part-tag">טיפה מעל הברך</span></td>
+              <td><span class="muscle-tag">רחב פנימי</span><br><span class="part-tag">טיפה מעל הברך</span></td>
               <td class="sets-cell">3 × 12–15</td><td class="rest-cell">60 שנ׳</td>
               <td><span class="badge badge-green">בידוד</span></td>
             </tr>
@@ -685,9 +685,9 @@
               <td>
                 <div class="ex-name-main">דד-ליפט רומני</div>
                 <div class="ex-name-en" lang="en">Romanian Deadlift</div>
-                <div class="ex-why">Hamstring Long Head — מתיחה מלאה</div>
+                <div class="ex-why">ירך אחורי — ראש ארוך — מתיחה מלאה</div>
               </td>
-              <td><span class="muscle-tag">Ham. Long Head</span><br><span class="part-tag">ירך אחורי + גב תחתון</span></td>
+              <td><span class="muscle-tag">ירך אחורי — ראש ארוך</span><br><span class="part-tag">ירך אחורי + גב תחתון</span></td>
               <td class="sets-cell">3 × 8–10</td><td class="rest-cell">2 דק׳</td>
               <td><span class="badge badge-red">כבד</span></td>
             </tr>
@@ -696,9 +696,9 @@
               <td>
                 <div class="ex-name-main">כפיפות רגל שכיבה</div>
                 <div class="ex-name-en" lang="en">Lying Leg Curl</div>
-                <div class="ex-why">Ham. Short Head — כיווץ מלא</div>
+                <div class="ex-why">ירך אחורי — ראש קצר — כיווץ מלא</div>
               </td>
-              <td><span class="muscle-tag">Ham. Short Head</span><br><span class="part-tag">כפיפה מלאה</span></td>
+              <td><span class="muscle-tag">ירך אחורי — ראש קצר</span><br><span class="part-tag">כפיפה מלאה</span></td>
               <td class="sets-cell">3 × 12</td><td class="rest-cell">60 שנ׳</td>
               <td><span class="badge badge-green">בידוד</span></td>
             </tr>
@@ -723,7 +723,7 @@
               <td>
                 <div class="ex-name-main">עריסת עגל עמידה</div>
                 <div class="ex-name-en" lang="en">Standing Calf Raise</div>
-                <div class="ex-why">רגל ישרה = Gastrocnemius (שריר עליון, ה"בליטה")</div>
+                <div class="ex-why">רגל ישרה = תאומים (שריר עליון, ה"בליטה")</div>
               </td>
               <td><span class="muscle-tag">תאומים</span><br><span class="part-tag">בליטה עליונה</span></td>
               <td class="sets-cell">4 × 15–20</td><td class="rest-cell">45 שנ׳</td>
@@ -734,7 +734,7 @@
               <td>
                 <div class="ex-name-main">עריסת עגל ישיבה</div>
                 <div class="ex-name-en" lang="en">Seated Calf Raise</div>
-                <div class="ex-why">ברך כפופה = Soleus — שריר שונה! רוב האנשים לעולם לא מאמנים אותו</div>
+                <div class="ex-why">ברך כפופה = סוליאוס — שריר שונה! רוב האנשים לעולם לא מאמנים אותו</div>
               </td>
               <td><span class="muscle-tag">סוליאוס</span><br><span class="part-tag">שוק תחתון + עובי</span></td>
               <td class="sets-cell">4 × 15–20</td><td class="rest-cell">45 שנ׳</td>
@@ -789,15 +789,15 @@
         <!-- ARMS MAP -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;">
           <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;">
-            <div style="font-weight:700;color:var(--blue);margin-bottom:8px;font-size:0.94rem;">בייסס — 3 חלקים</div>
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:0.94rem;">בייסס — 3 חלקים</div>
             <div style="font-size:0.86rem;color:var(--muted2);line-height:1.9;">
               <strong>ראש ארוך</strong> — הפיק (גובה הזרוע)<br>
               <strong>ראש קצר</strong> — הרוחב<br>
               <strong>ברכיאליס</strong> — מתחת לבייסס, <em>מרים אותה</em>
             </div>
           </div>
-          <div style="background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:12px;">
-            <div style="font-weight:700;color:var(--purple);margin-bottom:8px;font-size:0.94rem;">טריצפס — 3 חלקים</div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:0.94rem;">טריצפס — 3 חלקים</div>
             <div style="font-size:0.86rem;color:var(--muted2);line-height:1.9;">
               <strong>ראש ארוך</strong> — 60% מהזרוע!<br>
               <strong>ראש חיצוני</strong> — הפרסה הצדדית<br>
@@ -806,7 +806,7 @@
           </div>
         </div>
 
-        <div style="font-size:0.94rem;color:var(--purple);margin-bottom:14px;font-weight:600;background:rgba(168,85,247,.08);padding:10px 14px;border-radius:8px;">
+        <div style="font-size:0.94rem;color:var(--muted);margin-bottom:14px;background:var(--bg2);border:1px solid var(--border);padding:11px 14px;border-radius:var(--radius-md);">
           סופרסט — בצע את שני התרגילים ברצף בלי מנוחה, ואז נוח 75 שנ׳. פחות זמן, יותר נפח דם בשריר.
         </div>
 
@@ -823,7 +823,7 @@
               <td>
                 <div class="ex-name-main"><span class="superset-label">SS</span>כפיפות מוט EZ</div>
                 <div class="ex-name-en" lang="en">EZ Bar Curl</div>
-                <div class="ex-why">נפח כללי — Short Head בדגש</div>
+                <div class="ex-why">נפח כללי — ראש קצר בדגש</div>
               </td>
               <td><span class="muscle-tag">ראש קצר</span><br><span class="part-tag">רוחב הזרוע</span></td>
               <td class="sets-cell">3 × 8–10</td><td class="rest-cell">—</td>
@@ -834,7 +834,7 @@
               <td>
                 <div class="ex-name-main"><span class="superset-label">SS</span>כפיפות בנטייה</div>
                 <div class="ex-name-en" lang="en">Incline Dumbbell Curl</div>
-                <div class="ex-why">מתיחה מלאה → Long Head</div>
+                <div class="ex-why">מתיחה מלאה → ראש ארוך</div>
               </td>
               <td><span class="muscle-tag">ראש ארוך</span><br><span class="part-tag">פיק — גובה הבייסס</span></td>
               <td class="sets-cell">3 × 10–12</td><td class="rest-cell">75 שנ׳</td>
@@ -845,7 +845,7 @@
               <td>
                 <div class="ex-name-main">פטיש בכבל</div>
                 <div class="ex-name-en" lang="en">Cable Hammer Curl</div>
-                <div class="ex-why">Brachialis = מה שמרים את הבייסס למעלה ויזואלית</div>
+                <div class="ex-why">ברכיאליס = מה שמרים את הבייסס למעלה ויזואלית</div>
               </td>
               <td><span class="muscle-tag">ברכיאליס</span><br><span class="part-tag">עובי מתחת לבייסס</span></td>
               <td class="sets-cell">3 × 12–15</td><td class="rest-cell">60 שנ׳</td>
@@ -861,7 +861,7 @@
               <td>
                 <div class="ex-name-main"><span class="superset-label">SS</span>Skull Crushers</div>
                 <div class="ex-name-en" lang="en">EZ Bar Skull Crusher</div>
-                <div class="ex-why">Long Head — 60% מגודל הטריצפס!</div>
+                <div class="ex-why">ראש ארוך — 60% מגודל הטריצפס!</div>
               </td>
               <td><span class="muscle-tag">ראש ארוך</span><br><span class="part-tag">נפח עיקרי הזרוע</span></td>
               <td class="sets-cell">3 × 8–10</td><td class="rest-cell">—</td>
@@ -872,7 +872,7 @@
               <td>
                 <div class="ex-name-main"><span class="superset-label">SS</span>לחיצת חבל</div>
                 <div class="ex-name-en" lang="en">Rope Pushdown</div>
-                <div class="ex-why">Lateral Head — הפרסה הנראית</div>
+                <div class="ex-why">ראש חיצוני — הפרסה הנראית</div>
               </td>
               <td><span class="muscle-tag">ראש חיצוני</span><br><span class="part-tag">פרסה צדדית</span></td>
               <td class="sets-cell">3 × 12</td><td class="rest-cell">75 שנ׳</td>
@@ -883,7 +883,7 @@
               <td>
                 <div class="ex-name-main">טריצפס מעל הראש</div>
                 <div class="ex-name-en" lang="en">Overhead Cable Extension</div>
-                <div class="ex-why">Long Head במתיחה מקסימלית = יותר גדילה</div>
+                <div class="ex-why">ראש ארוך במתיחה מקסימלית = יותר גדילה</div>
               </td>
               <td><span class="muscle-tag">ראש ארוך</span><br><span class="part-tag">מתיחה מלאה</span></td>
               <td class="sets-cell">3 × 10–12</td><td class="rest-cell">75 שנ׳</td>
@@ -1022,8 +1022,8 @@
       <div class="card-head"><h2>מה לאכול ומה להימנע — כולסטרול</h2></div>
       <div class="card-body">
         <div class="grid-2">
-          <div style="background:rgba(255,122,69,.07);border:1px solid rgba(255,122,69,.25);border-radius:12px;padding:16px;">
-            <div style="font-weight:700;color:var(--green);margin-bottom:12px;">מומלץ — מוריד כולסטרול</div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:12px;">מומלץ — מוריד כולסטרול</div>
             <div style="font-size:0.94rem;color:var(--muted2);line-height:2;">
               סלמון, מוגרי, סרדינים (3×/שבוע)<br>
               שיבולת שועל (Beta-Glucan)<br>
@@ -1035,8 +1035,8 @@
               שום (מוריד LDL)
             </div>
           </div>
-          <div style="background:rgba(255,107,94,.07);border:1px solid rgba(255,107,94,.25);border-radius:12px;padding:16px;">
-            <div style="font-weight:700;color:var(--red);margin-bottom:12px;">להימנע — מעלה כולסטרול</div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:12px;">להימנע — מעלה כולסטרול</div>
             <div style="font-size:0.94rem;color:var(--muted2);line-height:2;">
               בשר אדום שמן — מקסימום 1×/שבוע<br>
               חמאה, שמנת, גהי<br>
@@ -1184,7 +1184,7 @@
 
     <!-- RECOVERY SCORE -->
     <div class="card sec-recovery collapsible" id="recovery-card">
-      <div class="card-head"><h2>ריקברי יומי</h2><span class="badge badge-neutral">צ'ק-אין</span></div>
+      <div class="card-head"><h2>התאוששות יומית</h2><span class="badge badge-neutral">צ'ק-אין</span></div>
       <div class="card-body" id="recovery-card-body">
         <div style="color:var(--muted);font-size:0.94rem;">טוען...</div>
       </div>
@@ -1443,7 +1443,7 @@
           </fieldset>
           <div class="settings-actions">
             <button id="btn-save-settings" class="settings-save" onclick="saveSettingsForm()">שמור הגדרות</button>
-            <button id="theme-btn" onclick="toggleTheme()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text);border-radius:10px;padding:10px 18px;font-size:0.94rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .18s;">החלף ערכת נושא</button>
+            <button id="theme-btn" onclick="toggleTheme()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 18px;font-size:0.94rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .18s;">החלף ערכת נושא</button>
           </div>
           <button type="button" class="btn-quiet settings-link" onclick="showPanel('tips',null)">מדריכים וטיפים ←</button>
           <div class="settings-actions-second">
@@ -1891,6 +1891,6 @@
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">מנוחה</button>
 </div>
 
-    <script type="module" src="app.js?v=21"></script>
+    <script type="module" src="app.js?v=22"></script>
 </body>
 </html>

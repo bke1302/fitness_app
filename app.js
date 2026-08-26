@@ -658,6 +658,7 @@ function showPanel(name,btn){
   }
   // Lazy-render panels that build their UI dynamically
   renderSubNav(name);
+  _placeWarmup(name);
   setTimeout(initCollapsibles,0);
   // after the lazy renderers below, not before them on the same tick
   setTimeout(()=>fixNumericRanges(document.getElementById('panel-'+name)),80);
@@ -867,47 +868,47 @@ const GOAL_LABELS={lean_bulk:'עלייה נקייה',bulk:'מסה מקסימלי
 // ═══════════════════════════════════════════════════
 const EX_ALTERNATIVES = {
   // ── חזה ──
-  benchPress:[{name:'לחיצת משקולות שכיבה',tag:'Dumbbell Bench Press — ריינג׳ של תנועה גדול יותר'},{name:'פוש-אפ בחגורה',tag:'Weighted Push-up — בית / ללא מכשיר'},{name:'פק דק / Chest Press מכונה',tag:'Machine Chest Press — מתחילים / שיקום'}],
-  inclineBench:[{name:'Incline Dumbbell Press',tag:'אותה קבוצת שריר, יותר יציבות'},{name:'Incline Push-up',tag:'ללא ציוד — שנה זווית הרצפה'},{name:'Low to High Cable Fly',tag:'כבל — מתח קבוע בחזה עליון'}],
-  cableFlye:[{name:'פרפר עם משקולות',tag:'Dumbbell Fly — שכיבה'},{name:'Pec Deck מכונה',tag:'בידוד מושלם לחזה'},{name:'Push-up רחב',tag:'ללא ציוד'}],
+  benchPress:[{name:'לחיצת משקולות שכיבה',tag:'Dumbbell Bench Press — ריינג׳ של תנועה גדול יותר'},{name:'פוש-אפ בחגורה',tag:'Weighted Push-up — בית / ללא מכשיר'},{name:'פק דק / לחיצת חזה מכונה',tag:'Machine Chest Press — מתחילים / שיקום'}],
+  inclineBench:[{name:'בשיפוע משקולת לחיצה',tag:'אותה קבוצת שריר, יותר יציבות'},{name:'בשיפוע שכיבת סמיכה',tag:'ללא ציוד — שנה זווית הרצפה'},{name:'מלמטה למעלה כבל פרפר',tag:'כבל — מתח קבוע בחזה עליון'}],
+  cableFlye:[{name:'פרפר עם משקולות',tag:'Dumbbell Fly — שכיבה'},{name:'פק דק מכונה',tag:'בידוד מושלם לחזה'},{name:'שכיבת סמיכה רחב',tag:'ללא ציוד'}],
   // ── כתפיים ──
-  ohp:[{name:'Arnold Press',tag:'סיבוב פנימי/חיצוני — כיסוי מלא של כתף'},{name:'Machine Shoulder Press',tag:'בטוח יותר לגב תחתון'},{name:'DB Shoulder Press ישיבה',tag:'Seated DB Press — יציבות גבוהה'}],
-  lateralRaise:[{name:'הרמות צד עם משקולות',tag:'Dumbbell Lateral Raise — אותו בידוד'},{name:'Lateral Raise כבל חד-צדדי',tag:'Cable One-Arm Lateral — מתח קבוע'},{name:'Machine Lateral Raise',tag:'בידוד מדויק ללא תנופה'}],
-  facePull:[{name:'Reverse Fly עם משקולות',tag:'Rear Delt Fly — שכיבה נוטה קדימה'},{name:'Band Face Pull',tag:'ריצועית — לכל מקום, ללא ציוד'},{name:'Rear Delt Machine',tag:'מכונה — בידוד מושלם'}],
+  ohp:[{name:'לחיצת ארנולד',tag:'סיבוב פנימי/חיצוני — כיסוי מלא של כתף'},{name:'מכונה לחיצת כתפיים',tag:'בטוח יותר לגב תחתון'},{name:'משקולת לחיצת כתפיים ישיבה',tag:'Seated DB Press — יציבות גבוהה'}],
+  lateralRaise:[{name:'הרמות צד עם משקולות',tag:'Dumbbell Lateral Raise — אותו בידוד'},{name:'הרמות צד כבל חד-צדדי',tag:'Cable One-Arm Lateral — מתח קבוע'},{name:'מכונה הרמות צד',tag:'בידוד מדויק ללא תנופה'}],
+  facePull:[{name:'פרפר הפוך עם משקולות',tag:'Rear Delt Fly — שכיבה נוטה קדימה'},{name:'גומייה משיכת פנים',tag:'ריצועית — לכל מקום, ללא ציוד'},{name:'כתף אחורית מכונה',tag:'מכונה — בידוד מושלם'}],
   // ── גב ──
-  pullup:[{name:'לט פולדאון',tag:'Lat Pulldown — אותו תנועה בישיבה'},{name:'Assisted Pull-up',tag:'מכונה עם עזר — לפיתוח כוח'},{name:'TRX Row',tag:'ישיבה נוטה — קל יותר'}],
-  bentRow:[{name:'חתירה עם משקולות',tag:'Dumbbell Row — גב ישר, יש הדגמות בכל מכון'},{name:'Machine Row',tag:'ללא שיווי משקל — טוב למתחילים'},{name:'TRX Row',tag:'ניתן לכוונן עצימות'}],
-  cableRow:[{name:'חתירה עם מוט',tag:'Barbell Row — כבד יותר'},{name:'חתירה עם משקולות',tag:'Dumbbell Row — כל יד בנפרד'},{name:'T-Bar Row',tag:'זווית שונה לגב אמצעי'}],
-  tBarRow:[{name:'One-Arm Dumbbell Row',tag:'כל יד בנפרד — טווח תנועה גדול'},{name:'Seated Cable Row',tag:'כבל — מתח קבוע לאורך כל התנועה'},{name:'Machine Row',tag:'בטוח יותר לגב תחתון'}],
-  deadlift:[{name:'Trap Bar Deadlift',tag:'עמוד השדרה ניטרלי יותר — טוב למתחילים'},{name:'Rack Pull',tag:'מתנקודת הברך — פחות טווח, יותר משקל'},{name:'Romanian Deadlift',tag:'RDL — הדגשה על Hamstrings'}],
+  pullup:[{name:'לט פולדאון',tag:'Lat Pulldown — אותו תנועה בישיבה'},{name:'מתח בעזרה',tag:'מכונה עם עזר — לפיתוח כוח'},{name:'חתירת TRX',tag:'ישיבה נוטה — קל יותר'}],
+  bentRow:[{name:'חתירה עם משקולות',tag:'Dumbbell Row — גב ישר, יש הדגמות בכל מכון'},{name:'מכונה חתירה',tag:'ללא שיווי משקל — טוב למתחילים'},{name:'חתירת TRX',tag:'ניתן לכוונן עצימות'}],
+  cableRow:[{name:'חתירה עם מוט',tag:'Barbell Row — כבד יותר'},{name:'חתירה עם משקולות',tag:'Dumbbell Row — כל יד בנפרד'},{name:'חתירת מוט T',tag:'זווית שונה לגב אמצעי'}],
+  tBarRow:[{name:'חד-יד משקולת חתירה',tag:'כל יד בנפרד — טווח תנועה גדול'},{name:'בישיבה כבל חתירה',tag:'כבל — מתח קבוע לאורך כל התנועה'},{name:'מכונה חתירה',tag:'בטוח יותר לגב תחתון'}],
+  deadlift:[{name:'מוט טרפ דדליפט',tag:'עמוד השדרה ניטרלי יותר — טוב למתחילים'},{name:'מתקן משיכה',tag:'מתנקודת הברך — פחות טווח, יותר משקל'},{name:'דדליפט רומני',tag:'RDL — הדגשה על Hamstrings'}],
   // ── רגליים ──
-  squat:[{name:'לחיצת רגליים',tag:'Leg Press — ללא עומס על עמוד השדרה'},{name:'Goblet Squat',tag:'משקולת אחת — טוב לטכניקה'},{name:'Bulgarian Split Squat',tag:'חד-רגלי — פחות משקל, יותר עבודה'}],
-  legPress:[{name:'סקוואט',tag:'Squat — כוח מלא'},{name:'Hack Squat',tag:'פחות עומס על גב תחתון'},{name:'Sissy Squat',tag:'בודד Quads — ללא ציוד'}],
-  rdl:[{name:'Rack Pull מגובה הברך',tag:'Rack Pull — פחות טווח, יותר גב תחתון'},{name:'Nordic Curl',tag:'Hamstrings ללא ציוד — הכי קשה'},{name:'Leg Curl מכונה',tag:'בידוד Hamstrings — בטוח לגב'}],
-  legExt:[{name:'Sissy Squat',tag:'ללא ציוד — בידוד Quad מלא'},{name:'Wall Sit',tag:'איזומטרי — 60 שנ׳ בלבד'},{name:'Step-up על ספסל',tag:'פונקציונלי — מגייס גם ישבן'}],
-  legCurl:[{name:'Nordic Curl',tag:'הכי קשה ללא ציוד — Hamstrings 100%'},{name:'Swiss Ball Leg Curl',tag:'כדור — אתגר שיווי משקל'},{name:'Good Morning',tag:'מוט על כתפיים — Hamstrings + גב תחתון'}],
-  lunges:[{name:'Step-up על ספסל',tag:'פחות עומס על ברך — נוח יותר'},{name:'Walking Lunges',tag:'תנועה — שורף יותר קלוריות'},{name:'Reverse Lunge',tag:'פחות לחץ על ברך קדמית'}],
-  hipThrust:[{name:'Glute Bridge',tag:'ללא ספסל — אותה תנועה על הרצפה'},{name:'Cable Kickback',tag:'כבל — בידוד ישבן ללא עומס על גב'},{name:'Donkey Kick',tag:'ללא ציוד — 15–20 חזרות לצד'}],
-  calfRaise:[{name:'Donkey Calf Raise',tag:'נוטה קדימה — מתיחה עמוקה ל-Gastrocnemius'},{name:'Seated Calf Raise',tag:'ישיבה = דגש על Soleus (שריר עמוק)'},{name:'Single-Leg Calf Raise',tag:'חד-רגלי ללא ציוד — כפל עומס'}],
+  squat:[{name:'לחיצת רגליים',tag:'Leg Press — ללא עומס על עמוד השדרה'},{name:'סקוואט גביע',tag:'משקולת אחת — טוב לטכניקה'},{name:'סקוואט בולגרי',tag:'חד-רגלי — פחות משקל, יותר עבודה'}],
+  legPress:[{name:'סקוואט',tag:'Squat — כוח מלא'},{name:'האק סקוואט',tag:'פחות עומס על גב תחתון'},{name:'סקוואט סיסי',tag:'בודד Quads — ללא ציוד'}],
+  rdl:[{name:'מתקן משיכה מגובה הברך',tag:'Rack Pull — פחות טווח, יותר גב תחתון'},{name:'כפיפת נורדית',tag:'Hamstrings ללא ציוד — הכי קשה'},{name:'רגל כפיפת מרפקים מכונה',tag:'בידוד Hamstrings — בטוח לגב'}],
+  legExt:[{name:'סקוואט סיסי',tag:'ללא ציוד — בידוד Quad מלא'},{name:'ישיבת קיר',tag:'איזומטרי — 60 שנ׳ בלבד'},{name:'עלייה על מדרגה על ספסל',tag:'פונקציונלי — מגייס גם ישבן'}],
+  legCurl:[{name:'כפיפת נורדית',tag:'הכי קשה ללא ציוד — Hamstrings 100%'},{name:'כדור פיזיו רגל כפיפת מרפקים',tag:'כדור — אתגר שיווי משקל'},{name:'בוקר טוב (הטיית גו)',tag:'מוט על כתפיים — Hamstrings + גב תחתון'}],
+  lunges:[{name:'עלייה על מדרגה על ספסל',tag:'פחות עומס על ברך — נוח יותר'},{name:'לאנג׳ בהליכה',tag:'תנועה — שורף יותר קלוריות'},{name:'הפוך לאנג׳',tag:'פחות לחץ על ברך קדמית'}],
+  hipThrust:[{name:'גשר ישבן',tag:'ללא ספסל — אותה תנועה על הרצפה'},{name:'כבל בעיטה לאחור',tag:'כבל — בידוד ישבן ללא עומס על גב'},{name:'חמור בעיטה',tag:'ללא ציוד — 15–20 חזרות לצד'}],
+  calfRaise:[{name:'חמור הרמות עקב',tag:'נוטה קדימה — מתיחה עמוקה ל-Gastrocnemius'},{name:'בישיבה הרמות עקב',tag:'ישיבה = דגש על Soleus (שריר עמוק)'},{name:'חד-צדדי הרמות עקב',tag:'חד-רגלי ללא ציוד — כפל עומס'}],
   // ── ידיים ──
-  bbCurl:[{name:'כפיפות משקולות',tag:'Dumbbell Curl — כל יד בנפרד'},{name:'Preacher Curl',tag:'מקנה גם ראש קצר בלבד — עיצוב'},{name:'כבל — כפיפות',tag:'Cable Curl — מתח קבוע'}],
-  hammerCurl:[{name:'Incline Dumbbell Curl',tag:'נוטה אחורה — מתיחה מלאה ל-Long Head'},{name:'Cross-Body Hammer',tag:'חוצה גוף — דגש על Brachialis'},{name:'Cable Rope Curl',tag:'כבל חבל — מתח קבוע'}],
-  skullCrusher:[{name:'Overhead EZ Extension',tag:'Long Head — אותה תנועה מעל הראש'},{name:'Overhead Dumbbell Extension',tag:'Long Head — משקולת בשתי ידיים'},{name:'Close-Grip Push-up',tag:'ללא ציוד — טריצפס בידוד'}],
-  triPushdown:[{name:'Overhead Cable Extension',tag:'Long Head — מתיחה מלאה בכבל'},{name:'Kickbacks משקולות',tag:'בידוד טהור — ללא עומס אחר'},{name:'Close-Grip Push-up',tag:'ללא ציוד — טריצפס'}],
+  bbCurl:[{name:'כפיפות משקולות',tag:'Dumbbell Curl — כל יד בנפרד'},{name:'כפיפת מרפקים בספסל סקוט',tag:'מקנה גם ראש קצר בלבד — עיצוב'},{name:'כבל — כפיפות',tag:'Cable Curl — מתח קבוע'}],
+  hammerCurl:[{name:'בשיפוע משקולת כפיפת מרפקים',tag:'נוטה אחורה — מתיחה מלאה ל-Long Head'},{name:'חוצה גוף פטיש',tag:'חוצה גוף — דגש על Brachialis'},{name:'כבל חבל כפיפת מרפקים',tag:'כבל חבל — מתח קבוע'}],
+  skullCrusher:[{name:'פשיטת מרפקים מעל הראש — מוט EZ',tag:'Long Head — אותה תנועה מעל הראש'},{name:'מעל הראש משקולת פשיטה',tag:'Long Head — משקולת בשתי ידיים'},{name:'שכיבת סמיכה אחיזה צרה',tag:'ללא ציוד — טריצפס בידוד'}],
+  triPushdown:[{name:'מעל הראש כבל פשיטה',tag:'Long Head — מתיחה מלאה בכבל'},{name:'בעיטות לאחור משקולות',tag:'בידוד טהור — ללא עומס אחר'},{name:'שכיבת סמיכה אחיזה צרה',tag:'ללא ציוד — טריצפס'}],
   // ── אמות ──
-  wristCurl:[{name:'כפיפת פרק עם ריצועית',tag:'Resistance Band Wrist Curl'},{name:'אחיזת בקבוק מים',tag:'ללא ציוד — 3×60 שנ׳'},{name:'Farmer Hold',tag:'אחיזה סטטית — ניהול עומס'}],
-  closeGripBench:[{name:'Diamond Push-up',tag:'ללא ציוד — טריצפס פנימי'},{name:'Dips במקביל',tag:'משקל גוף — כל ראשי הטריצפס'},{name:'Close-Grip Machine Press',tag:'מכונה — בטוח לפרקים'}],
-  ezCurl:[{name:'Barbell Curl',tag:'מוט ישר — Supination מלאה'},{name:'Dumbbell Curl',tag:'כפיפות משקולות — כל יד בנפרד'},{name:'Scott Curl / Preacher',tag:'בידוד מלא — ללא תנופה'}],
-  inclineCurl:[{name:'Concentration Curl',tag:'ריכוז — Long Head בידוד מלא'},{name:'Spider Curl',tag:'נוטה קדימה — Peak Bicep'},{name:'Cable Curl',tag:'כבל — מתח קבוע לאורך כל התנועה'}],
-  ohTricep:[{name:'Overhead DB Extension',tag:'משקולת — Long Head'},{name:'French Press / EZ Overhead',tag:'מוט EZ — מתח בשיא'},{name:'Rope Overhead Extension',tag:'כבל חבל — מתח קבוע'}],
-  bulgSplit:[{name:'Lunge עם משקולות',tag:'Dumbbell Lunge — פחות לחץ על גב'},{name:'Step-up על ספסל',tag:'פונקציונלי — נח יותר על ברך'},{name:'Single-Leg Press',tag:'חד-רגלי במכונה — בטוח למתחילים'}],
-  arnoldPress:[{name:'DB Shoulder Press ישיבה',tag:'Seated Dumbbell Press — כיסוי מלא ללא סיבוב'},{name:'Machine Shoulder Press',tag:'מכונה — בטוח לגב תחתון ולכתפיים'},{name:'OHP בישיבה',tag:'Seated Barbell Press — עומס גבוה יותר'}],
-  frontRaise:[{name:'Front Raise כבל נמוך',tag:'Cable Front Raise — מתח קבוע לאורך הטווח'},{name:'Plate Front Raise',tag:'דיסקית — אחיזה ניטרלית, קל יותר לשורש'},{name:'Incline Bench Front Raise',tag:'תמיכת גוף — מבטל תנופה לחלוטין'}],
-  diamondPushup:[{name:'Tricep Dips בין שני ספסלים',tag:'Bench Dips — נח יותר לשורשי כף יד'},{name:'Close-Grip Machine Press',tag:'מכונה — בידוד טריצפס בלי עומס כתפיים'},{name:'Overhead DB Tricep Extension',tag:'Long Head — מגייס גם ראש ארוך'}],
-  seatedCalfRaise:[{name:'Standing Calf Raise עם ברכיים כפופות',tag:'ברך כפופה = מדגיש Soleus כמו ישיבה'},{name:'Smith Machine Calf Raise בישיבה',tag:'יציב יותר, עמס גבוה יותר'},{name:'Resistance Band Calf Raise — ישיבה',tag:'ללא ציוד — ריצועית מתחת לברך'}],
-  reverseWristCurl:[{name:'Reverse Curl עם מוט EZ',tag:'EZ Bar — פחות עומס על המרפקים'},{name:'Hammer Curl',tag:'אחיזה ניטרלית — מגייס גם Extensor'},{name:'Resistance Band Reverse Curl',tag:'ריצועית — ללא ציוד, מתח עקבי'}],
-  farmerWalk:[{name:'Suitcase Carry',tag:'חד-צדדי — אתגר ליבה גדול יותר'},{name:'Plate Pinch Carry',tag:'אחיזת דיסקית — בידוד אצבעות'},{name:'Trap Bar Carry',tag:'Hex Bar — עמוד שדרה ניטרלי יותר'}],
-  cableCurl:[{name:'EZ Bar Curl',tag:'מוט EZ — יותר עומס, פחות עומס מרפק'},{name:'Preacher Curl',tag:'Scott Bench — בידוד מלא, ללא תנופה'},{name:'Concentration Curl',tag:'ריכוז — בידוד Long Head, ללא ציוד כבל'}],
+  wristCurl:[{name:'כפיפת פרק עם ריצועית',tag:'Resistance Band Wrist Curl'},{name:'אחיזת בקבוק מים',tag:'ללא ציוד — 3×60 שנ׳'},{name:'איכר אחיזה',tag:'אחיזה סטטית — ניהול עומס'}],
+  closeGripBench:[{name:'יהלום שכיבת סמיכה',tag:'ללא ציוד — טריצפס פנימי'},{name:'מקבילים במקביל',tag:'משקל גוף — כל ראשי הטריצפס'},{name:'אחיזה צרה מכונה לחיצה',tag:'מכונה — בטוח לפרקים'}],
+  ezCurl:[{name:'מוט כפיפת מרפקים',tag:'מוט ישר — Supination מלאה'},{name:'משקולת כפיפת מרפקים',tag:'כפיפות משקולות — כל יד בנפרד'},{name:'סקוט כפיפת מרפקים / סקוט',tag:'בידוד מלא — ללא תנופה'}],
+  inclineCurl:[{name:'כפיפת ריכוז',tag:'ריכוז — Long Head בידוד מלא'},{name:'כפיפת עכביש',tag:'נוטה קדימה — Peak Bicep'},{name:'כבל כפיפת מרפקים',tag:'כבל — מתח קבוע לאורך כל התנועה'}],
+  ohTricep:[{name:'מעל הראש משקולת פשיטה',tag:'משקולת — Long Head'},{name:'לחיצה צרפתית — מוט EZ מעל הראש',tag:'מוט EZ — מתח בשיא'},{name:'חבל פשיטת מרפקים מעל הראש',tag:'כבל חבל — מתח קבוע'}],
+  bulgSplit:[{name:'לאנג׳ עם משקולות',tag:'Dumbbell Lunge — פחות לחץ על גב'},{name:'עלייה על מדרגה על ספסל',tag:'פונקציונלי — נח יותר על ברך'},{name:'לחיצת רגל חד-צדדית',tag:'חד-רגלי במכונה — בטוח למתחילים'}],
+  arnoldPress:[{name:'משקולת לחיצת כתפיים ישיבה',tag:'Seated Dumbbell Press — כיסוי מלא ללא סיבוב'},{name:'מכונה לחיצת כתפיים',tag:'מכונה — בטוח לגב תחתון ולכתפיים'},{name:'לחיצה מעל הראש בישיבה',tag:'Seated Barbell Press — עומס גבוה יותר'}],
+  frontRaise:[{name:'הרמות קדמיות כבל נמוך',tag:'Cable Front Raise — מתח קבוע לאורך הטווח'},{name:'צלחת הרמות קדמיות',tag:'דיסקית — אחיזה ניטרלית, קל יותר לשורש'},{name:'בשיפוע ספסל הרמות קדמיות',tag:'תמיכת גוף — מבטל תנופה לחלוטין'}],
+  diamondPushup:[{name:'טריצפס מקבילים בין שני ספסלים',tag:'Bench Dips — נח יותר לשורשי כף יד'},{name:'אחיזה צרה מכונה לחיצה',tag:'מכונה — בידוד טריצפס בלי עומס כתפיים'},{name:'מעל הראש משקולת פשיטת מרפקים',tag:'Long Head — מגייס גם ראש ארוך'}],
+  seatedCalfRaise:[{name:'בעמידה הרמות עקב עם ברכיים כפופות',tag:'ברך כפופה = מדגיש Soleus כמו ישיבה'},{name:'סמית מכונה הרמות עקב בישיבה',tag:'יציב יותר, עמס גבוה יותר'},{name:'גומיית התנגדות הרמות עקב — ישיבה',tag:'ללא ציוד — ריצועית מתחת לברך'}],
+  reverseWristCurl:[{name:'כפיפה הפוכה — מוט EZ',tag:'EZ Bar — פחות עומס על המרפקים'},{name:'כפיפת פטיש',tag:'אחיזה ניטרלית — מגייס גם Extensor'},{name:'גומיית התנגדות כפיפה הפוכה',tag:'ריצועית — ללא ציוד, מתח עקבי'}],
+  farmerWalk:[{name:'נשיאת מזוודה',tag:'חד-צדדי — אתגר ליבה גדול יותר'},{name:'צלחת צביטה נשיאה',tag:'אחיזת דיסקית — בידוד אצבעות'},{name:'מוט טרפ נשיאה',tag:'Hex Bar — עמוד שדרה ניטרלי יותר'}],
+  cableCurl:[{name:'כפיפת מרפקים — מוט EZ',tag:'מוט EZ — יותר עומס, פחות עומס מרפק'},{name:'כפיפת מרפקים בספסל סקוט',tag:'Scott Bench — בידוד מלא, ללא תנופה'},{name:'כפיפת ריכוז',tag:'ריכוז — בידוד Long Head, ללא ציוד כבל'}],
 };
 
 function showAlternatives(exKey, exName){
@@ -993,11 +994,11 @@ function renderDashboardStats(u){
     const meals=getMealPlan(u,n);
     if(meals[0]){
       set('dash-meal-1-name', meals[0].name);
-      set('dash-meal-1-macro', Math.round(n.protein*meals[0].pRat)+'g חלבון · '+Math.round(n.target*meals[0].pct)+' קל׳');
+      set('dash-meal-1-macro', Math.round(n.protein*meals[0].pRat)+' ג׳ חלבון · '+Math.round(n.target*meals[0].pct)+' קל׳');
     }
     if(meals[1]){
       set('dash-meal-2-name', meals[1].name);
-      set('dash-meal-2-macro', Math.round(n.protein*meals[1].pRat)+'g חלבון · '+Math.round(n.target*meals[1].pct)+' קל׳');
+      set('dash-meal-2-macro', Math.round(n.protein*meals[1].pRat)+' ג׳ חלבון · '+Math.round(n.target*meals[1].pct)+' קל׳');
     }
   }catch(e){}
   // Achievements row in dashboard
@@ -1158,7 +1159,7 @@ function _buildMealCard(m, i, n, swaps){
       <div class="meal-tip" style="color:${tipColor}">${m.tip}</div>
       ${swapBtn}
     </div>
-    <div class="meal-macros"><span class="mp mp-p">חלבון ${p}g</span><span class="mp mp-c">פחמימות ${c}g</span><span class="mp mp-f">שומן ${f}g</span></div>
+    <div class="meal-macros"><span class="mp mp-p">חלבון ${p} ג׳</span><span class="mp mp-c">פחמימות ${c} ג׳</span><span class="mp mp-f">שומן ${f} ג׳</span></div>
   </div>`;
 }
 function renderNutritionPanel(){
@@ -2966,9 +2967,9 @@ function renderFoodPanel(){
     <div class="card-body">
       <div class="food-macro-bars">
         ${macroBar('קלוריות','קל׳',totals.cal,s.calories,'linear-gradient(90deg,var(--red),#9333ea)')}
-        ${macroBar('חלבון','גרם',totals.p,pGoal,'var(--blue)')}
-        ${macroBar('פחמימות','גרם',totals.c,cGoal,'var(--yellow)')}
-        ${macroBar('שומן','גרם',totals.f,fGoal,'var(--green)')}
+        ${macroBar('חלבון','ג׳',totals.p,pGoal,'var(--blue)')}
+        ${macroBar('פחמימות','ג׳',totals.c,cGoal,'var(--yellow)')}
+        ${macroBar('שומן','ג׳',totals.f,fGoal,'var(--green)')}
       </div>
     </div>
   </div>
@@ -3009,7 +3010,7 @@ function renderFoodPanel(){
     <div class="card-body" id="food-log-list">
       ${log.length?log.map((e,i)=>`<div class="food-log-entry">
         <div style="flex:1"><div class="fle-name">${_esc(e.name)}${(+e.qty>0&&+e.qty!==1)?` ×${e.qty}`:''}${e.unit?' '+_esc(e.unit):''}</div>
-        <div class="fle-amount">${Math.round(e.cal)} קל׳ · <span>חלבון ${Math.round(e.p)}</span> · <span>פחמ׳ ${Math.round(e.c)}</span> · <span>שומן ${Math.round(e.f)}</span></div></div>
+        <div class="fle-amount">${Math.round(e.cal)} קל׳ · <span>חלבון ${Math.round(e.p)} ג׳</span> · <span>פחמימות ${Math.round(e.c)} ג׳</span> · <span>שומן ${Math.round(e.f)} ג׳</span></div></div>
         <button class="fle-del" onclick="deleteFoodEntry(${i})" aria-label="מחק רשומה">✕</button>
       </div>`).join(''):`<div style="text-align:center;padding:24px 0;color:var(--muted);">
         <div style="margin-bottom:8px;color:var(--muted2);"><svg class="ico" style="width:30px;height:30px;"><use href="#i-utensils"/></svg></div>
@@ -3024,7 +3025,7 @@ function macroBar(label,unit,cur,goal,color){
   const pct=Math.min(100,(cur/goal)*100);
   const over=cur>goal;
   return `<div class="fmb-row">
-    <div class="fmb-top"><span class="fmb-label">${label}</span><span class="fmb-vals"><span class="ell-num">${Math.round(cur)} / ${goal}</span> ${unit}${over?' <span style="color:var(--red);font-weight:700;">חרגת</span>':''}</span></div>
+    <div class="fmb-top"><span class="fmb-label">${label}</span><span class="fmb-vals"><span class="ell-num">${Math.round(cur).toLocaleString('he-IL')} / ${goal.toLocaleString('he-IL')}</span> ${unit}${over?' <span style="color:var(--red);font-weight:700;">חרגת</span>':''}</span></div>
     <div class="fmb-track"><div class="fmb-fill${over?' fmb-over':''}" style="width:${pct}%;background:${color};"></div></div>
   </div>`;
 }
@@ -3034,7 +3035,7 @@ function _renderFoodDropdown(loading){
   const dd=document.getElementById('food-dropdown'); if(!dd) return;
   if(!_searchResults.length&&!loading){dd.classList.remove('show');return;}
   const rows=_searchResults.map((f,i)=>`<div class="food-option" onclick="selectFoodResult(${i})">
-    ${_esc(f.name)}${f._off?'<span class="fo-src"><svg class="ico"><use href="#i-globe"/></svg></span>':''}<div class="fo-macros">${Math.round(f.cal)} קל׳ · חלבון ${f.p} · פחמ׳ ${f.c} · שומן ${f.f}</div></div>`).join('');
+    ${_esc(f.name)}${f._off?'<span class="fo-src"><svg class="ico"><use href="#i-globe"/></svg></span>':''}<div class="fo-macros">${Math.round(f.cal)} קל׳ · חלבון ${f.p} ג׳ · פחמימות ${f.c} ג׳ · שומן ${f.f} ג׳</div></div>`).join('');
   dd.innerHTML=rows+(loading?'<div class="food-option fo-loading">מחפש במאגר העולמי…</div>':'');
   dd.classList.add('show');
 }
@@ -3118,7 +3119,7 @@ function updateFoodPreview(){
   if(!_selectedFood) return;
   const qty=parseFloat(document.getElementById('food-qty')?.value)||1;
   const pr=document.getElementById('food-preview');
-  if(pr) pr.textContent=`${Math.round(_selectedFood.cal*qty)} קל׳ · חלבון ${Math.round(_selectedFood.p*qty)}g · פחמימות ${Math.round(_selectedFood.c*qty)}g · שומן ${Math.round(_selectedFood.f*qty)}g`;
+  if(pr) pr.textContent=`${Math.round(_selectedFood.cal*qty)} קל׳ · חלבון ${Math.round(_selectedFood.p*qty)} ג׳ · פחמימות ${Math.round(_selectedFood.c*qty)} ג׳ · שומן ${Math.round(_selectedFood.f*qty)} ג׳`;
 }
 document.addEventListener('input',e=>{if(e.target.id==='food-qty') updateFoodPreview();});
 
@@ -4218,6 +4219,22 @@ function fixNumericRanges(root){
   });
 }
 
+// The warm-up card sits after .day-head-card in the DOM, and the exercise
+// table lives *inside* that card — so on the rendered page the warm-up came
+// after the whole workout. Reordering with flex cannot split a card, so the
+// card is moved under the start button instead, where it is read before the
+// first set rather than after the last.
+function _placeWarmup(name){
+  const panel=document.getElementById('panel-'+name);
+  if(!panel) return;
+  const warm=panel.querySelector(':scope > .warmup-card');
+  const day=panel.querySelector(':scope > .day-head-card');
+  if(!warm||!day) return;
+  const body=day.querySelector('.card-body');
+  if(!body||body.previousElementSibling===warm) return;
+  body.parentNode.insertBefore(warm,body);
+}
+
 // A .collapsible card shows only its heading until asked. These are the
 // sections you consult occasionally - a questionnaire, a measurements form,
 // a reference list - and having them all open is what made three screens
@@ -4715,8 +4732,8 @@ function saveRecovery(sleep,energy,soreness){
   const rec={date:todayStr(),sleep,energy,soreness,score};
   localStorage.setItem(RECOVERY_KEY,JSON.stringify(rec));
   renderRecoveryCard();
-  if(score<=3) showToast('ריקברי נמוך מאוד — מנוחה מלאה מומלצת היום!',4000);
-  else if(score<=5) showToast('ריקברי בינוני — שקול אימון קל / Deload',3000);
+  if(score<=3) showToast('התאוששות נמוך מאוד — מנוחה מלאה מומלצת היום!',4000);
+  else if(score<=5) showToast('התאוששות בינוני — שקול אימון קל / Deload',3000);
 }
 function renderRecoveryCard(){
   const el=document.getElementById('recovery-card-body');
@@ -5708,7 +5725,7 @@ function cfTabata(){
   const st=document.getElementById('cf-timer-status'); if(st) st.textContent='Tabata — 8×(20 עבודה/10 מנוחה)';
 }
 
-Object.assign(window,{gymPairCheck,toggleExSearch,initCollapsibles,renderSubNav,fixNumericRanges,
+Object.assign(window,{gymPairCheck,toggleExSearch,_placeWarmup,initCollapsibles,renderSubNav,fixNumericRanges,
   openModal,closeModal,closeModalBg,closeAltModal,
   cfFilter,cfToggleWod,cfOpenWod,cfSaveScore,cfTimerToggle,cfTimerReset,cfCountdown,cfTabata,
   showPanel,setMobileNav,renderExSearch,closeExSearch,browseExCategory,

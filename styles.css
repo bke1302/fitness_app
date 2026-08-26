@@ -3159,3 +3159,34 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
 /* A meal's calorie count is information, not a warning — red is what this
    app uses for exceeding a macro and for the alcohol caution. */
 .meal-cals{color:var(--text) !important;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   ROUND 12
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* A pill's border matches its own text — the macro chips were the last
+   three still outlined in lime around blue and yellow text. */
+.mp-p{border-color:rgba(0,169,255,.28) !important;}
+.mp-c{border-color:rgba(255,214,102,.28) !important;}
+.mp-f{border-color:rgba(61,255,149,.28) !important;}
+
+/* The warm-up now sits inside the day card, under the start button and above
+   the exercise list — see _placeWarmup(). It keeps a quieter surface so the
+   exercises stay the focus. */
+.day-head-card .warmup-card{
+  margin:0 0 18px;padding:13px 15px !important;
+  background:var(--bg2) !important;border:1px solid var(--border) !important;
+}
+.day-head-card .warmup-card .warmup-title{font-size:.86rem;margin-bottom:8px;}
+
+
+/* The warm-up card was skinned in --orange throughout — heading, chips and
+   surface. Orange is a workout-category hue here, and beside the red warning
+   palette it reads as a caution. A warm-up is instruction, so it takes the
+   neutral surface every other reference block uses. */
+.day-head-card .warmup-card .warmup-title{color:var(--text) !important;}
+.day-head-card .warmup-card .warmup-item{
+  background:var(--bg3) !important;border-color:var(--border) !important;
+  color:var(--muted) !important;
+}
