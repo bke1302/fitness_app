@@ -3142,3 +3142,20 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
    query could not reach, so "חזרות" was clipped to "חזרוו". */
 .elog-input{min-width:0;}
 .elog-row .elog-input{flex:1 1 72px;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   ROUND 11
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* Seven days, not six — the strip was rendering Sunday to Friday while the
+   schedule tab showed the whole week. */
+#dash-week-row{grid-template-columns:repeat(7,1fr) !important;}
+
+/* The ± buttons now bracket the kilos they change */
+.elog-kg-group{display:inline-flex;align-items:center;gap:4px;}
+.elog-kg-group .elog-input{flex:0 1 66px;text-align:center;}
+
+/* A meal's calorie count is information, not a warning — red is what this
+   app uses for exceeding a macro and for the alcohol caution. */
+.meal-cals{color:var(--text) !important;}

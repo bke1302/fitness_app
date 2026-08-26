@@ -2022,7 +2022,7 @@ const HEB_DAYS_SHORT=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳',''];
 function _renderDashChips(activeDayCfg){
   const row=document.getElementById('dash-week-row');
   if(!row) return;
-  const HEB_SHORT=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳'];
+  const HEB_SHORT=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'];
   row.innerHTML=HEB_SHORT.map((ltr,i)=>{
     const cfg=activeDayCfg[i];
     if(cfg){
@@ -2835,11 +2835,13 @@ function renderElogPanel(){
           ${tipHtml}
         </div>
         <div class="elog-inputs">
-          <button class="elog-inc-btn" onclick="elogAdjust('${key}',-2.5)">−</button>
-          <input class="elog-input" id="elog-kg-${key}" type="number" min="0" step="0.5" placeholder="ק״ג" value="${todayEntry?todayEntry.kg:last?last.kg:''}"/>
+          <span class="elog-kg-group">
+            <button class="elog-inc-btn" onclick="elogAdjust('${key}',-2.5)" aria-label="הפחת 2.5 קילו">−</button>
+            <input class="elog-input" id="elog-kg-${key}" type="number" min="0" step="0.5" placeholder="ק״ג" value="${todayEntry?todayEntry.kg:last?last.kg:''}"/>
+            <button class="elog-inc-btn" onclick="elogAdjust('${key}',2.5)" aria-label="הוסף 2.5 קילו">+</button>
+          </span>
           <span class="elog-x">×</span>
           <input class="elog-input" id="elog-reps-${key}" type="number" min="1" max="50" placeholder="חזרות" value="${todayEntry?todayEntry.reps:last?last.reps:''}"/>
-          <button class="elog-inc-btn" onclick="elogAdjust('${key}',2.5)">+</button>
           <button class="elog-save" onclick="elogSave('${key}')">שמור</button>
         </div>
       </div>`;
@@ -4052,10 +4054,10 @@ let _recognition=null;
 let _voiceActive=false;
 const VOICE_CMDS=[
   {k:['דאשבורד','לוח בקרה','dashboard'],fn:()=>{showPanel('dashboard');speak('עובר ללוח בקרה');}},
-  {k:['פוש','push','חזה'],fn:()=>{showPanel('push');speak('עובר לאימון PUSH');}},
-  {k:['פול','pull','גב'],fn:()=>{showPanel('pull');speak('עובר לאימון PULL');}},
-  {k:['לגס','legs','רגליים'],fn:()=>{showPanel('legs');speak('עובר לאימון LEGS');}},
-  {k:['ארמס','arms','ידיים'],fn:()=>{showPanel('arms');speak('עובר לאימון ARMS');}},
+  {k:['פוש','push','חזה'],fn:()=>{showPanel('push');speak('עובר לאימון דחיפה');}},
+  {k:['פול','pull','גב'],fn:()=>{showPanel('pull');speak('עובר לאימון משיכה');}},
+  {k:['לגס','legs','רגליים'],fn:()=>{showPanel('legs');speak('עובר לאימון רגליים');}},
+  {k:['ארמס','arms','ידיים'],fn:()=>{showPanel('arms');speak('עובר לאימון ידיים');}},
   {k:['תזונה','nutrition'],fn:()=>{showPanel('nutrition');speak('עובר לתזונה');}},
   {k:['הגדרות','settings'],fn:()=>{showPanel('settings');speak('עובר להגדרות');}},
   {k:['סטריק','רצף','streak'],fn:()=>{const n=document.getElementById('streak-num')?.textContent||'0';speak('הרצף שלך הוא '+n+' ימים');}},
@@ -4929,7 +4931,7 @@ function shareWhatsApp(){
   const u=getActiveUser()||{};
   const xp=getXP(); const lvl=getLevelData(xp);
   const streak=parseInt(document.getElementById('streak-num')?.textContent||'0');
-  const text=`*KOACH — האימון שלי*\n\n${u.name||'מתאמן'}\nרמה: ${lvl.badge} ${lvl.name}\nXP: ${xp} נקודות\nרצף: ${streak} ימים\n\nהורד בחינם: https://bke1302.github.io/fitness_app/`;
+  const text=`*KOACH — האימון שלי*\n\n${u.name||'מתאמן'}\nרמה: ${lvl.badge} ${lvl.name}\nניקוד: ${xp} נקודות\nרצף: ${streak} ימים\n\nהורד בחינם: https://bke1302.github.io/fitness_app/`;
   window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
 }
 function shareNativeOrDownload(){
@@ -5248,7 +5250,10 @@ function _buildSupersetRows(day){
     ss.pair.forEach((k,j)=>{
       paired.add(k); num++;
       const partner=EX[ss.pair[j?0:1]]?.name||'';
-      out+=buildExRow(k,num,{sets:reps[j],rest:j===0?ss.restWithin+' שנ׳':ss.restBetween+' שנ׳'})
+      // the pair header already states the between-rounds rest; repeating it
+      // on the second exercise in seconds while the header says minutes reads
+      // as two different numbers
+      out+=buildExRow(k,num,{sets:reps[j],rest:j===0?ss.restWithin+' שנ׳':'—'})
              .replace('<tr ','<tr class="ss-row'+(j?' ss-row-b':'')+'" data-ss="'+ss.id+'" '
                              +'data-ss-partner="'+_esc(partner)+'" data-ss-pos="'+(j?'ב':'א')+'" ');
     });
