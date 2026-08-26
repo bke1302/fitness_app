@@ -3642,11 +3642,11 @@ function _renderGymPair(p){
       ${side(p.b,r,'b',pb)}
     </div>`).join('');
   return `
-    <div class="gym-counter">סופרסט ${_gymIdx+1} מתוך ${_gymExercises.length}</div>
-    <div class="gym-ss"><span class="gym-ss-tag">${p.ss}</span>${_SS_TYPE[p.type]||''} · ${p.rounds} סבבים · ${p.restBetween} שנ׳ בין סבבים</div>
+    <div class="gym-counter">זוג ${_gymIdx+1} מתוך ${_gymExercises.length}</div>
+    <div class="gym-ss">${p.rounds} סבבים ברצף · מנוחה ${p.restBetween>=60?(p.restBetween%60?(p.restBetween/60).toFixed(1):p.restBetween/60)+' דק׳':p.restBetween+' שנ׳'}${p.note?` <button class="ss-why" onclick="this.closest('.gym-body').querySelector('.gym-pair-note').hidden=!this.closest('.gym-body').querySelector('.gym-pair-note').hidden">?</button>`:''}</div>
     <div class="gym-name gym-name-pair" style="color:${_gymColor}">${_esc(p.a.name)} + ${_esc(p.b.name)}</div>
     <div class="gym-sets-label">${p.a.sets} / ${p.b.sets}</div>
-    ${p.note?`<div class="gym-pair-note">${_esc(p.note)}</div>`:''}
+    ${p.note?`<div class="gym-pair-note" hidden>${_esc(p.note)}</div>`:''}
     <div class="gym-pair-rounds">${rounds}</div>`;
 }
 
@@ -3904,7 +3904,7 @@ function saveGymSet(){
 function toggleTempo(){
   _tempoOn=!_tempoOn;
   const btn=document.getElementById('gym-tempo-btn');
-  if(btn){ btn.textContent='קצב '+(_tempoOn?'ON':'OFF'); btn.classList.toggle('on',_tempoOn); }
+  if(btn){ btn.textContent='קצב '+(_tempoOn?'פועל':'כבוי'); btn.classList.toggle('on',_tempoOn); }
 }
 function speakTempo(){
   if(!window.speechSynthesis) return;
@@ -4246,6 +4246,10 @@ function renderMeasurements(){
 const RPE_KEY='pf_rpe';
 function setRPE(v){
   document.querySelectorAll('.rpe-btn').forEach(b=>b.classList.toggle('sel',+b.dataset.v===v));
+  // the keypad collapses again and the summary line carries the answer
+  const cur=document.getElementById('rpe-current');
+  if(cur) cur.textContent=v+' / 10';
+  document.getElementById('rpe-wrap')?.classList.remove('open');
   const today=todayStr();
   const rpe=_getJSON(RPE_KEY,{});
   if(!rpe[today]) rpe[today]=[];

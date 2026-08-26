@@ -2432,3 +2432,39 @@ body[data-panel="crossfit"] .timer-float{display:flex;}
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .workout-picker .wsel-meta{display:none;}   /* the day panel repeats it on arrival */
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   GYM MODE — the screen in your hand between sets.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* -2px tracking suits a Latin display face and destroys Hebrew word spacing:
+   "לחיצת חזה בשכיבה + מתח / לט פולדאון" rendered with no gaps at all. */
+.gym-name{letter-spacing:-.5px;word-spacing:.08em;}
+.gym-name-pair{font-size:1.35rem !important;line-height:1.4;letter-spacing:0;font-weight:800;}
+.gym-counter{text-transform:none;letter-spacing:.06em;}
+.gym-ss{font-size:.84rem;gap:7px;}
+.gym-pair-note{
+  margin:10px auto 2px;max-width:44ch;font-size:.84rem;line-height:1.6;
+  color:var(--muted2);text-align:right;
+  border-right:2px solid var(--border2);padding-right:11px;
+}
+
+/* Ten buttons stood open under every set. The question is answered once. */
+.rpe-wrap{padding:8px 20px calc(8px + env(safe-area-inset-bottom,0px));}
+.rpe-label{
+  display:flex;align-items:center;justify-content:space-between;width:100%;
+  background:none;border:none;padding:8px 0;cursor:pointer;
+  font-family:var(--font);font-size:.86rem;font-weight:700;
+  color:var(--muted);text-transform:none;letter-spacing:0;margin:0;
+}
+.rpe-label #rpe-current{color:var(--lime);font-family:var(--font-d);font-weight:800;}
+.rpe-btns{display:none;}
+.rpe-wrap.open .rpe-btns{display:grid;margin-top:8px;}
+
+
+/* The set-complete control is empty until it is ticked, so it reads as a
+   broken input rather than a button. Show a ghost check to be pressed. */
+.gym-check::after{content:'¹3';color:rgba(255,255,255,.22);font-size:1.15rem;line-height:1;}
+.gym-check.done::after{content:none;}
+.gym-pair-side .gym-check::after{font-size:1rem;}

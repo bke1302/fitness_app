@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
-<link rel="stylesheet" href="styles.css?v=7">
+<link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body dir="rtl">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -1561,7 +1561,7 @@
   <div class="gym-header">
     <div class="gym-badge" id="gym-badge">PUSH</div>
     <span class="gym-stopwatch" id="gym-stopwatch">0:00</span>
-    <button class="gym-tempo-btn" id="gym-tempo-btn" onclick="toggleTempo()">קצב OFF</button>
+    <button class="gym-tempo-btn" id="gym-tempo-btn" onclick="toggleTempo()">קצב כבוי</button>
     <button class="gym-close" aria-label="סגור מצב אימון" onclick="confirmCloseGymMode()">✕</button>
   </div>
   <div class="gym-body" id="gym-body"></div>
@@ -1590,7 +1590,9 @@
   </div>
 
   <div class="rpe-wrap" id="rpe-wrap">
-    <div class="rpe-label">עצימות (RPE)</div>
+    <button class="rpe-label" onclick="this.parentElement.classList.toggle('open')">
+      כמה קשה היה? <span id="rpe-current">—</span>
+    </button>
     <div class="rpe-btns" id="rpe-btns">
       <button class="rpe-btn" data-v="1" onclick="setRPE(1)">1</button>
       <button class="rpe-btn" data-v="2" onclick="setRPE(2)">2</button>
@@ -1891,6 +1893,6 @@
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">מנוחה</button>
 </div>
 
-    <script type="module" src="app.js?v=7"></script>
+    <script type="module" src="app.js?v=8"></script>
 </body>
 </html>
