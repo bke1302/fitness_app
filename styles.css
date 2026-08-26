@@ -2706,7 +2706,11 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
 #streak-micro:empty{display:none;}
 
 /* ── Timeline: the dots sat 18px off their own rail ──────────────────── */
-/* superseded — see ROUND 3; the base right:-7px was already centred */
+/* Measured, not reasoned: with the base right:-7px the dot centre lands 22px
+   to the right of the rail (rail centre x=353, dot centre x=375 at 390px).
+   Round 3 removed the offset on the strength of arithmetic against the wrong
+   reference box; this value is the measurement. */
+.tl-dot{right:15px;}
 
 /* ── The weight-log explanation read as an error ─────────────────────── */
 #panel-elog > .trainer-note{
@@ -2925,3 +2929,61 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
 /* the chart box was taller than the plot it held */
 .weight-chart-wrap{margin-bottom:0;}
 #weight-svg{min-height:0;height:auto;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   ROUND 5
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* tips drew six cards with six border colours that encode nothing — the same
+   pattern already removed from the timeline. Colour stays on the icon. */
+.tip-card{border-right-color:var(--border2) !important;}
+
+/* Lime is the next action. In gym mode it was also the day badge, the pair
+   tag, the number chips and the set targets — five jobs at once. */
+.gym-badge{
+  background:none !important;border:1px solid var(--border2) !important;
+  color:var(--muted) !important;letter-spacing:0 !important;
+}
+
+/* These two beat the earlier sweep on specificity, not source order */
+.hero-badge,.today-hero-info .today-hero-day{
+  letter-spacing:0 !important;text-transform:none !important;
+}
+
+/* An empty week should read as "not yet", not as seven blank outlines */
+.wr-day-bar{background:var(--bg4);border-color:transparent;}
+.wr-day-bar.today{background:var(--bg3);}
+
+
+/* ── Timeline: the rail and the dots now share one reference ───────────
+   The rail used to be an absolutely-positioned div at right:22px, aligned
+   against a card-body padding of 40px — a padding the structural pass later
+   removed with `.card-body{padding:0!important}`, so the rail migrated into
+   the text and the dots had to be nudged by hand to chase it. Drawing the
+   rail as the item's own border removes the coupling: a dot centred on its
+   parent's border cannot drift from it. */
+.tl-body{position:relative;}
+.tl-body .tl-item{
+  /* physical `right`, not the logical inline-end: in RTL the inline end is
+     the LEFT, and a Hebrew timeline reads down the right-hand side */
+  border-right:2px solid var(--border2);
+  padding-right:22px;padding-left:0;
+}
+.tl-body .tl-item:last-child{border-right-color:transparent;}
+.tl-body .tl-dot{right:-9px;left:auto;inset-inline-end:auto;top:5px;}
+
+
+/* ── Chat: a bubble inside a card, both bordered, is one frame too many ── */
+.chat-msgs{background:none !important;border:none !important;padding:0 !important;}
+.chat-bubble{max-width:100%;}
+
+/* ── The "?" beside a superset had no label of its own ────────────────── */
+.ss-why::after{content:'';}
+.ss-why{position:relative;}
+
+/* ── The picker sat at a different radius from the cards below it ─────── */
+.workout-picker > button,.workout-card{border-radius:var(--radius-lg) !important;}
+
+/* ── "בחר אימון" heading now lives inside the card system ─────────────── */
+#panel-schedule > div:first-of-type > .card-head{margin-bottom:16px;}

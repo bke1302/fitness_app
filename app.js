@@ -1978,10 +1978,10 @@ function renderWater(){
 // ═══════════════════════════════════════════════════
 /* Per-workout label badge — shown instead of emoji */
 const DAY_CFG={
-  0:{panel:'push',badge:'PUSH',color:'#FF6B6B',label:'חזה · כתפיים · טריצפס',sub:'PUSH DAY A',meta:'~55 דק׳ · 7 תרגילים'},
-  1:{panel:'pull',badge:'PULL',color:'#00D9FF',label:'גב · בייסס · כתף אחורית',sub:'PULL DAY B',meta:'~55 דק׳ · 7 תרגילים'},
-  3:{panel:'legs',badge:'LEGS',color:'#B47CFF',label:'ירכיים · ירך אחורי · שוק',sub:'LEGS DAY C',meta:'~65 דק׳ · 7 תרגילים'},
-  4:{panel:'arms',badge:'ARMS',color:'#FF7A45',label:'בייסס · טריצפס · כתפיים',sub:'ARMS DAY D',meta:'~50 דק׳ · 7 תרגילים'}
+  0:{panel:'push',badge:'PUSH',color:'#FF6B6B',label:'חזה · כתפיים · טריצפס',sub:'PUSH DAY A',meta:'כ־55 דק׳ · 7 תרגילים'},
+  1:{panel:'pull',badge:'PULL',color:'#00D9FF',label:'גב · בייסס · כתף אחורית',sub:'PULL DAY B',meta:'כ־55 דק׳ · 7 תרגילים'},
+  3:{panel:'legs',badge:'LEGS',color:'#B47CFF',label:'ירכיים · ירך אחורי · שוק',sub:'LEGS DAY C',meta:'כ־65 דק׳ · 7 תרגילים'},
+  4:{panel:'arms',badge:'ARMS',color:'#FF7A45',label:'בייסס · טריצפס · כתפיים',sub:'ARMS DAY D',meta:'כ־50 דק׳ · 7 תרגילים'}
 };
 // Builds a day-of-week→config map from the user's active plan.
 // Days rotate across the plan's dows, so a 2-day plan can fill 3 training days.
@@ -2000,7 +2000,7 @@ function _buildDayCfg(u){
       color:day.color||'#CCFF00',
       label:day.label,
       sub:(day.label||'').split('—').slice(1).join('—').trim()||day.shortLabel||'',
-      meta:`~${mins} דק׳ · ${n} תרגילים`
+      meta:`כ־${mins} דק׳ · ${n} תרגילים`
     };
   });
   return result;
@@ -2341,7 +2341,7 @@ function renderWChart(){
   const ysV=v=>P.t+(1-(v/maxV))*(H-P.t-P.b);
 
   let h=`<defs>
-    <linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF7A45"/><stop offset="100%" stop-color="#CCFF00"/></linearGradient>
+    <linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#CCFF00"/><stop offset="100%" stop-color="#CCFF00"/></linearGradient>
     <linearGradient id="ca" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#CCFF00" stop-opacity=".25"/><stop offset="100%" stop-color="#CCFF00" stop-opacity="0"/></linearGradient>
   </defs>`;
 
@@ -3421,7 +3421,7 @@ function updateORMDisplay(kg,reps){
   if(!box||!val) return;
   if(kg&&reps&&!isNaN(kg)&&!isNaN(reps)&&reps>0){
     const orm=Math.round(parseFloat(kg)*(1+parseFloat(reps)/30));
-    val.textContent='~'+orm+' ק"ג';
+    val.textContent='כ־'+orm+' ק״ג';
     box.classList.add('show');
   } else { box.classList.remove('show'); }
 }
@@ -4156,7 +4156,7 @@ function toggleExSearch(){
 // direction and the two numbers lay out right-to-left. A range is one atom.
 // Isolating known containers does not scale - ranges live in dosages, the
 // timeline, tips and coaching prose - so this walks text nodes instead.
-const _RANGE=/[+\u2212]?\d[\d.,]*\s*[\u2013\u2014-]\s*\d[\d.,]*/;
+const _RANGE=/[+\u2212]?\d[\d.,]*\s*[\u2013\u2014-]\s*\d[\d.,]*(?:\s*[+\/]?\s*(?=[A-Za-z0-9\u00B5]*[A-Za-z\u00B5])[A-Za-z0-9\u00B5%\u00B0.\/]+)*/;
 const _NO_BDI='script,style,input,textarea,select,option,.ex-table,#gym-body,.stat-box,.wk-frac,.ell-num,.sets-cell,.ex-sets,bdi,svg';
 function fixNumericRanges(root){
   const scope=root||document.getElementById('main-content');
@@ -4753,7 +4753,9 @@ function _getWeekDates(){
   const now=new Date();
   const day=now.getDay();
   const mon=new Date(now);
-  mon.setDate(now.getDate()-(day===0?6:day-1));
+  // Sunday is the first day of the week here, as it is in the plan and on
+  // the dashboard; this used to start on Monday and shift the whole strip
+  mon.setDate(now.getDate()-day);
   return Array.from({length:7},(_,i)=>{
     const d=new Date(mon); d.setDate(mon.getDate()+i);
     return d.toISOString().slice(0,10);
@@ -4791,7 +4793,7 @@ function renderWeeklyReport(){
   const weekDates=_getWeekDates();
   const log=getLog();
   const {workoutDays,weekPRs,weekVol,avgCal}=_buildWeekStats(weekDates);
-  const days=['ב','ג','ד','ה','ו','ש','א'];
+  const days=['א','ב','ג','ד','ה','ו','ש'];
   el.innerHTML=`
     <div class="wr-grid">
       <div class="wr-stat-card"><div class="wr-stat-val" data-val="${workoutDays}">0</div><div class="wr-stat-lbl">אימונים השבוע</div></div>
@@ -5017,13 +5019,13 @@ const WORKOUT_PLANS={
   },
   '3ab':{
     days:[
-      {id:'push',label:'Upper Body',shortLabel:'Upper',color:'#CCFF00',
+      {id:'push',label:'פלג גוף עליון',shortLabel:'עליון',color:'#CCFF00',
        exercises:['benchPress','pullup','ohp','bentRow','inclineBench','triPushdown','bbCurl','facePull']},
-      {id:'pull',label:'Lower Body',shortLabel:'Lower',color:'#B47CFF',
+      {id:'pull',label:'פלג גוף תחתון',shortLabel:'תחתון',color:'#B47CFF',
        exercises:['squat','rdl','legPress','legCurl','legExt','hipThrust','calfRaise']},
     ],
     dows:[0,2,4],
-    schedule:'א׳ Upper | ג׳ Lower | ה׳ Upper — הסבב מתחלף שבוע-שבוע'
+    schedule:'א׳ עליון · ג׳ תחתון · ה׳ עליון — הסבב מתחלף שבוע-שבוע'
   },
   '3ss':{
     days:[
@@ -5266,7 +5268,7 @@ function renderAdaptivePanels(){
       const ss=schedBtn.querySelector('.wsel-sub');
       if(ss) ss.textContent=sub;
       const sm=schedBtn.querySelector('.wsel-meta');
-      if(sm) sm.textContent=`${dayName[day.id]||''} | ${n} תרגילים | ~${mins} דק׳`;
+      if(sm) sm.textContent=`${dayName[day.id]||''} | ${n} תרגילים | כ־${mins} דק׳`;
     }
     // panel day header: title, duration badge, gym-mode label, watermark
     const head=document.querySelector('#panel-'+pid+' .day-head-card');
@@ -5275,7 +5277,7 @@ function renderAdaptivePanels(){
       const h2=head.querySelector('.day-title');
       if(h2) h2.textContent=`${dayName[day.id]||''} — ${short}`;
       const meta=head.querySelector('.day-meta');
-      if(meta) meta.textContent=`${n} תרגילים · ~${mins} דק׳`;
+      if(meta) meta.textContent=`${n} תרגילים · כ־${mins} דק׳`;
       const gymBtn=head.querySelector('.gym-mode-btn');
       if(gymBtn) gymBtn.setAttribute('onclick',`startGymMode('${pid}','${short}','${day.color}')`);
     }
@@ -5317,12 +5319,12 @@ function renderAdaptivePanels(){
 }
 
 function getWorkoutFreqLabel(freq,split){
-  if(freq===1) return '1×/שבוע — Full Body שבועי';
-  if(freq===2) return '2×/שבוע — Full Body';
-  if(freq===3) return split==='3ab'?'3×/שבוע — Upper/Lower':split==='3ss'?'3×/שבוע — סופרסטים פול-בודי':'3×/שבוע — Push/Pull/Legs';
-  if(freq===4) return split==='4ab'?'4×/שבוע — Upper/Lower A/B':'4×/שבוע — PPL+ARMS';
-  if(freq===5) return '5×/שבוע — PPL+Upper+Lower';
-  if(freq===6) return '6×/שבוע — PPL×2';
+  if(freq===1) return '1×/שבוע — כל הגוף';
+  if(freq===2) return '2×/שבוע — כל הגוף';
+  if(freq===3) return split==='3ab'?'3×/שבוע — עליון/תחתון':split==='3ss'?'3×/שבוע — סופרסטים פול-בודי':'3×/שבוע — דחיפה/משיכה/רגליים';
+  if(freq===4) return split==='4ab'?'4×/שבוע — עליון/תחתון א׳-ב׳':'4×/שבוע — דחיפה/משיכה/רגליים + ידיים';
+  if(freq===5) return '5×/שבוע — דחיפה/משיכה/רגליים + עליון + תחתון';
+  if(freq===6) return '6×/שבוע — דחיפה/משיכה/רגליים ×2';
   if(freq===7) return '7×/שבוע — לא מומלץ';
   return `${freq}×/שבוע`;
 }
