@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
-<link rel="stylesheet" href="styles.css?v=15">
+<link rel="stylesheet" href="styles.css?v=16">
 </head>
 <body dir="rtl">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -132,7 +132,7 @@
     <div class="card">
       <div class="card-head">
         <h2>התוכנית להיום</h2>
-        <button class="link-action" onclick="showPanel('schedule')">הצג הכל →</button>
+        <button class="link-action" onclick="showPanel('schedule')">הצג הכל ←</button>
       </div>
       <div id="today-hero" class="today-hero" style="position:relative;border-radius:18px;overflow:hidden;background:var(--bg2);border:1px solid rgba(204,255,0,.2);padding:20px;">
         <!-- Glow orb -->
@@ -358,25 +358,25 @@
           <div style="margin-bottom:6px;color:#CCFF00;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-arrow-up"/></svg></div>
           <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#CCFF00;">PUSH</div>
           <div class="wsel-sub" style="font-size:0.8rem;color:var(--muted);margin-top:4px;">חזה · כתפיים · טריצפס</div>
-          <div class="wsel-meta" style="font-size:0.72rem;color:rgba(204,255,0,.6);margin-top:6px;">ראשון | 7 תרגילים | כ־70 דק׳</div>
+          <div class="wsel-meta">ראשון · 7 תרגילים · כ־70 דק׳</div>
         </button>
         <button onclick="showPanel('pull',null);setMobileNav('pull');" style="background:var(--bg3);border:1.5px solid rgba(0,217,255,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="margin-bottom:6px;color:#00D9FF;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-arrow-down"/></svg></div>
           <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#00D9FF;">PULL</div>
           <div class="wsel-sub" style="font-size:0.8rem;color:var(--muted);margin-top:4px;">גב · ביצפס · אמות</div>
-          <div class="wsel-meta" style="font-size:0.72rem;color:rgba(0,217,255,.6);margin-top:6px;">שני | 7 תרגילים | כ־65 דק׳</div>
+          <div class="wsel-meta">שני · 7 תרגילים · כ־65 דק׳</div>
         </button>
         <button onclick="showPanel('legs',null);setMobileNav('legs');" style="background:var(--bg3);border:1.5px solid rgba(180,124,255,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="margin-bottom:6px;color:#B47CFF;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-dumbbell"/></svg></div>
           <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#B47CFF;">LEGS</div>
           <div class="wsel-sub" style="font-size:0.8rem;color:var(--muted);margin-top:4px;">רגליים מלא</div>
-          <div class="wsel-meta" style="font-size:0.72rem;color:rgba(180,124,255,.6);margin-top:6px;">רביעי | 7 תרגילים | כ־75 דק׳</div>
+          <div class="wsel-meta">רביעי · 7 תרגילים · כ־75 דק׳</div>
         </button>
         <button onclick="showPanel('arms',null);setMobileNav('arms');" style="background:var(--bg3);border:1.5px solid rgba(255,122,69,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="margin-bottom:6px;color:#FF7A45;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-dumbbell"/></svg></div>
           <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#FF7A45;">ARMS</div>
           <div class="wsel-sub" style="font-size:0.8rem;color:var(--muted);margin-top:4px;">ידיים · כתפיים</div>
-          <div class="wsel-meta" style="font-size:0.72rem;color:rgba(255,122,69,.6);margin-top:6px;">חמישי | 7 תרגילים | כ־60 דק׳</div>
+          <div class="wsel-meta">חמישי · 7 תרגילים · כ־60 דק׳</div>
         </button>
       </div>
     </div>
@@ -1095,7 +1095,7 @@
         <div class="tip-card good"><span class="tip-icon"><svg class="ico"><use href="#i-droplet"/></svg></span><div><strong>מים — 3.5 ליטר ביום אימון</strong><br>ירידה של 2% בהידרציה = ירידה של 10% בביצועים. זה הרבה.</div></div>
         <div class="tip-card gold"><span class="tip-icon"><svg class="ico"><use href="#i-pill"/></svg></span><div><strong>קריאטין — 5g כל יום, נקודה</strong><br>לא לפני, לא אחרי — פשוט כל יום. זה תוסף שנחקר 40 שנה וזה הכי בטוח שיש.</div></div>
         <div class="tip-card warn"><span class="tip-icon"><svg class="ico"><use href="#i-alert"/></svg></span><div><strong>אלכוהול הורג שרירים</strong><br>חוסם סינתזת חלבון ב-24–48 שעות. לא "קצת בסדר" — ממש חוסם.</div></div>
-        <div class="tip-card good"><span class="tip-icon"></span><div><strong>עקביות מנצחת מושלמות</strong><br>3 חודשים עקביים של 80% מהתוכנית עדיפים על שבוע מושלם ושבוע ויתור.</div></div>
+        <div class="tip-card good"><span class="tip-icon"><svg class="ico"><use href="#i-target"/></svg></span><div><strong>עקביות מנצחת מושלמות</strong><br>3 חודשים עקביים של 80% מהתוכנית עדיפים על שבוע מושלם ושבוע ויתור.</div></div>
       </div>
     </div>
   </div>
@@ -1838,11 +1838,11 @@
         <!-- 4-day splits -->
         <div id="ob-split-4" style="display:none;grid-template-columns:1fr 1fr;gap:8px;">
           <button class="ob-split-btn sel" data-split="4" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
-            <div style="font-weight:800;color:var(--red);font-size:0.94rem;">Push/Pull/Legs/Arms</div>
+            <div style="font-weight:800;color:var(--red);font-size:0.94rem;">דחיפה/משיכה/רגליים + ידיים</div>
             <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">הפיצול הקלאסי</div>
           </button>
           <button class="ob-split-btn" data-split="4ab" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
-            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">Upper/Lower A/B</div>
+            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">עליון/תחתון א׳-ב׳</div>
             <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">כוח + נפח</div>
           </button>
         </div>
@@ -1856,7 +1856,7 @@
     </div>
     <div class="onboard-footer">
       <button class="onboard-back" id="ob-back" onclick="obBack()" style="display:none;">חזור</button>
-      <button class="onboard-next" id="ob-next" onclick="obNext()">הבא →</button>
+      <button class="onboard-next" id="ob-next" onclick="obNext()">הבא ←</button>
     </div>
   </div>
 </div>
@@ -1891,6 +1891,6 @@
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">מנוחה</button>
 </div>
 
-    <script type="module" src="app.js?v=15"></script>
+    <script type="module" src="app.js?v=16"></script>
 </body>
 </html>

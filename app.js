@@ -1312,7 +1312,7 @@ function showOnboarding(){
   document.getElementById('ob-step-1')?.classList.add('active');
   document.querySelectorAll('.onboard-dot').forEach((d,i)=>{d.classList.toggle('active',i===0);});
   document.getElementById('ob-back').style.display='none';
-  document.getElementById('ob-next').textContent='הבא →';
+  document.getElementById('ob-next').textContent='הבא ←';
   document.getElementById('onboard-overlay').style.display='flex';
 }
 function showOnboardingForNew(){
@@ -1378,7 +1378,7 @@ function obNext(){
   document.querySelectorAll('.onboard-dot').forEach((d,i)=>{d.classList.toggle('active',i===_obStep-1);});
   _updateObDots(_obStep);
   document.getElementById('ob-back').style.display='block';
-  document.getElementById('ob-next').textContent=_obStep===4?'צור פרופיל ✓':'הבא →';
+  document.getElementById('ob-next').textContent=_obStep===4?'צור פרופיל ✓':'הבא ←';
   // Show/hide split selector in step 4
   if(_obStep===4) _updateSplitSelector();
 }
@@ -1390,7 +1390,7 @@ function obBack(){
   document.querySelectorAll('.onboard-dot').forEach((d,i)=>{d.classList.toggle('active',i===_obStep-1);});
   _updateObDots(_obStep);
   document.getElementById('ob-back').style.display=_obStep===1?'none':'block';
-  document.getElementById('ob-next').textContent=_obStep===4?'צור פרופיל ✓':'הבא →';
+  document.getElementById('ob-next').textContent=_obStep===4?'צור פרופיל ✓':'הבא ←';
 }
 function selectObFreq(btn){
   document.querySelectorAll('.ob-freq-btn').forEach(b=>b.classList.remove('sel'));
@@ -2341,7 +2341,7 @@ function renderWChart(){
   const ysV=v=>P.t+(1-(v/maxV))*(H-P.t-P.b);
 
   let h=`<defs>
-    <linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#CCFF00"/><stop offset="100%" stop-color="#CCFF00"/></linearGradient>
+    
     <linearGradient id="ca" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#CCFF00" stop-opacity=".25"/><stop offset="100%" stop-color="#CCFF00" stop-opacity="0"/></linearGradient>
   </defs>`;
 
@@ -2350,7 +2350,10 @@ function renderWChart(){
     const y=P.t+r*(H-P.t-P.b)/3;
     const v=(maxK-(maxK-minK)*r/3).toFixed(1);
     h+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#1e2433" stroke-width="1"/>`;
-    h+=`<text x="${W-P.r+6}" y="${y+4}" text-anchor="start" fill="#8d97a5" font-size="11" font-family="Barlow,sans-serif">${v}</text>`;
+    // skip an axis label that would land on top of the last point's label
+    const lastY=ysK(log[n-1].kg);
+    if(Math.abs(y-lastY)>20)
+      h+=`<text x="${W-P.r+6}" y="${y+4}" text-anchor="start" fill="#8d97a5" font-size="11" font-family="Barlow,sans-serif">${v}</text>`;
     if(hasVol){const vv=Math.round(maxV*(1-r/3));h+=`<text x="${P.l-6}" y="${y+4}" text-anchor="end" fill="#FF7A45" font-size="10" font-family="Barlow,sans-serif" opacity=".7">${vv}</text>`;}
   }
 
@@ -2365,7 +2368,7 @@ function renderWChart(){
   // Weight area + line (blue) — on top
   const pts=log.map((e,i)=>`${xs(i)},${ysK(e.kg)}`).join(' ');
   h+=`<polygon points="${xs(0)},${H-P.b} ${pts} ${xs(n-1)},${H-P.b}" fill="url(#ca)"/>`;
-  h+=`<polyline points="${pts}" fill="none" stroke="url(#cg)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  h+=`<polyline points="${pts}" fill="none" stroke="#CCFF00" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
   log.forEach((e,i)=>{
     h+=`<circle cx="${xs(i)}" cy="${ysK(e.kg)}" r="4" fill="#CCFF00" stroke="#000" stroke-width="2"/>`;
     // the last point sits against the value axis, so its label leans inward
@@ -3721,7 +3724,7 @@ function renderGymExercise(){
   if(ex.pairKind){
     body.innerHTML=_renderGymPair(ex);
     if(prev) prev.disabled=_gymIdx===0;
-    if(next) next.textContent=_gymIdx>=_gymExercises.length-1?'סיים האימון ✓':'הבא →';
+    if(next) next.textContent=_gymIdx>=_gymExercises.length-1?'סיים האימון ✓':'הבא ←';
     return;
   }
   const setsCount=parseInt(ex.sets)||3;
@@ -3754,7 +3757,7 @@ function renderGymExercise(){
     <div class="gym-sets-label">${ex.sets}</div>
     <div class="gym-setrows">${rowsHTML}</div>`;
   if(prev) prev.disabled=_gymIdx===0;
-  if(next) next.textContent=_gymIdx>=_gymExercises.length-1?'סיים האימון ✓':'הבא →';
+  if(next) next.textContent=_gymIdx>=_gymExercises.length-1?'סיים האימון ✓':'הבא ←';
 }
 function gymCheckSet(i){
   const el=document.getElementById('gym-chk-'+i);
@@ -4758,7 +4761,10 @@ function _getWeekDates(){
   mon.setDate(now.getDate()-day);
   return Array.from({length:7},(_,i)=>{
     const d=new Date(mon); d.setDate(mon.getDate()+i);
-    return d.toISOString().slice(0,10);
+    // local, not UTC: todayStr() is local, and toISOString() shifted the key
+    // by a day between midnight and 03:00 Israel time
+    const p=x=>String(x).padStart(2,'0');
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
   });
 }
 /** @param {string[]} weekDates @returns {{workoutDays:number,weekPRs:number,weekVol:number,avgCal:number}} */
@@ -5004,7 +5010,7 @@ const WORKOUT_PLANS={
     ],
     dows:[3],
     progression:'התקדמות ליניארית: כל אימון +2.5 ק״ג בעליון / +5 ק״ג בתחתון. נכשלת פעמיים ברצף — הורד 10% והתחל טיפוס מחדש.',
-    schedule:'רביעי — Full Body (7 מתחמים, ~65 דק׳)'
+    schedule:'רביעי — כל הגוף (7 מתחמים, כ־65 דק׳)'
   },
   2:{
     days:[
@@ -5132,17 +5138,17 @@ const WORKOUT_PLANS={
   },
   '4ab':{
     days:[
-      {id:'push',label:'Upper A — כוח עליון',shortLabel:'UP-A',color:'#CCFF00',
+      {id:'push',label:'עליון א׳ — כוח עליון',shortLabel:'UP-A',color:'#CCFF00',
        exercises:['benchPress','pullup','ohp','bentRow','lateralRaise','bbCurl','facePull']},
-      {id:'pull',label:'Lower A — כוח תחתון',shortLabel:'LOW-A',color:'#B47CFF',
+      {id:'pull',label:'תחתון א׳ — כוח תחתון',shortLabel:'LOW-A',color:'#B47CFF',
        exercises:['squat','rdl','legPress','legCurl','legExt','hipThrust','calfRaise']},
-      {id:'legs',label:'Upper B — נפח עליון',shortLabel:'UP-B',color:'#00D9FF',
+      {id:'legs',label:'עליון ב׳ — נפח עליון',shortLabel:'UP-B',color:'#00D9FF',
        exercises:['inclineBench','pullup','cableRow','facePull','lateralRaise','hammerCurl','skullCrusher','cableFlye']},
-      {id:'arms',label:'Lower B — נפח תחתון',shortLabel:'LOW-B',color:'#FF7A45',
+      {id:'arms',label:'תחתון ב׳ — נפח תחתון',shortLabel:'LOW-B',color:'#FF7A45',
        exercises:['legPress','bulgSplit','legExt','legCurl','rdl','hipThrust','calfRaise']},
     ],
     dows:[0,1,3,4],
-    schedule:'א׳ Upper A | ב׳ Lower A | ד׳ Upper B | ה׳ Lower B'
+    schedule:'א׳ עליון א׳ | ב׳ תחתון א׳ | ד׳ עליון ב׳ | ה׳ תחתון ב׳'
   },
   7:{
     days:[
@@ -5268,7 +5274,7 @@ function renderAdaptivePanels(){
       const ss=schedBtn.querySelector('.wsel-sub');
       if(ss) ss.textContent=sub;
       const sm=schedBtn.querySelector('.wsel-meta');
-      if(sm) sm.textContent=`${dayName[day.id]||''} | ${n} תרגילים | כ־${mins} דק׳`;
+      if(sm) sm.textContent=`${dayName[day.id]||''} · ${n} תרגילים · כ־${mins} דק׳`;
     }
     // panel day header: title, duration badge, gym-mode label, watermark
     const head=document.querySelector('#panel-'+pid+' .day-head-card');
