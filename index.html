@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
-<link rel="stylesheet" href="styles.css?v=16">
+<link rel="stylesheet" href="styles.css?v=17">
 </head>
 <body dir="rtl">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -160,11 +160,11 @@
         <span id="week-counter" class="head-meta">4 ימי אימון</span>
       </div>
       <div id="dash-week-row" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;">
-        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--red)"></span><span class="ddc-name">א׳</span><span class="ddc-type" style="color:var(--red)">PUSH</span></div>
-        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--cyan)"></span><span class="ddc-name">ב׳</span><span class="ddc-type" style="color:var(--cyan)">PULL</span></div>
+        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--red)"></span><span class="ddc-name">א׳</span><span class="ddc-type" style="color:var(--red)">דחיפה</span></div>
+        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--cyan)"></span><span class="ddc-name">ב׳</span><span class="ddc-type" style="color:var(--cyan)">משיכה</span></div>
         <div class="dash-day-chip ddc-rest"><span class="ddc-dot ddc-dot-rest"></span><span class="ddc-name">ג׳</span><span class="ddc-type">מנוחה</span></div>
-        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--purple)"></span><span class="ddc-name">ד׳</span><span class="ddc-type" style="color:var(--purple)">LEGS</span></div>
-        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--yellow)"></span><span class="ddc-name">ה׳</span><span class="ddc-type" style="color:var(--yellow)">ARMS</span></div>
+        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--purple)"></span><span class="ddc-name">ד׳</span><span class="ddc-type" style="color:var(--purple)">רגליים</span></div>
+        <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--yellow)"></span><span class="ddc-name">ה׳</span><span class="ddc-type" style="color:var(--yellow)">ידיים</span></div>
         <div class="dash-day-chip ddc-rest"><span class="ddc-dot ddc-dot-rest"></span><span class="ddc-name">ו׳</span><span class="ddc-type">אקטיב</span></div>
       </div>
     </div>
@@ -188,22 +188,22 @@
       <div class="workout-picker">
         <button class="workout-card push" onclick="showPanel('push',null);setMobileNav('push');">
           <div class="workout-card-icon"><svg class="ico"><use href="#i-arrow-up"/></svg></div>
-          <div class="workout-card-title" style="color:var(--push-c);">PUSH</div>
+          <div class="workout-card-title" style="color:var(--push-c);">דחיפה</div>
           <div class="workout-card-sub">חזה · כתפיים · טריצפס</div>
         </button>
         <button class="workout-card pull" onclick="showPanel('pull',null);setMobileNav('pull');">
           <div class="workout-card-icon"><svg class="ico"><use href="#i-arrow-down"/></svg></div>
-          <div class="workout-card-title" style="color:var(--pull-c);">PULL</div>
+          <div class="workout-card-title" style="color:var(--pull-c);">משיכה</div>
           <div class="workout-card-sub">גב · ביצפס · אמות</div>
         </button>
         <button class="workout-card legs" onclick="showPanel('legs',null);setMobileNav('legs');">
           <div class="workout-card-icon"><svg class="ico"><use href="#i-dumbbell"/></svg></div>
-          <div class="workout-card-title" style="color:var(--legs-c);">LEGS</div>
+          <div class="workout-card-title" style="color:var(--legs-c);">רגליים</div>
           <div class="workout-card-sub">רגליים מלא</div>
         </button>
         <button class="workout-card arms" onclick="showPanel('arms',null);setMobileNav('arms');">
           <div class="workout-card-icon"><svg class="ico"><use href="#i-dumbbell"/></svg></div>
-          <div class="workout-card-title" style="color:var(--arms-c);">ARMS</div>
+          <div class="workout-card-title" style="color:var(--arms-c);">ידיים</div>
           <div class="workout-card-sub">ידיים · כתפיים</div>
         </button>
         <button class="workout-card crossfit" onclick="showPanel('crossfit',null);setMobileNav('push');">
@@ -356,25 +356,25 @@
       <div class="workout-picker" style="margin-bottom:20px;">
         <button onclick="showPanel('push',null);setMobileNav('push');" style="background:var(--bg3);border:1.5px solid rgba(204,255,0,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="margin-bottom:6px;color:#CCFF00;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-arrow-up"/></svg></div>
-          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#CCFF00;">PUSH</div>
+          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#CCFF00;">דחיפה</div>
           <div class="wsel-sub" style="font-size:0.8rem;color:var(--muted);margin-top:4px;">חזה · כתפיים · טריצפס</div>
           <div class="wsel-meta">ראשון · 7 תרגילים · כ־70 דק׳</div>
         </button>
         <button onclick="showPanel('pull',null);setMobileNav('pull');" style="background:var(--bg3);border:1.5px solid rgba(0,217,255,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="margin-bottom:6px;color:#00D9FF;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-arrow-down"/></svg></div>
-          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#00D9FF;">PULL</div>
+          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#00D9FF;">משיכה</div>
           <div class="wsel-sub" style="font-size:0.8rem;color:var(--muted);margin-top:4px;">גב · ביצפס · אמות</div>
           <div class="wsel-meta">שני · 7 תרגילים · כ־65 דק׳</div>
         </button>
         <button onclick="showPanel('legs',null);setMobileNav('legs');" style="background:var(--bg3);border:1.5px solid rgba(180,124,255,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="margin-bottom:6px;color:#B47CFF;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-dumbbell"/></svg></div>
-          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#B47CFF;">LEGS</div>
+          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#B47CFF;">רגליים</div>
           <div class="wsel-sub" style="font-size:0.8rem;color:var(--muted);margin-top:4px;">רגליים מלא</div>
           <div class="wsel-meta">רביעי · 7 תרגילים · כ־75 דק׳</div>
         </button>
         <button onclick="showPanel('arms',null);setMobileNav('arms');" style="background:var(--bg3);border:1.5px solid rgba(255,122,69,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="margin-bottom:6px;color:#FF7A45;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-dumbbell"/></svg></div>
-          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#FF7A45;">ARMS</div>
+          <div class="wsel-title" style="font-size:1.05rem;font-weight:800;color:#FF7A45;">ידיים</div>
           <div class="wsel-sub" style="font-size:0.8rem;color:var(--muted);margin-top:4px;">ידיים · כתפיים</div>
           <div class="wsel-meta">חמישי · 7 תרגילים · כ־60 דק׳</div>
         </button>
@@ -384,11 +384,11 @@
       <div class="card-head"><h2>לוח שבועי</h2><span class="badge badge-neutral" id="sched-days-badge">4 ימי אימון</span></div>
       <div class="card-body">
         <div class="week-bar">
-          <div class="day-cell" onclick="goDay('push')"><div class="dc-name">ראשון א׳</div><div class="dc-icon"><span class="dc-dot" style="background:var(--red)"></span></div><div class="dc-type" style="color:var(--red)">PUSH</div><div class="dc-label">חזה · כתף · טריצפס</div></div>
-          <div class="day-cell" onclick="goDay('pull')"><div class="dc-name">שני ב׳</div><div class="dc-icon"><span class="dc-dot" style="background:var(--blue)"></span></div><div class="dc-type" style="color:var(--blue)">PULL</div><div class="dc-label">גב · בייסס</div></div>
+          <div class="day-cell" onclick="goDay('push')"><div class="dc-name">ראשון א׳</div><div class="dc-icon"><span class="dc-dot" style="background:var(--red)"></span></div><div class="dc-type" style="color:var(--red)">דחיפה</div><div class="dc-label">חזה · כתף · טריצפס</div></div>
+          <div class="day-cell" onclick="goDay('pull')"><div class="dc-name">שני ב׳</div><div class="dc-icon"><span class="dc-dot" style="background:var(--blue)"></span></div><div class="dc-type" style="color:var(--blue)">משיכה</div><div class="dc-label">גב · בייסס</div></div>
           <div class="day-cell rest-day"><div class="dc-name">שלישי ג׳</div><div class="dc-icon"><span class="dc-dot" style="background:transparent;border:1.5px solid var(--muted2)"></span></div><div class="dc-type" style="color:var(--green)">מנוחה</div><div class="dc-label">שיקום</div></div>
-          <div class="day-cell" onclick="goDay('legs')"><div class="dc-name">רביעי ד׳</div><div class="dc-icon"><span class="dc-dot" style="background:var(--purple)"></span></div><div class="dc-type" style="color:var(--purple)">LEGS</div><div class="dc-label">רגליים מלא</div></div>
-          <div class="day-cell" onclick="goDay('arms')"><div class="dc-name">חמישי ה׳</div><div class="dc-icon"><span class="dc-dot" style="background:var(--yellow)"></span></div><div class="dc-type" style="color:var(--yellow)">ARMS</div><div class="dc-label">ידיים · כתף</div></div>
+          <div class="day-cell" onclick="goDay('legs')"><div class="dc-name">רביעי ד׳</div><div class="dc-icon"><span class="dc-dot" style="background:var(--purple)"></span></div><div class="dc-type" style="color:var(--purple)">רגליים</div><div class="dc-label">רגליים מלא</div></div>
+          <div class="day-cell" onclick="goDay('arms')"><div class="dc-name">חמישי ה׳</div><div class="dc-icon"><span class="dc-dot" style="background:var(--yellow)"></span></div><div class="dc-type" style="color:var(--yellow)">ידיים</div><div class="dc-label">ידיים · כתף</div></div>
           <div class="day-cell rest-day"><div class="dc-name">שישי ו׳</div><div class="dc-icon"><span class="dc-dot" style="background:var(--cyan)"></span></div><div class="dc-type" style="color:var(--cyan)">אקטיב</div><div class="dc-label">הליכה/שחייה</div></div>
           <div class="day-cell rest-day"><div class="dc-name">שבת</div><div class="dc-icon"><span class="dc-dot" style="background:transparent;border:1.5px solid var(--muted2)"></span></div><div class="dc-type" style="color:var(--green)">מנוחה</div><div class="dc-label">מנוחה מלאה</div></div>
         </div>
@@ -496,7 +496,7 @@
         </table>
         <!-- ABS SECTION — Push Day -->
         <div class="abs-card">
-          <div class="abs-card-title">בטן — 5 דקות בסוף Push (3× בשבוע)</div>
+          <div class="abs-card-title">בטן — 5 דקות בסוף האימון (3× בשבוע)</div>
           <div class="abs-row"><span class="abs-row-name">פלאנק</span><span class="abs-row-sets">3 × 30–45 שנ׳</span></div>
           <div class="abs-row"><span class="abs-row-name">כפיפות בטן</span><span class="abs-row-sets">3 × 20</span></div>
           <div class="abs-row"><span class="abs-row-name">הרמות רגליים</span><span class="abs-row-sets">3 × 15</span></div>
@@ -752,7 +752,7 @@
         </div>
         <!-- ABS SECTION — Legs Day -->
         <div class="abs-card">
-          <div class="abs-card-title">בטן — 5 דקות בסוף Legs</div>
+          <div class="abs-card-title">בטן — 5 דקות בסוף האימון</div>
           <div class="abs-row"><span class="abs-row-name">דד באג</span><span class="abs-row-sets">3 × 10 (כל צד)</span></div>
           <div class="abs-row"><span class="abs-row-name">סיבובים רוסיים</span><span class="abs-row-sets">3 × 20</span></div>
           <div class="abs-row"><span class="abs-row-name">Side Plank</span><span class="abs-row-sets">2 × 30 שנ׳ (כל צד)</span></div>
@@ -966,7 +966,7 @@
         </div>
         <!-- ABS SECTION — Arms Day -->
         <div class="abs-card">
-          <div class="abs-card-title">בטן — 5 דקות בסוף Arms</div>
+          <div class="abs-card-title">בטן — 5 דקות בסוף האימון</div>
           <div class="abs-row"><span class="abs-row-name">Hollow Body Hold</span><span class="abs-row-sets">3 × 30 שנ׳</span></div>
           <div class="abs-row"><span class="abs-row-name">Bicycle Crunches</span><span class="abs-row-sets">3 × 20 (כל צד)</span></div>
           <div class="abs-row"><span class="abs-row-name">Leg Raises תלויות</span><span class="abs-row-sets">3 × 12</span></div>
@@ -1090,7 +1090,7 @@
     <div class="card">
       <div class="card-head"><h2>טיפים מהמאמן</h2></div>
       <div class="card-body">
-        <div class="tip-card warn"><span class="tip-icon"><svg class="ico"><use href="#i-trend"/></svg></span><div><strong>העמסה מתקדמת — בלי זה אין כלום</strong><br>כל שבוע: הוסף חזרה אחת, או 2.5 ק"ג, או סט נוסף. רשום הכל. אפליקציות מעקב: Strong או Hevy.</div></div>
+        <div class="tip-card gold"><span class="tip-icon"><svg class="ico"><use href="#i-trend"/></svg></span><div><strong>העמסה מתקדמת — בלי זה אין כלום</strong><br>כל שבוע: הוסף חזרה אחת, או 2.5 ק"ג, או סט נוסף. רשום הכל. אפליקציות מעקב: Strong או Hevy.</div></div>
         <div class="tip-card"><span class="tip-icon"><svg class="ico"><use href="#i-moon"/></svg></span><div><strong>שינה = שיקום = צמיחה</strong><br>7.5–9 שעות. הורמון גדילה מגיע ב-שינה עמוקה. פחות שינה = פחות הורמון גדילה = פחות שריר.</div></div>
         <div class="tip-card good"><span class="tip-icon"><svg class="ico"><use href="#i-droplet"/></svg></span><div><strong>מים — 3.5 ליטר ביום אימון</strong><br>ירידה של 2% בהידרציה = ירידה של 10% בביצועים. זה הרבה.</div></div>
         <div class="tip-card gold"><span class="tip-icon"><svg class="ico"><use href="#i-pill"/></svg></span><div><strong>קריאטין — 5g כל יום, נקודה</strong><br>לא לפני, לא אחרי — פשוט כל יום. זה תוסף שנחקר 40 שנה וזה הכי בטוח שיש.</div></div>
@@ -1445,7 +1445,7 @@
             <button id="btn-save-settings" class="settings-save" onclick="saveSettingsForm()">שמור הגדרות</button>
             <button id="theme-btn" onclick="toggleTheme()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text);border-radius:10px;padding:10px 18px;font-size:0.94rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .18s;">החלף ערכת נושא</button>
           </div>
-          <button type="button" class="btn-quiet settings-link" onclick="showPanel('tips',null)">מדריכים וטיפים →</button>
+          <button type="button" class="btn-quiet settings-link" onclick="showPanel('tips',null)">מדריכים וטיפים ←</button>
           <div class="settings-actions-second">
             <button onclick="exportData()" class="settings-save btn-quiet">ייצוא נתונים</button>
             <label class="settings-save btn-quiet" style="cursor:pointer;">
@@ -1557,7 +1557,7 @@
 <!-- GYM MODE OVERLAY -->
 <div class="gym-overlay" id="gym-overlay">
   <div class="gym-header">
-    <div class="gym-badge" id="gym-badge">PUSH</div>
+    <div class="gym-badge" id="gym-badge">דחיפה</div>
     <span class="gym-stopwatch" id="gym-stopwatch">0:00</span>
     <button class="gym-tempo-btn" id="gym-tempo-btn" onclick="toggleTempo()">קצב כבוי</button>
     <button class="gym-close" aria-label="סגור מצב אימון" onclick="confirmCloseGymMode()">✕</button>
@@ -1891,6 +1891,6 @@
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">מנוחה</button>
 </div>
 
-    <script type="module" src="app.js?v=16"></script>
+    <script type="module" src="app.js?v=17"></script>
 </body>
 </html>

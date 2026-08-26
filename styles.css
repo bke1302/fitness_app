@@ -3062,3 +3062,31 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
   }
   .week-bar .day-cell .dc-icon{margin:0;}
 }
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   ROUND 7 — hover does not exist on a phone
+   On iOS :hover latches after a tap and stays until you tap elsewhere, so a
+   hover that moves an element leaves it moved. `.card:hover` lifts 3px with
+   a shadow, and every screen is built from cards: touching anything inside
+   one lifts the whole card and strands it there. Round 6 covered three
+   selectors; this is the rest of them.
+   ══════════════════════════════════════════════════════════════════════ */
+@media (hover:none){
+  .card:hover,.today-hero:hover,.btn:hover,.ex-chip:hover,.ach-badge:hover,
+  .elog-empty-cta:hover,.boss-add-btn:hover,.meal-row:hover,.tip-card:hover,
+  .supp-card:hover,.subnav-btn:hover,.workout-picker > button:hover,
+  .ex-table tr[onclick]:hover,.settings-save:hover,.gym-mode-btn:hover{
+    transform:none !important;
+    box-shadow:none !important;
+  }
+}
+
+/* The "?" lost its hover feedback when it became a 44px target with a 22px
+   visual — the rule still targeted the button, which no longer draws itself. */
+.ss-why:hover::before{border-color:var(--lime);color:var(--lime);}
+
+/* Send is the whole point of the chat screen; muted it read as disabled */
+.chat-send:not(:disabled){
+  background:var(--lime) !important;color:#08090B !important;font-weight:800;
+}
