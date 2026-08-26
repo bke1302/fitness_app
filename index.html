@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
-<link rel="stylesheet" href="styles.css?v=9">
+<link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body dir="rtl">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -981,14 +981,16 @@
   <div class="panel" id="panel-nutrition">
 
     <!-- NUTRITION TIMING ENGINE -->
-    <div class="timing-card">
-      <div class="timing-head">תזמון תזונה לפי שעת אימון</div>
+    <div class="timing-card collapsible-lite">
+      <button class="timing-head" onclick="this.parentElement.classList.toggle('open')">תזמון ארוחות סביב האימון</button>
+      <div class="timing-card-body">
       <div class="timing-input-row">
         <label style="font-size:0.86rem;color:var(--muted2);">שעת אימון:</label>
         <input type="time" class="timing-time-input" id="workout-time-input" onchange="updateNutritionTiming()" value="18:00"/>
       </div>
       <div class="timing-rows" id="timing-rows">
         <!-- Filled by JS -->
+      </div>
       </div>
     </div>
 
@@ -1888,6 +1890,6 @@
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">מנוחה</button>
 </div>
 
-    <script type="module" src="app.js?v=9"></script>
+    <script type="module" src="app.js?v=10"></script>
 </body>
 </html>

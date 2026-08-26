@@ -2604,3 +2604,30 @@ body[data-panel="crossfit"] .timer-float{display:flex;}
   background:none !important;border:1px solid var(--border2) !important;
   color:var(--text) !important;
 }
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   FINAL PASS
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* Meal timing is read once, when you set your training hour */
+.timing-card{margin-bottom:0;}
+.timing-head{
+  display:flex;align-items:center;gap:9px;width:100%;
+  background:none;border:none;padding:0;margin:0;cursor:pointer;text-align:right;
+  font-family:var(--font);font-size:.95rem;font-weight:700;
+  color:var(--text);text-transform:none;letter-spacing:0;
+}
+.timing-head::after{
+  content:'';width:8px;height:8px;flex-shrink:0;margin-inline-start:auto;
+  border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s var(--ease-out);
+}
+.timing-card.open .timing-head::after{transform:rotate(225deg) translate(-3px,-3px);}
+.timing-card-body{display:none;padding-top:14px;}
+.timing-card.open .timing-card-body{display:block;}
+
+/* Seven 32px slabs to say "no workout yet". A bar is enough. */
+.wr-days{gap:5px;margin-top:14px;}
+.wr-day-bar{height:14px;border-radius:4px;}
+.wr-day-lbl{font-size:.7rem;color:var(--muted2);}

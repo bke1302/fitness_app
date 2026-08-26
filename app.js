@@ -750,7 +750,8 @@ function updateBMRPreview(){
   const surp={lean_bulk:350,bulk:600,cut:-400,maintain:0}[goalVal]??350;
   const target=tdee+surp;
   const surpLabel=surp>0?'+'+surp:String(surp);
-  prev.innerHTML=`BMR: <strong>${bmr.toLocaleString()}</strong> &nbsp;|&nbsp; TDEE: <strong>${tdee.toLocaleString()}</strong> &nbsp;|&nbsp; יעד (<strong>${surpLabel}</strong>): <strong style="color:var(--red)">${target.toLocaleString()}</strong> קל׳`;
+  prev.innerHTML=`היעד שלך: <strong style="color:var(--lime)">${target.toLocaleString()}</strong> קל׳ ליום `
+    +`<span style="color:var(--muted2)">· ${surpLabel} · שריפה יומית ${tdee.toLocaleString()}</span>`;
   const calIn=document.getElementById('sf-calories');
   if(calIn && !calIn.dataset.touched) calIn.value = target;
 }
@@ -1168,7 +1169,8 @@ function renderNutritionPanel(){
       <div class="stat-box green"><div class="val">${n.fat}g</div><div class="lbl">שומן בריא</div></div>`;
   }
   if(badge) badge.textContent=GOAL_LABELS[g]||g;
-  if(fatNote) fatNote.innerHTML=`BMR: <strong>${n.bmr.toLocaleString()}</strong> קל׳ &nbsp;|&nbsp; TDEE: <strong>${n.tdee.toLocaleString()}</strong> קל׳ &nbsp;|&nbsp; יעד: <strong style="color:var(--red)">${n.target.toLocaleString()}</strong> קל׳`;
+  if(fatNote) fatNote.innerHTML=`הגוף שלך שורף בערך <strong>${n.tdee.toLocaleString()}</strong> קל׳ ביום. `
+    +`היעד שלך: <strong style="color:var(--lime)">${n.target.toLocaleString()}</strong> קל׳`;
 
   const mealBadge=document.getElementById('meal-count-badge');
   if(mealBadge) mealBadge.textContent=(u.meal_count||5)+' ארוחות';
