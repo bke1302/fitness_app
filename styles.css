@@ -3128,3 +3128,17 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
 .card:active,.day-cell:not(.rest-day):active,.stat-box:active{
   transform:scale(.995) !important;
 }
+
+
+/* .elog-empty-cta:active (880) is overridden by .elog-empty-cta:hover (1053)
+   at equal specificity — the same hover-beats-press ordering already fixed
+   for .workout-card. This is the last instance of that class. */
+.elog-empty-cta:active,.install-banner-btn:active,.chat-send:active,
+.food-add-btn:active,.weight-add-btn:active{
+  transform:scale(.96) !important;
+}
+
+/* The weight-log number inputs carried an inline width:62px that the media
+   query could not reach, so "חזרות" was clipped to "חזרוו". */
+.elog-input{min-width:0;}
+.elog-row .elog-input{flex:1 1 72px;}

@@ -942,7 +942,7 @@ function renderDashboardStats(u){
   const badge=document.getElementById('dash-goal-badge');
   if(badge){
     badge.textContent=GOAL_LABELS[g]||g;
-    const cls={lean_bulk:'badge-red',bulk:'badge-purple',cut:'badge-blue',maintain:'badge-green'};
+    const cls={lean_bulk:'badge-neutral',bulk:'badge-neutral',cut:'badge-neutral',maintain:'badge-neutral'};
     badge.className='badge '+(cls[g]||'badge-red');
   }
 
@@ -2836,9 +2836,9 @@ function renderElogPanel(){
         </div>
         <div class="elog-inputs">
           <button class="elog-inc-btn" onclick="elogAdjust('${key}',-2.5)">−</button>
-          <input class="elog-input" id="elog-kg-${key}" type="number" min="0" step="0.5" placeholder="ק״ג" value="${todayEntry?todayEntry.kg:last?last.kg:''}" style="width:62px;"/>
+          <input class="elog-input" id="elog-kg-${key}" type="number" min="0" step="0.5" placeholder="ק״ג" value="${todayEntry?todayEntry.kg:last?last.kg:''}"/>
           <span class="elog-x">×</span>
-          <input class="elog-input" id="elog-reps-${key}" type="number" min="1" max="50" placeholder="חזרות" value="${todayEntry?todayEntry.reps:last?last.reps:''}" style="width:62px;"/>
+          <input class="elog-input" id="elog-reps-${key}" type="number" min="1" max="50" placeholder="חזרות" value="${todayEntry?todayEntry.reps:last?last.reps:''}"/>
           <button class="elog-inc-btn" onclick="elogAdjust('${key}',2.5)">+</button>
           <button class="elog-save" onclick="elogSave('${key}')">שמור</button>
         </div>
@@ -3003,11 +3003,11 @@ function renderFoodPanel(){
     </div>
   </div>
   <div class="card">
-    <div class="card-head"><h2>מה אכלתי היום</h2>${log.length?`<span class="badge badge-blue">${log.length} רשומות</span>`:''}</div>
+    <div class="card-head"><h2>מה אכלתי היום</h2>${log.length?`<span class="badge badge-neutral">${log.length} רשומות</span>`:''}</div>
     <div class="card-body" id="food-log-list">
       ${log.length?log.map((e,i)=>`<div class="food-log-entry">
-        <div style="flex:1"><div class="fle-name">${_esc(e.name)}${e.qty!==1?` ×${e.qty}`:''}${e.unit?' '+_esc(e.unit):''}</div>
-        <div class="fle-amount">${Math.round(e.cal)} קל׳ | <span style="color:var(--blue)">${Math.round(e.p)}g P</span> · <span style="color:var(--yellow)">${Math.round(e.c)}g C</span> · <span style="color:var(--green)">${Math.round(e.f)}g F</span></div></div>
+        <div style="flex:1"><div class="fle-name">${_esc(e.name)}${(+e.qty>0&&+e.qty!==1)?` ×${e.qty}`:''}${e.unit?' '+_esc(e.unit):''}</div>
+        <div class="fle-amount">${Math.round(e.cal)} קל׳ · <span>חלבון ${Math.round(e.p)}</span> · <span>פחמ׳ ${Math.round(e.c)}</span> · <span>שומן ${Math.round(e.f)}</span></div></div>
         <button class="fle-del" onclick="deleteFoodEntry(${i})" aria-label="מחק רשומה">✕</button>
       </div>`).join(''):`<div style="text-align:center;padding:24px 0;color:var(--muted);">
         <div style="margin-bottom:8px;color:var(--muted2);"><svg class="ico" style="width:30px;height:30px;"><use href="#i-utensils"/></svg></div>
@@ -3032,7 +3032,7 @@ function _renderFoodDropdown(loading){
   const dd=document.getElementById('food-dropdown'); if(!dd) return;
   if(!_searchResults.length&&!loading){dd.classList.remove('show');return;}
   const rows=_searchResults.map((f,i)=>`<div class="food-option" onclick="selectFoodResult(${i})">
-    ${_esc(f.name)}${f._off?'<span class="fo-src"><svg class="ico"><use href="#i-globe"/></svg></span>':''}<div class="fo-macros">${Math.round(f.cal)} קל׳ · P${f.p}g · C${f.c}g · F${f.f}g</div></div>`).join('');
+    ${_esc(f.name)}${f._off?'<span class="fo-src"><svg class="ico"><use href="#i-globe"/></svg></span>':''}<div class="fo-macros">${Math.round(f.cal)} קל׳ · חלבון ${f.p} · פחמ׳ ${f.c} · שומן ${f.f}</div></div>`).join('');
   dd.innerHTML=rows+(loading?'<div class="food-option fo-loading">מחפש במאגר העולמי…</div>':'');
   dd.classList.add('show');
 }
@@ -3318,7 +3318,7 @@ function offlineAnswer(q){
 }
 
 // ═══════════════════════════════════════════════════
-// F2 — XP & LEVEL SYSTEM
+// F2 — נקודות & LEVEL SYSTEM
 // ═══════════════════════════════════════════════════
 const XP_KEY='pf_xp';
 const LEVELS=[
@@ -3351,7 +3351,7 @@ function renderXPWidget(){
   const fill=document.getElementById('xp-fill');
   if(badge) badge.textContent=lvl.badge;
   if(name) name.textContent=lvl.name;
-  if(nums) nums.textContent=xp+' / '+(nextLvl?nextLvl.xp:'MAX')+' XP';
+  if(nums) nums.textContent=xp+' / '+(nextLvl?nextLvl.xp:'מקסימום')+' נקודות';
   if(fill) fill.style.width=Math.min(pct,100)+'%';
 }
 function showLevelUpToast(name,badge){
@@ -3736,7 +3736,7 @@ function renderGymExercise(){
     body.innerHTML=`<div class="gym-done-screen">
       <div class="gym-done-title">סיימת</div>
       <div class="gym-done-sub">האימון הושלם!<br>הגוף שלך מתחזק.</div>
-      <div class="gym-done-xp">+50 XP</div>
+      <div class="gym-done-xp">+50 נקודות</div>
       <button class="gym-nav-btn next" onclick="closeGymMode()" style="max-width:200px;margin-top:8px;">סגור</button>
     </div>`;
     if(prev) prev.style.display='none';
@@ -4059,7 +4059,7 @@ const VOICE_CMDS=[
   {k:['תזונה','nutrition'],fn:()=>{showPanel('nutrition');speak('עובר לתזונה');}},
   {k:['הגדרות','settings'],fn:()=>{showPanel('settings');speak('עובר להגדרות');}},
   {k:['סטריק','רצף','streak'],fn:()=>{const n=document.getElementById('streak-num')?.textContent||'0';speak('הרצף שלך הוא '+n+' ימים');}},
-  {k:['XP','אקסופי','נקודות'],fn:()=>{speak('יש לך '+getXP()+' נקודות XP');}},
+  {k:['XP','אקסופי','נקודות'],fn:()=>{speak('יש לך '+getXP()+' נקודות');}},
   {k:['טיימר','מנוחה','timer'],fn:()=>{if(typeof pickTimer==='function') pickTimer(90);speak('מתחיל טיימר מנוחה 90 שניות');}},
 ];
 function speak(text){
@@ -4829,7 +4829,7 @@ function renderWeeklyReport(){
     <div class="wr-grid">
       <div class="wr-stat-card"><div class="wr-stat-val" data-val="${workoutDays}">0</div><div class="wr-stat-lbl">אימונים השבוע</div></div>
       <div class="wr-stat-card"><div class="wr-stat-val" data-val="${weekPRs}">0</div><div class="wr-stat-lbl">שיאים חדשים</div></div>
-      <div class="wr-stat-card"><div class="wr-stat-val${weekVol>0?'':' is-empty'}">${weekVol>0?(weekVol>=1000?(weekVol/1000).toFixed(1)+' טון':Math.round(weekVol).toLocaleString('he-IL')):'—'}</div><div class="wr-stat-lbl">נפח אימון (ק"ג)</div></div>
+      <div class="wr-stat-card"><div class="wr-stat-val${weekVol>0?'':' is-empty'}">${weekVol>0?(weekVol>=1000?(weekVol/1000).toFixed(1)+' טון':Math.round(weekVol).toLocaleString('he-IL')):'—'}</div><div class="wr-stat-lbl">נפח אימון</div></div>
       <div class="wr-stat-card"><div class="wr-stat-val${avgCal?'':' is-empty'}" ${avgCal?'data-val="'+avgCal+'"':''}>${avgCal?'0':'—'}</div><div class="wr-stat-lbl">קל' ממוצע ליום</div></div>
     </div>
     <div class="wr-days">
