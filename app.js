@@ -120,10 +120,10 @@ const EX = {
     muscles:'Rhomboids, Middle Trapezius, Lat, Rear Delt.',
     tips:['שב זקוף — לא כפוף קדימה','שכמות מתקרבות בסוף המשיכה','אל תסחב בתנופה','מרפקים מאחורי הגוף בסיום']},
   reverseFly:{name:'פרפר הפוך — מכונה',en:'Reverse Pec Deck',e:'',cat:'כתף אחורית',sets:'4×12–15',rest:'45 שנ׳',lvl:'בידוד',
-    desc:'פתיחת זרועות לאחור במכונת פק-דק הפוכה. בידוד נקי לכתף האחורית כמעט ללא מעורבות בייסס — משלים ל-Face Pull ומחליף אותו בסבב הגיוון.',
+    desc:'פתיחת זרועות לאחור במכונת פק-דק הפוכה. בידוד נקי לכתף האחורית כמעט ללא מעורבות בייסס — משלים למשיכת הפנים ומחליף אותה בסבב הגיוון.',
     muscles:'Posterior Deltoid (ראשי), Rhomboids, Middle Trapezius.',
     tips:['כוון את הידיות לגובה הכתפיים בדיוק','מרפקים כפופים קלות וקבועים — זו לא פשיטת מרפק','משוך מהמרפק ולא מכף היד — אם הבייסס עובד, המשקל כבד מדי','עצור שנייה מלאה בכיווץ','משקל קל וחזרות גבוהות — הכתף האחורית קטנה ומתעייפת מהר']},
-  facePull:{name:'Face Pull — חבל',en:'Cable Face Pull',e:'',cat:'כתף אחורית',sets:'4×15–20',rest:'45 שנ׳',lvl:'בידוד',
+  facePull:{name:'משיכת פנים — כבל',en:'Cable Face Pull',e:'',cat:'כתף אחורית',sets:'4×15–20',rest:'45 שנ׳',lvl:'בידוד',
     desc:'קריטי לבריאות הכתף ולמניעת פציעות. עשה אותו כמעט כל אימון.',
     muscles:'Rear Deltoid, Rotator Cuff, Trapezius.',
     tips:['כבל בגובה ראש, אחיזה חבל','מושך לפנים הפנים — לא לסנטר','מרפקים גבוהים ופתוחים','חזרות גבוהות — 15–20','הכרחי לבריאות כתפיים לאורך זמן']},
@@ -347,7 +347,7 @@ const EX = {
     desc:'גומייה מאחורי הגב או מעוגנת בדלת בגובה חזה. מתח עולה בסוף התנועה — משלים מצוין לשכיבות סמיכה.',
     muscles:'חזה הגדול, כתפיים קדמיות, טריצפס.',
     tips:['צעד קדימה ליצירת מתח התחלתי','דחוף עד יישור מלא','ליבה אסופה','שלב עם שכיבות סמיכה באותו אימון']},
-  bandFacePull:{name:'Face Pull — גומייה',en:'Band Face Pull',e:'',cat:'כתף אחורית',sets:'4×15–25',rest:'45 שנ׳',lvl:'בידוד',eq:'band',
+  bandFacePull:{name:'משיכת פנים — גומייה',en:'Band Face Pull',e:'',cat:'כתף אחורית',sets:'4×15–25',rest:'45 שנ׳',lvl:'בידוד',eq:'band',
     desc:'זהה לגרסת הכבל — קריטי לבריאות הכתף.',
     muscles:'Rear Deltoid, Rotator Cuff, Trapezius.',
     tips:['עיגון בגובה פנים','מרפקים גבוהים ופתוחים','משוך לפנים הפנים','חובה בכל אימון ביתי']},
@@ -649,7 +649,8 @@ function showPanel(name,btn){
   // Lazy-render panels that build their UI dynamically
   renderSubNav(name);
   setTimeout(initCollapsibles,0);
-  setTimeout(()=>fixNumericRanges(document.getElementById('panel-'+name)),0);
+  // after the lazy renderers below, not before them on the same tick
+  setTimeout(()=>fixNumericRanges(document.getElementById('panel-'+name)),80);
   if(name==='settings') setTimeout(prefillSettingsForm,0);
   if(name==='elog') setTimeout(renderElogPanel,0);
   if(name==='food') setTimeout(renderFoodPanel,0);
@@ -849,7 +850,7 @@ function calcNutrition(u){
   return{bmr,tdee,target,protein,fat,carbs};
 }
 
-const GOAL_LABELS={lean_bulk:'Lean Bulk',bulk:'מסה מקסימלית',cut:'הורדת שומן',maintain:'שמירה'};
+const GOAL_LABELS={lean_bulk:'עלייה נקייה',bulk:'מסה מקסימלית',cut:'הורדת שומן',maintain:'שמירה'};
 
 // ═══════════════════════════════════════════════════
 // EXERCISE ALTERNATIVES
@@ -922,7 +923,7 @@ function renderDashboardStats(u){
   const surplusMap={lean_bulk:350,bulk:600,cut:-400,maintain:0};
   const surplus=surplusMap[g]??350;
   const surpLabel=surplus>0?'(+'+surplus+')':surplus<0?'('+surplus+')':'';
-  const goalHe={lean_bulk:'Lean Bulk',bulk:'מסה',cut:'הורדת שומן',maintain:'שמירה'};
+  const goalHe={lean_bulk:'עלייה נקייה',bulk:'מסה',cut:'הורדת שומן',maintain:'שמירה'};
 
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   const setW=(id,w)=>{const el=document.getElementById(id);if(el)el.style.width=w;};
@@ -971,9 +972,9 @@ function renderDashboardStats(u){
   // Timeline — strength goals based on bodyweight
   const bench=Math.round(w*1.3), squat=Math.round(w*1.6), dead=Math.round(w*2);
   const m5=document.getElementById('tl-m5');
-  if(m5) m5.innerHTML=`שינוי דרמטי. <strong>+${Math.round(w*0.06)}–${Math.round(w*0.1)} ק"ג שריר נטו.</strong> Bench ${bench}ק"ג, Squat ${squat}ק"ג. גוף מוצק.`;
+  if(m5) m5.innerHTML=`שינוי דרמטי. <strong>+${Math.round(w*0.06)}–${Math.round(w*0.1)} ק״ג שריר נטו.</strong> לחיצת חזה ${bench} ק״ג, סקוואט ${squat} ק״ג. גוף מוצק.`;
   const m9=document.getElementById('tl-m9');
-  if(m9) m9.innerHTML=`<strong>+${Math.round(w*0.1)}–${Math.round(w*0.15)} ק"ג שריר נטו</strong> — Deadlift ${dead}ק"ג. גוף שנבנה מחדש. שקול לעבור ל-Cut.`;
+  if(m9) m9.innerHTML=`<strong>+${Math.round(w*0.1)}–${Math.round(w*0.15)} ק״ג שריר נטו</strong> — דדליפט ${dead} ק״ג. גוף שנבנה מחדש. שקול לעבור לחיטוב.`;
 
   // Dashboard nutrition preview — dynamic meal title + first 2 meals
   const goalHeName=goalHe[g]||g;
@@ -3193,7 +3194,7 @@ async function sendChat(){
   if(btn) btn.disabled=true;
   const u=getActiveUser()||{};
   const n=calcNutrition(u);
-  const GOAL_HE={lean_bulk:'Lean Bulk — עליית מסה נקייה',bulk:'מסה מקסימלית',cut:'הורדת שומן עם שמירת שריר',maintain:'שמירה על המשקל הנוכחי'};
+  const GOAL_HE={lean_bulk:'עלייה נקייה — עליית מסה נקייה',bulk:'מסה מקסימלית',cut:'הורדת שומן עם שמירת שריר',maintain:'שמירה על המשקל הנוכחי'};
   const cholNote=u.cholesterol?'\n- בעיית כולסטרול: הימנע משומן רווי. מקורות שומן רק מבלתי רווי (זית, אבוקדו, אגוזים, דגים שמנים). כשמציע מזון — בדוק שידידותי לכולסטרול.':'';
   const systemPrompt=`אתה יועץ תזונה מקצועי לספורטאים. המשתמש:
 - שם: ${u.name||s.name} | גיל: ${u.age||s.age} | משקל: ${u.weight||s.weight}ק"ג | גובה: ${u.height||s.height}ס"מ
@@ -3250,10 +3251,10 @@ const OFFLINE_QA=[
   {k:['חלבון','protein','ביצים','עוף'],a:'לבניית שריר אתה צריך 2–2.5 גרם חלבון לכל ק"ג גוף. המקורות הטובים: חזה עוף, דגים, ביצים, יוגורט יווני, קוטג׳, Whey. פזר על פני כל הארוחות — הגוף לא יכול לספוג הכל בפעם אחת.'},
   {k:['שינה','sleep','עייפות'],a:'שינה היא הסאפלמנט הכי זול ויעיל. בשינה מופרש הורמון גדילה שבונה שריר. מטרה: 7–9 שעות. גוף ישן = גוף שמתאושש. אם מתקשה לישון: הורד קפאין אחרי 14:00, שמור על טמפרטורה קרירה.'},
   {k:['כאב שריר','DOMS','כאב','כואב'],a:'כאב שריר מאוחר (DOMS) — תגובה נורמלית לגירוי חדש. נעלם אחרי 48–72 שעות. לא חייב לכאוב בשביל לגדול. אם הכאב חד ופתאומי — עצור. מה עוזר: חום, מגנזיום, מסז׳, הליכה קלה.'},
-  {k:['קריאטין','creatine'],a:'קריאטין מונוהידרט — אחד מהסאפלמנטים הכי מוכחים מחקרית. 3–5 גרם ביום, לא צריך loading phase. מגביר כוח ונפח שריר. בטוח לשימוש ארוך טווח. שתה הרבה מים.'},
+  {k:['קריאטין','creatine'],a:'קריאטין מונוהידרט — אחד מהסאפלמנטים הכי מוכחים מחקרית. 3–5 גרם ביום, לא צריך שלב העמסה. מגביר כוח ונפח שריר. בטוח לשימוש ארוך טווח. שתה הרבה מים.'},
   {k:['פחמימות','carb','קארב','אורז','לחם'],a:'פחמימות הן דלק לשרירים. לפני אימון — אורז, בטטה, שיבולת שועל. אחרי אימון — בננה + Whey. לא אויב, חלק חיוני. בגרעון: הורד פחמימות, שמור חלבון גבוה.'},
   {k:['שומן','fat','אבוקדו','שמן'],a:'שומן חיוני לייצור הורמונים כולל טסטוסטרון. מטרה: 25–30% מהקלוריות. מקורות טובים: אבוקדו, אגוזי מלך, שמן זית, סלמון. הימנע משומן טרנס (מזון מעובד).'},
-  {k:['קלוריות','calories','אכילה','לאכול','כמה לאכול'],a:'לבניית שריר (Lean Bulk): TDEE + 300–400 קלוריות. לירידת שומן (Cut): TDEE - 400 קלוריות. TDEE = BMR × רמת פעילות. הדשבורד מחשב את זה עבורך אוטומטית בהתאם לפרופיל.'},
+  {k:['קלוריות','calories','אכילה','לאכול','כמה לאכול'],a:'לבניית שריר (עלייה נקייה): TDEE + 300–400 קלוריות. לירידת שומן (Cut): TDEE - 400 קלוריות. TDEE = BMR × רמת פעילות. הדשבורד מחשב את זה עבורך אוטומטית בהתאם לפרופיל.'},
   {k:['whey','ויי','אבקת חלבון','אבקה'],a:'Whey Isolate נספג מהר — אידיאלי 30 דק׳ אחרי אימון. Casein נספג לאט — טוב לפני שינה. לא חובה, אבל עוזר לעמוד ביעד החלבון. בחר Isolate אם יש רגישות ללקטוז.'},
   {k:['סקוואט','squat','רגליים'],a:'הסקוואט הוא מלך תרגילי הרגליים. טכניקה: גב ישר, חזה למעלה, ברכיים בכיוון בהונות, ירידה עד 90°. אם הגב סובל — נסה Goblet Squat לתיקון טכניקה.'},
   {k:['לחיצת חזה','bench','bench press','חזה'],a:'Bench Press: שכב על ספסל, מוט ברוחב כתפיים+, שכמות מקובצות. הורד לחזה התחתון (לא לצוואר), דחוף. להגדלת חזה עליון — Incline press חיוני.'},
@@ -3263,7 +3264,7 @@ const OFFLINE_QA=[
   {k:['כולסטרול','LDL','HDL'],a:'להורדת כולסטרול תוך כדי אימון: הגדל אומגה 3 (סלמון, אגוזי מלך), שיבולת שועל (Beta-Glucan), שמן זית. הפחת בשר אדום ומוצרי חלב שמנים. HDL עולה עם אירובי.'},
   {k:['השמנה','שומן בבטן','בטן','להשמין'],a:'שומן בבטן מוריד עם גרעון קלורי + אימוני כוח + שינה. אין "ממקד" — לא ניתן לאבד שומן רק מבטן. Cardio עוזר לגרעון. 80% מהתוצאה היא מהתזונה.'},
   {k:['ויטמינים','vitamin','D3','מגנזיום','zinc'],a:'ויטמינים חיוניים לספורטאי: D3 (1000–2000 IU), מגנזיום גליצינאט (200–400 מ"ג לפני שינה), Zinc (25 מ"ג), אומגה 3 (2–3 גרם EPA+DHA). בדוק ערכי דם.'},
-  {k:['Lean Bulk','לין בולק','בניית מסה','להגדיל'],a:'Lean Bulk = עודף קטן של 300–400 קלוריות. קצב: 0.5–1 ק"ג בחודש. לאט, אך רוב העלייה הוא שריר. מיקס: 80% מזון אמיתי + 20% גמישות. הניטור הוא המפתח.'},
+  {k:['עלייה נקייה','לין בולק','בניית מסה','להגדיל'],a:'עלייה נקייה = עודף קטן של 300–400 קלוריות. קצב: 0.5–1 ק"ג בחודש. לאט, אך רוב העלייה הוא שריר. מיקס: 80% מזון אמיתי + 20% גמישות. הניטור הוא המפתח.'},
   {k:['Cut','קאט','לרזות','ירידה'],a:'Cut = גרעון של 400–500 קלוריות. שמור חלבון גבוה (2.5 גרם/ק"ג) לשמירת שריר. הוסף 20–30 דק׳ Cardio × 3 בשבוע. קצב אידיאלי: 0.5–1 ק"ג שבועי.'},
   {k:['Bulk','מסה','bulking'],a:'Bulk = עודף גדול של 500–700 קלוריות. גדילה מהירה יותר אבל עם יותר שומן. אחרי 3–4 חודשי Bulk — עבור ל-Cut לחשוף את השריר. מחזוריות היא המפתח.'},
   {k:['מדידות','התקדמות','progress','כמה עלה'],a:'מד התקדמות נכון: שקול עצמך שבועי (בבוקר, בצום). מדוד גם היקפי שריר (חזה, זרוע, ירך). לפעמים המשקל לא עולה אבל האחוז שומן יורד — זה בסדר. השתמש בגרף ההתקדמות.'},
@@ -3272,7 +3273,7 @@ const OFFLINE_QA=[
   {k:['supplement','סאפלמנטים','תוספים'],a:'סאפלמנטים לפי עדיפות: 1) קריאטין מונוהידרט 3-5g, 2) Whey Protein (אם קשה לעמוד ביעד), 3) D3 1000IU, 4) מגנזיום גליצינאט, 5) אומגה 3. שאר — שיווק.'},
   {k:['Push','PUSH','חזה','לחיצה'],a:'Push Day: חזה → כתפיים → טריצפס. הסדר חשוב! עצב שניה כשהגוף טרי. Bench Press → Incline → Overhead Press → טריצפס. מנוחה 2–3 דק׳ בין סטים כבדים.'},
   {k:['Pull','PULL','גב','מתח'],a:'Pull Day: גב → בייסס → כתף אחורית. מתח / לט פולדאון → חתירה → Face Pull → כפיפות. גב חזק = יציבה טובה + פחות כאבי גב.'},
-  {k:['Progressive Overload','עומס','להתקדם'],a:'Progressive Overload = הוספת עומס בהדרגה. כל שבועיים-שלושה: הוסף 2.5 ק"ג או חזרה נוספת. זה עיקרון הגדילה. בלי זה — הגוף לא מגיב. יומן המשקלים הוא הכלי.'},
+  {k:['Progressive Overload','העמסה מתקדמת','עומס','להתקדם'],a:'העמסה מתקדמת = הוספת עומס בהדרגה. כל שבועיים-שלושה: הוסף 2.5 ק"ג או חזרה נוספת. זה עיקרון הגדילה. בלי זה — הגוף לא מגיב. יומן המשקלים הוא הכלי.'},
   {k:['overtraining','אוברטריינינג','יתר'],a:'סימני אוברטריינינג: ירידה בביצועים, עייפות כרונית, עצבנות, נדודי שינה. הפתרון: שבוע דה-לוד — אותן תנועות, 40% פחות משקל.'},
 ];
 function offlineAnswer(q){
@@ -3281,7 +3282,7 @@ function offlineAnswer(q){
   for(const qa of OFFLINE_QA){
     if(qa.k.some(k=>lower.includes(k.toLowerCase()))) return qa.a;
   }
-  return 'אני יועץ הכושר שלך גם ללא אינטרנט שאל על: חלבון, שינה, קריאטין, פחמימות, קלוריות, DOMS, חימום, Lean Bulk, Cut, Bulk, מנוחה, אמות, בטן, ויטמינים, Progressive Overload.';
+  return 'אני יועץ הכושר שלך גם ללא אינטרנט שאל על: חלבון, שינה, קריאטין, פחמימות, קלוריות, כאבי שרירים, חימום, עלייה נקייה, חיטוב, מנוחה, אמות, בטן, ויטמינים, העמסה מתקדמת.';
 }
 
 // ═══════════════════════════════════════════════════
@@ -4076,6 +4077,7 @@ window.addEventListener('load',()=>{
   renderElogPanel();
   // Pre-render elog chips in workout tables
   injectLastLogChips(getElog());
+  setTimeout(()=>fixNumericRanges(),120);
   // ── New feature inits ──
   if(typeof renderXPWidget==='function') renderXPWidget();
   if(typeof renderBossCard==='function') renderBossCard();
@@ -4150,7 +4152,7 @@ function toggleExSearch(){
 // direction and the two numbers lay out right-to-left. A range is one atom.
 // Isolating known containers does not scale - ranges live in dosages, the
 // timeline, tips and coaching prose - so this walks text nodes instead.
-const _RANGE=/\d[\d.,]*\s*[\u2013\u2014-]\s*\d[\d.,]*/;
+const _RANGE=/[+\u2212]?\d[\d.,]*\s*[\u2013\u2014-]\s*\d[\d.,]*/;
 const _NO_BDI='script,style,input,textarea,select,option,.ex-table,#gym-body,.stat-box,.wk-frac,.ell-num,.sets-cell,.ex-sets,bdi,svg';
 function fixNumericRanges(root){
   const scope=root||document.getElementById('main-content');
@@ -5027,7 +5029,7 @@ const WORKOUT_PLANS={
          {id:'A1',pair:['benchPress','pullup'],type:'antagonist',rounds:4,restWithin:20,restBetween:120,
           note:'דחיפה אופקית מול משיכה אנכית. אין שריר משותף, אפס עומס על עמוד השדרה, והאחיזה במתח מתאוששת במלואה במהלך סט הלחיצה.'},
          {id:'A2',pair:['squat','facePull'],type:'noncompeting',rounds:4,restWithin:20,restBetween:120,
-          note:'סקוואט כבד מול בידוד כתף אחורית במשקל זניח. הרץ את ה-Face Pull ב-RPE 6 — הוא מנוחה אקטיבית, לא תרגיל.'},
+          note:'סקוואט כבד מול בידוד כתף אחורית במשקל זניח. את משיכת הפנים תרוץ קל — היא מנוחה אקטיבית, לא תרגיל.'},
          {id:'A3',pair:['legCurl','cableLateral'],type:'noncompeting',rounds:3,restWithin:20,restBetween:60,
           note:'ירך אחורי בשכיבה מול כתף אמצעית בכבל. אפס חפיפה, אפס גב תחתון, אפס אחיזה.'},
          {id:'A4',pair:['triPushdown','cableCurl'],type:'antagonist',rounds:3,restWithin:15,restBetween:60,

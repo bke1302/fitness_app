@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
-<link rel="stylesheet" href="styles.css?v=12">
+<link rel="stylesheet" href="styles.css?v=13">
 </head>
 <body dir="rtl">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -208,8 +208,8 @@
         </button>
         <button class="workout-card crossfit" onclick="showPanel('crossfit',null);setMobileNav('push');">
           <div class="workout-card-icon"><svg class="ico"><use href="#i-timer"/></svg></div>
-          <div class="workout-card-title" style="color:var(--orange);">CROSSFIT — WOD</div>
-          <div class="workout-card-sub">ימי כוח לגיין · WODs · בנצ'מרקים · טיימר מובנה</div>
+          <div class="workout-card-title" style="color:var(--orange);">קרוספיט</div>
+          <div class="workout-card-sub">אימוני מעגל למדידת זמן · טיימר מובנה</div>
         </button>
       </div>
     </div>
@@ -352,7 +352,7 @@
   <div class="panel" id="panel-schedule">
     <!-- Workout type selector -->
     <div style="padding:16px 0 4px;">
-      <div style="font-size:0.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">בחר אימון</div>
+      <div class="card-head"><h2>בחר אימון</h2></div>
       <div class="workout-picker" style="margin-bottom:20px;">
         <button onclick="showPanel('push',null);setMobileNav('push');" style="background:var(--bg3);border:1.5px solid rgba(204,255,0,.35);border-radius:16px;padding:18px 12px;text-align:center;cursor:pointer;">
           <div style="margin-bottom:6px;color:#CCFF00;"><svg class="ico" style="width:26px;height:26px;"><use href="#i-arrow-up"/></svg></div>
@@ -381,7 +381,7 @@
       </div>
     </div>
     <div class="card">
-      <div class="card-head"><h2>לוח שבועי</h2><span class="badge badge-blue" id="sched-days-badge">4 ימי אימון</span></div>
+      <div class="card-head"><h2>לוח שבועי</h2><span class="badge badge-neutral" id="sched-days-badge">4 ימי אימון</span></div>
       <div class="card-body">
         <div class="week-bar">
           <div class="day-cell" onclick="goDay('push')"><div class="dc-name">ראשון א׳</div><div class="dc-icon"><span class="dc-dot" style="background:var(--red)"></span></div><div class="dc-type" style="color:var(--red)">PUSH</div><div class="dc-label">חזה · כתף · טריצפס</div></div>
@@ -408,7 +408,7 @@
         <div style="margin-top:16px;font-size:0.94rem;color:var(--muted2);line-height:1.8;">
           <strong style="color:var(--text)">חימום ספציפי:</strong> לפני כל תרגיל ראשי — סט אחד קל עם 50% מהמשקל<br>
           <strong style="color:var(--text)">העמסה מתקדמת:</strong> כשאתה מסיים 3 סטים עם טכניקה מושלמת — הוסף 2.5 ק"ג<br>
-          <strong style="color:var(--text)">RPE:</strong> הסיום של כל סט צריך להרגיש כמו 8/10 — לא להיכנע, לא להישבר<br>
+          <strong style="color:var(--text)">עצימות:</strong> הסיום של כל סט צריך להרגיש כמו 8 מתוך 10 — לא להיכנע, לא להישבר<br>
           <strong style="color:var(--text)">רישום:</strong> כתוב משקל + חזרות בכל אימון — זה מה שמפריד בין מי שגדל ומי שמרקד
         </div>
       </div>
@@ -497,8 +497,8 @@
         <!-- ABS SECTION — Push Day -->
         <div class="abs-card">
           <div class="abs-card-title">בטן — 5 דקות בסוף Push (3× בשבוע)</div>
-          <div class="abs-row"><span class="abs-row-name">Plank</span><span class="abs-row-sets">3 × 30–45 שנ׳</span></div>
-          <div class="abs-row"><span class="abs-row-name">כפיפות בטן (Crunches)</span><span class="abs-row-sets">3 × 20</span></div>
+          <div class="abs-row"><span class="abs-row-name">פלאנק</span><span class="abs-row-sets">3 × 30–45 שנ׳</span></div>
+          <div class="abs-row"><span class="abs-row-name">כפיפות בטן</span><span class="abs-row-sets">3 × 20</span></div>
           <div class="abs-row"><span class="abs-row-name">הרמות רגליים</span><span class="abs-row-sets">3 × 15</span></div>
         </div>
       </div>
@@ -753,8 +753,8 @@
         <!-- ABS SECTION — Legs Day -->
         <div class="abs-card">
           <div class="abs-card-title">בטן — 5 דקות בסוף Legs</div>
-          <div class="abs-row"><span class="abs-row-name">Dead Bug</span><span class="abs-row-sets">3 × 10 (כל צד)</span></div>
-          <div class="abs-row"><span class="abs-row-name">Russian Twists</span><span class="abs-row-sets">3 × 20</span></div>
+          <div class="abs-row"><span class="abs-row-name">דד באג</span><span class="abs-row-sets">3 × 10 (כל צד)</span></div>
+          <div class="abs-row"><span class="abs-row-name">סיבובים רוסיים</span><span class="abs-row-sets">3 × 20</span></div>
           <div class="abs-row"><span class="abs-row-name">Side Plank</span><span class="abs-row-sets">2 × 30 שנ׳ (כל צד)</span></div>
         </div>
       </div>
@@ -1005,7 +1005,7 @@
     </div>
 
     <div class="card" id="macro-stats-card">
-      <div class="card-head"><h2>יעדי מאקרו יומיים</h2><span class="badge badge-green" id="macro-goal-badge">Lean Bulk</span></div>
+      <div class="card-head"><h2>יעדי מאקרו יומיים</h2><span class="badge badge-neutral" id="macro-goal-badge">עלייה נקייה</span></div>
       <div class="card-body">
         <div class="grid-4" id="macro-stats-grid"><!-- filled by JS --></div>
         <div style="margin-top:14px;font-size:0.94rem;color:var(--muted);line-height:1.8;" id="macro-fat-note"><!-- filled by JS --></div>
@@ -1090,8 +1090,8 @@
     <div class="card">
       <div class="card-head"><h2>טיפים מהמאמן</h2></div>
       <div class="card-body">
-        <div class="tip-card warn"><span class="tip-icon"><svg class="ico"><use href="#i-trend"/></svg></span><div><strong>העמסה מתקדמת — בלי זה אין כלום</strong><br>כל שבוע: הוסף חזרה אחת, או 2.5 ק"ג, או סט נוסף. רשום הכל. אפליקציות: Strong, Hevy.</div></div>
-        <div class="tip-card"><span class="tip-icon"><svg class="ico"><use href="#i-moon"/></svg></span><div><strong>שינה = שיקום = צמיחה</strong><br>7.5–9 שעות. הורמון גדילה מגיע ב-deep sleep. פחות שינה = פחות GH = פחות שריר.</div></div>
+        <div class="tip-card warn"><span class="tip-icon"><svg class="ico"><use href="#i-trend"/></svg></span><div><strong>העמסה מתקדמת — בלי זה אין כלום</strong><br>כל שבוע: הוסף חזרה אחת, או 2.5 ק"ג, או סט נוסף. רשום הכל. אפליקציות מעקב: Strong או Hevy.</div></div>
+        <div class="tip-card"><span class="tip-icon"><svg class="ico"><use href="#i-moon"/></svg></span><div><strong>שינה = שיקום = צמיחה</strong><br>7.5–9 שעות. הורמון גדילה מגיע ב-שינה עמוקה. פחות שינה = פחות הורמון גדילה = פחות שריר.</div></div>
         <div class="tip-card good"><span class="tip-icon"><svg class="ico"><use href="#i-droplet"/></svg></span><div><strong>מים — 3.5 ליטר ביום אימון</strong><br>ירידה של 2% בהידרציה = ירידה של 10% בביצועים. זה הרבה.</div></div>
         <div class="tip-card gold"><span class="tip-icon"><svg class="ico"><use href="#i-pill"/></svg></span><div><strong>קריאטין — 5g כל יום, נקודה</strong><br>לא לפני, לא אחרי — פשוט כל יום. זה תוסף שנחקר 40 שנה וזה הכי בטוח שיש.</div></div>
         <div class="tip-card warn"><span class="tip-icon"><svg class="ico"><use href="#i-alert"/></svg></span><div><strong>אלכוהול הורג שרירים</strong><br>חוסם סינתזת חלבון ב-24–48 שעות. לא "קצת בסדר" — ממש חוסם.</div></div>
@@ -1116,21 +1116,21 @@
       <div class="card-body" style="position:relative;padding-right:40px;">
         <div style="position:absolute;right:22px;top:0;bottom:0;width:2px;background:var(--border2);border-radius:999px;"></div>
 
-        <div class="tl-item"><div class="tl-dot" style="background:var(--cyan);"></div>
-          <div><div style="font-weight:700;margin-bottom:4px;">חודש 1–2 <span class="badge badge-cyan">עכשיו</span></div>
+        <div class="tl-item tl-now"><div class="tl-dot"></div>
+          <div><div style="font-weight:700;margin-bottom:4px;">חודש 1–2 <span class="badge badge-neutral">עכשיו</span></div>
           <div style="font-size:0.94rem;color:var(--muted2);line-height:1.7;">עלייה עצבית-שרירית — הגוף לומד תנועות. הכוח עולה מהר אבל לא מסת שריר ממשית עדיין. <strong>זה נורמלי.</strong> תמשיך.</div></div>
         </div>
-        <div class="tl-item"><div class="tl-dot" style="background:var(--blue);"></div>
+        <div class="tl-item"><div class="tl-dot"></div>
           <div><div style="font-weight:700;margin-bottom:4px;">חודש 3–4</div>
           <div style="font-size:0.94rem;color:var(--muted2);line-height:1.7;">שינויים ויזואליים ברורים. <strong>+1.5–2.5 ק"ג שריר נטו.</strong> האנשים מתחילים להבחין.</div></div>
         </div>
-        <div class="tl-item"><div class="tl-dot" style="background:var(--yellow);"></div>
+        <div class="tl-item"><div class="tl-dot"></div>
           <div><div style="font-weight:700;margin-bottom:4px;">חודש 5–8</div>
           <div id="tl-m5" style="font-size:0.94rem;color:var(--muted2);line-height:1.7;">שינוי דרמטי. <strong>+4–6 ק"ג שריר נטו.</strong> כוח גבוה. גוף מוצק.</div></div>
         </div>
-        <div class="tl-item" style="margin-bottom:0;"><div class="tl-dot" style="background:var(--red);"></div>
+        <div class="tl-item" style="margin-bottom:0;"><div class="tl-dot"></div>
           <div><div style="font-weight:700;margin-bottom:4px;">חודש 9–12</div>
-          <div id="tl-m9" style="font-size:0.94rem;color:var(--muted2);line-height:1.7;"><strong>+6–9 ק"ג שריר נטו</strong> — גוף שנבנה מחדש. שקול לעבור ל-Cut לחצי שנה לחשוף את השריר.</div></div>
+          <div id="tl-m9" style="font-size:0.94rem;color:var(--muted2);line-height:1.7;"><strong>+6–9 ק"ג שריר נטו</strong> — גוף שנבנה מחדש. שקול לעבור לחיטוב לחצי שנה לחשוף את השריר.</div></div>
         </div>
       </div>
     </div>
@@ -1138,9 +1138,9 @@
       <div class="card-head"><h2>יעדי כוח ריאליסטיים לאחר שנה</h2></div>
       <div class="card-body">
         <div class="grid-3">
-          <div class="stat-box red"><div class="val" dir="ltr">80–90</div><div class="lbl">ק"ג Bench Press</div></div>
-          <div class="stat-box purple"><div class="val" dir="ltr">100–120</div><div class="lbl">ק"ג Squat</div></div>
-          <div class="stat-box blue"><div class="val" dir="ltr">130+</div><div class="lbl">ק"ג Deadlift</div></div>
+          <div class="stat-box red"><div class="val" dir="ltr">80–90</div><div class="lbl">ק״ג לחיצת חזה</div></div>
+          <div class="stat-box purple"><div class="val" dir="ltr">100–120</div><div class="lbl">ק״ג סקוואט</div></div>
+          <div class="stat-box blue"><div class="val" dir="ltr">130+</div><div class="lbl">ק״ג דדליפט</div></div>
         </div>
       </div>
     </div>
@@ -1195,7 +1195,7 @@
       <div>
         <div style="font-size:0.8rem;color:var(--lime);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">יומן אימונים</div>
         <div style="font-size:1rem;font-weight:800;color:var(--text);">משקלים · סטים · חזרות</div>
-        <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">מעקב PR לכל תרגיל לאורך זמן</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">מעקב שיאים לכל תרגיל לאורך זמן</div>
       </div>
       <div style="color:var(--muted2);"><svg class="ico" style="width:28px;height:28px;"><use href="#i-book"/></svg></div>
     </button>
@@ -1343,7 +1343,7 @@
             <div class="settings-field">
               <label class="settings-label" for="sf-goal">מטרה</label>
               <select id="sf-goal" class="settings-input" style="cursor:pointer;" aria-label="מטרת האימון" onchange="updateBMRPreview()">
-                <option value="lean_bulk">Lean Bulk (+350 קל׳)</option>
+                <option value="lean_bulk">עלייה נקייה (+350 קל׳)</option>
                 <option value="bulk">מסה מקסימלית (+600 קל׳)</option>
                 <option value="cut">הורדת שומן (−400 קל׳)</option>
                 <option value="maintain">שמירה</option>
@@ -1394,25 +1394,25 @@
           <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
             <label class="settings-label" for="sf-workout-freq">תדירות אימון בשבוע</label>
             <select id="sf-workout-freq" class="settings-input" style="cursor:pointer;" onchange="(function(v){var sw=document.querySelector('.sf-split-wrap');var s3=document.getElementById('sf-workout-split-3');var s4=document.getElementById('sf-workout-split-4');sw.style.display=(v==='3'||v==='4')?'block':'none';if(s3)s3.style.display=v==='3'?'block':'none';if(s4)s4.style.display=v==='4'?'block':'none';})(this.value)">
-              <option value="1">1×/שבוע — Full Body שבועי</option>
-              <option value="2">2×/שבוע — Full Body A/B</option>
+              <option value="1">1×/שבוע — כל הגוף</option>
+              <option value="2">2×/שבוע — כל הגוף א׳/ב׳</option>
               <option value="3">3×/שבוע — בחר סגנון</option>
               <option value="4">4×/שבוע — בחר סגנון</option>
-              <option value="5">5×/שבוע — PPL + Upper + Lower</option>
-              <option value="6">6×/שבוע — PPL × 2</option>
+              <option value="5">5×/שבוע — דחיפה/משיכה/רגליים + פלג גוף עליון + תחתון</option>
+              <option value="6">6×/שבוע — דחיפה/משיכה/רגליים ×2</option>
               <option value="7">7×/שבוע — לא מומלץ</option>
             </select>
           </div>
           <div class="sf-split-wrap" style="display:none;margin-top:10px;">
             <label class="settings-label">סגנון תוכנית</label>
             <select id="sf-workout-split-3" class="settings-input" style="cursor:pointer;">
-              <option value="3ab">Upper / Lower — מתחלף</option>
-              <option value="3abc">Push / Pull / Legs</option>
-              <option value="3ss">סופרסטים — פול-בודי A/B/C</option>
+              <option value="3ab">פלג גוף עליון / תחתון — מתחלף</option>
+              <option value="3abc">דחיפה / משיכה / רגליים</option>
+              <option value="3ss">סופרסטים — כל הגוף א׳/ב׳/ג׳</option>
             </select>
             <select id="sf-workout-split-4" class="settings-input" style="cursor:pointer;display:none;">
-              <option value="">Push / Pull / Legs / Arms</option>
-              <option value="4ab">Upper / Lower A/B</option>
+              <option value="">דחיפה / משיכה / רגליים / ידיים</option>
+              <option value="4ab">פלג גוף עליון / תחתון א׳-ב׳</option>
             </select>
           </div>
 
@@ -1754,7 +1754,7 @@
     <div class="onboard-step" id="ob-step-2">
       <div class="onboard-step-title">מה המטרה שלך?</div>
       <div class="onboard-goal-grid">
-        <button class="goal-btn" data-goal="lean_bulk" onclick="selectGoal(this)"><div class="goal-icon"><svg class="ico"><use href="#i-trend"/></svg></div><div class="goal-name">Lean Bulk</div><div class="goal-desc">+350 קל׳ / בניית מסה נקייה</div></button>
+        <button class="goal-btn" data-goal="lean_bulk" onclick="selectGoal(this)"><div class="goal-icon"><svg class="ico"><use href="#i-trend"/></svg></div><div class="goal-name">עלייה נקייה</div><div class="goal-desc">+350 קל׳ / בניית מסה נקייה</div></button>
         <button class="goal-btn" data-goal="bulk" onclick="selectGoal(this)"><div class="goal-icon"><svg class="ico"><use href="#i-dumbbell"/></svg></div><div class="goal-name">מסה מקסימלית</div><div class="goal-desc">+600 קל׳ / גדילה מהירה</div></button>
         <button class="goal-btn" data-goal="cut" onclick="selectGoal(this)"><div class="goal-icon"><svg class="ico"><use href="#i-flame"/></svg></div><div class="goal-name">הורדת שומן</div><div class="goal-desc">-400 קל׳ / שמירת שריר</div></button>
         <button class="goal-btn" data-goal="maintain" onclick="selectGoal(this)"><div class="goal-icon"><svg class="ico"><use href="#i-target"/></svg></div><div class="goal-name">שמירה</div><div class="goal-desc">תחזוקה + בריאות</div></button>
@@ -1822,11 +1822,11 @@
         <!-- 3-day splits -->
         <div id="ob-split-3" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <button class="ob-split-btn" data-split="3ab" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
-            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">Upper / Lower</div>
+            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">פלג גוף עליון / תחתון</div>
             <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">גוף עליון / גוף תחתון</div>
           </button>
           <button class="ob-split-btn sel" data-split="3abc" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
-            <div style="font-weight:800;color:var(--red);font-size:0.94rem;">Push / Pull / Legs</div>
+            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">דחיפה / משיכה / רגליים</div>
             <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">3 אימונים שונים</div>
           </button>
           <button class="ob-split-btn" data-split="3ss" onclick="selectObSplit(this)" style="grid-column:1/-1;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
@@ -1838,7 +1838,7 @@
         <div id="ob-split-4" style="display:none;grid-template-columns:1fr 1fr;gap:8px;">
           <button class="ob-split-btn sel" data-split="4" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
             <div style="font-weight:800;color:var(--red);font-size:0.94rem;">Push/Pull/Legs/Arms</div>
-            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">PPL קלאסי</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">הפיצול הקלאסי</div>
           </button>
           <button class="ob-split-btn" data-split="4ab" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
             <div style="font-weight:800;color:var(--text);font-size:0.94rem;">Upper/Lower A/B</div>
@@ -1890,6 +1890,6 @@
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">מנוחה</button>
 </div>
 
-    <script type="module" src="app.js?v=12"></script>
+    <script type="module" src="app.js?v=13"></script>
 </body>
 </html>

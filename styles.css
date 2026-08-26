@@ -2706,7 +2706,7 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
 #streak-micro:empty{display:none;}
 
 /* ── Timeline: the dots sat 18px off their own rail ──────────────────── */
-.tl-dot{inset-inline-end:-25px;}
+/* superseded — see ROUND 3; the base right:-7px was already centred */
 
 /* ── The weight-log explanation read as an error ─────────────────────── */
 #panel-elog > .trainer-note{
@@ -2738,7 +2738,7 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
 
 /* ── Timeline: one rail, one dot colour. Four hues across four rows read
       as four categories when it is one sequence. ───────────────────────── */
-.tl-dot{background:var(--muted2) !important;width:11px;height:11px;top:8px;}
+.tl-dot{background:var(--muted2) !important;}
 .tl-item.tl-now .tl-dot,.tl-item:first-child .tl-dot{background:var(--lime) !important;}
 
 /* Strength targets are goals, not warnings */
@@ -2835,3 +2835,61 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
 /* a stat tile's value colour must not encode which stat it is */
 .wr-stat-val{color:var(--text) !important;}
 .wr-stat-val.is-empty{color:var(--muted2) !important;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   ROUND 3 — regressions out, top blockers in
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* Timeline: one sequence, one dot colour, and "now" is the only accent */
+.tl-item.tl-now .tl-dot{background:var(--lime) !important;}
+.tl-item:first-child .tl-dot{background:var(--muted2) !important;}
+.tl-item.tl-now:first-child .tl-dot{background:var(--lime) !important;}
+
+/* Today, marked the same way in all three calendars */
+.dash-day-chip.ddc-active{
+  border-color:var(--lime) !important;
+  box-shadow:0 0 0 1px var(--lime) inset !important;
+  background:var(--bg3) !important;
+}
+
+/* A stat tile's value colour must not encode which stat it is — and the
+   calorie target is not an error, so it is not red. */
+.macro-stats-grid .stat-box .val,
+#panel-nutrition .stat-box .val,
+#panel-schedule .stat-box .val{color:var(--text) !important;}
+.stat-box .lbl{color:var(--muted);}
+
+/* The workout cards are tappable, so they keep a border — but the border is
+   structure and the colour is identity, so the colour lives on the icon and
+   the title. Three saturated outlines were the last of the rainbow. */
+.workout-card,.workout-picker > button{
+  border:1px solid var(--border) !important;
+  border-width:1px !important;
+}
+.workout-card:hover,.workout-picker > button:hover{border-color:var(--border2) !important;}
+#today-hero{border-color:var(--border) !important;}
+
+/* Day cells: 48px cannot hold "פול-בודי ג׳" without breaking the word */
+@media (max-width:680px){
+  .day-cell .dc-type{
+    font-size:.58rem;line-height:1.15;
+    overflow-wrap:normal;word-break:keep-all;hyphens:none;
+  }
+  .day-cell .dc-name{letter-spacing:0;text-transform:none;font-size:.6rem;}
+}
+
+/* Hebrew takes no tracking — the selectors the earlier sweep missed */
+.day-cell .dc-name,.settings-label,.ddc-name,.gym-badge,.pr-title,
+.tips-label,.ex-table th,.cf-moves th,.wr-day-lbl,.timing-head{
+  letter-spacing:0 !important;text-transform:none !important;
+}
+
+/* .card is the large surface; the radius sweep had flattened it to md */
+.card,.today-hero,.empty-state{border-radius:var(--radius-lg);}
+
+
+/* The day card carried a 7rem watermark of its own title at 2.5% white.
+   It repeats the heading directly above it and, before renderAdaptivePanels
+   runs, it repeats the *previous plan's* heading. Decoration without intent. */
+.card[data-wm]::before{content:none;}
