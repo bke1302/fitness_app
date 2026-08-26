@@ -445,6 +445,9 @@ let _modalTrapFn = null;
 function _exMuscles(e){ return Array.isArray(e.muscles)?e.muscles.join(', '):(e.muscles||''); }
 function _exRest(e){ return typeof e.rest==='number'?(e.rest>=120?(e.rest/60).toFixed(e.rest%60?1:0)+' דק׳':e.rest+' שנ׳'):(e.rest||''); }
 function _exLvl(e){ const m={1:'קל',2:'בינוני',3:'כבד'}; return typeof e.lvl==='number'?(m[e.lvl]||'בינוני'):(e.lvl||''); }
+// _CAT_KEY indexes CAT_STYLE; _CAT_HE is what the user reads. These were
+// one map, and translating it silently broke every category lookup.
+const _CAT_KEY={push:'PUSH',pull:'PULL',legs:'LEGS',arms:'ARMS',core:'CORE'};
 const _CAT_HE={push:'דחיפה',pull:'משיכה',legs:'רגליים',arms:'ידיים',core:'ליבה'};
 function _exCatLabel(e){ return _CAT_HE[e.cat]||e.cat||''; }
 
@@ -452,14 +455,22 @@ function openModal(key){
   const e=EX[key]; if(!e)return;
   _currentExKey = key;
   // cinematic hero
-  const _catMap={'ירכיים':'LEGS','ישבן':'LEGS','קוואדס':'LEGS','המסטרינג':'LEGS',
-    'טריצפס':'PUSH','כתפיים':'PUSH','חזה':'PUSH',
-    'גב':'PULL','בייסס':'PULL','ביצפס':'PULL'};
-  const _catUC=_CAT_HE[e.cat]||e.cat;
-  const cs=CAT_STYLE[_catUC]||CAT_STYLE[_catMap[e.cat]]||CAT_STYLE.PUSH;
+  // EX categories are mostly specific muscle names ("גב רחב", "כל הרגל"), so
+  // an exact-match table missed most of them and everything fell to PUSH.
+  // Match on the first word that identifies a group instead.
+  const _catWords=[[['ירכי','ישבן','קוואדס','המסטרינג','רגל','שוק','ארבע ראשי','ירך'],'LEGS'],
+                   [['גב','בייסס','ביצפס','בראכיאליס','אמות','אחיזה'],'PULL'],
+                   [['טריצפס','כתף','כתפיים','חזה'],'PUSH'],
+                   [['ליבה','בטן'],'CORE']];
+  const _catUC=_CAT_KEY[e.cat]||(()=>{
+    const t=String(e.cat||'');
+    for(const [words,g] of _catWords) if(words.some(w=>t.includes(w))) return g;
+    return '';
+  })();
+  const cs=CAT_STYLE[_catUC]||CAT_STYLE.PUSH;
   document.getElementById('m-hero-bg').style.background=cs.grad;
   document.getElementById('m-hero-wm').innerHTML='<svg class="ico hero-wm-ico"><use href="#i-dumbbell"/></svg>';
-  document.getElementById('m-hero-cat').textContent=_exCatLabel(e)+' DAY';
+  document.getElementById('m-hero-cat').textContent='יום '+_exCatLabel(e);
   document.getElementById('m-hero-name').textContent=e.name;
   document.getElementById('m-hero-en').textContent=e.en;
   document.getElementById('m-title').textContent=e.name;
@@ -1547,7 +1558,7 @@ function renderSetLogInModal(key){
   if(past.length){
     const rows=past.map(s=>{
       const d=s.date.slice(5).replace('-','.');
-      const line=s.sets.map(st=>st.kg?`${st.kg}×${st.reps}`:'—').join(' | ');
+      const line=s.sets.map(st=>st.kg?`${st.kg}×${st.reps}`:'—').join(' · ');
       return `<div class="msl-hist-row"><span class="msl-hist-date">${d}</span><span class="msl-hist-data">${line}</span></div>`;
     }).join('');
     histHTML=`<div class="msl-history"><div class="msl-hist-label">אימונים קודמים</div>${rows}</div>`;
@@ -1978,10 +1989,10 @@ function renderWater(){
 // ═══════════════════════════════════════════════════
 /* Per-workout label badge — shown instead of emoji */
 const DAY_CFG={
-  0:{panel:'push',badge:'PUSH',color:'#FF6B6B',label:'חזה · כתפיים · טריצפס',sub:'PUSH DAY A',meta:'כ־55 דק׳ · 7 תרגילים'},
-  1:{panel:'pull',badge:'PULL',color:'#00D9FF',label:'גב · בייסס · כתף אחורית',sub:'PULL DAY B',meta:'כ־55 דק׳ · 7 תרגילים'},
-  3:{panel:'legs',badge:'LEGS',color:'#B47CFF',label:'ירכיים · ירך אחורי · שוק',sub:'LEGS DAY C',meta:'כ־65 דק׳ · 7 תרגילים'},
-  4:{panel:'arms',badge:'ARMS',color:'#FF7A45',label:'בייסס · טריצפס · כתפיים',sub:'ARMS DAY D',meta:'כ־50 דק׳ · 7 תרגילים'}
+  0:{panel:'push',badge:'דחיפה',color:'#FF6B6B',label:'חזה · כתפיים · טריצפס',sub:'יום דחיפה',meta:'כ־55 דק׳ · 7 תרגילים'},
+  1:{panel:'pull',badge:'משיכה',color:'#00D9FF',label:'גב · בייסס · כתף אחורית',sub:'יום משיכה',meta:'כ־55 דק׳ · 7 תרגילים'},
+  3:{panel:'legs',badge:'רגליים',color:'#B47CFF',label:'ירכיים · ירך אחורי · שוק',sub:'יום רגליים',meta:'כ־65 דק׳ · 7 תרגילים'},
+  4:{panel:'arms',badge:'ידיים',color:'#FF7A45',label:'בייסס · טריצפס · כתפיים',sub:'יום ידיים',meta:'כ־50 דק׳ · 7 תרגילים'}
 };
 // Builds a day-of-week→config map from the user's active plan.
 // Days rotate across the plan's dows, so a 2-day plan can fill 3 training days.
@@ -2747,10 +2758,10 @@ function injectSparklines(){
 }
 
 const WORKOUT_ORDER=[
-  {id:'push',label:'PUSH — ראשון',color:'var(--red)'},
-  {id:'pull',label:'PULL — שני',color:'var(--blue)'},
-  {id:'legs',label:'LEGS — רביעי',color:'var(--purple)'},
-  {id:'arms',label:'ARMS — חמישי',color:'var(--yellow)'}
+  {id:'push',label:'דחיפה — ראשון',color:'var(--push-c)'},
+  {id:'pull',label:'משיכה — שני',color:'var(--pull-c)'},
+  {id:'legs',label:'רגליים — רביעי',color:'var(--legs-c)'},
+  {id:'arms',label:'ידיים — חמישי',color:'var(--arms-c)'}
 ];
 
 function renderElogPanel(){
@@ -2803,7 +2814,7 @@ function renderElogPanel(){
           </div>
           <div class="elog-ex-en" style="font-size:.72rem;color:var(--muted);margin-top:1px;">${ex.en}</div>
           <div class="elog-history">
-            ${todayEntry?`<span class="elog-hist-chip latest">היום: ${todayEntry.kg}ק"ג×${todayEntry.reps}</span>`:''}
+            ${todayEntry?`<span class="elog-hist-chip latest">היום: ${todayEntry.kg} ק״ג × ${todayEntry.reps}</span>`:''}
             ${chips}
             ${!chips&&!todayEntry?'<span style="color:var(--muted);font-size:.72rem;">אין היסטוריה עדיין</span>':''}
           </div>
@@ -3665,7 +3676,7 @@ function _renderGymPair(p){
     </div>`).join('');
   return `
     <div class="gym-counter">זוג ${_gymIdx+1} מתוך ${_gymExercises.length}</div>
-    <div class="gym-ss">${p.rounds} סבבים ברצף · מנוחה ${p.restBetween>=60?(p.restBetween%60?(p.restBetween/60).toFixed(1):p.restBetween/60)+' דק׳':p.restBetween+' שנ׳'}${p.note?` <button class="ss-why" onclick="this.closest('.gym-body').querySelector('.gym-pair-note').hidden=!this.closest('.gym-body').querySelector('.gym-pair-note').hidden">?</button>`:''}</div>
+    <div class="gym-ss">${p.rounds} סבבים ברצף · מנוחה ${p.restBetween>=60?(p.restBetween%60?(p.restBetween/60).toFixed(1):p.restBetween/60)+' דק׳':p.restBetween+' שנ׳'}${p.note?` <button class="ss-why" aria-label="למה" onclick="this.closest('.gym-body').querySelector('.gym-pair-note').hidden=!this.closest('.gym-body').querySelector('.gym-pair-note').hidden">?</button>`:''}</div>
     <div class="gym-name gym-name-pair" style="color:${_gymColor}">${_esc(p.a.name)} + ${_esc(p.b.name)}</div>
     <div class="gym-sets-label">${p.a.sets} / ${p.b.sets}</div>
     ${p.note?`<div class="gym-pair-note" hidden>${_esc(p.note)}</div>`:''}
@@ -3709,7 +3720,7 @@ function renderGymExercise(){
   cancelGymTimer();
   if(_gymIdx>=_gymExercises.length){
     body.innerHTML=`<div class="gym-done-screen">
-      <div class="gym-done-title">DONE</div>
+      <div class="gym-done-title">סיימת</div>
       <div class="gym-done-sub">האימון הושלם!<br>הגוף שלך מתחזק.</div>
       <div class="gym-done-xp">+50 XP</div>
       <button class="gym-nav-btn next" onclick="closeGymMode()" style="max-width:200px;margin-top:8px;">סגור</button>
@@ -5090,7 +5101,7 @@ const WORKOUT_PLANS={
        exercises:['benchPress','inclineBench','ohp','lateralRaise','triPushdown','skullCrusher','cableFlye']},
       {id:'pull',label:'משיכה — גב + בייסס',shortLabel:'משיכה',color:'#00D9FF',
        exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
-      {id:'legs',label:'רגליים — ',shortLabel:'רגליים',color:'#B47CFF',
+      {id:'legs',label:'רגליים — ירכיים ושוקיים',shortLabel:'רגליים',color:'#B47CFF',
        exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
     ],
     dows:[0,2,4],
@@ -5118,7 +5129,7 @@ const WORKOUT_PLANS={
        exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
       {id:'legs',label:'LEGS',shortLabel:'רגליים',color:'#B47CFF',
        exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
-      {id:'arms',label:'Upper — שחזור בינוני',shortLabel:'BODY',color:'#FF7A45',
+      {id:'arms',label:'פלג גוף עליון — שחזור בינוני',shortLabel:'עליון',color:'#FF7A45',
        exercises:['cableRow','lateralRaise','facePull','bbCurl','hammerCurl','triPushdown']},
     ],
     dows:[0,1,3,4,5],
@@ -5126,11 +5137,11 @@ const WORKOUT_PLANS={
   },
   6:{
     days:[
-      {id:'push',label:'PUSH A — כוח',shortLabel:'PUSH A',color:'#CCFF00',
+      {id:'push',label:'דחיפה א׳ — כוח',shortLabel:'דחיפה א׳',color:'#CCFF00',
        exercises:['benchPress','ohp','inclineBench','lateralRaise','triPushdown','skullCrusher','cableFlye']},
-      {id:'pull',label:'PULL A — רוחב',shortLabel:'PULL A',color:'#00D9FF',
+      {id:'pull',label:'משיכה א׳ — רוחב',shortLabel:'משיכה א׳',color:'#00D9FF',
        exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
-      {id:'legs',label:'LEGS A — ירכיים',shortLabel:'LEGS A',color:'#B47CFF',
+      {id:'legs',label:'רגליים א׳ — ירכיים',shortLabel:'רגליים א׳',color:'#B47CFF',
        exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
     ],
     dows:[0,1,2,3,4,5],
@@ -5158,7 +5169,7 @@ const WORKOUT_PLANS={
        exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
       {id:'legs',label:'LEGS — כוח + נפח',shortLabel:'רגליים',color:'#B47CFF',
        exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
-      {id:'arms',label:'יום 7 — שחזור פעיל בלבד',shortLabel:'REST',color:'#6B7280',
+      {id:'arms',label:'יום 7 — שחזור פעיל בלבד',shortLabel:'מנוחה',color:'#6B7280',
        exercises:['facePull','lateralRaise','inclineCurl','calfRaise','ezCurl','cableFlye']},
     ],
     dows:[0,1,2,3,4,5,6],

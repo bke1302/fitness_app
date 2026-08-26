@@ -3073,13 +3073,29 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
    selectors; this is the rest of them.
    ══════════════════════════════════════════════════════════════════════ */
 @media (hover:none){
-  .card:hover,.today-hero:hover,.btn:hover,.ex-chip:hover,.ach-badge:hover,
-  .elog-empty-cta:hover,.boss-add-btn:hover,.meal-row:hover,.tip-card:hover,
-  .supp-card:hover,.subnav-btn:hover,.workout-picker > button:hover,
-  .ex-table tr[onclick]:hover,.settings-save:hover,.gym-mode-btn:hover{
+  /* :not(:active) matters — a touch element takes :hover AND :active together
+     while pressed, so a blanket transform:none also killed every press
+     animation. This leaves the held-press feedback intact and only stops the
+     hover state latching after the finger lifts. */
+  .card:hover:not(:active),.today-hero:hover:not(:active),.btn:hover:not(:active),
+  .ex-chip:hover:not(:active),.ach-badge:hover:not(:active),
+  .elog-empty-cta:hover:not(:active),.boss-add-btn:hover:not(:active),
+  .meal-row:hover:not(:active),.tip-card:hover:not(:active),
+  .supp-card:hover:not(:active),.subnav-btn:hover:not(:active),
+  .workout-picker > button:hover:not(:active),
+  .ex-table tr[onclick]:hover:not(:active),.settings-save:hover:not(:active),
+  .gym-mode-btn:hover:not(:active){
     transform:none !important;
     box-shadow:none !important;
   }
+  /* colour and border latch just as visibly as a transform does */
+  .meal-row:hover:not(:active),.ex-chip:hover:not(:active),
+  .tip-card:hover:not(:active),.supp-card:hover:not(:active),
+  .day-cell:hover:not(:active),.workout-card:hover:not(:active){
+    border-color:var(--border) !important;
+    background-color:inherit;
+  }
+  .ss-why:hover:not(:active)::before{border-color:var(--border2);color:var(--muted);}
 }
 
 /* The "?" lost its hover feedback when it became a 44px target with a 22px
@@ -3089,4 +3105,13 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
 /* Send is the whole point of the chat screen; muted it read as disabled */
 .chat-send:not(:disabled){
   background:var(--lime) !important;color:#08090B !important;font-weight:800;
+}
+
+
+/* The day name ended in a geresh that text-overflow:clip was cutting off in
+   three of the seven cells. Let it shrink rather than lose a character. */
+@media (max-width:680px){
+  .week-bar .day-cell .dc-name{
+    text-overflow:unset;font-size:.68rem;letter-spacing:-.2px;
+  }
 }
