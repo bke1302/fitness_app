@@ -2743,3 +2743,95 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
 
 /* Strength targets are goals, not warnings */
 #panel-timeline .stat-box .val{color:var(--text) !important;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   ROUND 2a — one section heading, one rhythm
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* the dashboard is now built from the same .card sections as every other
+   screen, so it inherits the same 24px rhythm instead of per-block margins */
+#panel-dashboard > .card{margin-bottom:0;}
+.panel > *{margin-bottom:var(--gap);}
+
+/* a heading may carry one trailing item: a count, or a link to more */
+.head-meta{font-size:.8rem;color:var(--muted);font-weight:600;}
+.link-action{
+  background:none;border:none;padding:0;cursor:pointer;
+  font-family:var(--font);font-size:.82rem;font-weight:700;color:var(--lime);
+}
+.link-action:hover{text-decoration:underline;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   ROUND 2b — one week calendar language
+   The app draws the same week three times: chips on the dashboard, cells on
+   the schedule tab, bars on progress. Three components is a real refactor;
+   three *languages* is not. These are the rules all three now share:
+     today   = lime outline
+     trained = green fill
+     planned = the day's category colour, as a dot only
+     rest    = hollow, dimmed once
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* progress marked today in cyan while the other two used lime */
+.wr-day-bar.today{border-color:var(--lime) !important;border-width:1.5px;}
+.wr-day-bar.done{background:var(--green) !important;border-color:var(--green) !important;}
+
+/* the dashboard marked a completed day green on the dot; the schedule tab
+   tinted the whole cell and added a tick. Keep the tick, drop the wash. */
+.day-cell.done-day{
+  background:var(--bg3) !important;
+  border-color:rgba(61,255,149,.35) !important;
+}
+.day-cell.active-day{
+  background:var(--bg3) !important;
+  box-shadow:0 0 0 1px var(--lime) inset !important;
+  border-color:var(--lime) !important;
+}
+.dash-day-chip.ddc-active{box-shadow:none !important;background:var(--bg3) !important;}
+.dash-day-chip.ddc-done .ddc-dot{background:var(--green) !important;}
+
+/* one dimming step for a rest day, in all three */
+.day-cell.rest-day,.dash-day-chip.ddc-rest{opacity:.62 !important;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   ROUND 2c — dead vertical space, and one way to say "no data"
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* The weight chart was ~120px of plot under 60px of chrome. Give the data
+   the room; it is the reason the screen exists. */
+#weight-chart,#meas-svg{min-height:190px;}
+
+/* The add-weight form broke onto three unaligned rows: date and weight on
+   one line, then the button alone at content width. One row, one baseline. */
+.weight-form,.meas-form{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;}
+.weight-form > input,.weight-form > .weight-date{flex:1 1 120px;min-width:0;}
+.weight-add-btn{flex:0 0 auto;padding-inline:20px;}
+
+/* Empty panels ended in a long fall of black. A panel stops where its
+   content stops. */
+#panel-elog .elog-empty-state,#panel-food .empty-state{margin-bottom:0;}
+#panel-chat .chat-wrap{padding-bottom:0;}
+.panel > *:last-child{margin-bottom:0;}
+
+/* "No data" was a dash in two tiles and a zero in the two beside them */
+.wr-stat-val{font-variant-numeric:tabular-nums;}
+.wr-stat-card:has(.wr-stat-val:not([data-val])) .wr-stat-val{color:var(--muted2) !important;}
+
+
+/* ── The add-weight row: date, weight, button on one baseline ────────── */
+.weight-log-form{display:flex;flex-wrap:nowrap;gap:8px;align-items:stretch;margin-bottom:16px;}
+.weight-log-form .wl-input{flex:1 1 0;min-width:0;}
+.weight-log-form .weight-add-btn{flex:0 0 auto;padding-inline:18px;white-space:nowrap;}
+#weight-svg{min-height:190px;}
+
+/* One way to say "no data": a muted dash, never a coloured one */
+.wr-stat-val,.stat-box .val{}
+.wr-stat-card .wr-stat-val{color:var(--text);}
+.wr-stat-val:not([data-val]){color:var(--muted2) !important;}
+
+/* a stat tile's value colour must not encode which stat it is */
+.wr-stat-val{color:var(--text) !important;}
+.wr-stat-val.is-empty{color:var(--muted2) !important;}

@@ -744,7 +744,7 @@ function updateBMRPreview(){
   const h=parseFloat(document.getElementById('sf-height')?.value)||0;
   const a=parseInt(document.getElementById('sf-age')?.value)||0;
   const prev=document.getElementById('bmr-preview');
-  if(!prev||!w||!h||!a){if(prev)prev.innerHTML='הזן נתונים לחישוב BMR ו-TDEE';return;}
+  if(!prev||!w||!h||!a){if(prev)prev.innerHTML='הזן נתונים כדי לחשב את היעד היומי';return;}
   const _g=(getActiveUser()?.gender||'m')==='f'?-161:5;
   const bmr=Math.round(10*w+6.25*h-5*a+_g);
   const actVal=parseFloat(document.getElementById('sf-activity')?.value)||1.55;
@@ -2350,7 +2350,7 @@ function renderWChart(){
     const y=P.t+r*(H-P.t-P.b)/3;
     const v=(maxK-(maxK-minK)*r/3).toFixed(1);
     h+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#1e2433" stroke-width="1"/>`;
-    h+=`<text x="${P.l-5}" y="${y+4}" text-anchor="end" fill="#6b7a99" font-size="9" font-family="Barlow,sans-serif">${v}</text>`;
+    h+=`<text x="${P.l-5}" y="${y+4}" text-anchor="end" fill="#8d97a5" font-size="11" font-family="Barlow,sans-serif">${v}</text>`;
     if(hasVol){const vv=Math.round(maxV*(1-r/3));h+=`<text x="${W-P.r+5}" y="${y+4}" text-anchor="start" fill="#FF7A45" font-size="9" font-family="Barlow,sans-serif" opacity=".7">${vv}</text>`;}
   }
 
@@ -2373,17 +2373,20 @@ function renderWChart(){
 
   // X-axis date labels
   const step=Math.max(1,Math.floor(n/6));
-  log.forEach((e,i)=>{if(i%step===0||i===n-1)h+=`<text x="${xs(i)}" y="${H-P.b+14}" text-anchor="middle" fill="#6b7a99" font-size="9" font-family="Barlow,sans-serif">${e.date.slice(5).replace('-','/')}</text>`;});
+  log.forEach((e,i)=>{if(i%step===0||i===n-1)h+=`<text x="${xs(i)}" y="${H-P.b+15}" text-anchor="middle" fill="#8d97a5" font-size="11" font-family="Barlow,sans-serif">${e.date.slice(8)+'.'+e.date.slice(5,7)}</text>`;});
 
-  // Legend
-  h+=`<circle cx="${P.l+4}" cy="${H-P.b+28}" r="4" fill="#CCFF00"/>`;
-  h+=`<text x="${P.l+11}" y="${H-P.b+32}" fill="#6b7a99" font-size="9" font-family="Barlow,sans-serif">משקל (ק"ג)</text>`;
+  // One visible series needs no legend; a second one does. The old legend sat
+  // at H-P.b+28, which is inside the x-axis label band at H-P.b+14.
   if(hasVol){
-    h+=`<line x1="${P.l+75}" y1="${H-P.b+28}" x2="${P.l+87}" y2="${H-P.b+28}" stroke="#FF7A45" stroke-width="1.5" stroke-dasharray="4,2"/>`;
-    h+=`<text x="${P.l+91}" y="${H-P.b+32}" fill="#FF7A45" font-size="9" font-family="Barlow,sans-serif" opacity=".8">נפח שבועי (ק"ג)</text>`;
+    h+=`<circle cx="${P.l+4}" cy="${H-P.b+30}" r="3.5" fill="#CCFF00"/>`;
+    h+=`<text x="${P.l+11}" y="${H-P.b+34}" fill="#6b7a99" font-size="10" font-family="Barlow,sans-serif">משקל</text>`;
+    h+=`<line x1="${P.l+58}" y1="${H-P.b+30}" x2="${P.l+70}" y2="${H-P.b+30}" stroke="#FF7A45" stroke-width="1.5" stroke-dasharray="4,2"/>`;
+    h+=`<text x="${P.l+74}" y="${H-P.b+34}" fill="#FF7A45" font-size="10" font-family="Barlow,sans-serif" opacity=".8">נפח שבועי</text>`;
   }
 
-  svg.setAttribute('viewBox',`0 0 ${W} ${H+36}`);
+  // the extra 36 units were reserved for the legend; without one they are
+  // just blank canvas below the plot
+  svg.setAttribute('viewBox',`0 0 ${W} ${H+(hasVol?36:8)}`);
   // an empty string is not a valid SVG length; to let CSS size the chart the
   // attribute has to be removed, not blanked
   svg.removeAttribute('height');
@@ -4785,10 +4788,10 @@ function renderWeeklyReport(){
   const days=['ב','ג','ד','ה','ו','ש','א'];
   el.innerHTML=`
     <div class="wr-grid">
-      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--lime)" data-val="${workoutDays}">0</div><div class="wr-stat-lbl">אימונים השבוע</div></div>
-      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--red)" data-val="${weekPRs}">0</div><div class="wr-stat-lbl">שיאים חדשים</div></div>
-      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--cyan)">${weekVol>0?Math.round(weekVol/1000)+'K':'—'}</div><div class="wr-stat-lbl">נפח אימון (ק"ג)</div></div>
-      <div class="wr-stat-card"><div class="wr-stat-val" style="color:var(--yellow)" data-val="${avgCal||0}">${avgCal?'0':'—'}</div><div class="wr-stat-lbl">קל' ממוצע ליום</div></div>
+      <div class="wr-stat-card"><div class="wr-stat-val" data-val="${workoutDays}">0</div><div class="wr-stat-lbl">אימונים השבוע</div></div>
+      <div class="wr-stat-card"><div class="wr-stat-val" data-val="${weekPRs}">0</div><div class="wr-stat-lbl">שיאים חדשים</div></div>
+      <div class="wr-stat-card"><div class="wr-stat-val${weekVol>0?'':' is-empty'}">${weekVol>0?Math.round(weekVol/1000)+'K':'—'}</div><div class="wr-stat-lbl">נפח אימון (ק"ג)</div></div>
+      <div class="wr-stat-card"><div class="wr-stat-val${avgCal?'':' is-empty'}" ${avgCal?'data-val="'+avgCal+'"':''}>${avgCal?'0':'—'}</div><div class="wr-stat-lbl">קל' ממוצע ליום</div></div>
     </div>
     <div class="wr-days">
       ${weekDates.map((d,i)=>{
@@ -4858,7 +4861,7 @@ function renderMeasChart(){
   });
   // X labels
   const step=Math.max(1,Math.floor(arr.length/4));
-  arr.forEach((e,i)=>{if(i%step===0||i===arr.length-1)h+=`<text x="${xs(i)}" y="${H-P.b+13}" text-anchor="middle" fill="#6b7a99" font-size="8" font-family="Barlow,sans-serif">${e.date.slice(5).replace('-','/')}</text>`;});
+  arr.forEach((e,i)=>{if(i%step===0||i===arr.length-1)h+=`<text x="${xs(i)}" y="${H-P.b+14}" text-anchor="middle" fill="#8d97a5" font-size="10" font-family="Barlow,sans-serif">${e.date.slice(8)+'.'+e.date.slice(5,7)}</text>`;});
   // Legend
   metrics.forEach((m,mi)=>{h+=`<circle cx="${P.l+mi*70}" cy="${H-P.b+22}" r="3" fill="${m.color}"/><text x="${P.l+mi*70+6}" y="${H-P.b+26}" fill="${m.color}" font-size="8" font-family="Barlow,sans-serif">${m.label}</text>`;});
   svg.setAttribute('viewBox',`0 0 ${W} ${H+28}`);

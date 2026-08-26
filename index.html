@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
-<link rel="stylesheet" href="styles.css?v=11">
+<link rel="stylesheet" href="styles.css?v=12">
 </head>
 <body dir="rtl">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -126,13 +126,13 @@
   <!-- ══════════════════════════════════
        DASHBOARD
   ══════════════════════════════════ -->
-  <div class="panel active flex-1 space-y-4 overflow-y-auto" id="panel-dashboard">
+  <div class="panel active" id="panel-dashboard">
 
     <!-- ── TODAY'S WORKOUT HERO ── -->
-    <div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <span style="font-size:.95rem;font-weight:700;color:var(--text);">התוכנית להיום</span>
-        <button onclick="showPanel('schedule')" style="font-size:0.8rem;color:var(--lime);font-weight:600;cursor:pointer;background:none;border:none;padding:0;">הצג הכל →</button>
+    <div class="card">
+      <div class="card-head">
+        <h2>התוכנית להיום</h2>
+        <button class="link-action" onclick="showPanel('schedule')">הצג הכל →</button>
       </div>
       <div id="today-hero" class="today-hero" style="position:relative;border-radius:18px;overflow:hidden;background:var(--bg2);border:1px solid rgba(204,255,0,.2);padding:20px;">
         <!-- Glow orb -->
@@ -154,10 +154,10 @@
     </div>
 
     <!-- ── WEEK CAROUSEL ── -->
-    <div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <span style="font-size:.95rem;font-weight:700;color:var(--text);">השבוע שלך</span>
-        <span id="week-counter" style="font-size:0.8rem;color:var(--muted);">4 ימי אימון</span>
+    <div class="card">
+      <div class="card-head">
+        <h2>השבוע שלך</h2>
+        <span id="week-counter" class="head-meta">4 ימי אימון</span>
       </div>
       <div id="dash-week-row" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;">
         <div class="dash-day-chip"><span class="ddc-dot" style="background:var(--red)"></span><span class="ddc-name">א׳</span><span class="ddc-type" style="color:var(--red)">PUSH</span></div>
@@ -183,8 +183,8 @@
     </div>
 
     <!-- ── WORKOUT QUICK-START ── -->
-    <div>
-      <div style="font-size:0.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">התחל אימון</div>
+    <div class="card">
+      <div class="card-head"><h2>התחל אימון</h2></div>
       <div class="workout-picker">
         <button class="workout-card push" onclick="showPanel('push',null);setMobileNav('push');">
           <div class="workout-card-icon"><svg class="ico"><use href="#i-arrow-up"/></svg></div>
@@ -216,8 +216,8 @@
 
     <!-- ── DISCIPLINE CHECKLIST ── -->
     <div style="background:#16161B;border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-        <span style="font-size:0.94rem;font-weight:700;color:var(--text);">הרגלי היום</span>
+      <div class="card-head">
+        <h2>הרגלי היום</h2>
         <span id="habit-count-badge" style="font-size:0.8rem;color:var(--lime);font-weight:700;background:rgba(255,122,69,.1);padding:3px 8px;border-radius:6px;">0/5</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
@@ -246,7 +246,7 @@
 
     <!-- ── NUTRITION PREVIEW ── -->
     <div>
-      <span id="dash-meal-title" style="font-size:.95rem;font-weight:700;color:var(--text);display:block;margin-bottom:10px;">ארוחות יומי</span>
+      <div class="card-head"><h2 id="dash-meal-title">ארוחות יומי</h2></div>
       <div id="dash-nutrition-preview" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <div style="background:rgba(255,122,69,.06);border:1px solid rgba(255,122,69,.15);border-radius:14px;padding:14px;opacity:.75;">
           <span style="font-size:0.8rem;color:var(--lime);font-weight:700;">ארוחה 1</span>
@@ -407,7 +407,7 @@
         </div>
         <div style="margin-top:16px;font-size:0.94rem;color:var(--muted2);line-height:1.8;">
           <strong style="color:var(--text)">חימום ספציפי:</strong> לפני כל תרגיל ראשי — סט אחד קל עם 50% מהמשקל<br>
-          <strong style="color:var(--text)">Progressive Overload:</strong> כשאתה מסיים 3 סטים עם טכניקה מושלמת — הוסף 2.5 ק"ג<br>
+          <strong style="color:var(--text)">העמסה מתקדמת:</strong> כשאתה מסיים 3 סטים עם טכניקה מושלמת — הוסף 2.5 ק"ג<br>
           <strong style="color:var(--text)">RPE:</strong> הסיום של כל סט צריך להרגיש כמו 8/10 — לא להיכנע, לא להישבר<br>
           <strong style="color:var(--text)">רישום:</strong> כתוב משקל + חזרות בכל אימון — זה מה שמפריד בין מי שגדל ומי שמרקד
         </div>
@@ -1063,12 +1063,12 @@
       <div class="card-body">
         <div class="grid-2">
           <div style="background:var(--bg3);border-radius:12px;padding:18px;border:1px solid var(--border2);">
-            <div style="font-size:1.2rem;margin-bottom:8px;">Whey Protein</div>
+            <div style="font-size:1.2rem;margin-bottom:8px;">אבקת חלבון (Whey)</div>
             <div style="font-size:0.94rem;color:var(--muted2);line-height:1.8;">מינון: 25–30g אחרי אימון<br>מיתוס: לא צריך לשתות "מיד" — חלון 45 דק׳ מספיק<br><span style="color:var(--green);">מומלץ מאוד</span></div>
           </div>
           <div style="background:var(--bg3);border-radius:12px;padding:18px;border:1px solid var(--border2);">
             <div style="font-size:1.2rem;margin-bottom:8px;">קריאטין מונוהידראט</div>
-            <div style="font-size:0.94rem;color:var(--muted2);line-height:1.8;">מינון: 5g כל יום — גם מנוחה<br>אין צורך ב-loading phase<br><span style="color:var(--green);">הכי מחקר שיש</span></div>
+            <div style="font-size:0.94rem;color:var(--muted2);line-height:1.8;">מינון: 5g כל יום — גם מנוחה<br>אין צורך בשלב העמסה<br><span style="color:var(--green);">הכי מחקר שיש</span></div>
           </div>
           <div style="background:var(--bg3);border-radius:12px;padding:18px;border:1px solid var(--border2);">
             <div style="font-size:1.2rem;margin-bottom:8px;">ויטמין D3 + K2</div>
@@ -1090,7 +1090,7 @@
     <div class="card">
       <div class="card-head"><h2>טיפים מהמאמן</h2></div>
       <div class="card-body">
-        <div class="tip-card warn"><span class="tip-icon"><svg class="ico"><use href="#i-trend"/></svg></span><div><strong>Progressive Overload — בלי זה אין כלום</strong><br>כל שבוע: הוסף חזרה אחת, או 2.5 ק"ג, או סט נוסף. רשום הכל. אפליקציות: Strong, Hevy.</div></div>
+        <div class="tip-card warn"><span class="tip-icon"><svg class="ico"><use href="#i-trend"/></svg></span><div><strong>העמסה מתקדמת — בלי זה אין כלום</strong><br>כל שבוע: הוסף חזרה אחת, או 2.5 ק"ג, או סט נוסף. רשום הכל. אפליקציות: Strong, Hevy.</div></div>
         <div class="tip-card"><span class="tip-icon"><svg class="ico"><use href="#i-moon"/></svg></span><div><strong>שינה = שיקום = צמיחה</strong><br>7.5–9 שעות. הורמון גדילה מגיע ב-deep sleep. פחות שינה = פחות GH = פחות שריר.</div></div>
         <div class="tip-card good"><span class="tip-icon"><svg class="ico"><use href="#i-droplet"/></svg></span><div><strong>מים — 3.5 ליטר ביום אימון</strong><br>ירידה של 2% בהידרציה = ירידה של 10% בביצועים. זה הרבה.</div></div>
         <div class="tip-card gold"><span class="tip-icon"><svg class="ico"><use href="#i-pill"/></svg></span><div><strong>קריאטין — 5g כל יום, נקודה</strong><br>לא לפני, לא אחרי — פשוט כל יום. זה תוסף שנחקר 40 שנה וזה הכי בטוח שיש.</div></div>
@@ -1152,7 +1152,7 @@
   <div class="panel" id="panel-elog">
     <div class="trainer-note">
       <strong>יומן משקולות תרגילים</strong><br>
-      כאן שומרים <strong>כמה ק"ג × כמה חזרות</strong> בכל תרגיל. זה Progressive Overload — כתב, תגדל. (זה שונה מ"גרף משקל גוף" שנמצא בלשונית ההתקדמות)
+      כאן שומרים <strong>כמה ק"ג × כמה חזרות</strong> בכל תרגיל. זה העיקרון: כתוב, ותגדל. (זה שונה מ"גרף משקל גוף" שנמצא בלשונית ההתקדמות)
     </div>
     <div id="elog-content">
       <!-- filled by JS -->
@@ -1200,12 +1200,12 @@
       <div style="color:var(--muted2);"><svg class="ico" style="width:28px;height:28px;"><use href="#i-book"/></svg></div>
     </button>
     <div class="card sec-weight">
-      <div class="card-head"><h2>גרף משקל גוף</h2><span class="badge badge-cyan">לאורך זמן</span></div>
+      <div class="card-head"><h2>גרף משקל גוף</h2><span class="badge badge-neutral">לאורך זמן</span></div>
       <div class="card-body">
         <div class="weight-log-form">
           <label for="wl-date" class="sr-only">תאריך</label>
           <input type="date" id="wl-date" class="wl-input" aria-label="תאריך" />
-          <input type="number" id="wl-kg" class="wl-input" placeholder="משקל (ק״ג)" step="0.1" min="20" max="300" style="width:130px;" aria-label="משקל בקילוגרם" />
+          <input type="number" id="wl-kg" class="wl-input" placeholder="משקל (ק״ג)" step="0.1" min="20" max="300" aria-label="משקל בקילוגרם" />
           <button class="weight-add-btn" onclick="addWeightForm()">+ הוסף</button>
         </div>
         <div class="weight-chart-wrap">
@@ -1330,7 +1330,7 @@
             </div>
           </div>
           <div class="bmr-display" id="bmr-preview">
-            הזן נתונים לחישוב BMR ו-TDEE
+            הזן נתונים כדי לחשב את היעד היומי
           </div>
 
             </div>
@@ -1890,6 +1890,6 @@
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">מנוחה</button>
 </div>
 
-    <script type="module" src="app.js?v=11"></script>
+    <script type="module" src="app.js?v=12"></script>
 </body>
 </html>
