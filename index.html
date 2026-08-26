@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
-<link rel="stylesheet" href="styles.css?v=8">
+<link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body dir="rtl">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -311,20 +311,8 @@
       </div>
     </div>
 
-    <!-- ── QUICK STATS ROW: STEPS + WATER ── -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <!-- Steps -->
-      <div style="background:#16161B;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-size:0.8rem;color:var(--muted);font-weight:600;text-transform:uppercase;">צעדים</span>
-          <span style="color:#B47CFF;display:flex;"><svg class="ico" style="width:16px;height:16px;"><use href="#i-activity"/></svg></span>
-        </div>
-        <div style="font-size:1.35rem;font-weight:800;color:var(--text);line-height:1;">—</div>
-        <div style="font-size:0.72rem;color:var(--muted);margin-top:3px;">אין נתון</div>
-        <div style="height:3px;background:rgba(255,255,255,.06);border-radius:99px;margin-top:10px;overflow:hidden;">
-          <div style="width:0%;height:100%;background:var(--lime);border-radius:99px;"></div>
-        </div>
-      </div>
+    <!-- ── QUICK STATS ROW: WATER ── -->
+    <div>
       <!-- Water -->
       <div style="background:#16161B;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -345,14 +333,6 @@
       </div>
     </div>
 
-    <!-- ── COACH TIP ── -->
-    <div style="background:rgba(255,122,69,.06);border:1px solid rgba(255,122,69,.2);border-radius:14px;padding:14px;display:flex;gap:12px;margin-bottom:8px;">
-      <span style="flex-shrink:0;color:var(--lime,#FF7A45);"><svg class="ico" style="width:20px;height:20px;"><use href="#i-bulb"/></svg></span>
-      <div>
-        <div style="font-size:0.8rem;font-weight:800;color:rgba(255,122,69,.8);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">טיפ מהמאמן</div>
-        <div style="font-size:0.86rem;color:#94A3B8;line-height:1.65;">שבוע דה-לוד מומלץ לאחר כל 4 שבועות. הורד 40% ממשקלי העבודה לאפשר שיקום מלא.</div>
-      </div>
-    </div>
 
     <!-- ── ACHIEVEMENTS ── -->
     <div class="card" style="margin-top:12px;">
@@ -1030,13 +1010,13 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card sec-meals collapsible">
       <div class="card-head"><h2>תוכנית ארוחות</h2><span class="badge" id="meal-count-badge" style="background:rgba(255,255,255,.06);color:var(--muted2);">5 ארוחות</span></div>
       <div class="card-body" id="meals-container"><!-- filled by JS --></div>
     </div>
 
     <!-- CHOLESTEROL DO/DON'T -->
-    <div class="card" id="cholesterol-dont-card">
+    <div class="card sec-chol collapsible" id="cholesterol-dont-card">
       <div class="card-head"><h2>מה לאכול ומה להימנע — כולסטרול</h2></div>
       <div class="card-body">
         <div class="grid-2">
@@ -1193,7 +1173,7 @@
   <div class="panel" id="panel-progress">
 
     <!-- WEEKLY REPORT -->
-    <div class="card">
+    <div class="card sec-report">
       <div class="card-head"><h2>דוח שבועי</h2><span class="badge badge-lime">השבוע</span></div>
       <div class="card-body" id="weekly-report-body">
         <div style="color:var(--muted);font-size:0.94rem;">טוען...</div>
@@ -1201,7 +1181,7 @@
     </div>
 
     <!-- RECOVERY SCORE -->
-    <div class="card" id="recovery-card">
+    <div class="card sec-recovery collapsible" id="recovery-card">
       <div class="card-head"><h2>ריקברי יומי</h2><span class="badge badge-purple">צ'ק-אין</span></div>
       <div class="card-body" id="recovery-card-body">
         <div style="color:var(--muted);font-size:0.94rem;">טוען...</div>
@@ -1217,7 +1197,7 @@
       </div>
       <div style="color:var(--muted2);"><svg class="ico" style="width:28px;height:28px;"><use href="#i-book"/></svg></div>
     </button>
-    <div class="card">
+    <div class="card sec-weight">
       <div class="card-head"><h2>גרף משקל גוף</h2><span class="badge badge-cyan">לאורך זמן</span></div>
       <div class="card-body">
         <div class="weight-log-form">
@@ -1233,13 +1213,13 @@
         </div>
       </div>
     </div>
-    <div class="card">
+    <div class="card sec-hist collapsible">
       <div class="card-head"><h2>היסטוריית מדידות</h2></div>
       <div class="card-body">
         <div id="weight-log-list"><div style="color:var(--muted);font-size:0.94rem;padding:6px 0;">אין רשומות עדיין — הוסף מדידה ראשונה למעלה!</div></div>
       </div>
     </div>
-    <div class="card">
+    <div class="card sec-streak collapsible">
       <div class="card-head"><h2>רצף אימונים</h2></div>
       <div class="card-body">
         <div class="grid-2">
@@ -1258,7 +1238,7 @@
         <div style="font-size:0.86rem;color:var(--muted);margin-top:12px;">* הרצף מחושב לפי ימי אימון (א׳ ב׳ ד׳ ה׳) שבהם סימנת את כל התרגילים כהושלמו.</div>
       </div>
     </div>
-    <div class="card">
+    <div class="card sec-meas collapsible">
       <div class="card-head"><h2>מדדי גוף</h2><span class="badge badge-purple">מעקב</span></div>
       <div class="card-body">
         <div class="meas-form">
@@ -1286,7 +1266,7 @@
   <div class="panel" id="panel-settings">
 
     <!-- TOOLS QUICK ACCESS -->
-    <div class="card">
+    <div class="card sec-tools">
       <div class="card-head"><h2>כלים מהירים</h2></div>
       <div class="card-body">
         <div class="tools-bar">
@@ -1307,7 +1287,7 @@
     </div>
 
     <!-- USER SWITCHER CARD -->
-    <div class="card">
+    <div class="card sec-users collapsible">
       <div class="card-head"><h2>משתמשים</h2></div>
       <div class="card-body">
         <div class="user-list" id="user-list-ui"><!-- filled by JS --></div>
@@ -1315,10 +1295,13 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card sec-profile">
       <div class="card-head"><h2>עריכת פרופיל</h2></div>
       <div class="card-body">
         <form id="settings-form" onsubmit="return false;">
+          <fieldset class="settings-group open" data-grp="profile">
+            <legend class="settings-group-head">מי אתה</legend>
+            <div class="settings-group-body">
           <div class="grid-2">
             <div class="settings-field">
               <label class="settings-label" for="sf-name">שם</label>
@@ -1348,6 +1331,11 @@
             הזן נתונים לחישוב BMR ו-TDEE
           </div>
 
+            </div>
+          </fieldset>
+          <fieldset class="settings-group" data-grp="plan">
+            <legend class="settings-group-head">התוכנית שלי</legend>
+            <div class="settings-group-body">
           <!-- Goal + Activity -->
           <div class="grid-2" style="margin-top:14px;">
             <div class="settings-field">
@@ -1436,6 +1424,11 @@
             <label class="settings-label" for="sf-calories">יעד קלוריות יומי (מחושב אוטומטי)</label>
             <input id="sf-calories" class="settings-input" type="number" min="1500" max="5000" placeholder="קלוריות יומי" aria-label="יעד קלוריות יומי"/>
           </div>
+            </div>
+          </fieldset>
+          <fieldset class="settings-group" data-grp="adv">
+            <legend class="settings-group-head">מתקדם</legend>
+            <div class="settings-group-body">
           <div class="settings-field" style="margin-top:8px;">
             <label class="settings-label" for="sf-apikey">מפתח API — Claude AI</label>
             <input id="sf-apikey" class="settings-input" type="password" placeholder="sk-ant-..." autocomplete="off" aria-label="מפתח API"/>
@@ -1444,13 +1437,15 @@
               <button type="button" onclick="testApiKey()" style="background:none;border:1px solid var(--border2);color:var(--muted2);border-radius:8px;padding:4px 12px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;" id="test-api-btn">בדוק מפתח</button>
             </div>
           </div>
+            </div>
+          </fieldset>
           <div style="margin-top:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
             <button id="btn-save-settings" class="settings-save" onclick="saveSettingsForm()">שמור הגדרות</button>
             <button id="theme-btn" onclick="toggleTheme()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text);border-radius:10px;padding:10px 18px;font-size:0.94rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .18s;">החלף ערכת נושא</button>
           </div>
           <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <button onclick="exportData()" class="settings-save" style="background:var(--blue,#FF7A45);">ייצוא נתונים</button>
-            <label class="settings-save" style="background:var(--green,#FF7A45);cursor:pointer;">
+            <button onclick="exportData()" class="settings-save btn-quiet">ייצוא נתונים</button>
+            <label class="settings-save btn-quiet" style="cursor:pointer;">
               ייבוא נתונים<input type="file" accept=".json" onchange="importData(event)" style="display:none"/>
             </label>
           </div>
@@ -1893,6 +1888,6 @@
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">מנוחה</button>
 </div>
 
-    <script type="module" src="app.js?v=8"></script>
+    <script type="module" src="app.js?v=9"></script>
 </body>
 </html>

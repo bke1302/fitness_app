@@ -645,6 +645,8 @@ function showPanel(name,btn){
     setMobileNav(navMap[name]||'dashboard');
   }
   // Lazy-render panels that build their UI dynamically
+  renderSubNav(name);
+  setTimeout(initCollapsibles,0);
   if(name==='settings') setTimeout(prefillSettingsForm,0);
   if(name==='elog') setTimeout(renderElogPanel,0);
   if(name==='food') setTimeout(renderFoodPanel,0);
@@ -2377,7 +2379,9 @@ function renderWChart(){
   }
 
   svg.setAttribute('viewBox',`0 0 ${W} ${H+36}`);
-  svg.setAttribute('height','');
+  // an empty string is not a valid SVG length; to let CSS size the chart the
+  // attribute has to be removed, not blanked
+  svg.removeAttribute('height');
   svg.innerHTML=h;
 }
 
@@ -2916,10 +2920,10 @@ function renderFoodPanel(){
     <div class="card-head"><h2>מעקב תזונה יומי — ${todayStr().split('-').reverse().join('/')}</h2></div>
     <div class="card-body">
       <div class="food-macro-bars">
-        ${macroBar('קלוריות','kcal',totals.cal,s.calories,'linear-gradient(90deg,var(--red),#9333ea)')}
-        ${macroBar('חלבון','g',totals.p,pGoal,'var(--blue)')}
-        ${macroBar('פחמימות','g',totals.c,cGoal,'var(--yellow)')}
-        ${macroBar('שומן','g',totals.f,fGoal,'var(--green)')}
+        ${macroBar('קלוריות','קל׳',totals.cal,s.calories,'linear-gradient(90deg,var(--red),#9333ea)')}
+        ${macroBar('חלבון','גרם',totals.p,pGoal,'var(--blue)')}
+        ${macroBar('פחמימות','גרם',totals.c,cGoal,'var(--yellow)')}
+        ${macroBar('שומן','גרם',totals.f,fGoal,'var(--green)')}
       </div>
     </div>
   </div>
@@ -2975,7 +2979,7 @@ function macroBar(label,unit,cur,goal,color){
   const pct=Math.min(100,(cur/goal)*100);
   const over=cur>goal;
   return `<div class="fmb-row">
-    <div class="fmb-top"><span class="fmb-label">${label}</span><span class="fmb-vals">${Math.round(cur)} / ${goal} ${unit} ${over?'<span style="color:var(--red);font-weight:700;">✓ חרגת</span>':''}</span></div>
+    <div class="fmb-top"><span class="fmb-label">${label}</span><span class="fmb-vals"><span class="ell-num">${Math.round(cur)} / ${goal}</span> ${unit}${over?' <span style="color:var(--red);font-weight:700;">חרגת</span>':''}</span></div>
     <div class="fmb-track"><div class="fmb-fill${over?' fmb-over':''}" style="width:${pct}%;background:${color};"></div></div>
   </div>`;
 }
@@ -4129,6 +4133,62 @@ function toggleExSearch(){
     const r=document.getElementById('ex-search-results');
     if(r) r.style.display='none';
   }
+}
+
+// A .collapsible card shows only its heading until asked. These are the
+// sections you consult occasionally - a questionnaire, a measurements form,
+// a reference list - and having them all open is what made three screens
+// feel like a wall.
+function initCollapsibles(){
+  document.querySelectorAll('.settings-group:not([data-wired])').forEach(g=>{
+    g.dataset.wired='1';
+    const head=g.querySelector('.settings-group-head');
+    if(!head) return;
+    head.setAttribute('role','button');
+    head.setAttribute('tabindex','0');
+    head.setAttribute('aria-expanded',g.classList.contains('open')?'true':'false');
+    const toggle=()=>head.setAttribute('aria-expanded',g.classList.toggle('open')?'true':'false');
+    head.addEventListener('click',toggle);
+    head.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); }
+    });
+  });
+  document.querySelectorAll('.card.collapsible:not([data-collapsible])').forEach(card=>{
+    card.dataset.collapsible='1';
+    const head=card.querySelector('.card-head');
+    if(!head) return;
+    head.setAttribute('role','button');
+    head.setAttribute('tabindex','0');
+    const toggle=()=>{
+      const open=card.classList.toggle('open');
+      head.setAttribute('aria-expanded',open?'true':'false');
+    };
+    head.setAttribute('aria-expanded','false');
+    head.addEventListener('click',toggle);
+    head.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); }
+    });
+  });
+}
+
+// Five panels were built and then left with no way in: panel-food is the food
+// diary, panel-elog the weight log. showPanel already groups them onto the
+// bottom-nav tabs, so the group only had to become visible.
+const SUBNAV={
+  nutrition:[['nutrition','יעדים'],['food','יומן אוכל'],['supplements','תוספים'],['chat','שאל AI']],
+  progress:[['progress','סיכום'],['elog','משקולות'],['timeline','היסטוריה']]
+};
+function renderSubNav(name){
+  document.querySelectorAll('.subnav').forEach(n=>n.remove());
+  const group=Object.keys(SUBNAV).find(g=>SUBNAV[g].some(([id])=>id===name));
+  if(!group) return;
+  const panel=document.getElementById('panel-'+name);
+  if(!panel) return;
+  const bar=document.createElement('div');
+  bar.className='subnav';
+  bar.innerHTML=SUBNAV[group].map(([id,lbl])=>
+    `<button class="subnav-btn${id===name?' active':''}" onclick="showPanel('${id}',null)">${lbl}</button>`).join('');
+  panel.prepend(bar);
 }
 
 // LIGHT / DARK / AMOLED THEME — defined below in AMOLED section
@@ -5557,7 +5617,7 @@ function cfTabata(){
   const st=document.getElementById('cf-timer-status'); if(st) st.textContent='Tabata — 8×(20 עבודה/10 מנוחה)';
 }
 
-Object.assign(window,{gymPairCheck,toggleExSearch,
+Object.assign(window,{gymPairCheck,toggleExSearch,initCollapsibles,renderSubNav,
   openModal,closeModal,closeModalBg,closeAltModal,
   cfFilter,cfToggleWod,cfOpenWod,cfSaveScore,cfTimerToggle,cfTimerReset,cfCountdown,cfTabata,
   showPanel,setMobileNav,renderExSearch,closeExSearch,browseExCategory,

@@ -2468,3 +2468,139 @@ body[data-panel="crossfit"] .timer-float{display:flex;}
 .gym-check::after{content:'¹3';color:rgba(255,255,255,.22);font-size:1.15rem;line-height:1;}
 .gym-check.done::after{content:none;}
 .gym-pair-side .gym-check::after{font-size:1rem;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   COLLAPSIBLE SECTIONS
+   These screens were long because everything was open at once, not because
+   any one section was wrong. A section you consult occasionally is a heading
+   until you ask for it.
+   ══════════════════════════════════════════════════════════════════════ */
+.card.collapsible > .card-head{cursor:pointer;user-select:none;margin-bottom:0;}
+.card.collapsible > .card-head::after{
+  content:'';width:8px;height:8px;flex-shrink:0;
+  border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:rotate(45deg) translate(-2px,-2px);
+  transition:transform .2s var(--ease-out);
+  margin-inline-start:auto;
+}
+.card.collapsible > .card-head:hover::after{border-color:var(--lime);}
+.card.collapsible.open > .card-head{margin-bottom:14px;}
+.card.collapsible.open > .card-head::after{transform:rotate(225deg) translate(-3px,-3px);}
+.card.collapsible > .card-body{display:none;}
+.card.collapsible.open > .card-body{display:block;}
+
+/* ══════════════════════════════════════════════════════════════════════
+   SUB-NAV — the second level the bottom nav could not carry
+   ══════════════════════════════════════════════════════════════════════ */
+.subnav{
+  display:flex;gap:6px;margin-bottom:22px;padding:4px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:999px;
+}
+.subnav-btn{
+  flex:1;min-width:0;padding:9px 6px;border:none;border-radius:999px;
+  background:none;color:var(--muted);cursor:pointer;
+  font-family:var(--font);font-size:.82rem;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:background .18s,color .18s;
+}
+.subnav-btn.active{background:var(--lime);color:#08090B;}
+.subnav-btn:not(.active):hover{color:var(--text);}
+
+/* ══════════════════════════════════════════════════════════════════════
+   PROGRESS — the graph and this week's numbers lead; the rest is on request
+   ══════════════════════════════════════════════════════════════════════ */
+.panel.active#panel-progress{display:flex;flex-direction:column;}
+.sec-weight{order:1;}
+.sec-report{order:2;}
+.sec-recovery{order:3;}
+.sec-streak{order:4;}
+.sec-meas{order:5;}
+.sec-hist{order:6;}
+#panel-progress > .subnav{order:0;}
+#panel-progress > *:not([class*="sec-"]):not(.subnav){order:7;}
+
+/* Saving a check-in is a positive act; --red is the danger colour */
+.rec-save-ok{background:var(--lime) !important;color:#08090B !important;border:none !important;}
+
+/* ══════════════════════════════════════════════════════════════════════
+   SETTINGS — your profile first; the calculators are not settings
+   ══════════════════════════════════════════════════════════════════════ */
+.panel.active#panel-settings{display:flex;flex-direction:column;}
+.sec-profile{order:1;}
+.sec-users{order:2;}
+.sec-tools{order:3;}
+#panel-settings > *:not([class*="sec-"]){order:4;}
+
+/* ══════════════════════════════════════════════════════════════════════
+   NUTRITION — the numbers you came for, before the reference material
+   ══════════════════════════════════════════════════════════════════════ */
+.panel.active#panel-nutrition{display:flex;flex-direction:column;}
+#panel-nutrition > .subnav{order:0;}
+#panel-nutrition > .card:not(.collapsible){order:1;}
+.sec-meals{order:2;}
+.sec-chol{order:3;}
+#panel-nutrition > *:not(.card):not(.subnav){order:4;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   SETTINGS GROUPS — seventeen fields is not a form, it is an inventory.
+   ══════════════════════════════════════════════════════════════════════ */
+.settings-group{
+  border:none;padding:0;margin:0 0 8px;min-width:0;
+  border-top:1px solid var(--border);
+}
+.settings-group:first-of-type{border-top:none;}
+.settings-group-head{
+  display:flex;align-items:center;gap:9px;width:100%;
+  padding:15px 0;cursor:pointer;user-select:none;
+  font-family:var(--font);font-size:.98rem;font-weight:700;color:var(--text);
+}
+.settings-group-head::after{
+  content:'';width:8px;height:8px;flex-shrink:0;
+  border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:rotate(45deg) translate(-2px,-2px);
+  transition:transform .2s var(--ease-out);
+  margin-inline-start:auto;
+}
+.settings-group.open > .settings-group-head::after{transform:rotate(225deg) translate(-3px,-3px);}
+.settings-group-body{display:none;padding-bottom:16px;}
+.settings-group.open > .settings-group-body{display:block;}
+
+/* the action row sits below every group and never collapses */
+#settings-form > div[style*="margin-top:20px"]{margin-top:22px !important;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   SETTINGS FIELDS — five fields should not be a full screen
+   ══════════════════════════════════════════════════════════════════════ */
+.settings-group-body .settings-field{margin-bottom:12px;}
+.settings-group-body .settings-label{margin-bottom:5px;font-size:.8rem;}
+.settings-group-body .settings-input{padding:11px 13px;font-size:.95rem;}
+@media (max-width:680px){
+  /* short numeric answers sit two to a row; only the name needs full width */
+  .settings-group-body .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px;}
+  .settings-group-body .grid-2 > .settings-field:first-child{grid-column:1/-1;}
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   BUTTON HIERARCHY — one primary per screen.
+   The build had accumulated four primary treatments: a lime fill, a
+   yellow-to-lime gradient, a saturated cyan and a saturated green. Sitting
+   together they read as four equally urgent choices.
+   ══════════════════════════════════════════════════════════════════════ */
+.btn-primary,.elog-empty-cta,.install-banner-btn,.chat-send,
+.settings-save,.rec-save-ok,.day-head-card .gym-mode-btn{
+  background:var(--lime) !important;color:#08090B !important;
+  border:none !important;box-shadow:none !important;
+}
+.btn-quiet{
+  background:none !important;color:var(--text) !important;
+  border:1px solid var(--border2) !important;
+}
+.btn-quiet:hover{border-color:var(--lime) !important;color:var(--lime) !important;}
+#theme-btn{
+  background:none !important;border:1px solid var(--border2) !important;
+  color:var(--text) !important;
+}
