@@ -642,8 +642,7 @@ function showPanel(name,btn){
     const navMap={push:'push',pull:'push',legs:'push',arms:'push',schedule:'push',
       dashboard:'dashboard',nutrition:'nutrition',food:'nutrition',supplements:'nutrition',
       progress:'progress',elog:'progress',timeline:'progress',settings:'settings',
-      chat:'nutrition',crossfit:'push',tips:'settings',
-      'day-a':'push','day-b':'push','day-c':'push'};
+      chat:'nutrition',crossfit:'push',tips:'settings'};
     setMobileNav(navMap[name]||'dashboard');
   }
   // Lazy-render panels that build their UI dynamically
@@ -2351,8 +2350,8 @@ function renderWChart(){
     const y=P.t+r*(H-P.t-P.b)/3;
     const v=(maxK-(maxK-minK)*r/3).toFixed(1);
     h+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#1e2433" stroke-width="1"/>`;
-    h+=`<text x="${P.l-5}" y="${y+4}" text-anchor="end" fill="#8d97a5" font-size="11" font-family="Barlow,sans-serif">${v}</text>`;
-    if(hasVol){const vv=Math.round(maxV*(1-r/3));h+=`<text x="${W-P.r+5}" y="${y+4}" text-anchor="start" fill="#FF7A45" font-size="9" font-family="Barlow,sans-serif" opacity=".7">${vv}</text>`;}
+    h+=`<text x="${W-P.r+6}" y="${y+4}" text-anchor="start" fill="#8d97a5" font-size="11" font-family="Barlow,sans-serif">${v}</text>`;
+    if(hasVol){const vv=Math.round(maxV*(1-r/3));h+=`<text x="${P.l-6}" y="${y+4}" text-anchor="end" fill="#FF7A45" font-size="10" font-family="Barlow,sans-serif" opacity=".7">${vv}</text>`;}
   }
 
   // Volume area + line (red) — behind weight
@@ -2369,7 +2368,12 @@ function renderWChart(){
   h+=`<polyline points="${pts}" fill="none" stroke="url(#cg)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
   log.forEach((e,i)=>{
     h+=`<circle cx="${xs(i)}" cy="${ysK(e.kg)}" r="4" fill="#CCFF00" stroke="#000" stroke-width="2"/>`;
-    if(n<=8||i===0||i===n-1) h+=`<text x="${xs(i)}" y="${ysK(e.kg)-9}" text-anchor="middle" fill="#eaf0fb" font-size="10" font-weight="700" font-family="Barlow,sans-serif">${e.kg}</text>`;
+    // the last point sits against the value axis, so its label leans inward
+    // instead of landing on top of the axis label
+    if(n<=8||i===0||i===n-1){
+      const last=i===n-1;
+      h+=`<text x="${xs(i)+(last?-7:0)}" y="${ysK(e.kg)-9}" text-anchor="${last?'end':'middle'}" fill="#eaf0fb" font-size="10" font-weight="700" font-family="Barlow,sans-serif">${e.kg}</text>`;
+    }
   });
 
   // X-axis date labels

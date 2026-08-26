@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
-<link rel="stylesheet" href="styles.css?v=13">
+<link rel="stylesheet" href="styles.css?v=14">
 </head>
 <body dir="rtl">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -1441,11 +1441,12 @@
           </div>
             </div>
           </fieldset>
-          <div style="margin-top:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div class="settings-actions">
             <button id="btn-save-settings" class="settings-save" onclick="saveSettingsForm()">שמור הגדרות</button>
             <button id="theme-btn" onclick="toggleTheme()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text);border-radius:10px;padding:10px 18px;font-size:0.94rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .18s;">החלף ערכת נושא</button>
           </div>
-          <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <button type="button" class="btn-quiet settings-link" onclick="showPanel('tips',null)">מדריכים וטיפים →</button>
+          <div class="settings-actions-second">
             <button onclick="exportData()" class="settings-save btn-quiet">ייצוא נתונים</button>
             <label class="settings-save btn-quiet" style="cursor:pointer;">
               ייבוא נתונים<input type="file" accept=".json" onchange="importData(event)" style="display:none"/>
@@ -1890,6 +1891,6 @@
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">מנוחה</button>
 </div>
 
-    <script type="module" src="app.js?v=13"></script>
+    <script type="module" src="app.js?v=14"></script>
 </body>
 </html>
