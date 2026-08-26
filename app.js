@@ -641,12 +641,15 @@ function showPanel(name,btn){
   if(typeof setMobileNav==='function'){
     const navMap={push:'push',pull:'push',legs:'push',arms:'push',schedule:'push',
       dashboard:'dashboard',nutrition:'nutrition',food:'nutrition',supplements:'nutrition',
-      progress:'progress',elog:'progress',timeline:'progress',settings:'settings'};
+      progress:'progress',elog:'progress',timeline:'progress',settings:'settings',
+      chat:'nutrition',crossfit:'push',tips:'settings',
+      'day-a':'push','day-b':'push','day-c':'push'};
     setMobileNav(navMap[name]||'dashboard');
   }
   // Lazy-render panels that build their UI dynamically
   renderSubNav(name);
   setTimeout(initCollapsibles,0);
+  setTimeout(()=>fixNumericRanges(document.getElementById('panel-'+name)),0);
   if(name==='settings') setTimeout(prefillSettingsForm,0);
   if(name==='elog') setTimeout(renderElogPanel,0);
   if(name==='food') setTimeout(renderFoodPanel,0);
@@ -2915,7 +2918,9 @@ function renderFoodPanel(){
   const log=getFoodLog();
   const totals=log.reduce((acc,e)=>({cal:acc.cal+e.cal,p:acc.p+e.p,c:acc.c+e.c,f:acc.f+e.f}),{cal:0,p:0,c:0,f:0});
   const pct=(v,g)=>Math.min(100,(v/g)*100);
-  const pGoal=Math.round(s.weight*2.5); const cGoal=Math.round((s.calories-pGoal*4-70*9)/4); const fGoal=70;
+  // the targets tab and this diary must not disagree about the same day
+  const n=calcNutrition(Object.assign({},getActiveUser()||{},s));
+  const pGoal=n.protein, cGoal=n.carbs, fGoal=n.fat;
 
   wrap.innerHTML=`
   <div class="card">
@@ -3129,11 +3134,11 @@ function renderChatPanel(){
 
   wrap.innerHTML=`
   <div class="card">
-    <div class="card-head"><h2>יועץ תזונה AI — Claude</h2><span class="badge badge-purple">Powered by Claude</span></div>
+    <div class="card-head"><h2>יועץ תזונה AI — Claude</h2><span class="badge badge-neutral">מופעל ע״י Claude</span></div>
     <div class="card-body">
       ${!apiKey?`<div class="api-key-notice">
         כדי להשתמש ביועץ AI, הכנס את מפתח ה-API שלך מ-<a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> בהגדרות.<br>
-        <button style="margin-top:8px;background:var(--blue);border:none;color:#fff;border-radius:8px;padding:7px 16px;cursor:pointer;font-family:var(--font);font-size:.83rem;font-weight:700;" onclick="showPanel('settings')">פתח הגדרות</button>
+        <button class="btn-quiet btn-inline" onclick="showPanel('settings')">פתח הגדרות</button>
       </div>`:''}
       <div class="chat-wrap">
         <div class="chat-msgs" id="chat-msgs">
@@ -4135,6 +4140,43 @@ function toggleExSearch(){
     const r=document.getElementById('ex-search-results');
     if(r) r.style.display='none';
   }
+}
+
+// "2,000–4,000 IU" renders as "4,000–2,000": an en-dash is bidi-neutral, so
+// between two European numbers in an RTL paragraph it adopts the paragraph
+// direction and the two numbers lay out right-to-left. A range is one atom.
+// Isolating known containers does not scale - ranges live in dosages, the
+// timeline, tips and coaching prose - so this walks text nodes instead.
+const _RANGE=/\d[\d.,]*\s*[\u2013\u2014-]\s*\d[\d.,]*/;
+const _NO_BDI='script,style,input,textarea,select,option,.ex-table,#gym-body,.stat-box,.wk-frac,.ell-num,.sets-cell,.ex-sets,bdi,svg';
+function fixNumericRanges(root){
+  const scope=root||document.getElementById('main-content');
+  if(!scope) return;
+  const walker=document.createTreeWalker(scope,NodeFilter.SHOW_TEXT,{
+    acceptNode(n){
+      if(!_RANGE.test(n.nodeValue)) return NodeFilter.FILTER_REJECT;
+      if(n.parentElement?.closest(_NO_BDI)) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const hits=[]; let n;
+  while((n=walker.nextNode())) hits.push(n);
+  hits.forEach(node=>{
+    const frag=document.createDocumentFragment();
+    let rest=node.nodeValue,m;
+    const re=new RegExp(_RANGE.source,'g');
+    let last=0;
+    while((m=re.exec(rest))){
+      if(m.index>last) frag.appendChild(document.createTextNode(rest.slice(last,m.index)));
+      const bdi=document.createElement('bdi');
+      bdi.setAttribute('dir','ltr');
+      bdi.textContent=m[0];
+      frag.appendChild(bdi);
+      last=m.index+m[0].length;
+    }
+    if(last<rest.length) frag.appendChild(document.createTextNode(rest.slice(last)));
+    node.parentNode.replaceChild(frag,node);
+  });
 }
 
 // A .collapsible card shows only its heading until asked. These are the
@@ -5619,7 +5661,7 @@ function cfTabata(){
   const st=document.getElementById('cf-timer-status'); if(st) st.textContent='Tabata — 8×(20 עבודה/10 מנוחה)';
 }
 
-Object.assign(window,{gymPairCheck,toggleExSearch,initCollapsibles,renderSubNav,
+Object.assign(window,{gymPairCheck,toggleExSearch,initCollapsibles,renderSubNav,fixNumericRanges,
   openModal,closeModal,closeModalBg,closeAltModal,
   cfFilter,cfToggleWod,cfOpenWod,cfSaveScore,cfTimerToggle,cfTimerReset,cfCountdown,cfTabata,
   showPanel,setMobileNav,renderExSearch,closeExSearch,browseExCategory,

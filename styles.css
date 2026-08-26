@@ -336,10 +336,10 @@ body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
 .badge{display:inline-block;font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:999px;letter-spacing:.3px;}
 .badge-red{background:var(--coral-dim);color:var(--coral);border:1px solid rgba(255,90,82,.28);}
 .badge-green{background:rgba(61,255,149,.1);color:var(--green);border:1px solid rgba(61,255,149,.28);}
-.badge-blue{background:rgba(255,255,255,.06);color:var(--blue);border:1px solid rgba(204,255,0,.28);}
-.badge-yellow{background:rgba(255,255,255,.06);color:var(--yellow);border:1px solid rgba(204,255,0,.28);}
-.badge-purple{background:rgba(255,255,255,.06);color:var(--purple);border:1px solid rgba(204,255,0,.28);}
-.badge-cyan{background:rgba(255,255,255,.06);color:var(--cyan);border:1px solid rgba(204,255,0,.28);}
+.badge-blue{background:rgba(255,255,255,.05);color:var(--blue);border:1px solid rgba(0,169,255,.3);}
+.badge-yellow{background:rgba(255,255,255,.05);color:var(--yellow);border:1px solid rgba(255,214,102,.3);}
+.badge-purple{background:rgba(255,255,255,.05);color:var(--purple);border:1px solid rgba(180,124,255,.3);}
+.badge-cyan{background:rgba(255,255,255,.05);color:var(--cyan);border:1px solid rgba(0,217,255,.3);}
 
 /* ─── WEEK BAR ─── */
 .week-bar{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:20px;}
@@ -2631,3 +2631,115 @@ body[data-panel="crossfit"] .timer-float{display:flex;}
 .wr-days{gap:5px;margin-top:14px;}
 .wr-day-bar{height:14px;border-radius:4px;}
 .wr-day-lbl{font-size:.7rem;color:var(--muted2);}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   ROUND 1 — correctness
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* .chat-wrap was a fixed 60vh with a 400px floor, inside a panel already
+   spending ~290px on header, sub-nav, section head and the API notice. The
+   composer ended up under the bottom nav: a chat you cannot type into. */
+.chat-wrap{height:auto !important;min-height:0 !important;}
+.chat-msgs{min-height:180px;max-height:calc(100dvh - 400px);margin-bottom:10px;}
+.chat-input-wrap{position:sticky;bottom:0;background:var(--bg);padding-top:4px;}
+
+/* a range is one atom and reads left-to-right inside Hebrew */
+bdi[dir="ltr"]{unicode-bidi:isolate;}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   ROUND 1b — one system per problem
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── Badges: one shape. A pill's border always matches its own text. ──── */
+.badge{
+  border-radius:var(--radius-sm);padding:4px 10px;
+  font-size:.72rem;font-weight:700;letter-spacing:0;text-transform:none;
+  white-space:nowrap;
+}
+.badge-neutral{
+  background:rgba(255,255,255,.05);color:var(--muted);
+  border:1px solid var(--border2);
+}
+/* lime is the colour of the next action, so it does not outline containers */
+.api-key-notice,.timing-card{border-color:var(--border) !important;}
+#panel-push > .card,#panel-pull > .card,
+#panel-legs > .card,#panel-arms > .card{border-top:none !important;}
+
+/* ── Buttons: primary, secondary, quiet. Nothing else. ───────────────── */
+.chat-send,.food-add-btn,.weight-add-btn{
+  background:var(--lime) !important;color:#08090B !important;
+  border:none !important;border-radius:var(--radius-sm) !important;
+  letter-spacing:0 !important;box-shadow:none !important;
+}
+.btn-inline{
+  display:inline-block;margin-top:9px;padding:8px 16px;
+  border-radius:var(--radius-sm);cursor:pointer;
+  font-family:var(--font);font-size:.85rem;font-weight:700;
+}
+
+/* ── Hebrew does not take tracking or case ───────────────────────────── */
+.settings-save,.food-add-btn,.weight-add-btn,.chat-send,.rec-save-btn,
+.card-head h2,.badge,.subnav-btn,.mbn-label,.wr-stat-lbl,.stat-box .lbl,
+.elog-section-title,.m-section,.timing-head,.settings-group-head{
+  letter-spacing:0 !important;text-transform:none !important;
+}
+#panel-dashboard [style*="uppercase"]{
+  text-transform:none !important;letter-spacing:0 !important;
+}
+
+/* ── Radius: four steps, everywhere ──────────────────────────────────── */
+.card,.empty-state,.today-hero,.meal-row,.workout-card,.timing-card,
+.tip-card,.supp-card,.stat-box,.wr-stat-card,.dash-day-chip,.day-cell,
+.api-key-notice,.chat-msgs,.settings-input,.meas-input,
+.ex-table tr[onclick],.gym-pair-round,.set-log-row{
+  border-radius:var(--radius-md);
+}
+.badge,.subnav,.subnav-btn,.timer-btn,.hero-badge{border-radius:999px;}
+
+/* ── The streak card was half empty behind a stray orange border ──────── */
+#panel-dashboard > div:has(#streak-num){
+  border-color:var(--border) !important;
+  padding:13px 16px !important;
+}
+#streak-micro:empty{display:none;}
+
+/* ── Timeline: the dots sat 18px off their own rail ──────────────────── */
+.tl-dot{inset-inline-end:-25px;}
+
+/* ── The weight-log explanation read as an error ─────────────────────── */
+#panel-elog > .trainer-note{
+  color:var(--muted);border-inline-start:none;
+  border-inline-end:2px solid var(--lime);
+}
+#panel-elog > .trainer-note strong{color:var(--text);font-weight:700;}
+
+/* ── Empty states: one shape, CTA optional ───────────────────────────── */
+.elog-empty-state{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:34px 22px !important;
+}
+.elog-empty-state .elog-empty-title,.empty-state-title{
+  font-size:1.06rem !important;font-weight:700;margin-bottom:6px;
+}
+
+
+/* ── Chat: the AI bubble outlined itself in lime. Lime is the next action,
+      not a container, and the bubble is not an action. ─────────────────── */
+.chat-bubble.ai{border-color:var(--border2) !important;}
+.chat-bubble{border-radius:var(--radius-md);}
+
+/* A disabled primary should read as unavailable, not as a different brand */
+.chat-send:disabled,.settings-save:disabled,button:disabled.btn-primary{
+  background:var(--bg4) !important;color:var(--muted2) !important;
+  opacity:1;cursor:not-allowed;
+}
+
+/* ── Timeline: one rail, one dot colour. Four hues across four rows read
+      as four categories when it is one sequence. ───────────────────────── */
+.tl-dot{background:var(--muted2) !important;width:11px;height:11px;top:8px;}
+.tl-item.tl-now .tl-dot,.tl-item:first-child .tl-dot{background:var(--lime) !important;}
+
+/* Strength targets are goals, not warnings */
+#panel-timeline .stat-box .val{color:var(--text) !important;}
