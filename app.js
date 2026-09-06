@@ -95,7 +95,7 @@ const EX = {
     desc:'מלך תרגילי הכתפיים. מגייס גם שרירי ליבה לייצוב.',
     muscles:'דלטואיד קדמי + אמצעי, טריצפס, ליבה.',
     tips:['התחל עם המוט מתחת לסנטר','הראש נע מעט אחורה בדחיפה לפנות מקום למוט','גוף ישר לחלוטין — אל תכופף גב','נשוף בעלייה','בהתחלה — ישיבה (Seated) ליציבות']},
-  lateralRaise:{name:'הרמות צד',en:'Cable / DB Lateral Raise',e:'↔',cat:'כתף אמצעית',sets:'3×15–20',rest:'45 שנ׳',lvl:'בידוד',
+  lateralRaise:{name:'הרמות צד',en:'Cable / DB Lateral Raise',e:'↔',cat:'כתף אמצעית',sets:'4×15–20',rest:'45 שנ׳',lvl:'בידוד',
     desc:'בידוד לכתף האמצעית — אחראי על "רוחב" הכתפיים. עדיף כבל על משקולות.',
     muscles:'Medial Deltoid — בידוד.',
     tips:['עד גובה כתפיים בלבד','מרפקים כפופים קלות','אל תשתמש בתנופה — תנועה שולטת','כף יד מעט כלפי מטה בחלק העליון','כבל = מתח קבוע > משקולות']},
@@ -159,7 +159,7 @@ const EX = {
     desc:'הרגל האחורית על ספסל, הקדמית צועדת קדימה. הכי כואב ביום רגליים — והכי אפקטיבי.',
     muscles:'Glutes, Quadriceps, Hamstrings, שרירי איזון.',
     tips:['כסא או ספסל גובה 40–50 ס"מ','ירידה אנכית — לא קדימה','ברך קדמית לא חורגת מהאצבעות','גוף ישר, לא כפוף','בהתחלה בלי משקל — תלמד את התנועה']},
-  calfRaise:{name:'עריסת עגל עמידה',en:'Standing Calf Raise',e:'',cat:'שוק',sets:'4×15–20',rest:'45 שנ׳',lvl:'בידוד',
+  calfRaise:{name:'עריסת עגל עמידה',en:'Standing Calf Raise',e:'',cat:'שוק',sets:'4×15–20',rest:'90 שנ׳',lvl:'בידוד',
     desc:'שוק = שריר עיקש. צריך נפח, מתיחה מלאה, וכאב. 5 סטים ולא פחות.',
     muscles:'Gastrocnemius, Soleus.',
     tips:['על קצה מדרגה — מתיחה מלאה למטה','עלייה עד גובה מקסימלי','החזק שנייה בחלק העליון','לא לקצר טווח תנועה']},
@@ -179,7 +179,7 @@ const EX = {
     desc:'בידוד לכתף הקדמית.',
     muscles:'Anterior Deltoid.',
     tips:['עד גובה עיניים','כף יד כלפי מטה','אל תשתמש בתנופה','חילופין ידיים']},
-  diamondPushup:{name:'שכיבות יהלום',en:'Diamond Push-ups',e:'',cat:'טריצפס',sets:'2×כישלון',rest:'60 שנ׳',lvl:'בינוני',
+  diamondPushup:{name:'שכיבות יהלום',en:'Diamond Push-ups',e:'',cat:'טריצפס',sets:'2×כישלון',rest:'90 שנ׳',lvl:'בינוני',
     desc:'שכיבות עם ידיים צמודות בצורת יהלום — מדגישות טריצפס.',
     muscles:'Triceps Brachii, חזה פנימי.',
     tips:['ידיים צמודות — אצבעות נוגעות','גוף ישר לחלוטין','מרפקים כלפי מאחור בירידה','עד כישלון מוחלט']},
@@ -192,11 +192,11 @@ const EX = {
     desc:'טריגר מצוין לעובי הגב האמצעי. כיפוף 45° ומשיכת הידית אל הבטן.',
     muscles:'Rhomboids, Middle Trapezius, Latissimus Dorsi, בייסס.',
     tips:['גוף ב-45° — לא זקוף ולא שכוב','ידית V-grip = יותר גב אמצעי','ידית רחבה = יותר Lat','שכמות מתקרבות בסיום — הרגש כיווץ','הסר אגו — גב ישר חשוב ממשקל']},
-  hipThrust:{name:'Hip Thrust — מוט',en:'Barbell Hip Thrust',e:'',cat:'ישבן',sets:'4×10–12',rest:'90 שנ׳',lvl:'כבד',
+  hipThrust:{name:'Hip Thrust — מוט',en:'Barbell Hip Thrust',e:'',cat:'ישבן',sets:'4×10–12',rest:'2 דק׳',lvl:'כבד',
     desc:'תרגיל הגלוטאוס הכי אפקטיבי שנחקר. כל מי שרוצה ישבן עגול — חייב את זה.',
     muscles:'Gluteus Maximus (ראשי), Hamstrings, גב תחתון.',
     tips:['שכמות על ספסל גובה 40–45 ס"מ','המוט מעל האגן עם כרית','כנס סנטר ופשוט את האגן למעלה','בחלק העליון — גוף מקביל לרצפה','לחץ עקבים לרצפה לאורך כל התרגיל','הרגש כיווץ חזק בגלוטאוס בחלק העליון']},
-  seatedCalfRaise:{name:'עריסת עגל ישיבה',en:'Seated Calf Raise',e:'',cat:'שוק — סוליאוס',sets:'4×15–20',rest:'45 שנ׳',lvl:'בידוד',
+  seatedCalfRaise:{name:'עריסת עגל ישיבה',en:'Seated Calf Raise',e:'',cat:'שוק — סוליאוס',sets:'4×15–20',rest:'90 שנ׳',lvl:'בידוד',
     desc:'ישיבה מדגישה את ה-Soleus שנמצא מתחת ל-Gastrocnemius. שניהם יחד = שוק מלאה.',
     muscles:'Soleus (ראשי), Gastrocnemius (משני).',
     tips:['ברכיים כפופות ב-90°','מתיחה מלאה למטה בכל חזרה','עלייה עד גובה מקסימלי','5 שניות ירידה איטית — Soleus מגיב לטמפו','לפחות 15 חזרות — שריר איטי']},
@@ -232,53 +232,53 @@ const EX = {
     desc:'כבל שומר על מתח קבוע לאורך כל טווח התנועה — שאב דם מושלם לסיום.',
     muscles:'ביצפס, ברכיאליס.',
     tips:['זרוע ישרה לגמרי בתחתית','כיווץ מלא בפסגה','תנועה איטית ומבוקרת','אפשר לעשות חד-צדדי']},
-  inclineDB:{name:'לחיצת דמבל שכיבה',en:'Incline Dumbbell Press',e:'',cat:'push',sets:'4×8–12',rest:90,lvl:2,desc:'לחיצת חזה עם דמבלים בשכיבה 30-45 מעלות לדגש על חלק עליון',muscles:['חזה עליון','כתף קדמית','טריצפס'],tips:['כוון 30-45 מעלות — לא יותר','מרפקים 45 מעלות מהגוף','הורד לאט ואל תנעל למעלה']},
-  declineBench:{name:'לחיצת חזה ירידה',en:'Decline Bench Press',e:'',cat:'push',sets:'4×8–12',rest:90,lvl:2,desc:'לחיצת חזה בשכיבה יורדת לדגש על חלק תחתון',muscles:['חזה תחתון','טריצפס','כתף קדמית'],tips:['קבע רגליים היטב','קשת טבעית בגב','הורד לאט — 2-3 שניות']},
-  closeGripBenchDB:{name:'לחיצת מוט אחיזה צרה',en:'Close Grip Bench Press',e:'',cat:'push',sets:'4×6–10',rest:90,lvl:2,desc:'לחיצת מוט עם אחיזה צרה לדגש על טריצפס',muscles:['טריצפס','חזה','כתף קדמית'],tips:['אחיזה רוחב כתפיים','מרפקים קרובים לגוף','שליטה מלאה בירידה']},
-  pecDeck:{name:'פק דק',en:'Pec Deck Machine',e:'',cat:'push',sets:'3×12–15',rest:60,lvl:1,desc:'כיווץ חזה במכונה לטווח תנועה מלא',muscles:['חזה','כתף קדמית'],tips:['הרגש כיווץ בפסגה','אל תנעל מרפקים','טווח תנועה מלא']},
-  cableChestFly:{name:'פרפר חזה בכבל',en:'Cable Chest Fly',e:'',cat:'push',sets:'3×12–15',rest:60,lvl:2,desc:'פרפר בכבל בגובה בינוני לטנשן קבוע',muscles:['חזה','כתף קדמית'],tips:['עמוד באמצע המכשיר','תנועת חבוק','שמור על כפיפה קלה במרפק']},
-  arnoldPressDB:{name:'לחיצת ארנולד',en:'Arnold Press',e:'',cat:'push',sets:'3×10–12',rest:75,lvl:2,desc:'לחיצת כתפיים עם סיבוב לכיסוי כל ראשי הדלתא',muscles:['כתף','טריצפס','כתף קדמית'],tips:['התחל עם כפות ידיים פנים','סובב בעלייה','תנועה איטית ושליטה']},
-  seatedDBPress:{name:'לחיצת כתפיים ישיבה',en:'Seated Dumbbell Press',e:'',cat:'push',sets:'4×8–12',rest:90,lvl:1,desc:'לחיצת כתפיים עם דמבלים בישיבה לייצוב מקסימלי',muscles:['כתף','טריצפס','כתף קדמית'],tips:['גב ישר על משענת','מרפקים ב-90 מעלות בתחתית','אל תנעל למעלה']},
-  cableLateral:{name:'הרמה לצד בכבל',en:'Cable Lateral Raise',e:'',cat:'push',sets:'3×12–15',rest:60,lvl:2,desc:'הרמה לצד בכבל לטנשן קבוע לאורך כל התנועה',muscles:['כתף אמצעי'],tips:['כבל מתחת לגוף','תנועה איטית','מרפק מעט כפוף']},
-  machineShoulderPress:{name:'לחיצת כתפיים מכונה',en:'Machine Shoulder Press',e:'',cat:'push',sets:'3×10–15',rest:75,lvl:1,desc:'לחיצת כתפיים במכונה לתנועה בטוחה',muscles:['כתף','טריצפס'],tips:['כוון מושב לגובה הנכון','תנועה מלאה','אל תנעל למעלה']},
-  inclineChestPress:{name:'לחיצת חזה שכיבה מכונה',en:'Incline Chest Press Machine',e:'',cat:'push',sets:'4×10–12',rest:75,lvl:1,desc:'לחיצת חזה עליון במכונה',muscles:['חזה עליון','כתף קדמית','טריצפס'],tips:['כוון גובה מושב','גב על מושב','תנועה מבוקרת']},
-  singleArmRow:{name:'חתירה חד-צדדית',en:'Single Arm Dumbbell Row',e:'',cat:'pull',sets:'4×8–12',rest:75,lvl:1,desc:'חתירה עם דמבל יחיד על ספסל לגב חד-צדדי',muscles:['גב רחב','ראמ"ן','ביצפס'],tips:['יד תמיכה על ספסל','משוך למותניים','שלוט בחזרה']},
-  tBarRowV2:{name:'חתירת T-BAR',en:'T-Bar Row',e:'',cat:'pull',sets:'4×8–10',rest:90,lvl:2,desc:'חתירה עם מוט T לעובי גב מרבי',muscles:['גב עמוד אמצעי','ראמ"ן','ביצפס'],tips:['כפוף 45 מעלות','חזה על הריפוד','משוך לחזה התחתון']},
-  cableRowSeat:{name:'חתירה בכבל ישיבה',en:'Seated Cable Row',e:'',cat:'pull',sets:'4×10–12',rest:75,lvl:1,desc:'חתירה בכבל בישיבה לעובי גב',muscles:['גב עמוד אמצעי','ראמ"ן','ביצפס'],tips:['גב ישר לא כפוף','משוך לטבור','שלוט בחזרה']},
-  chinUp:{name:'מתח אחיזה מחודדת',en:'Chin Up',e:'',cat:'pull',sets:'4×6–10',rest:90,lvl:2,desc:'מתח אחיזה מחודדת להדגשת ביצפס',muscles:['גב רחב','ביצפס'],tips:['אחיזה פנים','משוך חזה לבר','ירידה איטית — 3 שניות']},
-  concentrationCurl:{name:'כפיפת ריכוז',en:'Concentration Curl',e:'',cat:'pull',sets:'3×10–12',rest:60,lvl:1,desc:'כפיפת ביצפס ישיבה לאיזוציה מרבית',muscles:['ביצפס ראש קצר'],tips:['מרפק על ירך פנימית','תנועה מלאה','כיווץ בפסגה 1 שניה']},
-  reverseGripCurl:{name:'כפיפה אחיזה הפוכה',en:'Reverse Grip Curl',e:'',cat:'pull',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפת ביצפס עם כפות ידיים כלפי מטה לברכיאליס',muscles:['ברכיאליס','ברכיו-ראדיאליס'],tips:['אחיזה רוחב כתפיים','מרפקים קרובים לגוף','תנועה שלוטה']},
-  underhandPulldown:{name:'לאת אחיזה מחודדת',en:'Underhand Lat Pulldown',e:'',cat:'pull',sets:'3×10–12',rest:75,lvl:1,desc:'לאת בכבל עם אחיזה מחודדת לדגש ביצפס',muscles:['גב רחב','ביצפס'],tips:['אחיזה רוחב כתפיים','גב ישר','משוך לחזה התחתון']},
-  machineRow:{name:'חתירה במכונה',en:'Machine Row',e:'',cat:'pull',sets:'3×12–15',rest:60,lvl:1,desc:'חתירת גב במכונה לתנועה בטוחה',muscles:['גב עמוד אמצעי','ראמ"ן'],tips:['כוון גובה ידיות','גב ישר','משוך ועצור שניה']},
-  inclineCurlDB:{name:'כפיפת דמבל שכיבה',en:'Incline Dumbbell Curl',e:'',cat:'pull',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפת ביצפס עם דמבלים בשכיבה להתמתחות מרבית',muscles:['ביצפס','ברכיאליס'],tips:['ספסל 45-60 מעלות','ידיים תלויות','כפוף לאט']},
-  bulgarianSplit:{name:'סקוואט בולגרי',en:'Bulgarian Split Squat',e:'',cat:'legs',sets:'4×8–10',rest:90,lvl:2,desc:'סקוואט חד-רגלי עם רגל אחורית על ספסל',muscles:['ארבע ראשי','ישבן','ירכיים'],tips:['רגל אחורית על ספסל','ברך קדמית מעל אצבעות','יסוד אנכי']},
-  walkingLunge:{name:'צעדות',en:'Walking Lunges',e:'',cat:'legs',sets:'3×12–16',rest:75,lvl:1,desc:'צעדות קדימה לאימון מלא של הרגל',muscles:['ארבע ראשי','ישבן','ירכיים'],tips:['צעד גדול','ברך אחורית לא נוגעת ברצפה','גב ישר']},
-  sumoSquat:{name:'סקוואט סומו',en:'Sumo Squat',e:'',cat:'legs',sets:'4×10–12',rest:75,lvl:1,desc:'סקוואט פתיחה רחבה לדגש מכייסים',muscles:['מכייס','אדקטורים','ישבן'],tips:['פתיחה 45 מעלות לחוץ','ברכיים בכיוון האצבעות','ירך עד מקביל']},
-  gobletSquat:{name:'סקוואט גביע',en:'Goblet Squat',e:'',cat:'legs',sets:'3×12–15',rest:60,lvl:1,desc:'סקוואט עם דמבל לקידמה — מושלם לטכניקה',muscles:['ארבע ראשי','ישבן','ליבה'],tips:['דמבל ליד חזה','עקבים על הרצפה','ישב עמוק']},
-  singleLegRDL:{name:'RDL חד-רגלי',en:'Single Leg RDL',e:'',cat:'legs',sets:'3×8–10',rest:75,lvl:2,desc:'RDL על רגל אחת לאיזון ועקמוניים',muscles:['עקמוניים ירכיים','ישבן','עגל'],tips:['עמוד יציב','גב שטוח','הורד עד שמרגיש מתיחה']},
-  gluteBridge:{name:'גשר ישבן',en:'Glute Bridge',e:'',cat:'legs',sets:'4×12–15',rest:60,lvl:1,desc:'גשר על הגב לאקטיבציה מרבית של הישבן',muscles:['ישבן','עקמוניים ירכיים'],tips:['כפות רגליים קרובות לישבן','דחוף ישבן למעלה','כיווץ בפסגה 1 שניה']},
-  abductorMachine:{name:'אבדקטור',en:'Hip Abductor Machine',e:'↗',cat:'legs',sets:'3×15–20',rest:60,lvl:1,desc:'מכונת אבדקטור לפיתוח ישבן צידי',muscles:['ישבן צידי','גלוטאוס מדיוס'],tips:['כוון גובה מושב','תנועה איטית','עצור בנקודה הרחוקה']},
-  adductorMachine:{name:'אדדקטור',en:'Hip Adductor Machine',e:'↙',cat:'legs',sets:'3×15–20',rest:60,lvl:1,desc:'מכונת אדדקטור לירכיים פנימיות',muscles:['ירך פנימית','אדקטורים'],tips:['כוון זווית מושב','תנועה שלוטה','אל תגלוש']},
-  boxJump:{name:'קפיצת בוקס',en:'Box Jump',e:'',cat:'legs',sets:'4×6–8',rest:90,lvl:2,desc:'קפיצה אתלטית לעוצמה ומהירות',muscles:['ארבע ראשי','עגל','ישבן'],tips:['נחת רך עם ברכיים כפופות','קפוץ בשתי רגליים','ירד בזהירות']},
-  legPressNarrow:{name:'לג פרס אחיזה צרה',en:'Leg Press Narrow Stance',e:'',cat:'legs',sets:'4×10–12',rest:90,lvl:1,desc:'לחיצת רגל צרה לדגש ארבע ראשי קדמי',muscles:['ארבע ראשי'],tips:['פתיחה עד רוחב כתפיים','ירד עמוק','אל תנעל ברכיים']},
-  dbSkullCrusher:{name:'שוברי גולגולת דמבל',en:'DB Skull Crusher',e:'',cat:'arms',sets:'3×10–12',rest:75,lvl:2,desc:'שוברי גולגולת עם דמבלים לטווח תנועה טוב',muscles:['טריצפס ראש ארוך'],tips:['מרפקים מעל הפנים','הורד לאט בשליטה','אל תיתן מרפקים לפרוח']},
-  cableTricepOverhead:{name:'טריצפס כבל מעל ראש',en:'Cable Overhead Tricep Ext',e:'',cat:'arms',sets:'3×12–15',rest:60,lvl:2,desc:'הרחבת טריצפס בכבל מעל הראש לראש ארוך',muscles:['טריצפס ראש ארוך'],tips:['עמוד גב לכבל','מרפקים קרובים לאוזניים','תנועה מלאה']},
-  benchDipsArms:{name:'שכיבות סמיכה על ספסל',en:'Bench Dips',e:'',cat:'arms',sets:'3×12–15',rest:60,lvl:1,desc:'שכיבות סמיכה עם ידיים על ספסל לטריצפס',muscles:['טריצפס','כתף קדמית'],tips:['ידיים קרובות לגוף','ירד עד מתיחה','רגליים מוארכות לקושי']},
-  ropePushdown:{name:'פשיטת טריצפס חבל',en:'Rope Tricep Pushdown',e:'',cat:'arms',sets:'3×12–15',rest:60,lvl:1,desc:'פשיטת טריצפס בכבל עם חבל לכיסוי מלא',muscles:['טריצפס'],tips:['פצל החבל בתחתית','מרפקים קבועים','כיווץ מלא']},
-  spiderCurl:{name:'ספיידר קרל',en:'Spider Curl',e:'',cat:'arms',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפת ביצפס על ספסל נטוי קדימה לאיזוציה',muscles:['ביצפס'],tips:['שכב עם חזה על ספסל נטוי','ידיים תלויות','כפוף לאט ושלוט']},
-  zottmanCurl:{name:'זוטמן קרל',en:'Zottman Curl',e:'',cat:'arms',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפה עם סיבוב לביצפס וברכיאליס',muscles:['ביצפס','ברכיאליס','ברכיו-ראדיאליס'],tips:['כפוף עם כפות ידיים למעלה','סובב בפסגה','הורד עם כפות ידיים למטה']},
-  reverseCurl:{name:'כפיפה הפוכה',en:'Reverse Curl',e:'↩',cat:'arms',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפה עם אחיזה הפוכה לברכיו-ראדיאליס',muscles:['ברכיו-ראדיאליס','ברכיאליס'],tips:['אחיזה הפוכה רוחב כתפיים','מרפקים קרובים לגוף','תנועה שלוטה']},
-  wristCurlDB:{name:'כפיפת פרק יד',en:'Wrist Curl',e:'',cat:'arms',sets:'3×15–20',rest:45,lvl:1,desc:'חיזוק שרירי האמה עם כפיפת פרק יד',muscles:['שרירי אמה קדמי'],tips:['אמות על ברכיים','תנועה מלאה','משקל קל']},
-  plank:{name:'פלאנק',en:'Plank',e:'',cat:'core',sets:'3×45-60 שניות',rest:45,lvl:1,desc:'החזקת גוף ישר על אמות לחיזוק הליבה',muscles:['ליבה','כתפיים','ישבן'],tips:['גוף קו ישר','טבור פנים','נשום בקביעות']},
-  hangingLegRaise:{name:'הרמת רגליים תלוי',en:'Hanging Leg Raise',e:'',cat:'core',sets:'4×10–15',rest:60,lvl:2,desc:'הרמת רגליים בתלייה על בר לבטן תחתונה',muscles:['בטן תחתונה','היפ פלקסור'],tips:['תנופה אפסית','הרם עד מקביל','הורד לאט']},
-  cableCrunch:{name:'כפיפת בטן בכבל',en:'Cable Crunch',e:'',cat:'core',sets:'4×12–15',rest:60,lvl:2,desc:'כפיפת בטן בכבל לבטן עליונה',muscles:['בטן עליונה'],tips:['ברכיים על הרצפה','כפוף מהצלעות','כיווץ בפסגה']},
-  russianTwist:{name:'סיבוב רוסי',en:'Russian Twist',e:'',cat:'core',sets:'3×20',rest:45,lvl:1,desc:'סיבוב ישיבה לאלכסוניים',muscles:['בטן אלכסוני','בטן שטוחה'],tips:['הרם רגליים מהרצפה','סובב מהמותניים','משקל קל']},
-  abWheel:{name:'גלגל בטן',en:'Ab Wheel Rollout',e:'',cat:'core',sets:'3×8–12',rest:60,lvl:3,desc:'גלגול גלגל בטן לליבה מתקדמת',muscles:['בטן שטוחה','ליבה','כתפיים'],tips:['ברכיים על הרצפה','גב שטוח','חזור לאט']},
-  sidePlank:{name:'פלאנק צד',en:'Side Plank',e:'↗',cat:'core',sets:'3×30-45 שניות',rest:30,lvl:1,desc:'פלאנק צידי לאלכסוניים ויציבות',muscles:['בטן אלכסוני','ליבה','כתף'],tips:['גוף קו ישר','ירך מורמת','נשום בקביעות']},
-  vUp:{name:'V-UP',en:'V-Up',e:'',cat:'core',sets:'3×12–15',rest:45,lvl:2,desc:'כפיפה מלאה לרגליים ופלג עליון',muscles:['בטן שטוחה','היפ פלקסור'],tips:['שמור גב ישר','גע ידיים ברגליים','הורד לאט']},
-  toeTouch:{name:'נגיעת אצבעות',en:'Toe Touch Crunch',e:'',cat:'core',sets:'3×15–20',rest:45,lvl:1,desc:'כפיפת בטן עם רגליים אנכיות',muscles:['בטן עליונה'],tips:['רגליים אנכיות לרצפה','גע ידיים לאצבעות','כתפיים מהרצפה']},
-  crunchMachine:{name:'כפיפת בטן מכונה',en:'Crunch Machine',e:'',cat:'core',sets:'3×15–20',rest:45,lvl:1,desc:'כפיפת בטן עם עמסה מכנית',muscles:['בטן עליונה','בטן אמצעי'],tips:['כוון גובה מושב','כפוף מהצלעות','כיווץ מלא']},
-  dragonFlag:{name:'דרגון פלאג',en:'Dragon Flag',e:'',cat:'core',sets:'3×5–8',rest:90,lvl:3,desc:'תרגיל ליבה מתקדם — גוף שלם',muscles:['בטן שטוחה','ליבה','גב תחתון'],tips:['אחוז ספסל מאחורי הראש','גוף קשיח','הורד לאט בשליטה']},
+  inclineDB:{name:'לחיצת דמבל שכיבה',en:'Incline Dumbbell Press',e:'',cat:'חזה עליון',sets:'4×8–12',rest:90,lvl:2,desc:'לחיצת חזה עם דמבלים בשכיבה 30-45 מעלות לדגש על חלק עליון',muscles:['חזה עליון','כתף קדמית','טריצפס'],tips:['כוון 30-45 מעלות — לא יותר','מרפקים 45 מעלות מהגוף','הורד לאט ואל תנעל למעלה']},
+  declineBench:{name:'לחיצת חזה ירידה',en:'Decline Bench Press',e:'',cat:'חזה תחתון',sets:'4×8–12',rest:90,lvl:2,desc:'לחיצת חזה בשכיבה יורדת לדגש על חלק תחתון',muscles:['חזה תחתון','טריצפס','כתף קדמית'],tips:['קבע רגליים היטב','קשת טבעית בגב','הורד לאט — 2-3 שניות']},
+  closeGripBenchDB:{name:'לחיצת מוט אחיזה צרה',en:'Close Grip Bench Press',e:'',cat:'טריצפס',sets:'4×6–10',rest:90,lvl:2,desc:'לחיצת מוט עם אחיזה צרה לדגש על טריצפס',muscles:['טריצפס','חזה','כתף קדמית'],tips:['אחיזה רוחב כתפיים','מרפקים קרובים לגוף','שליטה מלאה בירידה']},
+  pecDeck:{name:'פק דק',en:'Pec Deck Machine',e:'',cat:'חזה',sets:'3×12–15',rest:60,lvl:1,desc:'כיווץ חזה במכונה לטווח תנועה מלא',muscles:['חזה','כתף קדמית'],tips:['הרגש כיווץ בפסגה','אל תנעל מרפקים','טווח תנועה מלא']},
+  cableChestFly:{name:'פרפר חזה בכבל',en:'Cable Chest Fly',e:'',cat:'חזה',sets:'3×12–15',rest:60,lvl:2,desc:'פרפר בכבל בגובה בינוני לטנשן קבוע',muscles:['חזה','כתף קדמית'],tips:['עמוד באמצע המכשיר','תנועת חבוק','שמור על כפיפה קלה במרפק']},
+  arnoldPressDB:{name:'לחיצת ארנולד',en:'Arnold Press',e:'',cat:'כל הכתף',sets:'3×10–12',rest:75,lvl:2,desc:'לחיצת כתפיים עם סיבוב לכיסוי כל ראשי הדלתא',muscles:['כתף','טריצפס','כתף קדמית'],tips:['התחל עם כפות ידיים פנים','סובב בעלייה','תנועה איטית ושליטה']},
+  seatedDBPress:{name:'לחיצת כתפיים ישיבה',en:'Seated Dumbbell Press',e:'',cat:'כתף קדמית',sets:'4×8–12',rest:90,lvl:1,desc:'לחיצת כתפיים עם דמבלים בישיבה לייצוב מקסימלי',muscles:['כתף','טריצפס','כתף קדמית'],tips:['גב ישר על משענת','מרפקים ב-90 מעלות בתחתית','אל תנעל למעלה']},
+  cableLateral:{name:'הרמה לצד בכבל',en:'Cable Lateral Raise',e:'',cat:'כתף אמצעית',sets:'4×12–15',rest:60,lvl:2,desc:'הרמה לצד בכבל לטנשן קבוע לאורך כל התנועה',muscles:['כתף אמצעי'],tips:['כבל מתחת לגוף','תנועה איטית','מרפק מעט כפוף']},
+  machineShoulderPress:{name:'לחיצת כתפיים מכונה',en:'Machine Shoulder Press',e:'',cat:'כתף קדמית',sets:'3×10–15',rest:75,lvl:1,desc:'לחיצת כתפיים במכונה לתנועה בטוחה',muscles:['כתף','טריצפס'],tips:['כוון מושב לגובה הנכון','תנועה מלאה','אל תנעל למעלה']},
+  inclineChestPress:{name:'לחיצת חזה שכיבה מכונה',en:'Incline Chest Press Machine',e:'',cat:'חזה עליון',sets:'4×10–12',rest:75,lvl:1,desc:'לחיצת חזה עליון במכונה',muscles:['חזה עליון','כתף קדמית','טריצפס'],tips:['כוון גובה מושב','גב על מושב','תנועה מבוקרת']},
+  singleArmRow:{name:'חתירה חד-צדדית',en:'Single Arm Dumbbell Row',e:'',cat:'גב אמצעי',sets:'4×8–12',rest:75,lvl:1,desc:'חתירה עם דמבל יחיד על ספסל לגב חד-צדדי',muscles:['גב רחב','ראמ"ן','ביצפס'],tips:['יד תמיכה על ספסל','משוך למותניים','שלוט בחזרה']},
+  tBarRowV2:{name:'חתירת T-BAR',en:'T-Bar Row',e:'',cat:'גב עבה',sets:'4×8–10',rest:90,lvl:2,desc:'חתירה עם מוט T לעובי גב מרבי',muscles:['גב עמוד אמצעי','ראמ"ן','ביצפס'],tips:['כפוף 45 מעלות','חזה על הריפוד','משוך לחזה התחתון']},
+  cableRowSeat:{name:'חתירה בכבל ישיבה',en:'Seated Cable Row',e:'',cat:'גב אמצעי',sets:'4×10–12',rest:75,lvl:1,desc:'חתירה בכבל בישיבה לעובי גב',muscles:['גב עמוד אמצעי','ראמ"ן','ביצפס'],tips:['גב ישר לא כפוף','משוך לטבור','שלוט בחזרה']},
+  chinUp:{name:'מתח אחיזה מחודדת',en:'Chin Up',e:'',cat:'גב רחב',sets:'4×6–10',rest:90,lvl:2,desc:'מתח אחיזה מחודדת להדגשת ביצפס',muscles:['גב רחב','ביצפס'],tips:['אחיזה פנים','משוך חזה לבר','ירידה איטית — 3 שניות']},
+  concentrationCurl:{name:'כפיפת ריכוז',en:'Concentration Curl',e:'',cat:'בייסס',sets:'3×10–12',rest:60,lvl:1,desc:'כפיפת ביצפס ישיבה לאיזוציה מרבית',muscles:['ביצפס ראש קצר'],tips:['מרפק על ירך פנימית','תנועה מלאה','כיווץ בפסגה 1 שניה']},
+  reverseGripCurl:{name:'כפיפה אחיזה הפוכה',en:'Reverse Grip Curl',e:'',cat:'בראכיאליס',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפת ביצפס עם כפות ידיים כלפי מטה לברכיאליס',muscles:['ברכיאליס','ברכיו-ראדיאליס'],tips:['אחיזה רוחב כתפיים','מרפקים קרובים לגוף','תנועה שלוטה']},
+  underhandPulldown:{name:'לאת אחיזה מחודדת',en:'Underhand Lat Pulldown',e:'',cat:'גב רחב',sets:'3×10–12',rest:75,lvl:1,desc:'לאת בכבל עם אחיזה מחודדת לדגש ביצפס',muscles:['גב רחב','ביצפס'],tips:['אחיזה רוחב כתפיים','גב ישר','משוך לחזה התחתון']},
+  machineRow:{name:'חתירה במכונה',en:'Machine Row',e:'',cat:'גב אמצעי',sets:'3×12–15',rest:60,lvl:1,desc:'חתירת גב במכונה לתנועה בטוחה',muscles:['גב עמוד אמצעי','ראמ"ן'],tips:['כוון גובה ידיות','גב ישר','משוך ועצור שניה']},
+  inclineCurlDB:{name:'כפיפת דמבל שכיבה',en:'Incline Dumbbell Curl',e:'',cat:'בייסס',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפת ביצפס עם דמבלים בשכיבה להתמתחות מרבית',muscles:['ביצפס','ברכיאליס'],tips:['ספסל 45-60 מעלות','ידיים תלויות','כפוף לאט']},
+  bulgarianSplit:{name:'סקוואט בולגרי',en:'Bulgarian Split Squat',e:'',cat:'ירכיים + ישבן',sets:'4×8–10',rest:90,lvl:2,desc:'סקוואט חד-רגלי עם רגל אחורית על ספסל',muscles:['ארבע ראשי','ישבן','ירכיים'],tips:['רגל אחורית על ספסל','ברך קדמית מעל אצבעות','יסוד אנכי']},
+  walkingLunge:{name:'צעדות',en:'Walking Lunges',e:'',cat:'ירכיים + ישבן',sets:'3×12–16',rest:75,lvl:1,desc:'צעדות קדימה לאימון מלא של הרגל',muscles:['ארבע ראשי','ישבן','ירכיים'],tips:['צעד גדול','ברך אחורית לא נוגעת ברצפה','גב ישר']},
+  sumoSquat:{name:'סקוואט סומו',en:'Sumo Squat',e:'',cat:'ירכיים + ישבן',sets:'4×10–12',rest:75,lvl:1,desc:'סקוואט פתיחה רחבה לדגש מכייסים',muscles:['מכייס','אדקטורים','ישבן'],tips:['פתיחה 45 מעלות לחוץ','ברכיים בכיוון האצבעות','ירך עד מקביל']},
+  gobletSquat:{name:'סקוואט גביע',en:'Goblet Squat',e:'',cat:'ארבע ראשי',sets:'3×12–15',rest:60,lvl:1,desc:'סקוואט עם דמבל לקידמה — מושלם לטכניקה',muscles:['ארבע ראשי','ישבן','ליבה'],tips:['דמבל ליד חזה','עקבים על הרצפה','ישב עמוק']},
+  singleLegRDL:{name:'RDL חד-רגלי',en:'Single Leg RDL',e:'',cat:'ירך אחורי',sets:'3×8–10',rest:75,lvl:2,desc:'RDL על רגל אחת לאיזון ועקמוניים',muscles:['עקמוניים ירכיים','ישבן','עגל'],tips:['עמוד יציב','גב שטוח','הורד עד שמרגיש מתיחה']},
+  gluteBridge:{name:'גשר ישבן',en:'Glute Bridge',e:'',cat:'ישבן',sets:'4×12–15',rest:60,lvl:1,desc:'גשר על הגב לאקטיבציה מרבית של הישבן',muscles:['ישבן','עקמוניים ירכיים'],tips:['כפות רגליים קרובות לישבן','דחוף ישבן למעלה','כיווץ בפסגה 1 שניה']},
+  abductorMachine:{name:'אבדקטור',en:'Hip Abductor Machine',e:'↗',cat:'ישבן',sets:'3×15–20',rest:60,lvl:1,desc:'מכונת אבדקטור לפיתוח ישבן צידי',muscles:['ישבן צידי','גלוטאוס מדיוס'],tips:['כוון גובה מושב','תנועה איטית','עצור בנקודה הרחוקה']},
+  adductorMachine:{name:'אדדקטור',en:'Hip Adductor Machine',e:'↙',cat:'מקרבים',sets:'3×15–20',rest:60,lvl:1,desc:'מכונת אדדקטור לירכיים פנימיות',muscles:['ירך פנימית','אדקטורים'],tips:['כוון זווית מושב','תנועה שלוטה','אל תגלוש']},
+  boxJump:{name:'קפיצת בוקס',en:'Box Jump',e:'',cat:'כל הרגל',sets:'4×6–8',rest:90,lvl:2,desc:'קפיצה אתלטית לעוצמה ומהירות',muscles:['ארבע ראשי','עגל','ישבן'],tips:['נחת רך עם ברכיים כפופות','קפוץ בשתי רגליים','ירד בזהירות']},
+  legPressNarrow:{name:'לג פרס אחיזה צרה',en:'Leg Press Narrow Stance',e:'',cat:'ארבע ראשי',sets:'4×10–12',rest:90,lvl:1,desc:'לחיצת רגל צרה לדגש ארבע ראשי קדמי',muscles:['ארבע ראשי'],tips:['פתיחה עד רוחב כתפיים','ירד עמוק','אל תנעל ברכיים']},
+  dbSkullCrusher:{name:'שוברי גולגולת דמבל',en:'DB Skull Crusher',e:'',cat:'טריצפס',sets:'3×10–12',rest:75,lvl:2,desc:'שוברי גולגולת עם דמבלים לטווח תנועה טוב',muscles:['טריצפס ראש ארוך'],tips:['מרפקים מעל הפנים','הורד לאט בשליטה','אל תיתן מרפקים לפרוח']},
+  cableTricepOverhead:{name:'טריצפס כבל מעל ראש',en:'Cable Overhead Tricep Ext',e:'',cat:'טריצפס',sets:'3×12–15',rest:60,lvl:2,desc:'הרחבת טריצפס בכבל מעל הראש לראש ארוך',muscles:['טריצפס ראש ארוך'],tips:['עמוד גב לכבל','מרפקים קרובים לאוזניים','תנועה מלאה']},
+  benchDipsArms:{name:'שכיבות סמיכה על ספסל',en:'Bench Dips',e:'',cat:'טריצפס',sets:'3×12–15',rest:60,lvl:1,desc:'שכיבות סמיכה עם ידיים על ספסל לטריצפס',muscles:['טריצפס','כתף קדמית'],tips:['ידיים קרובות לגוף','ירד עד מתיחה','רגליים מוארכות לקושי']},
+  ropePushdown:{name:'פשיטת טריצפס חבל',en:'Rope Tricep Pushdown',e:'',cat:'טריצפס',sets:'3×12–15',rest:60,lvl:1,desc:'פשיטת טריצפס בכבל עם חבל לכיסוי מלא',muscles:['טריצפס'],tips:['פצל החבל בתחתית','מרפקים קבועים','כיווץ מלא']},
+  spiderCurl:{name:'ספיידר קרל',en:'Spider Curl',e:'',cat:'בייסס',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפת ביצפס על ספסל נטוי קדימה לאיזוציה',muscles:['ביצפס'],tips:['שכב עם חזה על ספסל נטוי','ידיים תלויות','כפוף לאט ושלוט']},
+  zottmanCurl:{name:'זוטמן קרל',en:'Zottman Curl',e:'',cat:'בייסס',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפה עם סיבוב לביצפס וברכיאליס',muscles:['ביצפס','ברכיאליס','ברכיו-ראדיאליס'],tips:['כפוף עם כפות ידיים למעלה','סובב בפסגה','הורד עם כפות ידיים למטה']},
+  reverseCurl:{name:'כפיפה הפוכה',en:'Reverse Curl',e:'↩',cat:'בראכיאליס',sets:'3×10–12',rest:60,lvl:2,desc:'כפיפה עם אחיזה הפוכה לברכיו-ראדיאליס',muscles:['ברכיו-ראדיאליס','ברכיאליס'],tips:['אחיזה הפוכה רוחב כתפיים','מרפקים קרובים לגוף','תנועה שלוטה']},
+  wristCurlDB:{name:'כפיפת פרק יד',en:'Wrist Curl',e:'',cat:'אמות',sets:'3×15–20',rest:45,lvl:1,desc:'חיזוק שרירי האמה עם כפיפת פרק יד',muscles:['שרירי אמה קדמי'],tips:['אמות על ברכיים','תנועה מלאה','משקל קל']},
+  plank:{name:'פלאנק',en:'Plank',e:'',cat:'ליבה',sets:'3×45-60 שניות',rest:45,lvl:1,desc:'החזקת גוף ישר על אמות לחיזוק הליבה',muscles:['ליבה','כתפיים','ישבן'],tips:['גוף קו ישר','טבור פנים','נשום בקביעות']},
+  hangingLegRaise:{name:'הרמת רגליים תלוי',en:'Hanging Leg Raise',e:'',cat:'ליבה',sets:'4×10–15',rest:60,lvl:2,desc:'הרמת רגליים בתלייה על בר לבטן תחתונה',muscles:['בטן תחתונה','היפ פלקסור'],tips:['תנופה אפסית','הרם עד מקביל','הורד לאט']},
+  cableCrunch:{name:'כפיפת בטן בכבל',en:'Cable Crunch',e:'',cat:'ליבה',sets:'4×12–15',rest:60,lvl:2,desc:'כפיפת בטן בכבל לבטן עליונה',muscles:['בטן עליונה'],tips:['ברכיים על הרצפה','כפוף מהצלעות','כיווץ בפסגה']},
+  russianTwist:{name:'סיבוב רוסי',en:'Russian Twist',e:'',cat:'ליבה',sets:'3×20',rest:45,lvl:1,desc:'סיבוב ישיבה לאלכסוניים',muscles:['בטן אלכסוני','בטן שטוחה'],tips:['הרם רגליים מהרצפה','סובב מהמותניים','משקל קל']},
+  abWheel:{name:'גלגל בטן',en:'Ab Wheel Rollout',e:'',cat:'ליבה',sets:'3×8–12',rest:60,lvl:3,desc:'גלגול גלגל בטן לליבה מתקדמת',muscles:['בטן שטוחה','ליבה','כתפיים'],tips:['ברכיים על הרצפה','גב שטוח','חזור לאט']},
+  sidePlank:{name:'פלאנק צד',en:'Side Plank',e:'↗',cat:'ליבה',sets:'3×30-45 שניות',rest:30,lvl:1,desc:'פלאנק צידי לאלכסוניים ויציבות',muscles:['בטן אלכסוני','ליבה','כתף'],tips:['גוף קו ישר','ירך מורמת','נשום בקביעות']},
+  vUp:{name:'V-UP',en:'V-Up',e:'',cat:'ליבה',sets:'3×12–15',rest:45,lvl:2,desc:'כפיפה מלאה לרגליים ופלג עליון',muscles:['בטן שטוחה','היפ פלקסור'],tips:['שמור גב ישר','גע ידיים ברגליים','הורד לאט']},
+  toeTouch:{name:'נגיעת אצבעות',en:'Toe Touch Crunch',e:'',cat:'ליבה',sets:'3×15–20',rest:45,lvl:1,desc:'כפיפת בטן עם רגליים אנכיות',muscles:['בטן עליונה'],tips:['רגליים אנכיות לרצפה','גע ידיים לאצבעות','כתפיים מהרצפה']},
+  crunchMachine:{name:'כפיפת בטן מכונה',en:'Crunch Machine',e:'',cat:'ליבה',sets:'3×15–20',rest:45,lvl:1,desc:'כפיפת בטן עם עמסה מכנית',muscles:['בטן עליונה','בטן אמצעי'],tips:['כוון גובה מושב','כפוף מהצלעות','כיווץ מלא']},
+  dragonFlag:{name:'דרגון פלאג',en:'Dragon Flag',e:'',cat:'ליבה',sets:'3×5–8',rest:90,lvl:3,desc:'תרגיל ליבה מתקדם — גוף שלם',muscles:['בטן שטוחה','ליבה','גב תחתון'],tips:['אחוז ספסל מאחורי הראש','גוף קשיח','הורד לאט בשליטה']},
 
   // ═══ HOME — משקל גוף (eq:'none') ═══
   pushup:{name:'שכיבות סמיכה',en:'Push-up',e:'',cat:'חזה',sets:'4×8–20',rest:'90 שנ׳',lvl:'בינוני',eq:'none',
@@ -335,6 +335,10 @@ const EX = {
     tips:['גב תחתון חייב להישאר צמוד לרצפה','קשה מדי? כופף ברכיים','ידיים מעל הראש = קשה','איכות לפני זמן']},
 
   // ═══ HOME — גומיות התנגדות (eq:'band') ═══
+  chestSupportedRow:{name:'חתירה בתמיכת חזה',en:'Chest-Supported DB Row',e:'',cat:'גב אמצעי',sets:'4×10–12',rest:'90 שנ׳',lvl:'בינוני',eq:'db',
+    desc:'שכיבה על ספסל בשיפוע חיובי, פנים כלפי מטה, משיכת משקולות למותניים. התמיכה מבטלת לגמרי תנופת גו — כל העבודה נשארת בגב.',
+    muscles:'גב אמצעי, שכמות, כתף אחורית, בייסס.',
+    tips:['הספסל בשיפוע 30–45 מעלות','מרפקים קרובים לגוף — לא לצדדים','שכמות נסגרות לפני שהזרוע נעצרת','אל תרים את החזה מהספסל']},
   bandRow:{name:'חתירה עם גומייה',en:'Band Seated Row',e:'',cat:'גב אמצעי',sets:'4×12–20',rest:'75 שנ׳',lvl:'בינוני',eq:'band',
     desc:'ישיבה על הרצפה, גומייה סביב כפות הרגליים. התחליף הביתי לחתירת כבל.',
     muscles:'Rhomboids, Lat, Trapezius, בייסס.',
@@ -1997,6 +2001,56 @@ const DAY_CFG={
 };
 // Builds a day-of-week→config map from the user's active plan.
 // Days rotate across the plan's dows, so a 2-day plan can fill 3 training days.
+
+// ── Honest session length ───────────────────────────────────────────────
+// `45 + n*5` charged five minutes per exercise whether it was 2 sets or 4,
+// and whether the rest was 45 seconds or three minutes. It overstated every
+// plan but 3ss by 15-31 minutes. This sums what the day actually prescribes.
+function _restSec(str){
+  const s=String(str||'');
+  const nums=(s.match(/\d+(?:\.\d+)?/g)||[]).map(Number);
+  if(!nums.length) return 75;
+  const avg=nums.reduce((x,y)=>x+y,0)/nums.length;
+  return /דק/.test(s)?avg*60:avg;
+}
+function _setCount(str){
+  const m=String(str||'').match(/^\s*(\d+)/);
+  return m?+m[1]:3;
+}
+function estimateMinutes(day){
+  const keys=(day&&day.exercises)||[];
+  if(!keys.length) return 45;
+  const home=/home/.test(day.id||'')||day.home;
+  const transition=home?45:90;              // walking, wiping down, loading plates
+  let sec=0;
+
+  // a superset pair shares one rest period, so it is charged once per round
+  const paired=new Set();
+  (day.supersets||[]).forEach(ss=>{
+    const [x,y]=ss.pair||[];
+    paired.add(x); paired.add(y);
+    const work=_setSec(EX[x])+_setSec(EX[y]);
+    sec+=(ss.rounds||3)*(work+(ss.restWithin||20)+(ss.restBetween||120));
+    sec+=transition;
+  });
+
+  keys.forEach((k,idx)=>{
+    if(paired.has(k)) return;
+    const ex=EX[k]||{};
+    const sets=_setCount(ex.sets);
+    sec+=sets*_setSec(ex)+(sets-1)*_restSec(_exRest?_exRest(ex):ex.rest);
+    sec+=transition;
+    if(idx===0) sec+=5*60; else if(idx===1) sec+=4*60;   // ramp-up sets
+    else if(_restSec(_exRest?_exRest(ex):ex.rest)>=120) sec+=60;
+  });
+  return Math.round(sec/60/5)*5;
+}
+function _setSec(ex){
+  const m=String((ex&&ex.sets)||'').match(/(\d+)\s*[-\u2013]\s*(\d+)\s*$/);
+  const reps=m?(+m[1]+ +m[2])/2:10;
+  return reps*3+12;                          // ~3s a rep, plus getting in and out
+}
+
 function _buildDayCfg(u){
   const plan=_resolvePlan(u);
   if(!plan||!plan.days||!plan.days.length) return DAY_CFG;
@@ -2005,7 +2059,7 @@ function _buildDayCfg(u){
   dows.forEach((dow,i)=>{
     const day=plan.days[i%plan.days.length];
     const n=day.exercises?day.exercises.length:6;
-    const mins=day.estMin||45+n*5;
+    const mins=estimateMinutes(day);
     result[dow]={
       panel:day.id,
       badge:day.shortLabel||day.label.slice(0,6),
@@ -5012,11 +5066,11 @@ const WORKOUT_PLANS={
   home_bw3:{
     days:[
       {id:'push',label:'פול-בודי א׳ — ביתי',shortLabel:'בית א׳',color:'#FF7A45',
-       exercises:['pushup','doorRow','bwSquat','gluteBridgeSL','pikePushup','plankReach']},
+       exercises:['pushup','doorRow','bwSquat','gluteBridgeSL','pikePushup','calfRaiseHome','plankReach']},
       {id:'pull',label:'פול-בודי ב׳ — ביתי',shortLabel:'בית ב׳',color:'#00D9FF',
        exercises:['declinePushup','chinupHome','bulgSplitHome','nordicHome','diamondPushup','hollowHold']},
       {id:'legs',label:'פול-בודי ג׳ — ביתי',shortLabel:'בית ג׳',color:'#B47CFF',
-       exercises:['pikePushup','doorRow','pistolBox','gluteBridgeSL','pushup','calfRaiseHome','plankReach']},
+       exercises:['pikePushup','chinupHome','pistolBox','gluteBridgeSL','pushup','calfRaiseHome','hollowHold']},
     ],
     dows:[0,2,4],
     schedule:'א׳ א׳ · ג׳ ב׳ · ה׳ ג׳ — משקל גוף בלבד, 48 שעות מנוחה בין אימונים'
@@ -5024,11 +5078,11 @@ const WORKOUT_PLANS={
   home_band3:{
     days:[
       {id:'push',label:'פול-בודי א׳ — גומיות',shortLabel:'גומי א׳',color:'#FF7A45',
-       exercises:['pushup','bandRow','bwSquat','bandChestPress','bandGoodMorning','bandFacePull']},
+       exercises:['pushup','bandRow','bwSquat','bandGoodMorning','bandLateral','bandFacePull','plankReach']},
       {id:'pull',label:'פול-בודי ב׳ — גומיות',shortLabel:'גומי ב׳',color:'#00D9FF',
-       exercises:['bandPulldown','declinePushup','bulgSplitHome','bandLateral','bandCurl','bandTricep']},
+       exercises:['bandPulldown','pikePushup','declinePushup','bulgSplitHome','bandCurl','bandTricep','hollowHold']},
       {id:'legs',label:'פול-בודי ג׳ — גומיות',shortLabel:'גומי ג׳',color:'#B47CFF',
-       exercises:['bandChestPress','bandRow','pistolBox','gluteBridgeSL','bandFacePull','calfRaiseHome']},
+       exercises:['bandChestPress','bandRow','pistolBox','gluteBridgeSL','bandLateral','calfRaiseHome','plankReach']},
     ],
     dows:[0,2,4],
     schedule:'א׳ א׳ · ג׳ ב׳ · ה׳ ג׳ — גומיות התנגדות + משקל גוף'
@@ -5040,7 +5094,7 @@ const WORKOUT_PLANS={
       {id:'pull',label:'תחתון א׳ — ביתי',shortLabel:'תחתון א׳',color:'#B47CFF',
        exercises:['dbGobletSquat','dbRdl','bulgSplitHome','gluteBridgeSL','calfRaiseHome','plankReach']},
       {id:'legs',label:'עליון ב׳ — ביתי',shortLabel:'עליון ב׳',color:'#00D9FF',
-       exercises:['pushup','dbRow','pikePushup','bandFacePull','inclineCurl','ohTricep']},
+       exercises:['declinePushup','chinupHome','dbRow','lateralRaise','inclineCurl','ohTricep','plankReach']},
       {id:'arms',label:'תחתון ב׳ — ביתי',shortLabel:'תחתון ב׳',color:'#FF7A45',
        exercises:['dbRdl','pistolBox','dbGobletSquat','nordicHome','calfRaiseHome','hollowHold']},
     ],
@@ -5070,51 +5124,51 @@ const WORKOUT_PLANS={
   '3ab':{
     days:[
       {id:'push',label:'פלג גוף עליון',shortLabel:'עליון',color:'#CCFF00',
-       exercises:['benchPress','pullup','ohp','bentRow','inclineBench','triPushdown','bbCurl','facePull']},
+       exercises:['benchPress','inclineBench','pullup','bentRow','ohp','lateralRaise','triPushdown','bbCurl','hangingLegRaise']},
       {id:'pull',label:'פלג גוף תחתון',shortLabel:'תחתון',color:'#B47CFF',
-       exercises:['squat','rdl','legPress','legCurl','legExt','hipThrust','calfRaise']},
+       exercises:['squat','rdl','legPress','legCurl','legExt','hipThrust','calfRaise','seatedCalfRaise','sidePlank']},
     ],
     dows:[0,2,4],
-    schedule:'א׳ עליון · ג׳ תחתון · ה׳ עליון — הסבב מתחלף שבוע-שבוע'
+    schedule:'א׳ עליון · ג׳ תחתון · ה׳ עליון — פלג גוף עליון פעמיים בשבוע'
   },
   '3ss':{
     days:[
-      {id:'push',label:'פול-בודי א׳ — כוח (מוט חופשי)',shortLabel:'פול-בודי א׳',color:'#CCFF00',estMin:52,
-       exercises:['benchPress','pullup','squat','facePull','legCurl','cableLateral','triPushdown','cableCurl'],
+      {id:'push',label:'פול-בודי א׳ — כוח (מוט חופשי)',shortLabel:'פול-בודי א׳',color:'#CCFF00',
+       exercises:['benchPress','pullup','squat','bandFacePull','legCurl','cableLateral','triPushdown','cableCurl'],
        supersets:[
          {id:'A1',pair:['benchPress','pullup'],type:'antagonist',rounds:4,restWithin:20,restBetween:120,
           note:'דחיפה אופקית מול משיכה אנכית. אין שריר משותף, אפס עומס על עמוד השדרה, והאחיזה במתח מתאוששת במלואה במהלך סט הלחיצה.'},
-         {id:'A2',pair:['squat','facePull'],type:'noncompeting',rounds:4,restWithin:20,restBetween:120,
+         {id:'A2',pair:['squat','bandFacePull'],type:'noncompeting',rounds:4,restWithin:20,restBetween:120,
           note:'סקוואט כבד מול בידוד כתף אחורית במשקל זניח. את משיכת הפנים תרוץ קל — היא מנוחה אקטיבית, לא תרגיל.'},
-         {id:'A3',pair:['legCurl','cableLateral'],type:'noncompeting',rounds:3,restWithin:20,restBetween:60,
+         {id:'A3',pair:['legCurl','cableLateral'],type:'noncompeting',rounds:4,restWithin:20,restBetween:60,
           note:'ירך אחורי בשכיבה מול כתף אמצעית בכבל. אפס חפיפה, אפס גב תחתון, אפס אחיזה.'},
          {id:'A4',pair:['triPushdown','cableCurl'],type:'antagonist',rounds:3,restWithin:15,restBetween:60,
           note:'אנטגוניסטים במרפק על אותה עמדת כבל. המפרק משותף — לכן 3 סבבים בלבד ובסוף האימון.'}
        ]},
-      {id:'pull',label:'פול-בודי ב׳ — נפח (דמבל ומכונה)',shortLabel:'פול-בודי ב׳',color:'#00D9FF',estMin:58,
-       exercises:['inclineDB','cableRowSeat','rdl','machineShoulderPress','legPress','lateralRaise','skullCrusher','hammerCurl','calfRaise','hangingLegRaise'],
+      {id:'pull',label:'פול-בודי ב׳ — נפח (דמבל ומכונה)',shortLabel:'פול-בודי ב׳',color:'#00D9FF',
+       exercises:['inclineDB','chestSupportedRow','dbRdl','seatedDBPress','legPress','lateralRaise','skullCrusher','hammerCurl','calfRaise','hangingLegRaise'],
        supersets:[
-         {id:'B1',pair:['inclineDB','cableRowSeat'],type:'antagonist',rounds:4,restWithin:25,restBetween:105,
+         {id:'B1',pair:['inclineDB','chestSupportedRow'],type:'antagonist',rounds:4,restWithin:25,restBetween:105,
           note:'דחיפה בנטייה מול חתירה אופקית. שמור על חתירה קפדנית בלי תנופת גו — ה-RDL מגיע מיד אחרי.'},
-         {id:'B2',pair:['rdl','machineShoulderPress'],type:'noncompeting',rounds:3,restWithin:25,restBetween:90,
+         {id:'B2',pair:['dbRdl','seatedDBPress'],type:'noncompeting',rounds:3,restWithin:25,restBetween:90,
           note:'דווקא מכונה ולא לחיצת כתפיים בעמידה: ה-RDL מרוקן זוקפי גב ואחיזה, והמכונה נותנת משענת מלאה. זה מה שהופך את הזוג לבטוח.'},
-         {id:'B3',pair:['legPress','lateralRaise'],type:'noncompeting',rounds:3,restWithin:20,restBetween:90,
+         {id:'B3',pair:['legPress','lateralRaise'],type:'noncompeting',rounds:4,restWithin:20,restBetween:90,
           note:'לג-פרס נתמך מושב (אפס עומס אקסיאלי) מול הרמות צד קלות.'},
          {id:'B4',pair:['skullCrusher','hammerCurl'],type:'antagonist',rounds:3,restWithin:15,restBetween:60,
           note:'אנטגוניסטים במרפק, שניהם בידוד, בסוף האימון.'},
          {id:'B5',pair:['calfRaise','hangingLegRaise'],type:'noncompeting',rounds:4,restWithin:15,restBetween:45,
           note:'שוק מול ליבה. אם האחיזה נשברת ראשונה — החלף את הרמת הרגליים בכפיפת בטן בכבל.'}
        ]},
-      {id:'legs',label:'פול-בודי ג׳ — פאמפ (כבל וחד-צדדי)',shortLabel:'פול-בודי ג׳',color:'#B47CFF',estMin:54,
-       exercises:['chinUp','ohp','bulgSplit','cableFlye','hipThrust','machineRow','seatedCalfRaise','cableCrunch'],
+      {id:'legs',label:'פול-בודי ג׳ — פאמפ (כבל וחד-צדדי)',shortLabel:'פול-בודי ג׳',color:'#B47CFF',
+       exercises:['chinUp','ohp','bulgSplit','cableFlye','hipThrust','bandRow','seatedCalfRaise','reverseFly','cableCrunch'],
        supersets:[
          {id:'C1',pair:['chinUp','ohp'],type:'antagonist',rounds:4,restWithin:25,restBetween:105,
           note:'משיכה אנכית מול דחיפה אנכית. ראשון ביום — הלחיצה בעמידה דורשת זוקפים טריים, לפני ה-Hip Thrust.'},
          {id:'C2',pair:['bulgSplit','cableFlye'],type:'noncompeting',rounds:3,restWithin:20,restBetween:90,
           note:'רגל חד-צדדית מול בידוד חזה. שים לב: כל סבב = 2 סטים של רגליים (צד וצד).'},
-         {id:'C3',pair:['hipThrust','machineRow'],type:'noncompeting',rounds:4,restWithin:25,restBetween:90,
+         {id:'C3',pair:['hipThrust','bandRow'],type:'noncompeting',rounds:4,restWithin:25,restBetween:90,
           note:'פשיטת ירך מול חתירה בתמיכת חזה — אפס כיפוף מותני תחת עומס. זה הזוג שבו הגב התחתון מקבל אוויר.'},
-         {id:'C4',pair:['seatedCalfRaise','cableCrunch'],type:'noncompeting',rounds:4,restWithin:15,restBetween:45,
+         {id:'C4',pair:['seatedCalfRaise','reverseFly'],type:'noncompeting',rounds:4,restWithin:15,restBetween:45,
           note:'סוליאוס בישיבה מול כפיפת בטן בכבל. אפס חפיפה.'}
        ]}
     ],
@@ -5131,11 +5185,11 @@ const WORKOUT_PLANS={
   '3abc':{
     days:[
       {id:'push',label:'דחיפה — חזה + כתפיים',shortLabel:'דחיפה',color:'#CCFF00',
-       exercises:['benchPress','inclineBench','ohp','lateralRaise','triPushdown','skullCrusher','cableFlye']},
+       exercises:['benchPress','inclineBench','ohp','cableFlye','lateralRaise','cableLateral','triPushdown']},
       {id:'pull',label:'משיכה — גב + בייסס',shortLabel:'משיכה',color:'#00D9FF',
-       exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
+       exercises:['pullup','underhandPulldown','bentRow','cableRow','facePull','reverseFly','bbCurl','hangingLegRaise']},
       {id:'legs',label:'רגליים — ירכיים ושוקיים',shortLabel:'רגליים',color:'#B47CFF',
-       exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
+       exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise','seatedCalfRaise','sidePlank']},
     ],
     dows:[0,2,4],
     schedule:'א׳ דחיפה · ג׳ משיכה · ה׳ רגליים'
@@ -5143,13 +5197,13 @@ const WORKOUT_PLANS={
   4:{
     days:[
       {id:'push',label:'דחיפה — חזה + כתפיים',shortLabel:'דחיפה',color:'#CCFF00',
-       exercises:['benchPress','ohp','inclineBench','cableFlye','lateralRaise','triPushdown']},
+       exercises:['benchPress','ohp','inclineBench','cableFlye','lateralRaise','cableLateral','triPushdown']},
       {id:'pull',label:'משיכה — גב + בייסס',shortLabel:'משיכה',color:'#00D9FF',
-       exercises:['rdl','pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
+       exercises:['pullup','underhandPulldown','bentRow','cableRow','rdl','facePull','reverseFly','bbCurl','hangingLegRaise']},
       {id:'legs',label:'רגליים — יום רגליים מלא',shortLabel:'רגליים',color:'#B47CFF',
-       exercises:['squat','legPress','bulgSplit','legCurl','hipThrust','legExt','calfRaise']},
+       exercises:['squat','legPress','bulgSplit','legCurl','legExt','hipThrust','calfRaise','seatedCalfRaise','sidePlank']},
       {id:'arms',label:'ידיים — זרועות',shortLabel:'ידיים',color:'#FF7A45',
-       exercises:['closeGripBench','ezCurl','skullCrusher','inclineCurl','ohTricep','hammerCurl']},
+       exercises:['closeGripBench','skullCrusher','ohTricep','inclineCurl','bbCurl','abWheel']},
     ],
     dows:[0,1,3,4],
     schedule:'א׳ דחיפה · ב׳ משיכה · ד׳ רגליים · ה׳ ידיים'
@@ -5157,25 +5211,25 @@ const WORKOUT_PLANS={
   5:{
     days:[
       {id:'push',label:'דחיפה — כבד',shortLabel:'דחיפה',color:'#CCFF00',
-       exercises:['benchPress','inclineBench','ohp','lateralRaise','triPushdown','skullCrusher','cableFlye']},
+       exercises:['benchPress','inclineBench','ohp','cableFlye','lateralRaise','cableLateral','triPushdown']},
       {id:'pull',label:'משיכה — כבד',shortLabel:'משיכה',color:'#00D9FF',
-       exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
+       exercises:['pullup','underhandPulldown','bentRow','cableRow','facePull','reverseFly','bbCurl','hangingLegRaise']},
       {id:'legs',label:'רגליים',shortLabel:'רגליים',color:'#B47CFF',
-       exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
-      {id:'arms',label:'פלג גוף עליון — שחזור בינוני',shortLabel:'עליון',color:'#FF7A45',
-       exercises:['cableRow','lateralRaise','facePull','bbCurl','hammerCurl','triPushdown']},
+       exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise','seatedCalfRaise']},
+      {id:'arms',label:'רגליים ב׳ — נפח',shortLabel:'רגליים ב׳',color:'#FF7A45',
+       exercises:['legPress','bulgSplit','legCurl','legExt','seatedCalfRaise','sidePlank']},
     ],
     dows:[0,1,3,4,5],
-    schedule:'א׳ דחיפה · ב׳ משיכה · ד׳ רגליים · ה׳ עליון · ו׳ דחיפה (סבב חוזר)'
+    schedule:'א׳ דחיפה · ב׳ משיכה · ד׳ רגליים א׳ · ה׳ רגליים ב׳ · ו׳ דחיפה — רגליים פעמיים בשבוע'
   },
   6:{
     days:[
       {id:'push',label:'דחיפה א׳ — כוח',shortLabel:'דחיפה א׳',color:'#CCFF00',
-       exercises:['benchPress','ohp','inclineBench','lateralRaise','triPushdown','skullCrusher','cableFlye']},
+       exercises:['benchPress','inclineBench','ohp','cableFlye','lateralRaise','cableLateral','triPushdown']},
       {id:'pull',label:'משיכה א׳ — רוחב',shortLabel:'משיכה א׳',color:'#00D9FF',
-       exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
+       exercises:['pullup','underhandPulldown','bentRow','cableRow','facePull','bbCurl','hangingLegRaise']},
       {id:'legs',label:'רגליים א׳ — ירכיים',shortLabel:'רגליים א׳',color:'#B47CFF',
-       exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
+       exercises:['squat','legPress','rdl','legCurl','legExt','calfRaise','seatedCalfRaise','sidePlank']},
     ],
     dows:[0,1,2,3,4,5],
     schedule:'א׳ דחיפה · ב׳ משיכה · ג׳ רגליים · ד׳ דחיפה · ה׳ משיכה · ו׳ רגליים — שבת מנוחה מלאה'
@@ -5183,11 +5237,11 @@ const WORKOUT_PLANS={
   '4ab':{
     days:[
       {id:'push',label:'עליון א׳ — כוח עליון',shortLabel:'עליון א׳',color:'#CCFF00',
-       exercises:['benchPress','pullup','ohp','bentRow','lateralRaise','bbCurl','facePull']},
+       exercises:['benchPress','pullup','ohp','bentRow','inclineBench','triPushdown','lateralRaise','hangingLegRaise']},
       {id:'pull',label:'תחתון א׳ — כוח תחתון',shortLabel:'תחתון א׳',color:'#B47CFF',
        exercises:['squat','rdl','legPress','legCurl','legExt','hipThrust','calfRaise']},
       {id:'legs',label:'עליון ב׳ — נפח עליון',shortLabel:'עליון ב׳',color:'#00D9FF',
-       exercises:['inclineBench','pullup','cableRow','facePull','lateralRaise','hammerCurl','skullCrusher','cableFlye']},
+       exercises:['squat','legPress','bulgSplit','legCurl','legExt','calfRaise','seatedCalfRaise','sidePlank']},
       {id:'arms',label:'תחתון ב׳ — נפח תחתון',shortLabel:'תחתון ב׳',color:'#FF7A45',
        exercises:['legPress','bulgSplit','legExt','legCurl','rdl','hipThrust','calfRaise']},
     ],
@@ -5197,13 +5251,13 @@ const WORKOUT_PLANS={
   7:{
     days:[
       {id:'push',label:'דחיפה — כוח + נפח',shortLabel:'דחיפה',color:'#CCFF00',
-       exercises:['benchPress','ohp','inclineBench','lateralRaise','triPushdown','skullCrusher','cableFlye']},
+       exercises:['benchPress','inclineBench','ohp','cableFlye','lateralRaise','cableLateral','triPushdown']},
       {id:'pull',label:'משיכה — כוח + נפח',shortLabel:'משיכה',color:'#00D9FF',
-       exercises:['pullup','bentRow','cableRow','facePull','bbCurl','hammerCurl']},
+       exercises:['pullup','underhandPulldown','bentRow','cableRow','facePull','bbCurl','hangingLegRaise']},
       {id:'legs',label:'רגליים — כוח + נפח',shortLabel:'רגליים',color:'#B47CFF',
        exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
-      {id:'arms',label:'יום 7 — שחזור פעיל בלבד',shortLabel:'מנוחה',color:'#6B7280',
-       exercises:['facePull','lateralRaise','inclineCurl','calfRaise','ezCurl','cableFlye']},
+      {id:'arms',label:'שחזור פעיל — קל בלבד',shortLabel:'שחזור',color:'#6B7280',
+       exercises:['facePull','sidePlank','plank']},
     ],
     dows:[0,1,2,3,4,5,6],
     schedule:'א׳ דחיפה · ב׳ משיכה · ג׳ רגליים · ד׳ שחזור פעיל · ה׳ דחיפה · ו׳ משיכה · ש׳ רגליים — לא מומלץ לאורך זמן'
@@ -5306,7 +5360,7 @@ function renderAdaptivePanels(){
     const day=days[i];
     const sub=day.label.includes(' — ')?day.label.split(' — ').slice(1).join(' — '):day.label;
     const n=day.exercises.length;
-    const mins=day.estMin||45+n*5;
+    const mins=estimateMinutes(day);
     const short=day.shortLabel||pid.toUpperCase();
 
     if(card){
@@ -5725,7 +5779,7 @@ function cfTabata(){
   const st=document.getElementById('cf-timer-status'); if(st) st.textContent='Tabata — 8×(20 עבודה/10 מנוחה)';
 }
 
-Object.assign(window,{gymPairCheck,toggleExSearch,_placeWarmup,initCollapsibles,renderSubNav,fixNumericRanges,
+Object.assign(window,{gymPairCheck,toggleExSearch,estimateMinutes,_placeWarmup,initCollapsibles,renderSubNav,fixNumericRanges,
   openModal,closeModal,closeModalBg,closeAltModal,
   cfFilter,cfToggleWod,cfOpenWod,cfSaveScore,cfTimerToggle,cfTimerReset,cfCountdown,cfTabata,
   showPanel,setMobileNav,renderExSearch,closeExSearch,browseExCategory,
