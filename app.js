@@ -5123,13 +5123,15 @@ const WORKOUT_PLANS={
   },
   '3ab':{
     days:[
-      {id:'push',label:'פלג גוף עליון',shortLabel:'עליון',color:'#CCFF00',
-       exercises:['benchPress','inclineBench','pullup','bentRow','ohp','lateralRaise','triPushdown','bbCurl','hangingLegRaise']},
-      {id:'pull',label:'פלג גוף תחתון',shortLabel:'תחתון',color:'#B47CFF',
+      {id:'push',label:'פלג גוף עליון א׳ — לחיצה אופקית',shortLabel:'עליון א׳',color:'#CCFF00',
+       exercises:['benchPress','pullup','ohp','bentRow','inclineBench','lateralRaise','triPushdown','bbCurl','hangingLegRaise']},
+      {id:'pull',label:'פלג גוף תחתון — סקוואט וציר',shortLabel:'תחתון',color:'#B47CFF',
        exercises:['squat','rdl','legPress','legCurl','legExt','hipThrust','calfRaise','seatedCalfRaise','sidePlank']},
+      {id:'legs',label:'פלג גוף עליון ב׳ — לחיצה אנכית',shortLabel:'עליון ב׳',color:'#00D9FF',
+       exercises:['ohp','underhandPulldown','inclineChestPress','cableRow','cableFlye','cableLateral','facePull','hammerCurl','skullCrusher','abWheel']},
     ],
     dows:[0,2,4],
-    schedule:'א׳ עליון · ג׳ תחתון · ה׳ עליון — פלג גוף עליון פעמיים בשבוע'
+    schedule:'א׳ עליון א׳ · ג׳ תחתון · ה׳ עליון ב׳ — שני אימוני עליון שונים'
   },
   '3ss':{
     days:[
@@ -5241,7 +5243,7 @@ const WORKOUT_PLANS={
       {id:'pull',label:'תחתון א׳ — כוח תחתון',shortLabel:'תחתון א׳',color:'#B47CFF',
        exercises:['squat','rdl','legPress','legCurl','legExt','hipThrust','calfRaise']},
       {id:'legs',label:'עליון ב׳ — נפח עליון',shortLabel:'עליון ב׳',color:'#00D9FF',
-       exercises:['squat','legPress','bulgSplit','legCurl','legExt','calfRaise','seatedCalfRaise','sidePlank']},
+       exercises:['ohp','underhandPulldown','inclineChestPress','cableRow','cableFlye','cableLateral','facePull','hammerCurl','skullCrusher','abWheel']},
       {id:'arms',label:'תחתון ב׳ — נפח תחתון',shortLabel:'תחתון ב׳',color:'#FF7A45',
        exercises:['legPress','bulgSplit','legExt','legCurl','rdl','hipThrust','calfRaise']},
     ],
