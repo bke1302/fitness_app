@@ -481,7 +481,7 @@ function openModal(key){
   document.getElementById('m-desc').textContent=e.desc;
   document.getElementById('m-muscles').textContent=_exMuscles(e);
   document.getElementById('m-info').innerHTML=
-    `<div class="info-pill">סטים: <strong>${e.sets}</strong></div>
+    `<div class="info-pill">סטים: <strong>${setsLabelToday(e)}</strong></div>
      <div class="info-pill">מנוחה: <strong>${_exRest(e)}</strong></div>
      <div class="info-pill">עצימות: <strong>${_exLvl(e)}</strong></div>`;
   document.getElementById('m-tips').innerHTML=e.tips.map(t=>`<li><span class="m-tips-check">✓</span><span>${_esc(t)}</span></li>`).join('');
@@ -1535,7 +1535,7 @@ function getModalSetHistory(key){
 
 function renderSetLogInModal(key){
   const ex=EX[key]; if(!ex) return;
-  const nSets=parseSetsCount(ex.sets||'3');
+  const nSets=setsToday(ex);
   const history=getModalSetHistory(key);
   const last=history[0];
   const today=todayStr();
@@ -1574,7 +1574,7 @@ function renderSetLogInModal(key){
   section.innerHTML=`<div class="msl-section">
     <div class="msl-header">
       <span class="msl-title">רשום את האימון</span>
-      <span class="msl-subtitle">${ex.sets} · ${_exRest(ex)}</span>
+      <span class="msl-subtitle">${setsLabelToday(ex)} · ${_exRest(ex)}</span>
     </div>
     <div class="msl-sets">${setRows}</div>
     <button class="msl-save-btn" onclick="saveModalSetLog('${key}',${nSets})">✓ שמור אימון</button>
@@ -2030,14 +2030,14 @@ function estimateMinutes(day){
     const [x,y]=ss.pair||[];
     paired.add(x); paired.add(y);
     const work=_setSec(EX[x])+_setSec(EX[y]);
-    sec+=(ss.rounds||3)*(work+(ss.restWithin||20)+(ss.restBetween||120));
+    sec+=roundsToday(ss)*(work+(ss.restWithin||20)+(ss.restBetween||120));
     sec+=transition;
   });
 
   keys.forEach((k,idx)=>{
     if(paired.has(k)) return;
     const ex=EX[k]||{};
-    const sets=_setCount(ex.sets);
+    const sets=setsToday(ex);
     sec+=sets*_setSec(ex)+(sets-1)*_restSec(_exRest?_exRest(ex):ex.rest);
     sec+=transition;
     if(idx===0) sec+=5*60; else if(idx===1) sec+=4*60;   // ramp-up sets
@@ -2711,9 +2711,14 @@ function saveElogEntry(key,kg,reps){
   const log=getElog();
   if(!log[key]) log[key]=[];
   const today=todayStr();
-  // Remove existing entry for today if any
+  // Keep the day's best set, not its last. In gym mode every checkmark calls
+  // this, so overwriting meant set 4 — the tiredest — became the record, and
+  // both the "last time" chip and the coach tip read the worst set of the day.
   const idx=log[key].findIndex(e=>e.date===today);
-  if(idx>=0) log[key][idx]={date:today,kg,reps};
+  if(idx>=0){
+    const cur=log[key][idx];
+    if(calc1RM(kg,reps)>calc1RM(cur.kg,cur.reps)) log[key][idx]={date:today,kg,reps};
+  }
   else log[key].unshift({date:today,kg,reps});
   // Keep last 15 entries
   log[key]=log[key].slice(0,CONFIG.MAX_ELOG_ENTRIES);
@@ -2723,7 +2728,11 @@ function saveElogEntry(key,kg,reps){
 // ─── COACH: Progressive Overload Analysis ───────────────────────────────────
 /** @param {string} setsStr @returns {{min:number,max:number}} */
 function _parseRepRange(setsStr){
-  const m=(setsStr||'').match(/\d+[×xX](\d+)(?:[–\-](\d+))?/);
+  const s=setsStr||'';
+  // '3×30–60 שנ׳' is seconds, not reps, and '2×כישלון' has no range at all —
+  // both used to come back as rep targets and drove the coach to nonsense.
+  if(/שנ׳|שניות|כישלון/.test(s)) return null;
+  const m=s.match(/\d+\s*[×xX]\s*(\d+)(?:\s*[–\-]\s*(\d+))?/);
   if(!m) return {min:8,max:12};
   return {min:parseInt(m[1]),max:parseInt(m[2]||m[1])};
 }
@@ -2737,6 +2746,8 @@ function getCoachTip(exKey){
   // Stagnation: 4+ sessions identical kg + reps
   if(hist.length>=CONFIG.COACH_STAGNATION&&hist.slice(0,CONFIG.COACH_STAGNATION).every(r=>r.kg===r0.kg&&r.reps===r0.reps))
     return {icon:'refresh',msg:`קיפאון — ${CONFIG.COACH_STAGNATION} אימונים ב-${r0.kg}ק"ג × ${r0.reps} חזרות. שנה תרגיל או עצימות.`,type:'change'};
+  // Held sets and to-failure sets have no rep target, so nothing below applies.
+  if(!range) return null;
   // Weight increase: last 2+ sessions at or above max reps, same kg
   const topSessions=hist.filter(r=>r.reps>=range.max);
   if(topSessions.length>=CONFIG.COACH_INCREASE_MIN&&hist[0].kg===hist[1].kg)
@@ -3290,7 +3301,7 @@ async function sendChat(){
 - מטרה: ${GOAL_HE[u.goal||'lean_bulk']}
 - יעד קלוריות: ${n.target} קל׳ ביום | חלבון: ${n.protein}g | פחמימות: ${n.carbs}g | שומן: ${n.fat}g
 - ארוחות ביום: ${u.meal_count||5}${cholNote}
-- תוכנית אימונים: Push/Pull/Legs/Arms 4 ימים בשבוע
+- תוכנית אימונים: ${_planSummaryForAI()}
 - היום אכל: ${foodLog.map(e=>e.name+(e.qty>1?'×'+e.qty:'')).join(', ')||'כלום עדיין'} (סה"כ ${Math.round(totals.cal)} קל׳, ${Math.round(totals.p)}g חלבון)
 ענה בעברית. תשובות קצרות ומעשיות.`;
   try{
@@ -3723,22 +3734,25 @@ function _groupGymSupersets(list,panelName){
 }
 
 function _renderGymPair(p){
-  const today=todayStr(), log=getLog(), elog=getElog();
-  const pre=e=>{ const l=e.key?elog[e.key]?.[0]:null; return {kg:l?.kg||'',reps:l?.reps||''}; };
-  const pa=pre(p.a), pb=pre(p.b);
-  const side=(e,r,s,fill)=>{
+  const today=todayStr(), log=getLog();
+  // Was: prefill both fields from elog, i.e. hand back last week's numbers.
+  // Now each half of the pair gets its own target, because a non-competing
+  // pair shares no muscle and has no reason to stall or advance together.
+  const pa=p.a.key?prescribe(p.a.key):null, pb=p.b.key?prescribe(p.b.key):null;
+  const side=(e,r,s,rx)=>{
     const done=log[today]?.[e.name]?.[r]||false;
     return `<div class="gym-pair-side${done?' done':''}" id="gym-p-${r}-${s}">
       <div class="gym-pair-nm">${_esc(e.name)}</div>
       <div class="gym-sr-inputs">
-        <input class="gym-sr-kg" id="gym-p-kg-${r}-${s}" type="number" inputmode="decimal" min="0" step="0.5" placeholder="ק״ג" value="${fill.kg}" ${done?'disabled':''}/>
+        <input class="gym-sr-kg" id="gym-p-kg-${r}-${s}" type="number" inputmode="decimal" min="0" step="0.5" placeholder="${rx&&rx.kg?rx.kg:'ק״ג'}" ${done?'disabled':''}/>
         <span class="gym-sr-x">×</span>
-        <input class="gym-sr-reps" id="gym-p-reps-${r}-${s}" type="number" inputmode="numeric" min="1" max="50" placeholder="חז׳" value="${fill.reps}" ${done?'disabled':''}/>
+        <input class="gym-sr-reps" id="gym-p-reps-${r}-${s}" type="number" inputmode="numeric" min="1" max="50" placeholder="${rx&&rx.mode==='reps'?rx.repLow:'חז׳'}" ${done?'disabled':''}/>
       </div>
       <button class="gym-check${done?' done':''}" id="gym-p-chk-${r}-${s}" onclick="gymPairCheck(${r},'${s}')">${done?'✓':''}</button>
     </div>`;
   };
-  const rounds=Array.from({length:p.rounds},(_,r)=>`
+  const nRounds=roundsToday(p);
+  const rounds=Array.from({length:nRounds},(_,r)=>`
     <div class="gym-pair-round">
       <div class="gym-pair-rn">סבב ${r+1}</div>
       ${side(p.a,r,'a',pa)}
@@ -3747,9 +3761,17 @@ function _renderGymPair(p){
     </div>`).join('');
   return `
     <div class="gym-counter">זוג ${_gymIdx+1} מתוך ${_gymExercises.length}</div>
-    <div class="gym-ss">${p.rounds} סבבים ברצף · מנוחה ${p.restBetween>=60?(p.restBetween%60?(p.restBetween/60).toFixed(1):p.restBetween/60)+' דק׳':p.restBetween+' שנ׳'}${p.note?` <button class="ss-why" aria-label="למה" onclick="this.closest('.gym-body').querySelector('.gym-pair-note').hidden=!this.closest('.gym-body').querySelector('.gym-pair-note').hidden">?</button>`:''}</div>
+    <div class="gym-ss">${nRounds} סבבים ברצף · מנוחה ${p.restBetween>=60?(p.restBetween%60?(p.restBetween/60).toFixed(1):p.restBetween/60)+' דק׳':p.restBetween+' שנ׳'}${p.note?` <button class="ss-why" aria-label="למה" onclick="this.closest('.gym-body').querySelector('.gym-pair-note').hidden=!this.closest('.gym-body').querySelector('.gym-pair-note').hidden">?</button>`:''}</div>
     <div class="gym-name gym-name-pair" style="color:${_gymColor}">${_esc(p.a.name)} + ${_esc(p.b.name)}</div>
-    <div class="gym-sets-label">${p.a.sets} / ${p.b.sets}</div>
+    <div class="gym-sets-label">${setsLabelToday(p.a)} / ${setsLabelToday(p.b)}</div>
+    ${[[p.a,pa],[p.b,pb]].filter(x=>x[1]).map(([e,rx])=>`
+      <div class="gym-target gym-target-pair gym-target-${rx.state}">
+        <div class="gym-target-top">
+          <span class="gym-target-lbl">${_esc(e.name)}</span>
+          <span class="gym-target-val">${prescriptionHTML(rx)}</span>
+        </div>
+        <div class="gym-target-why">${_esc(rx.reason)}</div>
+      </div>`).join('')}
     ${p.note?`<div class="gym-pair-note" hidden>${_esc(p.note)}</div>`:''}
     <div class="gym-pair-rounds">${rounds}</div>`;
 }
@@ -3783,6 +3805,219 @@ function gymPairCheck(r,s){
   if(_tempoOn) speakTempo();
 }
 
+
+// ═══════════════════════════════════════════════════════════════════
+// PROGRESSION ENGINE
+// The app logged what you lifted and never said what to lift next, so the
+// honest default was to repeat last week. Double progression over the rep
+// range each exercise already declares, driven off pf_setlog2 (every set of
+// every session), not off proFit_elog (which keeps only the day's top set).
+// ═══════════════════════════════════════════════════════════════════
+
+// A lateral raise at 8kg cannot take +2.5kg — that is a 31% jump. Anything
+// above this fraction of the working load becomes added reps instead.
+const _MAX_JUMP_FRACTION = 0.05;
+
+function _isLowerBody(ex){
+  return /רגל|ירכ|ישבן|שוק|ארבע ראשי|ירך אחורי|מקרבים/.test(ex?.cat||'');
+}
+function _isCompound(ex){
+  return /כבד|בינוני/.test(ex?.lvl||'') && !/בידוד/.test(ex?.lvl||'');
+}
+/** Smallest load step this exercise can actually take in a real gym. */
+function _loadStep(ex){
+  const eq=ex?.eq||'';
+  if(eq==='none'||eq==='band') return 0;          // no external load to add
+  if(eq==='db') return 2;                          // one dumbbell jump, the pair
+  if(_isLowerBody(ex)) return _isCompound(ex)?5:2.5;
+  return 2.5;
+}
+/** Reps are per side when the scheme says so, which changes nothing here but
+    matters to whoever reads the numbers back. */
+function _repRange(ex){
+  const s=String(ex?.sets||'');
+  if(/כישלון/.test(s)) return {min:0,max:0,mode:'amrap'};
+  if(/שנ׳|שניות/.test(s)) return {min:0,max:0,mode:'time'};
+  const m=s.match(/\d+\s*[×xX]\s*(\d+)(?:\s*[–\-]\s*(\d+))?/);
+  if(!m) return {min:8,max:12,mode:'reps'};
+  return {min:+m[1],max:+(m[2]||m[1]),mode:'reps'};
+}
+function _plannedSets(ex){ return setsToday(ex); }
+function _history(key){
+  try{ return JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}')[key]||[]; }
+  catch(e){ return []; }
+}
+/** Sets that count: a warm-up at a much lighter load should not veto a
+    progression, so anything under 80% of the session's top load is ignored. */
+function _workingSets(entry){
+  const sets=(entry&&entry.sets||[]).filter(s=>+s.kg>0&&+s.reps>0);
+  if(!sets.length) return [];
+  const top=Math.max(...sets.map(s=>+s.kg));
+  return sets.filter(s=>+s.kg>=top*0.8);
+}
+
+/**
+ * What to put on the bar for this exercise today.
+ * @returns {{kg:number|null, repLow:number, repHigh:number, state:string,
+ *            reason:string, mode:string, sets:number}}
+ */
+function prescribe(exKey){
+  const ex=EX[exKey]||{};
+  const range=_repRange(ex);
+  const sets=_plannedSets(ex);
+  const base={repLow:range.min,repHigh:range.max,mode:range.mode,sets};
+  if(range.mode!=='reps')
+    return Object.assign({},base,{kg:null,state:'asis',reason:'בצע לפי הזמן שנקבע'});
+
+  const hist=_history(exKey);
+  if(!hist.length)
+    return Object.assign({},base,{kg:null,state:'calibrate',
+      reason:'סט היכרות — מצא משקל שאפשר לעצור איתו עם 3 בבנק'});
+
+  const last=_workingSets(hist[0]);
+  if(!last.length)
+    return Object.assign({},base,{kg:null,state:'calibrate',reason:'אין נתונים מהאימון האחרון'});
+
+  const load=Math.max(...last.map(s=>+s.kg));
+  const step=_loadStep(ex);
+  const allTop=last.every(s=>+s.reps>=range.max);
+  const anyBelow=last.some(s=>+s.reps<range.min);
+
+  // two sessions in a row where the first working set missed the bottom of
+  // the range is the app's own stated rule for backing off
+  const prev=_workingSets(hist[1]||{});
+  const failedNow=+last[0].reps<range.min;
+  const failedBefore=prev.length&&+prev[0].reps<range.min;
+  if(failedNow&&failedBefore){
+    const cut=step?Math.max(step,Math.round(load*0.1/step)*step):0;
+    return Object.assign({},base,{kg:+(load-cut).toFixed(1),state:'backoff',
+      reason:'שני אימונים מתחת לטווח — יורדים 10% ובונים מחדש'});
+  }
+  if(allTop){
+    if(!step)
+      return Object.assign({},base,{kg:null,state:'addreps',
+        reason:'הגעת לראש הטווח — הוסף חזרות או האט את הקצב'});
+    if(step/load>_MAX_JUMP_FRACTION)
+      return Object.assign({},base,{kg:load,repHigh:range.max+2,state:'addreps',
+        reason:'קפיצת משקל תהיה גדולה מדי — מרחיבים את הטווח'});
+    return Object.assign({},base,{kg:+(load+step).toFixed(1),state:'up',
+      reason:'כל הסטים בראש הטווח — מעלים משקל'});
+  }
+  if(anyBelow)
+    return Object.assign({},base,{kg:load,state:'hold',
+      reason:'החזק את המשקל — סגור את הטווח בכל הסטים'});
+  const total=last.reduce((s,x)=>s+(+x.reps),0);
+  return Object.assign({},base,{kg:load,state:'beat',
+    reason:'אותו משקל — נצח את '+total+' החזרות של הפעם הקודמת'});
+}
+
+/** The target as ordered elements, so bidi has nothing to resolve. */
+function prescriptionHTML(p){
+  if(!p) return '';
+  if(p.mode==='time') return '<span class="rx-word">לפי זמן</span>';
+  if(p.mode==='amrap') return '<span class="rx-word">עד כישלון</span>';
+  const reps=p.repLow===p.repHigh?String(p.repLow):p.repLow+'–'+p.repHigh;
+  return (p.kg?`<span class="rx-kg"><bdi dir="ltr">${p.kg}</bdi> ק״ג</span><span class="rx-x">×</span>`:'')
+        +`<span class="rx-reps"><bdi dir="ltr">${reps}</bdi></span>`;
+}
+/** One short line for a set row: "82.5 ק״ג × 6–8" */
+// The mesocycle anchor: the Monday the current block started. Set on first
+// view so an existing user's block begins now rather than in a fabricated past.
+const MESO_KEY='pf_meso_start';
+function _mesoStart(){
+  let s=localStorage.getItem(MESO_KEY);
+  if(!s||!/^\d{4}-\d{2}-\d{2}$/.test(s)){
+    const d=new Date(); d.setDate(d.getDate()-((d.getDay()+6)%7)); // back to Monday
+    s=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    _safeSet(MESO_KEY,s);
+  }
+  return s;
+}
+// Only 3ss shipped a wave. The rest inherit this one so every plan
+// periodises rather than repeating week 1 forever.
+const DEFAULT_WAVES=[
+  {week:1,label:'צבירה',rir:3,note:'תחתית טווח החזרות — בונים בסיס לשבועות הבאים'},
+  {week:2,label:'עומס',rir:2,note:'סט נוסף בכל תרגיל בידוד, ומשקל עולה במובילים'},
+  {week:3,label:'שיא',rir:1,note:'אותו נפח כמו שבוע 2, אבל ראש הטווח בכל סט ו-RIR 1 — כאן קובעים שיאים'},
+  {week:4,label:'דילואד',rir:4,note:'חצי מהסטים ו-60% מהמשקל — כאן הגוף בונה את מה שאימנת'}
+];
+/** Which week of the plan's wave today falls in, and which cycle. */
+function currentWave(plan){
+  const w=(plan&&plan.waves)||DEFAULT_WAVES;
+  if(!w||!w.length) return null;
+  const start=new Date(_mesoStart()+'T00:00:00');
+  const now=new Date(todayStr()+'T00:00:00');
+  const weeks=Math.floor((now-start)/6048e5);
+  const i=((weeks%w.length)+w.length)%w.length;
+  return Object.assign({},w[i],{cycle:Math.floor(weeks/w.length)+1,of:w.length});
+}
+// currentWave resolves the plan on every call and this runs per exercise per
+// render, so the answer is memoised for the day.
+let _waveMemo=null;
+function _todayWave(){
+  const d=todayStr();
+  if(_waveMemo&&_waveMemo.d===d) return _waveMemo.w;
+  let w=null;
+  try{ const u=getActiveUser(); const pl=u&&_resolvePlan(u); w=pl?currentWave(pl):null; }catch(e){}
+  _waveMemo={d,w};
+  return w;
+}
+/**
+ * Sets to do today: the exercise's baseline, moved by the week of the block.
+ * Compounds hold their count — extra sets there cost recovery without buying
+ * growth, and it is the recovery that decides whether the block finishes.
+ */
+function setsToday(ex){
+  const base=_setCount(ex&&ex.sets);
+  const wv=_todayWave();
+  if(!wv) return base;
+  if(wv.label==='דילואד') return Math.max(2,Math.ceil(base/2));
+  if(/כבד/.test((ex&&ex.lvl)||'')) return base;
+  // One added set per isolation, held through the peak week. Peak earns its
+  // name on intensity (RIR 1), not on another ten sets a session.
+  return wv.week>=2?base+1:base;
+}
+/** Superset rounds move with the block too — a deload that halves the sets
+    but leaves the rounds alone is not a deload. */
+function roundsToday(ss){
+  const base=(ss&&ss.rounds)||3;
+  const wv=_todayWave();
+  if(!wv) return base;
+  if(wv.label==='דילואד') return Math.max(2,Math.ceil(base/2));
+  return wv.week>=2?base+1:base;
+}
+/** The scheme string with today's set count in front of it. */
+function setsLabelToday(ex){
+  const s=String((ex&&ex.sets)||'');
+  const n=setsToday(ex);
+  return /^\s*\d+/.test(s)?s.replace(/^\s*\d+/,String(n)):s;
+}
+/** Restart the block from this week. */
+function resetMesocycle(){
+  localStorage.removeItem(MESO_KEY); _mesoStart();
+  if(typeof renderAdaptivePanels==='function') renderAdaptivePanels();
+  if(typeof showToast==='function') showToast('מחזור חדש התחיל — שבוע 1');
+}
+/** The user's actual plan, for the assistant — it used to be told everyone
+    trains a 4-day PPL/Arms split, which is wrong for 10 of the 13 plans. */
+function _planSummaryForAI(){
+  try{
+    const u=getActiveUser(); const pl=u&&_resolvePlan(u);
+    if(!pl) return 'לא הוגדרה';
+    const days=(pl.days||[]).map(d=>d.shortLabel||d.label).join(' · ');
+    const wv=currentWave(pl);
+    return `${(pl.dows||[]).length||pl.days.length} ימים בשבוע — ${days}`
+      +(wv?` · שבוע ${wv.week} (${wv.label}, RIR ${wv.rir})`:'');
+  }catch(e){ return 'לא הוגדרה'; }
+}
+function prescriptionLabel(p){
+  if(!p) return '';
+  if(p.mode==='time') return 'לפי זמן';
+  if(p.mode==='amrap') return 'עד כישלון';
+  const reps=p.repLow===p.repHigh?String(p.repLow):p.repLow+'–'+p.repHigh;
+  return (p.kg?p.kg+' ק״ג × ':'')+reps;
+}
+
 function renderGymExercise(){
   const body=document.getElementById('gym-body');
   const prev=document.getElementById('gym-prev');
@@ -3809,21 +4044,23 @@ function renderGymExercise(){
     if(next) next.textContent=_gymIdx>=_gymExercises.length-1?'סיים האימון ✓':'הבא ←';
     return;
   }
-  const setsCount=parseInt(ex.sets)||3;
+  const setsCount=setsToday(ex);
   const today=todayStr(); const log=getLog();
   const checks=Array.from({length:setsCount},(_,i)=>log[today]?.[ex.name]?.[i]||false);
-  // Pre-fill last saved kg/reps from elog
-  const elog=getElog();
-  const lastEntry=ex.key?elog[ex.key]?.[0]:null;
-  const prefillKg=lastEntry?.kg||'';
-  const prefillReps=lastEntry?.reps||'';
+  // The old code pre-filled every weight field with last session's weight and
+  // wrote it straight back on save — tapping through the checkmarks recorded
+  // an identical session forever. The target goes on the label; the field
+  // starts empty so the number logged is the number lifted.
+  const _rx=ex.key?prescribe(ex.key):null;
+  const prefillKg='';
+  const prefillReps='';
   const rowsHTML=checks.map((done,i)=>`
     <div class="gym-set-row${done?' done':''}" id="gym-sr-${i}">
       <span class="gym-sr-num">סט ${i+1}</span>
       <div class="gym-sr-inputs">
-        <input class="gym-sr-kg" id="gym-sr-kg-${i}" type="number" inputmode="decimal" min="0" step="0.5" placeholder="ק״ג" value="${prefillKg}" ${done?'disabled':''}/>
+        <input class="gym-sr-kg" id="gym-sr-kg-${i}" type="number" inputmode="decimal" min="0" step="0.5" placeholder="${_rx&&_rx.kg?_rx.kg:'ק״ג'}" value="${prefillKg}" ${done?'disabled':''}/>
         <span class="gym-sr-x">×</span>
-        <input class="gym-sr-reps" id="gym-sr-reps-${i}" type="number" inputmode="numeric" min="1" max="50" placeholder="חז׳" value="${prefillReps}" ${done?'disabled':''}/>
+        <input class="gym-sr-reps" id="gym-sr-reps-${i}" type="number" inputmode="numeric" min="1" max="50" placeholder="${_rx&&_rx.mode==='reps'?_rx.repLow:'חז׳'}" value="${prefillReps}" ${done?'disabled':''}/>
       </div>
       <button class="gym-check${done?' done':''}" id="gym-chk-${i}" onclick="gymCheckSet(${i})">${done?'✓':''}</button>
     </div>`).join('');
@@ -3836,7 +4073,14 @@ function renderGymExercise(){
     ${ex.nameEn?`<div class="gym-name-en">${_esc(ex.nameEn)}</div>`:''}
     ${ex.muscle?`<div class="gym-muscle-tag">${_esc(ex.muscle)}</div>`:''}
     ${prBadge}
-    <div class="gym-sets-label">${ex.sets}</div>
+    ${_rx?`<div class="gym-target gym-target-${_rx.state}">
+      <div class="gym-target-top">
+        <span class="gym-target-lbl">היעד היום</span>
+        <span class="gym-target-val">${prescriptionHTML(_rx)}</span>
+      </div>
+      <div class="gym-target-why">${_esc(_rx.reason)}</div>
+    </div>`:''}
+    <div class="gym-sets-label">${setsLabelToday(ex)}</div>
     <div class="gym-setrows">${rowsHTML}</div>`;
   if(prev) prev.disabled=_gymIdx===0;
   if(next) next.textContent=_gymIdx>=_gymExercises.length-1?'סיים האימון ✓':'הבא ←';
@@ -3883,12 +4127,13 @@ function _saveGymExToSetlog(){
     ['a','b'].forEach(s=>{
       const e=ex[s]; if(!e?.key) return;
       const sets=[];
-      for(let r=0;r<ex.rounds;r++){
+      for(let r=0;r<roundsToday(ex);r++){
         const kg=parseFloat(document.getElementById(`gym-p-kg-${r}-${s}`)?.value)||0;
         const reps=parseInt(document.getElementById(`gym-p-reps-${r}-${s}`)?.value)||0;
         if(kg>0) sets.push({kg,reps});
       }
       if(!sets.length) return;
+      sets.forEach(s=>{ if(s.kg>0&&s.reps>0) savePREntry(e.key,s.kg,s.reps); });
       const all=_getJSON(SETLOG_KEY,{});
       const arr=(all[e.key]||[]).filter(x=>x.date!==todayStr());
       arr.unshift({date:todayStr(),sets});
@@ -3898,7 +4143,7 @@ function _saveGymExToSetlog(){
     return;
   }
   if(!ex||!ex.key) return;
-  const setsCount=parseInt(ex.sets)||3;
+  const setsCount=setsToday(ex);
   const sets=[];
   for(let i=0;i<setsCount;i++){
     const kg=parseFloat(document.getElementById('gym-sr-kg-'+i)?.value)||0;
@@ -3906,6 +4151,9 @@ function _saveGymExToSetlog(){
     if(kg>0) sets.push({kg,reps});
   }
   if(!sets.length) return;
+  // Gym mode logged sets but never called savePREntry, so anyone who trains
+  // through gym mode alone never recorded a single PR.
+  sets.forEach(s=>{ if(s.kg>0&&s.reps>0) savePREntry(ex.key,s.kg,s.reps); });
   const all=_getJSON(SETLOG_KEY,{});
   const arr=all[ex.key]||[];
   const today=todayStr();
@@ -4754,7 +5002,7 @@ function checkProgressiveSuggestion(exKey,kg,reps){
   const hist=getModalSetHistory(exKey)||[];
   if(hist.length<2) return; // need at least 2 sessions
   // Find best of PREVIOUS session (not current)
-  const prev=hist[1]; // hist[0] is current session
+  const prev=hist[1]&&hist[1].sets; // entries are {date,sets}, not arrays
   if(!Array.isArray(prev)||!prev.length) return;
   const prevBest=prev.reduce((best,s)=>{
     return(!best||calc1RM(s.kg,s.reps)>calc1RM(best.kg,best.reps))?s:best;
@@ -5276,7 +5524,7 @@ function buildExRow(key,num,over){
     <td><div class="ex-name-main">${ex.name}</div><div class="ex-name-en" lang="en">${ex.en}</div>
         <div class="ex-why">${ex.desc?ex.desc.slice(0,60)+'…':''}</div></td>
     <td><span class="muscle-tag">${_exCatLabel(ex)}</span></td>
-    <td class="sets-cell">${over?.sets||ex.sets||'3×10'}</td>
+    <td class="sets-cell">${over?.sets||setsLabelToday(ex)||'3×10'}</td>
     <td class="rest-cell">${over?.rest||_exRest(ex)||'90 שנ׳'}</td>
     <td><span class="badge ${lvlCls}">${lvlStr}</span></td>
   </tr>`;
@@ -5306,7 +5554,7 @@ function _buildSupersetRows(day){
     const reps=ss.pair.map(k=>{
       const s=EX[k]?.sets||'3×10';
       const r=s.split('×')[1]||s;   // keep the plan's round count, the exercise's rep range
-      return ss.rounds+'×'+r;
+      return roundsToday(ss)+'×'+r;
     });
     _ssNum++;
     const restTxt=ss.restBetween>=60
@@ -5315,7 +5563,7 @@ function _buildSupersetRows(day){
     out+=`<tr class="ss-head"><td colspan="6">
       <div class="ss-line">
         <span class="ss-tag">זוג ${_ssNum}</span>
-        <span class="ss-meta">${ss.rounds} סבבים ברצף · מנוחה ${restTxt}</span>
+        <span class="ss-meta">${roundsToday(ss)} סבבים ברצף · מנוחה ${restTxt}</span>
         ${ss.note?`<button class="ss-why" aria-label="למה" onclick="this.closest('td').querySelector('.ss-note').hidden=!this.closest('td').querySelector('.ss-note').hidden">?</button>`:''}
       </div>
       ${ss.note?`<div class="ss-note" hidden>${_esc(ss.note)}</div>`:''}
@@ -5389,6 +5637,24 @@ function renderAdaptivePanels(){
       if(meta) meta.textContent=`${n} תרגילים · כ־${mins} דק׳`;
       const gymBtn=head.querySelector('.gym-mode-btn');
       if(gymBtn) gymBtn.setAttribute('onclick',`startGymMode('${pid}','${short}','${day.color}')`);
+      // The wave and the progression rule: written into the plan, never shown.
+      const wv=currentWave(plan);
+      let wc=head.querySelector('.day-wave');
+      if(wv){
+        if(!wc){
+          wc=document.createElement('div'); wc.className='day-wave';
+          (head.querySelector('.day-meta')||head.firstElementChild)
+            .insertAdjacentElement('afterend',wc);
+        }
+        wc.innerHTML=`<div class="dw-top">
+            <span class="dw-week">שבוע ${wv.week} מתוך ${wv.of}</span>
+            <span class="dw-label">${_esc(wv.label)}</span>
+            <span class="dw-rir">RIR ${wv.rir}</span>
+          </div>
+          <div class="dw-note">${_esc(wv.note)}</div>
+          ${plan.progression?`<details class="dw-more"><summary>איך מתקדמים בתוכנית הזו</summary><p>${_esc(plan.progression)}</p></details>`:''}
+          <button class="dw-reset" onclick="resetMesocycle()">התחל מחזור חדש</button>`;
+      } else if(wc) wc.remove();
     }
     renderWorkoutDay(pid,day);
   });
@@ -5781,7 +6047,8 @@ function cfTabata(){
   const st=document.getElementById('cf-timer-status'); if(st) st.textContent='Tabata — 8×(20 עבודה/10 מנוחה)';
 }
 
-Object.assign(window,{gymPairCheck,toggleExSearch,estimateMinutes,_placeWarmup,initCollapsibles,renderSubNav,fixNumericRanges,
+Object.assign(window,{prescribe,prescriptionHTML,prescriptionLabel,currentWave,resetMesocycle,setsToday,setsLabelToday,roundsToday,
+  gymPairCheck,toggleExSearch,estimateMinutes,_placeWarmup,initCollapsibles,renderSubNav,fixNumericRanges,
   openModal,closeModal,closeModalBg,closeAltModal,
   cfFilter,cfToggleWod,cfOpenWod,cfSaveScore,cfTimerToggle,cfTimerReset,cfCountdown,cfTabata,
   showPanel,setMobileNav,renderExSearch,closeExSearch,browseExCategory,

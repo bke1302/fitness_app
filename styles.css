@@ -3190,3 +3190,120 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
   background:var(--bg3) !important;border-color:var(--border) !important;
   color:var(--muted) !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   THE TARGET — the number you came to the app for
+   Everything else on the gym screen is reference material. This is the
+   instruction, so it gets the loudest treatment in the design system and
+   the only unbroken use of the lime at this size.
+   Layout is flex over separate spans, not a mixed-direction string, so
+   the reading order is set by the box and not by the bidi algorithm.
+   ═══════════════════════════════════════════════════════════════════ */
+.gym-target{
+  margin:var(--space-md) 0 var(--space-sm);
+  padding:14px var(--pad-md);
+  border-radius:var(--radius-md);
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-inline-start:3px solid var(--muted2);
+}
+.gym-target-top{
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+}
+.gym-target-lbl{
+  font-size:var(--fs-meta);color:var(--muted2);
+  font-weight:var(--fw-semi);letter-spacing:.04em;
+}
+.gym-target-val{
+  display:flex;align-items:baseline;gap:7px;
+  margin-inline-start:auto;
+  font-family:var(--font-d);
+  font-size:1.6rem;font-weight:var(--fw-black);
+  line-height:var(--lh-tight);color:var(--text);
+}
+.rx-kg{white-space:nowrap}
+.rx-x{color:var(--muted2);font-size:1.05rem;font-weight:var(--fw-normal)}
+.rx-reps{white-space:nowrap}
+.rx-word{font-size:1.15rem}
+.gym-target-why{
+  margin-top:6px;
+  font-size:var(--fs-meta);color:var(--muted);
+  line-height:var(--lh-normal);
+}
+/* State reads off the rail and the number, never off a fill — a filled
+   card at this size would outrank the exercise name it sits under. */
+.gym-target-up{border-inline-start-color:var(--lime)}
+.gym-target-up .gym-target-val{color:var(--lime)}
+.gym-target-beat,.gym-target-hold{border-inline-start-color:var(--cyan)}
+.gym-target-beat .gym-target-val,.gym-target-hold .gym-target-val{color:var(--cyan)}
+.gym-target-addreps{border-inline-start-color:var(--purple)}
+.gym-target-addreps .gym-target-val{color:var(--purple)}
+.gym-target-backoff{border-inline-start-color:var(--coral)}
+.gym-target-backoff .gym-target-val{color:var(--coral)}
+.gym-target-calibrate .gym-target-val,.gym-target-asis .gym-target-val{color:var(--muted)}
+
+/* ═══════════════════════════════════════════════════════════════════
+   THE WAVE — which week of the block this is
+   The plan has carried a four-week mesocycle all along and never showed it.
+   Compact by design: it belongs on the day header as orientation, not as a
+   second headline competing with the workout title.
+   ═══════════════════════════════════════════════════════════════════ */
+.day-wave{
+  margin-top:var(--space-sm);
+  padding:10px var(--pad-sm);
+  border-radius:var(--radius-sm);
+  background:var(--glass);
+  border:1px solid var(--border);
+}
+.dw-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dw-week{font-size:var(--fs-meta);color:var(--muted);font-weight:var(--fw-semi)}
+.dw-label{
+  font-size:var(--fs-meta);font-weight:var(--fw-bold);
+  color:var(--lime);background:var(--lime-dim);
+  padding:2px 9px;border-radius:999px;
+}
+.dw-rir{
+  margin-inline-start:auto;
+  font-family:var(--font-d);font-size:var(--fs-meta);
+  color:var(--muted2);font-weight:var(--fw-semi);
+}
+.dw-note{
+  margin-top:6px;font-size:var(--fs-meta);
+  color:var(--muted);line-height:var(--lh-normal);
+}
+.dw-more{margin-top:8px}
+.dw-more summary{
+  cursor:pointer;font-size:var(--fs-meta);
+  color:var(--muted2);font-weight:var(--fw-semi);
+  padding:4px 0;list-style:none;
+}
+.dw-more summary::-webkit-details-marker{display:none}
+.dw-more summary::after{content:' ▾';font-size:.7em}
+.dw-more[open] summary::after{content:' ▴'}
+.dw-more summary:hover{color:var(--text)}
+.dw-more p{
+  margin:6px 0 0;font-size:var(--fs-meta);
+  color:var(--muted);line-height:var(--lh-normal);
+}
+.dw-reset{
+  margin-top:8px;padding:5px 12px;
+  background:transparent;border:1px solid var(--border2);
+  border-radius:999px;color:var(--muted2);
+  font-family:var(--font);font-size:var(--fs-meta);font-weight:var(--fw-semi);
+  cursor:pointer;
+}
+.dw-reset:hover{color:var(--text);border-color:var(--muted2)}
+@media (hover:none){
+  .dw-more summary:hover:not(:active){color:var(--muted2)}
+  .dw-reset:hover:not(:active){color:var(--muted2);border-color:var(--border2)}
+}
+
+/* Two targets stack on a superset screen, so they shrink: the pair's own
+   name headline already carries the identity, and these are the numbers. */
+.gym-target-pair{margin:var(--space-sm) 0 0;padding:10px var(--pad-sm)}
+.gym-target-pair .gym-target-lbl{
+  color:var(--muted);font-weight:var(--fw-semi);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:52%;
+}
+.gym-target-pair .gym-target-val{font-size:1.2rem}
+.gym-target-pair .gym-target-why{margin-top:4px}
