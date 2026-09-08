@@ -2,11 +2,41 @@
 (function(){
   const k='proFit_apiKey';
   const old=sessionStorage.getItem(k);
-  if(old){localStorage.setItem(k,old);sessionStorage.removeItem(k);}
+  if(old){_store.setItem(k,old);sessionStorage.removeItem(k);}
 })();
 
 // HTML escape utility — wrap user-supplied strings before injecting into innerHTML
 function _esc(str){ return String(str==null?'':str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+// ─── Per-user storage ────────────────────────────────────────────────────────
+// pf_users held only names and body stats; every training key was global, so a
+// second profile read — and overwrote — the first one's sets, PRs and streak.
+// These keys belong to a profile. Anything not listed (the user list, the
+// active id, settings, the API key) is shared and passes through unchanged.
+const _PER_USER_KEY=/^(pf_setlog2|proFit_elog|proFit_pr|proFit_log|pf_xp|pf_achievements_seen|pf_recovery|pf_rpe|proFit_food|pf_meso_start|proFit_weight|pf_meas|pf_wod_scores|pf_habits|pf_water|pf_boss_|pf_deloadDismissed_|pf_chat)/;
+const _rawLS=localStorage;
+/**
+ * The first profile keeps the original key names, so data already on this
+ * device is never moved and no migration can lose it. Every later profile is
+ * suffixed with its own id.
+ */
+function _ns(key){
+  if(!_PER_USER_KEY.test(key)) return key;
+  try{
+    const id=_rawLS.getItem('pf_active_user_id');
+    if(!id) return key;
+    const us=JSON.parse(_rawLS.getItem('pf_users')||'[]');
+    if(!us.length||us[0].id===id) return key;
+    return key+'__'+id;
+  }catch(e){ return key; }
+}
+const _store={
+  getItem:k=>_rawLS.getItem(_ns(k)),
+  setItem:(k,v)=>_rawLS.setItem(_ns(k),v),
+  removeItem:k=>_rawLS.removeItem(_ns(k)),
+  key:i=>_rawLS.key(i),
+  get length(){ return _rawLS.length; }
+};
+
 function _ic(n){ return '<svg class="ico" aria-hidden="true"><use href="#i-'+n+'"/></svg>'; }
 
 // ─── DOM helpers (reduce querySelector/getElementById repetition) ─────────────
@@ -16,7 +46,7 @@ function _setHTML(id,html){ const e=_el(id); if(e) e.innerHTML=html; }
 function _show(id){ const e=_el(id); if(e) e.style.display=''; }
 function _hide(id){ const e=_el(id); if(e) e.style.display='none'; }
 // ─── localStorage helpers ─────────────────────────────────────────────────────
-function _getJSON(key,fallback=null){ try{ return JSON.parse(localStorage.getItem(key)??'null')??fallback; }catch(e){ return fallback; } }
+function _getJSON(key,fallback=null){ try{ return JSON.parse(_store.getItem(key)??'null')??fallback; }catch(e){ return fallback; } }
 function _setJSON(key,val){ _safeSet(key,JSON.stringify(val)); }
 
 // Audio context singleton
@@ -31,7 +61,7 @@ function _getAudioCtx(){
 
 // localStorage quota guard
 function _safeSet(key,val){
-  try{ localStorage.setItem(key,val); }
+  try{ _store.setItem(key,val); }
   catch(e){
     if(e.name==='QuotaExceededError'||e.code===22){
       _logError('localStorage quota exceeded for key: '+key,'storage-quota',0);
@@ -58,7 +88,7 @@ function _logError(msg,src,line){
   try{
     const log=_getJSON(ERR_KEY,[]);
     log.unshift({ts:new Date().toISOString(),msg:String(msg).slice(0,200),src:String(src||'').slice(0,100),line});
-    localStorage.setItem(ERR_KEY,JSON.stringify(log.slice(0,20)));
+    _store.setItem(ERR_KEY,JSON.stringify(log.slice(0,20)));
   }catch(e){}
 }
 window.onerror=function(msg,src,line){ _logError(msg,src,line); return false; };
@@ -714,7 +744,7 @@ let deferredPrompt;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  if(!localStorage.getItem('pf_installDismissed')){
+  if(!_store.getItem('pf_installDismissed')){
     const banner=document.getElementById('install-banner');
     if(banner) banner.style.display='flex';
     const btn=document.getElementById('install-banner-btn');
@@ -738,8 +768,8 @@ window.addEventListener('appinstalled', () => {
 // ═══════════════════════════════════════════════════
 const SETTINGS_KEY = 'proFit_settings';
 const DEFAULT_S = {name:'המשתמש שלי',weight:60,height:170,age:31,calories:2750};
-function getSettings(){ try{return{...DEFAULT_S,...JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}')};}catch(e){return{...DEFAULT_S};} }
-function saveSettings(s){ localStorage.setItem(SETTINGS_KEY,JSON.stringify(s)); applySettings(s); }
+function getSettings(){ try{return{...DEFAULT_S,...JSON.parse(_store.getItem(SETTINGS_KEY)||'{}')};}catch(e){return{...DEFAULT_S};} }
+function saveSettings(s){ _store.setItem(SETTINGS_KEY,JSON.stringify(s)); applySettings(s); }
 function applySettings(s){
   // Topbar chips
   const tcw=document.getElementById('tc-weight'); if(tcw) tcw.textContent=s.weight+' ק"ג';
@@ -786,7 +816,7 @@ function saveSettingsForm(){
   if(isNaN(age)||age<13||age>100){showToast('ערך לא תקין');return;}
   saveSettings({name,weight,height,age,calories});
   const apiKey=(document.getElementById('sf-apikey')?.value||'').trim();
-  if(apiKey) localStorage.setItem('proFit_apiKey',apiKey);
+  if(apiKey) _store.setItem('proFit_apiKey',apiKey);
   // Read new profile fields
   const goal=document.getElementById('sf-goal')?.value||'lean_bulk';
   const activity=parseFloat(document.getElementById('sf-activity')?.value)||1.55;
@@ -836,10 +866,10 @@ function saveSettingsForm(){
 const USERS_KEY = 'pf_users';
 const ACTIVE_USER_KEY = 'pf_active_user_id';
 
-function getUsers(){ try{return JSON.parse(localStorage.getItem(USERS_KEY)||'[]')}catch(e){return[];} }
-function saveUsers(u){ localStorage.setItem(USERS_KEY,JSON.stringify(u)); invalidateUserCache(); }
-function getActiveUserId(){ return localStorage.getItem(ACTIVE_USER_KEY)||null; }
-function setActiveUserId(id){ localStorage.setItem(ACTIVE_USER_KEY,id); }
+function getUsers(){ try{return JSON.parse(_store.getItem(USERS_KEY)||'[]')}catch(e){return[];} }
+function saveUsers(u){ _store.setItem(USERS_KEY,JSON.stringify(u)); invalidateUserCache(); }
+function getActiveUserId(){ return _store.getItem(ACTIVE_USER_KEY)||null; }
+function setActiveUserId(id){ _store.setItem(ACTIVE_USER_KEY,id); }
 let _cachedUser=null,_cachedUserId=null;
 function getActiveUser(){
   const id=getActiveUserId();
@@ -1110,7 +1140,7 @@ function swapMeal(mealIdx){
   if(!alts.length) return;
   const cur=swaps[mealIdx]||0;
   swaps[mealIdx]=(cur+1)%(alts.length+1);
-  localStorage.setItem(key,JSON.stringify(swaps));
+  _store.setItem(key,JSON.stringify(swaps));
   renderNutritionPanel();
 }
 // Helper: get foods array + tag from MEAL_FOOD_ALTS entry (supports old string[] and new [string[],tag] format)
@@ -1229,7 +1259,7 @@ function switchUser(id){
   // Sync settings form and settings key
   const n=calcNutrition(u);
   saveSettings({name:u.name,weight:u.weight,height:u.height,age:u.age,calories:n.target});
-  if(u.apiKey) localStorage.setItem('proFit_apiKey',u.apiKey);
+  if(u.apiKey) _store.setItem('proFit_apiKey',u.apiKey);
   renderUserList();
   renderNutritionPanel();
   applyUserConditions(u);
@@ -1261,7 +1291,7 @@ function prefillSettingsForm(){
   const sh=document.getElementById('sf-height'); if(sh) sh.value=s.height;
   const sa=document.getElementById('sf-age'); if(sa) sa.value=s.age;
   const sc2=document.getElementById('sf-calories'); if(sc2) sc2.value=s.calories;
-  const sk=document.getElementById('sf-apikey'); if(sk) sk.value=localStorage.getItem('proFit_apiKey')||'';
+  const sk=document.getElementById('sf-apikey'); if(sk) sk.value=_store.getItem('proFit_apiKey')||'';
   // New fields from user record
   const sg=document.getElementById('sf-goal'); if(sg) sg.value=u.goal||'lean_bulk';
   const act=document.getElementById('sf-activity'); if(act) act.value=String(u.activity||1.55);
@@ -1482,7 +1512,7 @@ function obFinish(){
     animateStats();
     renderWLog();
     renderWChart();
-    if(localStorage.getItem('pf_installDismissed')){
+    if(_store.getItem('pf_installDismissed')){
       const b=document.getElementById('install-banner'); if(b) b.style.display='none';
     }
   }
@@ -1494,7 +1524,7 @@ function obFinish(){
 // PERSONAL RECORDS
 // ═══════════════════════════════════════════════════
 const PR_KEY='proFit_pr';
-function getPRs(){ try{return JSON.parse(localStorage.getItem(PR_KEY)||'{}')}catch(e){return{};} }
+function getPRs(){ try{return JSON.parse(_store.getItem(PR_KEY)||'{}')}catch(e){return{};} }
 function savePRFromModal(){
   const key=_currentExKey; if(!key) return;
   const kg=parseFloat(document.getElementById('pr-kg')?.value);
@@ -1504,7 +1534,7 @@ function savePRFromModal(){
   const prs=getPRs(); const prev=prs[key];
   const isNew=!prev||kg>prev.kg||(kg===prev.kg&&reps>prev.reps);
   prs[key]={kg,reps,date:todayStr()};
-  localStorage.setItem(PR_KEY,JSON.stringify(prs));
+  _store.setItem(PR_KEY,JSON.stringify(prs));
   if(disp){
     disp.textContent=isNew?'שיא חדש! '+kg+'ק"ג × '+reps:'נשמר: '+kg+'ק"ג × '+reps;
     disp.style.color=isNew?'var(--yellow)':'var(--cyan)';
@@ -1530,7 +1560,7 @@ function parseSetsCount(setsStr){
 }
 
 function getModalSetHistory(key){
-  try{return JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}')[key]||[];}catch(e){return[];}
+  try{return JSON.parse(_store.getItem(SETLOG_KEY)||'{}')[key]||[];}catch(e){return[];}
 }
 
 function renderSetLogInModal(key){
@@ -1652,7 +1682,7 @@ function savePREntry(key,kg,reps){
   const prev=prs[key];
   if(!prev||kg>prev.kg||(kg===prev.kg&&reps>prev.reps)){
     prs[key]={kg,reps,date:todayStr()};
-    localStorage.setItem(PR_KEY,JSON.stringify(prs));
+    _store.setItem(PR_KEY,JSON.stringify(prs));
   }
   checkNewAchievements();
 }
@@ -1661,7 +1691,7 @@ function savePREntry(key,kg,reps){
 // WORKOUT LOGGER (set checkboxes)
 // ═══════════════════════════════════════════════════
 const LOG_KEY='proFit_log';
-function getLog(){ try{return JSON.parse(localStorage.getItem(LOG_KEY)||'{}')}catch(e){return{};} }
+function getLog(){ try{return JSON.parse(_store.getItem(LOG_KEY)||'{}')}catch(e){return{};} }
 function saveLog(log){ _safeSet(LOG_KEY,JSON.stringify(log)); }
 /** A YYYY-MM-DD key in the device's own timezone — never toISOString(), which
     is UTC and lands on yesterday for the first hours of every Israeli day. */
@@ -1832,7 +1862,7 @@ function checkNewAchievements(){
         if(navigator.vibrate) navigator.vibrate([100,50,100,50,200]);
       }, newOnes.indexOf(a)*1200);
     });
-    localStorage.setItem(ACH_KEY,JSON.stringify([...seen]));
+    _store.setItem(ACH_KEY,JSON.stringify([...seen]));
   }
 }
 
@@ -1938,7 +1968,7 @@ function getHabitsToday(){
   return [false,false,false,false,false];
 }
 function saveHabitsToday(arr){
-  localStorage.setItem(HABIT_KEY,JSON.stringify({date:todayStr(),checked:arr}));
+  _store.setItem(HABIT_KEY,JSON.stringify({date:todayStr(),checked:arr}));
 }
 function renderHabits(){
   const checked=getHabitsToday();
@@ -1967,12 +1997,12 @@ function toggleHabit(i){
 const WATER_KEY='pf_water';
 function getWaterToday(){
   try{
-    const stored=JSON.parse(localStorage.getItem(WATER_KEY)||'{}');
+    const stored=JSON.parse(_store.getItem(WATER_KEY)||'{}');
     return stored.date===todayStr()?stored.cups||0:0;
   }catch(e){return 0;}
 }
 function saveWaterToday(cups){
-  localStorage.setItem(WATER_KEY,JSON.stringify({date:todayStr(),cups}));
+  _store.setItem(WATER_KEY,JSON.stringify({date:todayStr(),cups}));
 }
 function addWaterCup(){
   const cups=Math.min(CONFIG.WATER_GOAL*2,getWaterToday()+1);
@@ -2247,7 +2277,7 @@ function animateStats(){
 // REST TIMER
 // ═══════════════════════════════════════════════════
 let _timerIv=null, _timerTotal=0, _timerRemain=0, _timerEndAt=0;
-let _lastTimerSec=parseInt(localStorage.getItem('pf_lastTimer')||'90');
+let _lastTimerSec=parseInt(_store.getItem('pf_lastTimer')||'90');
 const CIRC=2*Math.PI*24; // r=24
 
 // Background timer — resume when page becomes visible again
@@ -2287,7 +2317,7 @@ function onTimerBtnClick(){
 function pickTimer(sec){
   document.getElementById('timer-presets').classList.remove('show');
   if(_timerIv){ clearInterval(_timerIv); _timerIv=null; }
-  _lastTimerSec=sec; localStorage.setItem('pf_lastTimer',String(sec));
+  _lastTimerSec=sec; _store.setItem('pf_lastTimer',String(sec));
   _timerTotal=sec; _timerRemain=sec; _timerEndAt=Date.now()+sec*1000;
   const btn=document.getElementById('timer-btn');
   const ring=document.getElementById('timer-ring');
@@ -2324,7 +2354,7 @@ function tickTimer(){
 // WEIGHT CHART
 // ═══════════════════════════════════════════════════
 const WLOG_KEY='proFit_weight';
-function getWLog(){ try{return JSON.parse(localStorage.getItem(WLOG_KEY)||'[]')}catch(e){return[];} }
+function getWLog(){ try{return JSON.parse(_store.getItem(WLOG_KEY)||'[]')}catch(e){return[];} }
 function addWeightForm(){
   const dEl=document.getElementById('wl-date');
   const kEl=document.getElementById('wl-kg');
@@ -2334,17 +2364,17 @@ function addWeightForm(){
   const idx=log.findIndex(e=>e.date===date);
   if(idx>=0) log[idx].kg=kg; else log.push({date,kg});
   log.sort((a,b)=>a.date.localeCompare(b.date));
-  localStorage.setItem(WLOG_KEY,JSON.stringify(log));
+  _store.setItem(WLOG_KEY,JSON.stringify(log));
   if(kEl) kEl.value='';
   // Sync latest weight to active user profile so BMR stays current
   const _au=getActiveUser();
-  if(_au){ _au.weight=kg; const us=getUsers(); const idx2=us.findIndex(u=>u.id===_au.id); if(idx2>=0){us[idx2]=_au; localStorage.setItem(USERS_KEY,JSON.stringify(us)); invalidateUserCache();} }
+  if(_au){ _au.weight=kg; const us=getUsers(); const idx2=us.findIndex(u=>u.id===_au.id); if(idx2>=0){us[idx2]=_au; _store.setItem(USERS_KEY,JSON.stringify(us)); invalidateUserCache();} }
   showToast('משקל נשמר — '+kg+' ק"ג');
   renderWLog(); renderWChart();
 }
 function deleteWEntry(date){
   const log=getWLog().filter(e=>e.date!==date);
-  localStorage.setItem(WLOG_KEY,JSON.stringify(log));
+  _store.setItem(WLOG_KEY,JSON.stringify(log));
   renderWLog(); renderWChart();
 }
 function renderWLog(){
@@ -2394,7 +2424,7 @@ function renderWChart(){
 
   // ── Weekly Volume from elog (red, right Y) ──
   function getWeekKey(dateStr){const d=new Date(dateStr);const day=d.getDay();const diff=d.getDate()-(day||7)+1;const mon=new Date(d);mon.setDate(diff);return _dateKey(mon);}
-  const elog=(() => { try{return JSON.parse(localStorage.getItem(ELOG_KEY)||'{}')}catch(e){return{};} })();
+  const elog=(() => { try{return JSON.parse(_store.getItem(ELOG_KEY)||'{}')}catch(e){return{};} })();
   const volByWeek={};
   Object.values(elog).forEach(arr=>{
     if(!Array.isArray(arr)) return;
@@ -2474,7 +2504,7 @@ function renderWChart(){
 // INSTALL BANNER
 // ═══════════════════════════════════════════════════
 function dismissInstallBanner(){
-  localStorage.setItem('pf_installDismissed','1');
+  _store.setItem('pf_installDismissed','1');
   document.getElementById('install-banner').style.display='none';
 }
 
@@ -2483,13 +2513,13 @@ function dismissInstallBanner(){
 // ═══════════════════════════════════════════════════
 window.addEventListener('load',()=>{
   // ── Migrate old single-user settings → multi-user ──
-  if(!localStorage.getItem(USERS_KEY)){
-    const old=localStorage.getItem(SETTINGS_KEY);
+  if(!_store.getItem(USERS_KEY)){
+    const old=_store.getItem(SETTINGS_KEY);
     if(old){
       try{
         const s=JSON.parse(old);
         const migrated={id:'u_0',name:s.name||'המשתמש שלי',age:s.age||31,weight:s.weight||60,height:s.height||170,gender:'m',goal:'lean_bulk',activity:1.55,calories:s.calories||2750};
-        const apiKey=localStorage.getItem('proFit_apiKey');
+        const apiKey=_store.getItem('proFit_apiKey');
         if(apiKey) migrated.apiKey=apiKey;
         saveUsers([migrated]);
         setActiveUserId('u_0');
@@ -2525,7 +2555,7 @@ window.addEventListener('load',()=>{
   renderWLog();
   renderWChart();
   // Install banner
-  if(localStorage.getItem('pf_installDismissed')){
+  if(_store.getItem('pf_installDismissed')){
     const b=document.getElementById('install-banner'); if(b) b.style.display='none';
   }
   // Splash fade-out
@@ -2706,7 +2736,7 @@ function cleanEmojis(){
 // TRAINING LOG (יומן משקלים)
 // ═══════════════════════════════════════════════════
 const ELOG_KEY='proFit_elog';
-function getElog(){ try{return JSON.parse(localStorage.getItem(ELOG_KEY)||'{}')}catch(e){return{};} }
+function getElog(){ try{return JSON.parse(_store.getItem(ELOG_KEY)||'{}')}catch(e){return{};} }
 /** @param {string} key @param {number} kg @param {number} reps */
 function saveElogEntry(key,kg,reps){
   if(!key||typeof kg!=='number'||kg<0||kg>500)return;
@@ -2943,7 +2973,7 @@ function elogSave(key){
   const prs=getPRs(); const prev=prs[key];
   if(!prev||kg>prev.kg||(kg===prev.kg&&reps>prev.reps)){
     prs[key]={kg,reps,date:todayStr()};
-    localStorage.setItem(PR_KEY,JSON.stringify(prs));
+    _store.setItem(PR_KEY,JSON.stringify(prs));
     showToast('שיא חדש! '+kg+'ק״ג × '+reps);
     launchConfetti();
     if(navigator.vibrate) navigator.vibrate([200,100,200]);
@@ -3007,8 +3037,8 @@ let _selectedFood=null;
 let _searchResults=[];   // current dropdown results (local + Open Food Facts)
 let _offReqId=0;         // guards against out-of-order async responses
 
-function getFoodLog(){ try{const d=localStorage.getItem(FOOD_KEY+'_'+todayStr());return d?JSON.parse(d):[]}catch(e){return[];} }
-function saveFoodLog(log){ localStorage.setItem(FOOD_KEY+'_'+todayStr(),JSON.stringify(log)); }
+function getFoodLog(){ try{const d=_store.getItem(FOOD_KEY+'_'+todayStr());return d?JSON.parse(d):[]}catch(e){return[];} }
+function saveFoodLog(log){ _store.setItem(FOOD_KEY+'_'+todayStr(),JSON.stringify(log)); }
 
 function renderFoodPanel(){
   const wrap=document.getElementById('food-content'); if(!wrap) return;
@@ -3232,10 +3262,10 @@ let _chatRendered=false;
 function renderChatPanel(){
   const wrap=document.getElementById('chat-content'); if(!wrap) return;
   if(!_chatHistory.length){
-    try{_chatHistory=JSON.parse(localStorage.getItem('pf_chat')||'[]');}catch(e){_chatHistory=[];}
+    try{_chatHistory=JSON.parse(_store.getItem('pf_chat')||'[]');}catch(e){_chatHistory=[];}
   }
   const s=getSettings();
-  const apiKey=localStorage.getItem('proFit_apiKey')||'';
+  const apiKey=_store.getItem('proFit_apiKey')||'';
   const foodLog=getFoodLog();
   const totals=foodLog.reduce((a,e)=>({cal:a.cal+e.cal,p:a.p+e.p}),{cal:0,p:0});
 
@@ -3279,7 +3309,7 @@ function renderWelcomeMsg(s,totals){
 }
 
 async function sendChat(){
-  const apiKey=localStorage.getItem('proFit_apiKey')||'';
+  const apiKey=_store.getItem('proFit_apiKey')||'';
   if(!apiKey){showPanel('settings');return;}
   const inp=document.getElementById('chat-input');
   const msg=(inp?.value||'').trim();
@@ -3400,13 +3430,13 @@ const LEVELS=[
   {xp:1000,max:1500,name:'מכונה',badge:'LV 5'},
   {xp:1500,max:99999,name:'אגדה',badge:'LV 6'},
 ];
-function getXP(){return parseInt(localStorage.getItem(XP_KEY)||'0');}
+function getXP(){return parseInt(_store.getItem(XP_KEY)||'0');}
 function getLevelData(xp){return LEVELS.slice().reverse().find(l=>xp>=l.xp)||LEVELS[0];}
 function addXP(amount){
   const old=getXP();
   const oldLvl=getLevelData(old);
   const newXP=old+amount;
-  localStorage.setItem(XP_KEY,newXP);
+  _store.setItem(XP_KEY,newXP);
   const newLvl=getLevelData(newXP);
   if(newLvl.badge!==oldLvl.badge) showLevelUpToast(newLvl.name,newLvl.badge);
   renderXPWidget();
@@ -3456,8 +3486,8 @@ function getISOWeek(){
 }
 function getBossKey(){return BOSS_KEY+new Date().getFullYear()+'-W'+String(getISOWeek()).padStart(2,'0');}
 function getCurrentBoss(){return BOSS_CHALLENGES[getISOWeek()%BOSS_CHALLENGES.length];}
-function getBossProgress(){return parseInt(localStorage.getItem(getBossKey())||'0');}
-function setBossProgress(v){localStorage.setItem(getBossKey(),v);}
+function getBossProgress(){return parseInt(_store.getItem(getBossKey())||'0');}
+function setBossProgress(v){_store.setItem(getBossKey(),v);}
 function renderBossCard(){
   if(!document.getElementById('boss-week-tag')) return; // boss card not in DOM
   const boss=getCurrentBoss();
@@ -3494,7 +3524,7 @@ function bossAddProgress(){
 // ═══════════════════════════════════════════════════
 function checkDeload(){
   const key='pf_deloadDismissed_'+new Date().getFullYear()+'-W'+getISOWeek();
-  if(localStorage.getItem(key)) return;
+  if(_store.getItem(key)) return;
   // Count consecutive weeks with workouts
   const log=getLog();
   const weeks=new Set(Object.keys(log).map(d=>{ const dt=new Date(d); const w=getISOWeekFromDate(dt); return dt.getFullYear()+'-W'+w; }));
@@ -3507,7 +3537,7 @@ function getISOWeekFromDate(d){
 }
 function dismissDeload(){
   const key='pf_deloadDismissed_'+new Date().getFullYear()+'-W'+getISOWeek();
-  localStorage.setItem(key,'1');
+  _store.setItem(key,'1');
   document.getElementById('deload-banner')?.classList.remove('show');
 }
 
@@ -3592,7 +3622,7 @@ function updateNutritionTiming(){
   const inp=document.getElementById('workout-time-input');
   if(!inp) return;
   const val=inp.value||'18:00';
-  localStorage.setItem('pf_workoutTime',val);
+  _store.setItem('pf_workoutTime',val);
   const [h,m]=val.split(':').map(Number);
   const base=h*60+m;
   // Simple time arithmetic
@@ -3863,7 +3893,7 @@ function _repRange(ex){
 function _plannedSets(ex){ return setsToday(ex); }
 function _history(key){
   try{
-    const all=JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}')[key]||[];
+    const all=JSON.parse(_store.getItem(SETLOG_KEY)||'{}')[key]||[];
     // Today's own entry is written the moment you leave an exercise, so it
     // would come back as "last session" the moment you returned to it, and the
     // engine would prescribe off the sets just performed.
@@ -3949,7 +3979,7 @@ function prescriptionHTML(p){
 // view so an existing user's block begins now rather than in a fabricated past.
 const MESO_KEY='pf_meso_start';
 function _mesoStart(){
-  let s=localStorage.getItem(MESO_KEY);
+  let s=_store.getItem(MESO_KEY);
   if(!s||!/^\d{4}-\d{2}-\d{2}$/.test(s)){
     const d=new Date(); d.setDate(d.getDate()-((d.getDay()+6)%7)); // back to Monday
     s=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -4022,7 +4052,7 @@ function setsLabelToday(ex){
 }
 /** Restart the block from this week. */
 function resetMesocycle(){
-  localStorage.removeItem(MESO_KEY); _mesoStart();
+  _store.removeItem(MESO_KEY); _mesoStart();
   if(typeof renderAdaptivePanels==='function') renderAdaptivePanels();
   if(typeof showToast==='function') showToast('מחזור חדש התחיל — שבוע 1');
 }
@@ -4226,7 +4256,7 @@ document.addEventListener('visibilitychange',()=>{
 });
 function gymPickTimer(sec){
   if(_gymTimerIv){ clearInterval(_gymTimerIv); _gymTimerIv=null; }
-  _lastTimerSec=sec; localStorage.setItem('pf_lastTimer',String(sec));
+  _lastTimerSec=sec; _store.setItem('pf_lastTimer',String(sec));
   _gymTimerTotal=sec; _gymTimerRemain=sec;
   const zone=document.getElementById('gym-rest-timer');
   const msg=document.getElementById('gym-rest-msg');
@@ -4638,7 +4668,7 @@ function renderSubNav(name){
 
 // LIGHT / DARK / AMOLED THEME — defined below in AMOLED section
 function initTheme(){
-  const t=localStorage.getItem('pf_theme')||'dark';
+  const t=_store.getItem('pf_theme')||'dark';
   applyTheme(t);
 }
 
@@ -4716,7 +4746,7 @@ function injectOverloadBadges(){
 // BODY MEASUREMENTS
 // ═══════════════════════════════════════════════════
 const MEAS_KEY='pf_meas';
-function getMeasurements(){ try{return JSON.parse(localStorage.getItem(MEAS_KEY)||'[]')}catch(e){return[];} }
+function getMeasurements(){ try{return JSON.parse(_store.getItem(MEAS_KEY)||'[]')}catch(e){return[];} }
 function saveMeasurement(){
   const chest=parseFloat(document.getElementById('meas-chest')?.value)||null;
   const waist=parseFloat(document.getElementById('meas-waist')?.value)||null;
@@ -4725,7 +4755,7 @@ function saveMeasurement(){
   if(!chest&&!waist&&!arm&&!hip) return;
   const arr=getMeasurements();
   arr.unshift({date:todayStr(),chest,waist,arm,hip});
-  localStorage.setItem(MEAS_KEY,JSON.stringify(arr.slice(0,50)));
+  _store.setItem(MEAS_KEY,JSON.stringify(arr.slice(0,50)));
   ['meas-chest','meas-waist','meas-arm','meas-hip'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   renderMeasurements();
   if(navigator.vibrate) navigator.vibrate(30);
@@ -4759,7 +4789,7 @@ function setRPE(v){
   const rpe=_getJSON(RPE_KEY,{});
   if(!rpe[today]) rpe[today]=[];
   rpe[today].push({t:new Date().toTimeString().slice(0,5),v});
-  localStorage.setItem(RPE_KEY,JSON.stringify(rpe));
+  _store.setItem(RPE_KEY,JSON.stringify(rpe));
 }
 
 // ═══════════════════════════════════════════════════
@@ -4810,9 +4840,12 @@ function exportData(){
     // were never in a backup. The API key is left out on purpose: a backup
     // file travels, and a credential should not travel with it.
     all: (()=>{ const o={};
-      for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i);
+      // Raw access on purpose: these are real key names, already carrying any
+      // profile suffix, so re-namespacing them would read back nothing. It also
+      // means a backup covers every profile, not just the active one.
+      for(let i=0;i<_rawLS.length;i++){ const k=_rawLS.key(i);
         if(/^(pf_|proFit_)/.test(k) && k!=='proFit_apiKey' && k!=='pf_errors')
-          o[k]=localStorage.getItem(k); }
+          o[k]=_rawLS.getItem(k); }
       return o; })(),
     exported: new Date().toISOString()
   };
@@ -4840,16 +4873,16 @@ function importData(e){
       if(d.all&&typeof d.all==='object')
         Object.keys(d.all).forEach(k=>{
           if(/^(pf_|proFit_)/.test(k)&&k!=='proFit_apiKey'&&typeof d.all[k]==='string')
-            localStorage.setItem(k,d.all[k]);
+            _rawLS.setItem(k,d.all[k]);   // restore under the exact key it was saved as
         });
-      if(d.users)    localStorage.setItem(USERS_KEY,    JSON.stringify(d.users));
-      if(d.settings) localStorage.setItem(SETTINGS_KEY, JSON.stringify(d.settings));
-      if(d.log)      localStorage.setItem(LOG_KEY,      JSON.stringify(d.log));
-      if(d.prs)      localStorage.setItem(PR_KEY,       JSON.stringify(d.prs));
-      if(d.elog)         localStorage.setItem(ELOG_KEY,      JSON.stringify(d.elog));
-      if(d.setlog)       localStorage.setItem(SETLOG_KEY,   JSON.stringify(d.setlog));
-      if(d.wlog)         localStorage.setItem(WLOG_KEY,      JSON.stringify(d.wlog));
-      if(d.measurements) localStorage.setItem(MEAS_KEY,      JSON.stringify(d.measurements));
+      if(d.users)    _store.setItem(USERS_KEY,    JSON.stringify(d.users));
+      if(d.settings) _store.setItem(SETTINGS_KEY, JSON.stringify(d.settings));
+      if(d.log)      _store.setItem(LOG_KEY,      JSON.stringify(d.log));
+      if(d.prs)      _store.setItem(PR_KEY,       JSON.stringify(d.prs));
+      if(d.elog)         _store.setItem(ELOG_KEY,      JSON.stringify(d.elog));
+      if(d.setlog)       _store.setItem(SETLOG_KEY,   JSON.stringify(d.setlog));
+      if(d.wlog)         _store.setItem(WLOG_KEY,      JSON.stringify(d.wlog));
+      if(d.measurements) _store.setItem(MEAS_KEY,      JSON.stringify(d.measurements));
       showToast('נתונים יובאו בהצלחה!');
       setTimeout(()=>location.reload(),1200);
     }catch(err){
@@ -4863,7 +4896,7 @@ function importData(e){
 // ─── Test API Key ─────────────────────────────────────────────────────────
 async function testApiKey(){
   const key=(document.getElementById('sf-apikey')?.value||'').trim()
-           ||localStorage.getItem('proFit_apiKey')||'';
+           ||_store.getItem('proFit_apiKey')||'';
   if(!key){showToast('הכנס מפתח API קודם');return;}
   const btn=document.getElementById('test-api-btn');
   if(btn){btn.textContent='בודק…';btn.disabled=true;}
@@ -4997,10 +5030,10 @@ function applyTheme(t){
   root.setAttribute('data-theme',t==='light'?'light':t==='amoled'?'amoled':'');
   const btn=document.getElementById('theme-btn');
   if(btn) btn.textContent=t==='light'?'ערכה: בהירה':t==='amoled'?'ערכה: AMOLED':'ערכה: כהה';
-  localStorage.setItem('pf_theme',t);
+  _store.setItem('pf_theme',t);
 }
 function toggleTheme(){
-  const cur=localStorage.getItem('pf_theme')||'dark';
+  const cur=_store.getItem('pf_theme')||'dark';
   const next={dark:'light',light:'amoled',amoled:'dark'}[cur]||'dark';
   applyTheme(next);
 }
@@ -5084,14 +5117,14 @@ function checkProgressiveSuggestion(exKey,kg,reps){
 const RECOVERY_KEY='pf_recovery';
 function getRecoveryToday(){
   try{
-    const d=JSON.parse(localStorage.getItem(RECOVERY_KEY)||'{}');
+    const d=JSON.parse(_store.getItem(RECOVERY_KEY)||'{}');
     return d.date===todayStr()?d:null;
   }catch(e){return null;}
 }
 function saveRecovery(sleep,energy,soreness){
   const score=Math.round((sleep+energy+(6-soreness))/3*2); // 1–10
   const rec={date:todayStr(),sleep,energy,soreness,score};
-  localStorage.setItem(RECOVERY_KEY,JSON.stringify(rec));
+  _store.setItem(RECOVERY_KEY,JSON.stringify(rec));
   renderRecoveryCard();
   if(score<=3) showToast('התאוששות נמוך מאוד — מנוחה מלאה מומלצת היום!',4000);
   else if(score<=5) showToast('התאוששות בינוני — שקול אימון קל / Deload',3000);
@@ -5182,7 +5215,7 @@ function _buildWeekStats(weekDates){
     arr.forEach(e=>{ if(weekDates.includes(e.date)) weekVol+=Math.round((e.kg||0)*(e.reps||0)*(e.sets||1)); });
   });
   const weekPRs=Object.entries(prs).filter(([,v])=>weekDates.includes(v.date)).length;
-  const foodLogs=weekDates.map(d=>{try{return JSON.parse(localStorage.getItem(FOOD_KEY+'_'+d)||'[]');}catch(e){return[];}});
+  const foodLogs=weekDates.map(d=>{try{return JSON.parse(_store.getItem(FOOD_KEY+'_'+d)||'[]');}catch(e){return[];}});
   const avgCal=Math.round(foodLogs.reduce((s,fl)=>s+fl.reduce((a,f)=>a+(f.cal||0)*(f.qty||1),0),0)/Math.max(1,foodLogs.filter(fl=>fl.length).length));
   return {workoutDays,weekPRs,weekVol,avgCal};
 }
@@ -5240,7 +5273,7 @@ function saveMeasurementFull(){
   if(!Object.keys(vals).length){showToast('הזן לפחות מדידה אחת');return;}
   const arr=getMeasurements();
   arr.unshift({date:todayStr(),...vals});
-  localStorage.setItem(MEAS_KEY,JSON.stringify(arr.slice(0,60)));
+  _store.setItem(MEAS_KEY,JSON.stringify(arr.slice(0,60)));
   fields.forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   renderMeasurementsFull();
   showToast('מדידות נשמרו!');
@@ -6109,6 +6142,7 @@ function cfTabata(){
 // EX and WORKOUT_PLANS are already fully readable in this file, which is
 // served as-is; exposing them costs no privacy and makes the data auditable.
 Object.assign(window,{EX,WORKOUT_PLANS,_isHeavyCompound,_loadStep,_repRange,setsToday,todayStr,_dateKey,
+  _store,_ns,getPRs,savePREntry,getElog,getLog,
   prescribe,prescriptionHTML,prescriptionLabel,currentWave,resetMesocycle,setsToday,setsLabelToday,roundsToday,
   gymPairCheck,toggleExSearch,estimateMinutes,_placeWarmup,initCollapsibles,renderSubNav,fixNumericRanges,
   openModal,closeModal,closeModalBg,closeAltModal,
