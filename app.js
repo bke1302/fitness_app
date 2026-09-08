@@ -1503,7 +1503,7 @@ function savePRFromModal(){
   if(isNaN(kg)||isNaN(reps)||kg<=0||reps<=0){if(disp){disp.textContent='הזן ק"ג וחזרות';disp.style.color='var(--red)';}return;}
   const prs=getPRs(); const prev=prs[key];
   const isNew=!prev||kg>prev.kg||(kg===prev.kg&&reps>prev.reps);
-  prs[key]={kg,reps,date:new Date().toISOString().slice(0,10)};
+  prs[key]={kg,reps,date:todayStr()};
   localStorage.setItem(PR_KEY,JSON.stringify(prs));
   if(disp){
     disp.textContent=isNew?'שיא חדש! '+kg+'ק"ג × '+reps:'נשמר: '+kg+'ק"ג × '+reps;
@@ -1663,7 +1663,10 @@ function savePREntry(key,kg,reps){
 const LOG_KEY='proFit_log';
 function getLog(){ try{return JSON.parse(localStorage.getItem(LOG_KEY)||'{}')}catch(e){return{};} }
 function saveLog(log){ _safeSet(LOG_KEY,JSON.stringify(log)); }
-function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+/** A YYYY-MM-DD key in the device's own timezone — never toISOString(), which
+    is UTC and lands on yesterday for the first hours of every Israeli day. */
+function _dateKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function todayStr(){ return _dateKey(new Date()); }
 
 function initCheckboxes(){
   const today=todayStr(); const log=getLog();
@@ -1796,7 +1799,7 @@ function computeStreak(){
     const d=new Date(today); d.setDate(today.getDate()-i);
     const dow=d.getDay();
     if(!trainDays.includes(dow)) continue;
-    const ds=d.toISOString().slice(0,10);
+    const ds=_dateKey(d);
     if(log[ds]?.__complete) streak++;
     else break;
   }
@@ -1843,7 +1846,7 @@ function renderWeeklySummary(){
   const weekDates=[];
   for(let i=0;i<7;i++){
     const d=new Date(today); d.setDate(today.getDate()-i);
-    weekDates.push(d.toISOString().slice(0,10));
+    weekDates.push(_dateKey(d));
   }
   // workouts completed this week
   weekDates.forEach(ds=>{ if(log[ds]&&Object.values(log[ds]).some(v=>v===true||v===1)) workouts++; });
@@ -1920,7 +1923,7 @@ function updateStreak(){
   let done=0;
   for(let i=0;i<7;i++){
     const d=new Date(today);d.setDate(today.getDate()-i);
-    const ds=d.toISOString().slice(0,10);
+    const ds=_dateKey(d);
     if(trainDays.includes(d.getDay())&&log[ds]?.__complete) done++;
   }
   const el=document.getElementById('week-workouts-display');
@@ -2188,7 +2191,7 @@ function initTodayHero(){
     if(panel){
       for(let j=0;j<7;j++){
         const dt=new Date(mon);dt.setDate(mon.getDate()+j);
-        const key=dt.toISOString().slice(0,10);
+        const key=_dateKey(dt);
         if(fullLog[key]?.__complete){
           const dow=dt.getDay();
           if(dow===i){c.classList.add('done-day');weekDone++;break;}
@@ -2390,7 +2393,7 @@ function renderWChart(){
   const ysK=k=>P.t+(1-(k-minK)/(maxK-minK))*(H-P.t-P.b);
 
   // ── Weekly Volume from elog (red, right Y) ──
-  function getWeekKey(dateStr){const d=new Date(dateStr);const day=d.getDay();const diff=d.getDate()-(day||7)+1;const mon=new Date(d);mon.setDate(diff);return mon.toISOString().slice(0,10);}
+  function getWeekKey(dateStr){const d=new Date(dateStr);const day=d.getDay();const diff=d.getDate()-(day||7)+1;const mon=new Date(d);mon.setDate(diff);return _dateKey(mon);}
   const elog=(() => { try{return JSON.parse(localStorage.getItem(ELOG_KEY)||'{}')}catch(e){return{};} })();
   const volByWeek={};
   Object.values(elog).forEach(arr=>{
@@ -4684,14 +4687,14 @@ function fireConfetti(){
 function _weekMon(dateStr){
   const d=new Date(dateStr); const day=d.getDay();
   const diff=d.getDate()-(day===0?6:day-1);
-  const m=new Date(d); m.setDate(diff); return m.toISOString().slice(0,10);
+  const m=new Date(d); m.setDate(diff); return _dateKey(m);
 }
 function injectOverloadBadges(){
   const elog=getElog();
   const today=new Date();
-  const thisW=_weekMon(today.toISOString().slice(0,10));
+  const thisW=_weekMon(_dateKey(today));
   const lastWDate=new Date(today); lastWDate.setDate(today.getDate()-7);
-  const lastW=_weekMon(lastWDate.toISOString().slice(0,10));
+  const lastW=_weekMon(_dateKey(lastWDate));
   document.querySelectorAll('.ex-table tbody tr[onclick]').forEach(tr=>{
     const m=tr.getAttribute('onclick').match(/openModal\('(\w+)'\)/);
     if(!m) return;
@@ -4802,6 +4805,15 @@ function exportData(){
     setlog: _getJSON(SETLOG_KEY,{}),
     wlog: _getJSON(WLOG_KEY,[]),
     measurements: _getJSON(MEAS_KEY,[]),
+    // Everything else the app stores, verbatim — including the per-day
+    // proFit_food_<date> keys, which are the largest body of history here and
+    // were never in a backup. The API key is left out on purpose: a backup
+    // file travels, and a credential should not travel with it.
+    all: (()=>{ const o={};
+      for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i);
+        if(/^(pf_|proFit_)/.test(k) && k!=='proFit_apiKey' && k!=='pf_errors')
+          o[k]=localStorage.getItem(k); }
+      return o; })(),
     exported: new Date().toISOString()
   };
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -4823,6 +4835,13 @@ function importData(e){
       if(!d||typeof d!=='object'||(!d.users&&!d.log&&!d.prs&&!d.elog)){
         showToast('קובץ גיבוי לא תקין');return;
       }
+      // Restore the bulk first, then the named keys, so a backup written by an
+      // older version (which has no `all`) still imports exactly as it used to.
+      if(d.all&&typeof d.all==='object')
+        Object.keys(d.all).forEach(k=>{
+          if(/^(pf_|proFit_)/.test(k)&&k!=='proFit_apiKey'&&typeof d.all[k]==='string')
+            localStorage.setItem(k,d.all[k]);
+        });
       if(d.users)    localStorage.setItem(USERS_KEY,    JSON.stringify(d.users));
       if(d.settings) localStorage.setItem(SETTINGS_KEY, JSON.stringify(d.settings));
       if(d.log)      localStorage.setItem(LOG_KEY,      JSON.stringify(d.log));
@@ -6089,7 +6108,7 @@ function cfTabata(){
 
 // EX and WORKOUT_PLANS are already fully readable in this file, which is
 // served as-is; exposing them costs no privacy and makes the data auditable.
-Object.assign(window,{EX,WORKOUT_PLANS,_isHeavyCompound,_loadStep,_repRange,setsToday,
+Object.assign(window,{EX,WORKOUT_PLANS,_isHeavyCompound,_loadStep,_repRange,setsToday,todayStr,_dateKey,
   prescribe,prescriptionHTML,prescriptionLabel,currentWave,resetMesocycle,setsToday,setsLabelToday,roundsToday,
   gymPairCheck,toggleExSearch,estimateMinutes,_placeWarmup,initCollapsibles,renderSubNav,fixNumericRanges,
   openModal,closeModal,closeModalBg,closeAltModal,
