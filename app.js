@@ -3859,8 +3859,14 @@ function _repRange(ex){
 }
 function _plannedSets(ex){ return setsToday(ex); }
 function _history(key){
-  try{ return JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}')[key]||[]; }
-  catch(e){ return []; }
+  try{
+    const all=JSON.parse(localStorage.getItem(SETLOG_KEY)||'{}')[key]||[];
+    // Today's own entry is written the moment you leave an exercise, so it
+    // would come back as "last session" the moment you returned to it, and the
+    // engine would prescribe off the sets just performed.
+    const t=todayStr();
+    return all.filter(e=>e&&e.date!==t);
+  }catch(e){ return []; }
 }
 /** Sets that count: a warm-up at a much lighter load should not veto a
     progression, so anything under 80% of the session's top load is ignored. */
@@ -4112,7 +4118,12 @@ function gymCheckSet(i){
     el.classList.remove('done'); el.textContent=''; el.style.background='';
     const row=document.getElementById('gym-sr-'+i);
     if(row){ row.classList.remove('done');
-      row.querySelectorAll('input').forEach(inp=>inp.disabled=false); }
+      // Clear the values too. The save loop reads inputs whether or not the set
+      // is ticked, so a mistyped weight left behind here becomes a permanent PR.
+      row.querySelectorAll('input').forEach(inp=>{inp.disabled=false; inp.value='';}); }
+    // Actually undo it, the way the superset path already does.
+    const uex=_gymExercises[_gymIdx], ut=todayStr(), ul=getLog();
+    if(uex&&ul[ut]&&ul[ut][uex.name]){ delete ul[ut][uex.name][i]; saveLog(ul); }
     return;
   }
   // Read kg/reps from inline inputs
@@ -4192,6 +4203,9 @@ function gymPrev(){
   renderGymExercise();
 }
 function closeGymMode(){
+  // Save before tearing anything down: leaving by the ✕ or ESC used to discard
+  // whatever was on screen, because only next/prev ever wrote to the setlog.
+  try{ _saveGymExToSetlog(); }catch(e){}
   document.getElementById('gym-overlay').classList.remove('open');
   document.body.style.overflow='';
   gymReleaseWakeLock();
@@ -4200,6 +4214,13 @@ function closeGymMode(){
   cancelGymTimer();
   window.speechSynthesis?.cancel();
 }
+// A phone backgrounds the app the second a message arrives mid-set, and none
+// of the close paths run then — so the screen would be lost on return.
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState!=='hidden') return;
+  if(!document.getElementById('gym-overlay')?.classList.contains('open')) return;
+  try{ _saveGymExToSetlog(); }catch(e){}
+});
 function gymPickTimer(sec){
   if(_gymTimerIv){ clearInterval(_gymTimerIv); _gymTimerIv=null; }
   _lastTimerSec=sec; localStorage.setItem('pf_lastTimer',String(sec));
