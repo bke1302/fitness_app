@@ -3819,17 +3819,32 @@ function gymPairCheck(r,s){
 const _MAX_JUMP_FRACTION = 0.05;
 
 function _isLowerBody(ex){
-  return /רגל|ירכ|ישבן|שוק|ארבע ראשי|ירך אחורי|מקרבים/.test(ex?.cat||'');
+  // 'כל הגוף' is the deadlift, the only entry with that category and the most
+  // loadable lift here — it takes the lower-body jump, not the upper one.
+  return /רגל|ירכ|ישבן|שוק|ארבע ראשי|ירך אחורי|מקרבים|כל הגוף/.test(ex?.cat||'');
 }
-function _isCompound(ex){
-  return /כבד|בינוני/.test(ex?.lvl||'') && !/בידוד/.test(ex?.lvl||'');
+/**
+ * Is this a heavy compound? `lvl` alone cannot say: 47 entries store a numeric
+ * difficulty and the Hebrew ones mix difficulty with load class. `_exLvl`
+ * normalizes what is there; where that only says 'medium', the prescribed rest
+ * and the rep range are the fields that actually encode load.
+ */
+function _isHeavyCompound(ex){
+  if(!ex) return false;
+  // The numeric scale is difficulty (1 easy .. 3 hard), a different axis from
+  // load class, so it decides nothing here — an ab wheel is hard and weightless.
+  const lvl=typeof ex.lvl==='number'?'':String(ex.lvl||'');
+  if(/בידוד|קל/.test(lvl)) return false;
+  if(/כבד/.test(lvl)) return true;
+  const rest=_restSec(_exRest?_exRest(ex):ex.rest);
+  return rest>=120 && _repRange(ex).min<=8;
 }
 /** Smallest load step this exercise can actually take in a real gym. */
 function _loadStep(ex){
   const eq=ex?.eq||'';
   if(eq==='none'||eq==='band') return 0;          // no external load to add
   if(eq==='db') return 2;                          // one dumbbell jump, the pair
-  if(_isLowerBody(ex)) return _isCompound(ex)?5:2.5;
+  if(_isLowerBody(ex)) return _isHeavyCompound(ex)?5:2.5;
   return 2.5;
 }
 /** Reps are per side when the scheme says so, which changes nothing here but
@@ -3972,7 +3987,7 @@ function setsToday(ex){
   const wv=_todayWave();
   if(!wv) return base;
   if(wv.label==='דילואד') return Math.max(2,Math.ceil(base/2));
-  if(/כבד/.test((ex&&ex.lvl)||'')) return base;
+  if(_isHeavyCompound(ex)) return base;   // was /כבד/ on a field 47 entries store as a number
   // One added set per isolation, held through the peak week. Peak earns its
   // name on intensity (RIR 1), not on another ten sets a session.
   return wv.week>=2?base+1:base;
@@ -6047,7 +6062,10 @@ function cfTabata(){
   const st=document.getElementById('cf-timer-status'); if(st) st.textContent='Tabata — 8×(20 עבודה/10 מנוחה)';
 }
 
-Object.assign(window,{prescribe,prescriptionHTML,prescriptionLabel,currentWave,resetMesocycle,setsToday,setsLabelToday,roundsToday,
+// EX and WORKOUT_PLANS are already fully readable in this file, which is
+// served as-is; exposing them costs no privacy and makes the data auditable.
+Object.assign(window,{EX,WORKOUT_PLANS,_isHeavyCompound,_loadStep,_repRange,setsToday,
+  prescribe,prescriptionHTML,prescriptionLabel,currentWave,resetMesocycle,setsToday,setsLabelToday,roundsToday,
   gymPairCheck,toggleExSearch,estimateMinutes,_placeWarmup,initCollapsibles,renderSubNav,fixNumericRanges,
   openModal,closeModal,closeModalBg,closeAltModal,
   cfFilter,cfToggleWod,cfOpenWod,cfSaveScore,cfTimerToggle,cfTimerReset,cfCountdown,cfTabata,
