@@ -6,7 +6,7 @@
 })();
 
 // HTML escape utility — wrap user-supplied strings before injecting into innerHTML
-function _esc(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function _esc(str){ return String(str==null?'':str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function _ic(n){ return '<svg class="ico" aria-hidden="true"><use href="#i-'+n+'"/></svg>'; }
 
 // ─── DOM helpers (reduce querySelector/getElementById repetition) ─────────────
@@ -3247,7 +3247,7 @@ function renderChatPanel(){
       <div class="chat-wrap">
         <div class="chat-msgs" id="chat-msgs">
           ${_chatHistory.length?'':renderWelcomeMsg(s,totals)}
-          ${_chatHistory.map(m=>`<div class="chat-bubble ${m.role==='user'?'user':'ai'}">${m.content.replace(/\n/g,'<br>')}</div>`).join('')}
+          ${_chatHistory.map(m=>`<div class="chat-bubble ${m.role==='user'?'user':'ai'}">${_esc(m.content).replace(/\n/g,'<br>')}</div>`).join('')}
         </div>
         <div class="chat-input-wrap">
           <textarea class="chat-input" id="chat-input" rows="2" placeholder="שאל על תזונה, ארוחות, מה לאכול אחרי אימון..."></textarea>
