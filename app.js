@@ -3970,11 +3970,15 @@ function currentWave(plan){
 // render, so the answer is memoised for the day.
 let _waveMemo=null;
 function _todayWave(){
-  const d=todayStr();
-  if(_waveMemo&&_waveMemo.d===d) return _waveMemo.w;
+  let u=null,key;
+  try{ u=getActiveUser(); }catch(e){}
+  // Key on everything the answer depends on: the day, the block anchor (which
+  // "start a new cycle" moves) and the plan (which settings can switch).
+  key=todayStr()+'|'+_mesoStart()+'|'+(u?_getPlanKey(u):'');
+  if(_waveMemo&&_waveMemo.k===key) return _waveMemo.w;
   let w=null;
-  try{ const u=getActiveUser(); const pl=u&&_resolvePlan(u); w=pl?currentWave(pl):null; }catch(e){}
-  _waveMemo={d,w};
+  try{ const pl=u&&_resolvePlan(u); w=pl?currentWave(pl):null; }catch(e){}
+  _waveMemo={k:key,w};
   return w;
 }
 /**
