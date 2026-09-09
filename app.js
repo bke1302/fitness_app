@@ -692,7 +692,7 @@ function showPanel(name,btn){
   window.scrollTo(0,0);
   // Sync bottom-nav highlight
   if(typeof setMobileNav==='function'){
-    const navMap={push:'push',pull:'push',legs:'push',arms:'push',schedule:'push',
+    const navMap={push:'push',pull:'push',legs:'push',arms:'push',day5:'push',day6:'push',day7:'push',schedule:'push',
       dashboard:'dashboard',nutrition:'nutrition',food:'nutrition',supplements:'nutrition',
       progress:'progress',elog:'progress',timeline:'progress',settings:'settings',
       chat:'nutrition',crossfit:'push',tips:'settings'};
@@ -709,7 +709,7 @@ function showPanel(name,btn){
   if(name==='food') setTimeout(renderFoodPanel,0);
   if(name==='chat') setTimeout(renderChatPanel,0);
   if(name==='crossfit') setTimeout(renderCrossfitPanel,0);
-  if(['push','pull','legs','arms','day-a','day-b','day-c'].includes(name)) setTimeout(injectSparklines,0);
+  if(['push','pull','legs','arms','day5','day6','day7','day-a','day-b','day-c'].includes(name)) setTimeout(injectSparklines,0);
 }
 // Sidebar was removed from the HTML — keep safe no-ops for any leftover callers
 function openSidebar(){}
@@ -5613,58 +5613,72 @@ const WORKOUT_PLANS={
   },
   5:{
     days:[
-      {id:'push',label:'דחיפה — כבד',shortLabel:'דחיפה',color:'#CCFF00',
-       exercises:['benchPress','inclineBench','ohp','cableFlye','lateralRaise','cableLateral','triPushdown']},
-      {id:'pull',label:'משיכה — כבד',shortLabel:'משיכה',color:'#00D9FF',
-       exercises:['pullup','underhandPulldown','bentRow','cableRow','facePull','reverseFly','bbCurl','hangingLegRaise']},
-      {id:'legs',label:'רגליים',shortLabel:'רגליים',color:'#B47CFF',
-       exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise','seatedCalfRaise']},
-      {id:'arms',label:'רגליים ב׳ — נפח',shortLabel:'רגליים ב׳',color:'#FF7A45',
-       exercises:['legPress','bulgSplit','legCurl','legExt','seatedCalfRaise','sidePlank']},
+      {id:'push',label:'דחיפה א׳ — מוט וכוח',shortLabel:'דחיפה א׳',color:'#CCFF00',
+       exercises:['benchPress','ohp','inclineBench','closeGripBenchDB','lateralRaise','reverseFly','triPushdown']},
+      {id:'pull',label:'משיכה א׳ — משיכה אנכית',shortLabel:'משיכה א׳',color:'#00D9FF',
+       exercises:['pullup','underhandPulldown','cableRow','reverseFly','bbCurl','hammerCurl','hangingLegRaise']},
+      {id:'legs',label:'רגליים א׳ — סקוואט',shortLabel:'רגליים א׳',color:'#B47CFF',
+       exercises:['squat','legPress','legExt','legCurl','calfRaise','sidePlank']},
+      {id:'arms',label:'עליון ב׳ — מכונות וכבלים',shortLabel:'עליון ב׳',color:'#CCFF00',
+       exercises:['inclineChestPress','singleArmRow','machineShoulderPress','tBarRow','pecDeck','cableLateral','facePull','ezCurl','cableTricepOverhead']},
+      {id:'day5',label:'רגליים ב׳ — ציר וחד-צדדי',shortLabel:'רגליים ב׳',color:'#FF7A45',
+       exercises:['deadlift','bulgarianSplit','singleLegRDL','hipThrust','abductorMachine','seatedCalfRaise']},
     ],
     dows:[0,1,3,4,5],
-    schedule:'א׳ דחיפה · ב׳ משיכה · ד׳ רגליים א׳ · ה׳ רגליים ב׳ · ו׳ דחיפה — רגליים פעמיים בשבוע'
+    schedule:'א׳ דחיפה א׳ · ב׳ משיכה א׳ · ד׳ רגליים א׳ · ה׳ עליון ב׳ · ו׳ רגליים ב׳'
   },
   6:{
     days:[
-      {id:'push',label:'דחיפה א׳ — כוח',shortLabel:'דחיפה א׳',color:'#CCFF00',
-       exercises:['benchPress','inclineBench','ohp','cableFlye','lateralRaise','cableLateral','triPushdown']},
-      {id:'pull',label:'משיכה א׳ — רוחב',shortLabel:'משיכה א׳',color:'#00D9FF',
-       exercises:['pullup','underhandPulldown','bentRow','cableRow','facePull','bbCurl','hangingLegRaise']},
-      {id:'legs',label:'רגליים א׳ — ירכיים',shortLabel:'רגליים א׳',color:'#B47CFF',
-       exercises:['squat','legPress','rdl','legCurl','legExt','calfRaise','seatedCalfRaise','sidePlank']},
+      {id:'push',label:'דחיפה א׳ — מוט וכוח',shortLabel:'דחיפה א׳',color:'#CCFF00',
+       exercises:['benchPress','ohp','inclineBench','closeGripBenchDB','lateralRaise','reverseFly','triPushdown']},
+      {id:'pull',label:'משיכה א׳ — משיכה אנכית',shortLabel:'משיכה א׳',color:'#00D9FF',
+       exercises:['pullup','underhandPulldown','cableRow','reverseFly','bbCurl','hammerCurl','hangingLegRaise']},
+      {id:'legs',label:'רגליים א׳ — סקוואט',shortLabel:'רגליים א׳',color:'#B47CFF',
+       exercises:['squat','legPress','legExt','legCurl','calfRaise','sidePlank']},
+      {id:'arms',label:'דחיפה ב׳ — מכונות וכבלים',shortLabel:'דחיפה ב׳',color:'#CCFF00',
+       exercises:['inclineChestPress','pecDeck','machineShoulderPress','cableChestFly','cableLateral','facePull','cableTricepOverhead']},
+      {id:'day5',label:'משיכה ב׳ — חתירה אופקית',shortLabel:'משיכה ב׳',color:'#00D9FF',
+       exercises:['bentRow','tBarRow','singleArmRow','facePull','ezCurl','reverseCurl','cableCrunch']},
+      {id:'day6',label:'רגליים ב׳ — ציר וחד-צדדי',shortLabel:'רגליים ב׳',color:'#FF7A45',
+       exercises:['deadlift','bulgarianSplit','singleLegRDL','hipThrust','abductorMachine','seatedCalfRaise']},
     ],
     dows:[0,1,2,3,4,5],
-    schedule:'א׳ דחיפה · ב׳ משיכה · ג׳ רגליים · ד׳ דחיפה · ה׳ משיכה · ו׳ רגליים — שבת מנוחה מלאה'
+    schedule:'א׳ דחיפה א׳ · ב׳ משיכה א׳ · ג׳ רגליים א׳ · ד׳ דחיפה ב׳ · ה׳ משיכה ב׳ · ו׳ רגליים ב׳ — שישה אימונים שונים'
   },
   '4ab':{
     days:[
       {id:'push',label:'עליון א׳ — כוח עליון',shortLabel:'עליון א׳',color:'#CCFF00',
        exercises:['benchPress','pullup','ohp','bentRow','inclineBench','triPushdown','lateralRaise','reverseFly','hangingLegRaise']},
-      {id:'pull',label:'תחתון א׳ — כוח תחתון',shortLabel:'תחתון א׳',color:'#B47CFF',
+      {id:'pull',label:'תחתון א׳ — סקוואט וכוח',shortLabel:'תחתון א׳',color:'#B47CFF',
        exercises:['squat','rdl','legPress','legCurl','legExt','hipThrust','calfRaise']},
       {id:'legs',label:'עליון ב׳ — נפח עליון',shortLabel:'עליון ב׳',color:'#00D9FF',
        exercises:['ohp','underhandPulldown','inclineChestPress','cableRow','cableFlye','cableLateral','facePull','hammerCurl','skullCrusher','abWheel']},
-      {id:'arms',label:'תחתון ב׳ — נפח תחתון',shortLabel:'תחתון ב׳',color:'#FF7A45',
-       exercises:['legPress','bulgSplit','legExt','legCurl','rdl','hipThrust','calfRaise']},
+      {id:'arms',label:'תחתון ב׳ — ציר וחד-צדדי',shortLabel:'תחתון ב׳',color:'#FF7A45',
+       exercises:['deadlift','bulgarianSplit','legPressNarrow','singleLegRDL','gluteBridge','adductorMachine','seatedCalfRaise']},
     ],
     dows:[0,1,3,4],
     schedule:'א׳ עליון א׳ · ב׳ תחתון א׳ · ד׳ עליון ב׳ · ה׳ תחתון ב׳'
   },
   7:{
     days:[
-      {id:'push',label:'דחיפה — כוח + נפח',shortLabel:'דחיפה',color:'#CCFF00',
-       exercises:['benchPress','inclineBench','ohp','cableFlye','lateralRaise','cableLateral','triPushdown']},
-      {id:'pull',label:'משיכה — כוח + נפח',shortLabel:'משיכה',color:'#00D9FF',
-       exercises:['pullup','underhandPulldown','bentRow','cableRow','facePull','bbCurl','hangingLegRaise']},
-      {id:'legs',label:'רגליים — כוח + נפח',shortLabel:'רגליים',color:'#B47CFF',
-       exercises:['squat','legPress','rdl','legCurl','legExt','hipThrust','calfRaise']},
-      {id:'arms',label:'שחזור פעיל — קל בלבד',shortLabel:'שחזור',color:'#6B7280',
+      {id:'push',label:'דחיפה א׳ — מוט וכוח',shortLabel:'דחיפה א׳',color:'#CCFF00',
+       exercises:['benchPress','ohp','inclineBench','closeGripBenchDB','lateralRaise','reverseFly','triPushdown']},
+      {id:'pull',label:'משיכה א׳ — משיכה אנכית',shortLabel:'משיכה א׳',color:'#00D9FF',
+       exercises:['pullup','underhandPulldown','cableRow','reverseFly','bbCurl','hammerCurl','hangingLegRaise']},
+      {id:'legs',label:'רגליים א׳ — סקוואט',shortLabel:'רגליים א׳',color:'#B47CFF',
+       exercises:['squat','legPress','legExt','legCurl','calfRaise','sidePlank']},
+      {id:'arms',label:'דחיפה ב׳ — מכונות וכבלים',shortLabel:'דחיפה ב׳',color:'#CCFF00',
+       exercises:['inclineChestPress','pecDeck','machineShoulderPress','cableChestFly','cableLateral','facePull','cableTricepOverhead']},
+      {id:'day5',label:'משיכה ב׳ — חתירה אופקית',shortLabel:'משיכה ב׳',color:'#00D9FF',
+       exercises:['bentRow','tBarRow','singleArmRow','facePull','ezCurl','reverseCurl','cableCrunch']},
+      {id:'day6',label:'רגליים ב׳ — ציר וחד-צדדי',shortLabel:'רגליים ב׳',color:'#FF7A45',
+       exercises:['deadlift','bulgarianSplit','singleLegRDL','hipThrust','abductorMachine','seatedCalfRaise']},
+      {id:'day7',label:'שחזור פעיל — קל בלבד',shortLabel:'שחזור',color:'#8A93A6',
        exercises:['facePull','sidePlank','plank']},
     ],
     dows:[0,1,2,3,4,5,6],
-    schedule:'א׳ דחיפה · ב׳ משיכה · ג׳ רגליים · ד׳ שחזור פעיל · ה׳ דחיפה · ו׳ משיכה · ש׳ רגליים — לא מומלץ לאורך זמן'
-  }
+    schedule:'שישה אימונים שונים + יום שחזור פעיל — שבעה ימים ברצף אינם מומלצים'
+  },
 };
 
 function buildExRow(key,num,over){
@@ -5737,6 +5751,43 @@ function _buildSupersetRows(day){
   return out;
 }
 
+// Four panels are written into the HTML; the rest are cloned from the first when
+// a plan needs them. Index in this list IS the day slot — days[i] renders into
+// DAY_PANEL_IDS[i] — which is why a plan's day.id must match its position.
+const DAY_PANEL_IDS=['push','pull','legs','arms','day5','day6','day7'];
+function _ensureDayPanels(n){
+  const src=document.getElementById('panel-push');
+  if(!src) return;
+  const cardSrc=document.querySelector('.workout-card.push');
+  const schedSrc=document.querySelector('#panel-schedule .workout-picker button');
+  DAY_PANEL_IDS.slice(4,n).forEach(pid=>{
+    if(!document.getElementById('panel-'+pid)){
+      const el=src.cloneNode(true);
+      el.id='panel-'+pid;
+      el.classList.remove('active');
+      // the trainer note and warm-up in the template describe the push day
+      el.classList.add('plan-generic');
+      const tb=el.querySelector('.ex-table tbody'); if(tb) tb.innerHTML='';
+      const gb=el.querySelector('.gym-mode-btn');
+      if(gb) gb.setAttribute('onclick',"startGymMode('"+pid+"','','')");
+      src.parentElement.appendChild(el);
+    }
+    if(cardSrc&&!document.querySelector('.workout-card.'+pid)){
+      const c=cardSrc.cloneNode(true);
+      c.classList.remove('push'); c.classList.add(pid);
+      c.setAttribute('onclick',"showPanel('"+pid+"',null);setMobileNav('"+pid+"');");
+      cardSrc.parentElement.appendChild(c);
+    }
+    // Marked rather than matched on the onclick string: renderAdaptivePanels
+    // looks these up by onclick, but finding them again here only needs a flag.
+    if(schedSrc&&!document.querySelector('#panel-schedule [data-day-panel="'+pid+'"]')){
+      const s=schedSrc.cloneNode(true);
+      s.dataset.dayPanel=pid;
+      s.setAttribute('onclick',"showPanel('"+pid+"',null);setMobileNav('"+pid+"');");
+      schedSrc.parentElement.appendChild(s);
+    }
+  });
+}
 function renderAdaptivePanels(){
   const u=getActiveUser();
   const plan=_resolvePlan(u);
@@ -5748,7 +5799,8 @@ function renderAdaptivePanels(){
   const dayName={};
   dows.forEach((d,i)=>{ const id=days[i%days.length].id; if(!(id in dayName)) dayName[id]=HD[d]; });
 
-  const allIds=['push','pull','legs','arms'];
+  _ensureDayPanels(days.length);
+  const allIds=DAY_PANEL_IDS;
   allIds.forEach((pid,i)=>{
     const shown=i<days.length;
     const card=document.querySelector('.workout-card.'+pid);
@@ -5818,7 +5870,9 @@ function renderAdaptivePanels(){
 
   // The trainer-note and warm-up cards are hand-written for the classic
   // PPL/Arms split. On any other plan they describe the wrong workout.
-  const classic=['3abc',4,'4',5,'5',6,'6',7,'7'].includes(_getPlanKey(u));
+  // Plans 5-7 no longer run a push/pull/legs week verbatim, so the hand-written
+  // notes would describe a workout the lifter is not doing.
+  const classic=['3abc',4,'4'].includes(_getPlanKey(u));
   allIds.forEach(pid=>{
     const panel=document.getElementById('panel-'+pid);
     if(!panel) return;
