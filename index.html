@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
-<link rel="stylesheet" href="styles.css?v=37">
+<link rel="stylesheet" href="styles.css?v=38">
 </head>
 <body dir="rtl">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -1406,14 +1406,14 @@
           <div class="sf-split-wrap" style="display:none;margin-top:10px;">
             <label class="settings-label">סגנון תוכנית</label>
             <select id="sf-workout-split-3" class="settings-input" style="cursor:pointer;">
-              <option value="3ab">פלג גוף עליון / תחתון — מתחלף</option>
-              <option value="3abc">דחיפה / משיכה / רגליים</option>
+              <option value="3ab">AB — עליון · תחתון (מתחלף)</option>
+              <option value="3abc">PPL — דחיפה · משיכה · רגליים</option>
               <option value="3ss">סופרסטים — כל הגוף א׳/ב׳/ג׳</option>
             </select>
             <select id="sf-workout-split-4" class="settings-input" style="cursor:pointer;display:none;">
-              <option value="">דחיפה / משיכה / רגליים / ידיים</option>
-              <option value="4ab">פלג גוף עליון / תחתון א׳-ב׳</option>
-              <option value="4ant">חזה·כתפיים·יד קדמית ↔ גב·יד אחורית·רגליים</option>
+              <option value="">PPL — דחיפה · משיכה · רגליים · ידיים</option>
+              <option value="4ab">AB — עליון · תחתון</option>
+              <option value="4ant">ANT — חזה+כתפיים+יד קדמית ↔ גב+יד אחורית+רגליים</option>
             </select>
             <div class="plan-since" id="plan-since"></div>
           </div>
@@ -1825,12 +1825,12 @@
         <!-- 3-day splits -->
         <div id="ob-split-3" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <button class="ob-split-btn" data-split="3ab" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
-            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">פלג גוף עליון / תחתון</div>
-            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">גוף עליון / גוף תחתון</div>
+            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">AB — עליון / תחתון</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">מחלק את הגוף לחצי עליון וחצי תחתון</div>
           </button>
           <button class="ob-split-btn sel" data-split="3abc" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
-            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">דחיפה / משיכה / רגליים</div>
-            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">3 אימונים שונים</div>
+            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">PPL — דחיפה / משיכה / רגליים</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">מחלק לפי סוג התנועה</div>
           </button>
           <button class="ob-split-btn" data-split="3ss" onclick="selectObSplit(this)" style="grid-column:1/-1;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
             <div style="font-weight:800;color:var(--lime);font-size:0.94rem;">סופרסטים — פול-בודי</div>
@@ -1840,16 +1840,16 @@
         <!-- 4-day splits -->
         <div id="ob-split-4" style="display:none;grid-template-columns:1fr 1fr;gap:8px;">
           <button class="ob-split-btn sel" data-split="4" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
-            <div style="font-weight:800;color:var(--red);font-size:0.94rem;">דחיפה/משיכה/רגליים + ידיים</div>
-            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">הפיצול הקלאסי</div>
+            <div style="font-weight:800;color:var(--red);font-size:0.94rem;">PPL — דחיפה/משיכה/רגליים + ידיים</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">מחלק לפי סוג התנועה · הפיצול הקלאסי</div>
           </button>
           <button class="ob-split-btn" data-split="4ab" onclick="selectObSplit(this)" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
-            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">עליון/תחתון א׳-ב׳</div>
-            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">כוח + נפח</div>
+            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">AB — עליון / תחתון</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">מחלק את הגוף לחצי עליון וחצי תחתון · הכי הרבה רגליים</div>
           </button>
           <button class="ob-split-btn" data-split="4ant" onclick="selectObSplit(this)" style="grid-column:1/-1;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;">
-            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">חזה·כתפיים·יד קדמית ↔ גב·יד אחורית·רגליים</div>
-            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">שרירים נגדיים — היד הקדמית טרייה אחרי לחיצות</div>
+            <div style="font-weight:800;color:var(--text);font-size:0.94rem;">ANT — שרירים נגדיים</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">חזה+כתפיים+יד קדמית ↔ גב+יד אחורית+רגליים</div>
           </button>
         </div>
       </div>
@@ -1897,6 +1897,6 @@
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">מנוחה</button>
 </div>
 
-    <script type="module" src="app.js?v=37"></script>
+    <script type="module" src="app.js?v=38"></script>
 </body>
 </html>
