@@ -12,7 +12,7 @@ function _esc(str){ return String(str==null?'':str).replace(/&/g,'&amp;').replac
 // second profile read — and overwrote — the first one's sets, PRs and streak.
 // These keys belong to a profile. Anything not listed (the user list, the
 // active id, settings, the API key) is shared and passes through unchanged.
-const _PER_USER_KEY=/^(pf_setlog2|proFit_elog|proFit_pr|proFit_log|pf_xp|pf_achievements_seen|pf_recovery|pf_rpe|proFit_food|pf_meso_start|proFit_weight|pf_meas|pf_wod_scores|pf_habits|pf_water|pf_boss_|pf_deloadDismissed_|pf_chat)/;
+const _PER_USER_KEY=/^(pf_setlog2|proFit_elog|proFit_pr|proFit_log|pf_xp|pf_plan_since|pf_achievements_seen|pf_recovery|pf_rpe|proFit_food|pf_meso_start|proFit_weight|pf_meas|pf_wod_scores|pf_habits|pf_water|pf_boss_|pf_deloadDismissed_|pf_chat)/;
 const _rawLS=localStorage;
 /**
  * The first profile keeps the original key names, so data already on this
@@ -1347,8 +1347,14 @@ function prefillSettingsForm(){
   // can hold a leftover from another frequency, and the screen naming one plan
   // while the week runs another is how this went unnoticed.
   const _pk=String(_getPlanKey(u));
+  // The wrap's inline display:none is only lifted by the frequency select's own
+  // onchange, which opening settings never fires.
+  const splitWrap=document.querySelector('.sf-split-wrap');
+  if(splitWrap) splitWrap.style.display=(_f===3||_f===4)?'block':'none';
   if(sfsplit3){sfsplit3.value=['3ab','3abc','3ss'].includes(_pk)?_pk:'3abc';sfsplit3.style.display=_f===3?'block':'none';}
   if(sfsplit4){sfsplit4.value=['4ab','4ant'].includes(_pk)?_pk:'';sfsplit4.style.display=_f===4?'block':'none';}
+  const since=document.getElementById('plan-since');
+  if(since) since.textContent=planTenureText(u);
   const sfloc=document.getElementById('sf-workout-location'); if(sfloc) sfloc.value=u.workout_location||'gym';
   const sfeq=document.getElementById('sf-home-equipment'); if(sfeq) sfeq.value=u.home_equipment||'none';
   const sfeqwrap=document.querySelector('.sf-homeeq-wrap');
@@ -5807,6 +5813,31 @@ function _ensureDayPanels(n){
     }
   });
 }
+
+// ─── How long on this plan ───────────────────────────────────────────────────
+// Switching plans costs nothing — history is keyed by exercise, not by plan —
+// but a lifter deciding "I'll run this for a month" needs to know when the month
+// is up. Records the day the resolved plan key last changed.
+const PLAN_SINCE_KEY='pf_plan_since';
+function _planSince(u){
+  const key=String(_getPlanKey(u||getActiveUser()));
+  let rec=null;
+  try{ rec=JSON.parse(_store.getItem(PLAN_SINCE_KEY)||'null'); }catch(e){}
+  if(!rec||rec.key!==key){
+    rec={key,date:todayStr()};
+    _store.setItem(PLAN_SINCE_KEY,JSON.stringify(rec));
+  }
+  return rec;
+}
+function planTenureText(u){
+  const rec=_planSince(u);
+  const [y,m,d]=rec.date.split('-').map(Number);
+  const days=Math.max(0,Math.round((new Date()-new Date(y,m-1,d))/86400000));
+  if(days<7) return days<=1?'התחלת את התוכנית הזו היום':`אתה על התוכנית הזו ${days} ימים`;
+  const w=Math.floor(days/7);
+  const base=w===1?'אתה על התוכנית הזו שבוע':`אתה על התוכנית הזו ${w} שבועות`;
+  return w>=4?base+' — נקודה טובה להחליף, אם בא לך. ההיסטוריה והשיאים נשארים.':base;
+}
 function renderAdaptivePanels(){
   const u=getActiveUser();
   const plan=_resolvePlan(u);
@@ -6278,7 +6309,7 @@ function cfTabata(){
 Object.assign(window,{EX,WORKOUT_PLANS,_isHeavyCompound,_loadStep,_repRange,setsToday,todayStr,_dateKey,
   _store,_ns,getPRs,savePREntry,getElog,getLog,
   getActiveUser,calcNutrition,getSettings,renderNutritionPanel,renderFoodPanel,getFoodLog,
-  _getPlanKey,_resolvePlan,_buildDayCfg,_obState:()=>({freq:_obFreq,split:_obSplit}),
+  _getPlanKey,_resolvePlan,_buildDayCfg,_planSince,planTenureText,_obState:()=>({freq:_obFreq,split:_obSplit}),
   prescribe,prescriptionHTML,prescriptionLabel,currentWave,resetMesocycle,setsToday,setsLabelToday,roundsToday,
   gymPairCheck,toggleExSearch,estimateMinutes,_placeWarmup,initCollapsibles,renderSubNav,fixNumericRanges,
   openModal,closeModal,closeModalBg,closeAltModal,

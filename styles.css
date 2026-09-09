@@ -3308,3 +3308,6 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
 }
 .gym-target-pair .gym-target-val{font-size:1.2rem}
 .gym-target-pair .gym-target-why{margin-top:4px}
+
+/* Plan tenure under the split selector — a fact, not a control, so no border. */
+.plan-since{font-size:.74rem;color:var(--muted2);margin-top:8px;line-height:1.5;}
