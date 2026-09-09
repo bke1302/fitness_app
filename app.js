@@ -385,6 +385,14 @@ const EX = {
     desc:'זהה לגרסת הכבל — קריטי לבריאות הכתף.',
     muscles:'Rear Deltoid, Rotator Cuff, Trapezius.',
     tips:['עיגון בגובה פנים','מרפקים גבוהים ופתוחים','משוך לפנים הפנים','חובה בכל אימון ביתי']},
+  dbReverseFly:{name:'פרפר הפוך עם משקולות',en:'Bent-Over Dumbbell Reverse Fly',e:'',cat:'כתף אחורית',sets:'4×12–20',rest:'45 שנ׳',lvl:'בידוד',eq:'db',
+    desc:'רכינה קדימה בזווית של כ־45 מעלות, משקולות תלויות מתחת לחזה, פתיחה לצדדים עד גובה הכתפיים.',
+    muscles:'Rear Deltoid, Rhomboids, Middle Trapezius.',
+    tips:['גב ישר — הרכינה מהירכיים, לא מהגב','מרפקים כפופים קלות וקבועים לאורך התנועה','הובל עם המרפק, לא עם כף היד','משקל קל — זה בידוד, לא תרגיל כוח','עצור רגע בשיא הפתיחה']},
+  proneReverseFly:{name:'פרפר הפוך בשכיבה על הבטן',en:'Prone Y-T Raise',e:'',cat:'כתף אחורית',sets:'3×12–20',rest:'45 שנ׳',lvl:'בידוד',eq:'none',
+    desc:'שכיבה על הבטן, ידיים מורמות מהרצפה — פעם בצורת Y ופעם בצורת T. ללא ציוד, לכתף האחורית ולשכמות.',
+    muscles:'Rear Deltoid, Middle & Lower Trapezius, Rhomboids.',
+    tips:['המצח נשאר קרוב לרצפה — לא מרימים את הראש','אגודלים כלפי מעלה','ההרמה מהשכמות, לא מהצוואר','עצור שנייה למעלה בכל חזרה','אפשר להחזיק בקבוקי מים להתנגדות']},
   bandLateral:{name:'הרמות צד עם גומייה',en:'Band Lateral Raise',e:'↔',cat:'כתף אמצעית',sets:'3×15–25',rest:'45 שנ׳',lvl:'בידוד',eq:'band',
     desc:'דריכה על הגומייה והרמה לצד. ההתנגדות בשיא בדיוק בנקודת הכיווץ.',
     muscles:'Medial Deltoid.',
@@ -950,10 +958,13 @@ function showAlternatives(exKey, exName){
   if(!alts||!alts.length){ showToast('אין חלופות מוגדרות לתרגיל זה'); return; }
   document.getElementById('alt-title').textContent='חלופות ל: '+exName;
   const list=document.getElementById('alt-list');
+  // The chevron and the pointer cursor promised a tap that never existed: the
+  // alternatives are editorial text, not exercise keys — only 9 of the 108
+  // name a movement the catalogue actually holds, so none of them could be
+  // swapped in even if the row were wired. It reads as a reference list now.
   list.innerHTML=alts.map(a=>`
     <div class="alt-item">
       <div><div class="alt-item-name">${_esc(a.name)}</div><div class="alt-item-tag">${_esc(a.tag)}</div></div>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted2)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </div>`).join('');
   document.getElementById('alt-modal').classList.add('open');
 }
@@ -5406,11 +5417,11 @@ const WORKOUT_PLANS={
   home_bw3:{
     days:[
       {id:'push',label:'פול-בודי א׳ — ביתי',shortLabel:'בית א׳',color:'#FF7A45',
-       exercises:['pushup','doorRow','bwSquat','gluteBridgeSL','pikePushup','calfRaiseHome','plankReach']},
+       exercises:['pushup','doorRow','bwSquat','gluteBridgeSL','pikePushup','proneReverseFly','calfRaiseHome','plankReach']},
       {id:'pull',label:'פול-בודי ב׳ — ביתי',shortLabel:'בית ב׳',color:'#00D9FF',
        exercises:['declinePushup','chinupHome','bulgSplitHome','nordicHome','diamondPushup','hollowHold']},
       {id:'legs',label:'פול-בודי ג׳ — ביתי',shortLabel:'בית ג׳',color:'#B47CFF',
-       exercises:['pikePushup','chinupHome','pistolBox','gluteBridgeSL','pushup','calfRaiseHome','hollowHold']},
+       exercises:['pikePushup','chinupHome','pistolBox','gluteBridgeSL','pushup','proneReverseFly','calfRaiseHome','hollowHold']},
     ],
     dows:[0,2,4],
     schedule:'א׳ א׳ · ג׳ ב׳ · ה׳ ג׳ — משקל גוף בלבד, 48 שעות מנוחה בין אימונים'
@@ -5418,11 +5429,11 @@ const WORKOUT_PLANS={
   home_band3:{
     days:[
       {id:'push',label:'פול-בודי א׳ — גומיות',shortLabel:'גומי א׳',color:'#FF7A45',
-       exercises:['pushup','bandRow','bwSquat','bandGoodMorning','bandLateral','bandFacePull','plankReach']},
+       exercises:['pushup','bandRow','bwSquat','bandGoodMorning','bandLateral','bandFacePull','calfRaiseHome','plankReach']},
       {id:'pull',label:'פול-בודי ב׳ — גומיות',shortLabel:'גומי ב׳',color:'#00D9FF',
-       exercises:['bandPulldown','pikePushup','declinePushup','bulgSplitHome','bandCurl','bandTricep','hollowHold']},
+       exercises:['bandPulldown','pikePushup','declinePushup','bulgSplitHome','bandLateral','bandCurl','bandTricep','hollowHold']},
       {id:'legs',label:'פול-בודי ג׳ — גומיות',shortLabel:'גומי ג׳',color:'#B47CFF',
-       exercises:['bandChestPress','bandRow','pistolBox','gluteBridgeSL','bandLateral','calfRaiseHome','plankReach']},
+       exercises:['bandChestPress','bandRow','pistolBox','gluteBridgeSL','bandLateral','bandFacePull','calfRaiseHome','plankReach']},
     ],
     dows:[0,2,4],
     schedule:'א׳ א׳ · ג׳ ב׳ · ה׳ ג׳ — גומיות התנגדות + משקל גוף'
@@ -5430,11 +5441,11 @@ const WORKOUT_PLANS={
   home_db4:{
     days:[
       {id:'push',label:'עליון א׳ — ביתי',shortLabel:'עליון א׳',color:'#CCFF00',
-       exercises:['dbFloorPress','dbRow','dbShoulderPress','chinupHome','lateralRaise','hammerCurl']},
+       exercises:['dbFloorPress','dbRow','dbShoulderPress','chinupHome','lateralRaise','dbReverseFly','hammerCurl']},
       {id:'pull',label:'תחתון א׳ — ביתי',shortLabel:'תחתון א׳',color:'#B47CFF',
        exercises:['dbGobletSquat','dbRdl','bulgSplitHome','gluteBridgeSL','calfRaiseHome','plankReach']},
       {id:'legs',label:'עליון ב׳ — ביתי',shortLabel:'עליון ב׳',color:'#00D9FF',
-       exercises:['declinePushup','chinupHome','dbRow','lateralRaise','inclineCurl','ohTricep','plankReach']},
+       exercises:['declinePushup','pushup','chinupHome','dbRow','lateralRaise','dbReverseFly','inclineCurl','ohTricep','plankReach']},
       {id:'arms',label:'תחתון ב׳ — ביתי',shortLabel:'תחתון ב׳',color:'#FF7A45',
        exercises:['dbRdl','pistolBox','dbGobletSquat','nordicHome','calfRaiseHome','hollowHold']},
     ],
@@ -5453,9 +5464,9 @@ const WORKOUT_PLANS={
   2:{
     days:[
       {id:'push',label:'יום א׳ — פול-בודי כבד',shortLabel:'יום א׳',color:'#CCFF00',
-       exercises:['squat','benchPress','pullup','rdl','cableRow','triPushdown','bbCurl','calfRaise']},
+       exercises:['squat','benchPress','pullup','rdl','cableRow','facePull','triPushdown','bbCurl','calfRaise']},
       {id:'pull',label:'יום ב׳ — פול-בודי נפח',shortLabel:'יום ב׳',color:'#00D9FF',
-       exercises:['legPress','ohp','bentRow','inclineBench','underhandPulldown','hipThrust','lateralRaise','legCurl','seatedCalfRaise','hangingLegRaise']},
+       exercises:['legPress','ohp','bentRow','inclineBench','underhandPulldown','hipThrust','lateralRaise','reverseFly','legCurl','seatedCalfRaise','hangingLegRaise']},
     ],
     dows:[1,4],
     progression:'התקדמות ליניארית: כל אימון +2.5 ק״ג בעליון / +5 ק״ג בתחתון בתרגיל הראשי. נכשלת בטווח פעמיים ברצף — הורד 10%. בבידודים: הגע לראש הטווח בכל הסטים ואז +2.5 ק״ג. Deload כל 8–10 שבועות.',
@@ -5464,7 +5475,7 @@ const WORKOUT_PLANS={
   '3ab':{
     days:[
       {id:'push',label:'פלג גוף עליון א׳ — לחיצה אופקית',shortLabel:'עליון א׳',color:'#CCFF00',
-       exercises:['benchPress','pullup','ohp','bentRow','inclineBench','lateralRaise','triPushdown','bbCurl','hangingLegRaise']},
+       exercises:['benchPress','pullup','ohp','bentRow','inclineBench','lateralRaise','reverseFly','triPushdown','bbCurl','hangingLegRaise']},
       {id:'pull',label:'פלג גוף תחתון — סקוואט וציר',shortLabel:'תחתון',color:'#B47CFF',
        exercises:['squat','rdl','legPress','legCurl','legExt','hipThrust','calfRaise','seatedCalfRaise','sidePlank']},
       {id:'legs',label:'פלג גוף עליון ב׳ — לחיצה אנכית',shortLabel:'עליון ב׳',color:'#00D9FF',
@@ -5579,7 +5590,7 @@ const WORKOUT_PLANS={
   '4ab':{
     days:[
       {id:'push',label:'עליון א׳ — כוח עליון',shortLabel:'עליון א׳',color:'#CCFF00',
-       exercises:['benchPress','pullup','ohp','bentRow','inclineBench','triPushdown','lateralRaise','hangingLegRaise']},
+       exercises:['benchPress','pullup','ohp','bentRow','inclineBench','triPushdown','lateralRaise','reverseFly','hangingLegRaise']},
       {id:'pull',label:'תחתון א׳ — כוח תחתון',shortLabel:'תחתון א׳',color:'#B47CFF',
        exercises:['squat','rdl','legPress','legCurl','legExt','hipThrust','calfRaise']},
       {id:'legs',label:'עליון ב׳ — נפח עליון',shortLabel:'עליון ב׳',color:'#00D9FF',

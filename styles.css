@@ -1243,9 +1243,10 @@ select:invalid:not(:placeholder-shown){
 .alt-box{background:#111;border:1px solid var(--border2);border-radius:22px 22px 0 0;padding:24px;width:100%;max-width:480px;}
 .alt-title{font-family:var(--font-d);font-size:1rem;font-weight:800;margin-bottom:4px;}
 .alt-sub{font-size:.78rem;color:var(--muted);margin-bottom:16px;}
-.alt-item{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:opacity .15s;}
+/* A reference list, not a menu: nothing here is tappable, so nothing here
+   advertises a tap. */
+.alt-item{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
 .alt-item:last-child{border-bottom:none;}
-.alt-item:hover{opacity:.75;}
 .alt-item-name{font-weight:600;font-size:.9rem;}
 .alt-item-tag{font-size:.72rem;color:var(--muted2);margin-top:2px;}
 .alt-close-btn{width:100%;margin-top:14px;background:rgba(255,255,255,.06);border:1px solid var(--border2);color:var(--muted2);border-radius:var(--radius-md);padding:12px;cursor:pointer;font-family:var(--font-d);font-size:.88rem;font-weight:700;}
