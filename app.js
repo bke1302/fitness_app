@@ -5648,13 +5648,13 @@ const WORKOUT_PLANS={
   '4ant':{
     days:[
       {id:'push',label:'A׳ — חזה, כתפיים ויד קדמית',shortLabel:'A כוח',color:'#CCFF00',
-       exercises:['benchPress','ohp','inclineBench','lateralRaise','reverseFly','bbCurl','hammerCurl','hangingLegRaise']},
+       exercises:['benchPress','ohp','inclineBench','lateralRaise','reverseFly','bbCurl','hangingLegRaise']},
       {id:'pull',label:'B׳ — גב, יד אחורית ורגליים (סקוואט)',shortLabel:'B סקוואט',color:'#00D9FF',
-       exercises:['squat','pullup','bentRow','legPress','legCurl','calfRaise','triPushdown','skullCrusher']},
+       exercises:['squat','pullup','bentRow','legPress','legExt','legCurl','calfRaise','triPushdown']},
       {id:'legs',label:'A׳׳ — חזה, כתפיים ויד קדמית (נפח)',shortLabel:'A נפח',color:'#B47CFF',
-       exercises:['inclineChestPress','pecDeck','machineShoulderPress','cableLateral','facePull','ezCurl','inclineCurl','abWheel']},
+       exercises:['inclineChestPress','pecDeck','machineShoulderPress','cableLateral','facePull','hammerCurl','abWheel']},
       {id:'arms',label:'B׳׳ — גב, יד אחורית ורגליים (ציר)',shortLabel:'B ציר',color:'#FF7A45',
-       exercises:['deadlift','underhandPulldown','singleArmRow','bulgarianSplit','singleLegRDL','seatedCalfRaise','cableTricepOverhead','ropePushdown']},
+       exercises:['deadlift','underhandPulldown','singleArmRow','bulgarianSplit','singleLegRDL','hipThrust','seatedCalfRaise','cableTricepOverhead']},
     ],
     dows:[0,1,3,4],
     progression:'התקדמות כפולה: הגע לראש טווח החזרות בכל הסטים ואז העלה משקל. הרגליים מפוצלות בין שני ימי B — סקוואט באחד, ציר בשני — כדי שלא ייפלו תמיד בסוף אימון ארוך.',
