@@ -1344,7 +1344,7 @@ function prefillSettingsForm(){
   // while the week runs another is how this went unnoticed.
   const _pk=String(_getPlanKey(u));
   if(sfsplit3){sfsplit3.value=['3ab','3abc','3ss'].includes(_pk)?_pk:'3abc';sfsplit3.style.display=_f===3?'block':'none';}
-  if(sfsplit4){sfsplit4.value=_pk==='4ab'?'4ab':'';sfsplit4.style.display=_f===4?'block':'none';}
+  if(sfsplit4){sfsplit4.value=['4ab','4ant'].includes(_pk)?_pk:'';sfsplit4.style.display=_f===4?'block':'none';}
   const sfloc=document.getElementById('sf-workout-location'); if(sfloc) sfloc.value=u.workout_location||'gym';
   const sfeq=document.getElementById('sf-home-equipment'); if(sfeq) sfeq.value=u.home_equipment||'none';
   const sfeqwrap=document.querySelector('.sf-homeeq-wrap');
@@ -1834,7 +1834,7 @@ const DOWS_BY_FREQ={1:[3],2:[1,4],3:[0,2,4],4:[0,1,3,4],5:[0,1,3,4,5],6:[0,1,2,3
 // Resolves the active plan key: home mode (by equipment) > gym freq/split
 // Which split values belong to which weekly frequency. Anything outside its
 // own family is a leftover from another choice and must not decide a plan.
-const _SPLIT_FAMILY={3:['3ab','3abc','3ss'],4:['4','4ab']};
+const _SPLIT_FAMILY={3:['3ab','3abc','3ss'],4:['4','4ab','4ant']};
 // The same training style at the other frequency. A choice left over from a
 // different frequency still says what the lifter wanted, so it is translated
 // rather than dropped: upper/lower stays upper/lower, push-pull-legs stays
@@ -5645,6 +5645,21 @@ const WORKOUT_PLANS={
     dows:[0,1,2,3,4,5],
     schedule:'א׳ דחיפה א׳ · ב׳ משיכה א׳ · ג׳ רגליים א׳ · ד׳ דחיפה ב׳ · ה׳ משיכה ב׳ · ו׳ רגליים ב׳ — שישה אימונים שונים'
   },
+  '4ant':{
+    days:[
+      {id:'push',label:'A׳ — חזה, כתפיים ויד קדמית',shortLabel:'A כוח',color:'#CCFF00',
+       exercises:['benchPress','ohp','inclineBench','lateralRaise','reverseFly','bbCurl','hammerCurl','hangingLegRaise']},
+      {id:'pull',label:'B׳ — גב, יד אחורית ורגליים (סקוואט)',shortLabel:'B סקוואט',color:'#00D9FF',
+       exercises:['squat','pullup','bentRow','legPress','legCurl','calfRaise','triPushdown','skullCrusher']},
+      {id:'legs',label:'A׳׳ — חזה, כתפיים ויד קדמית (נפח)',shortLabel:'A נפח',color:'#B47CFF',
+       exercises:['inclineChestPress','pecDeck','machineShoulderPress','cableLateral','facePull','ezCurl','inclineCurl','abWheel']},
+      {id:'arms',label:'B׳׳ — גב, יד אחורית ורגליים (ציר)',shortLabel:'B ציר',color:'#FF7A45',
+       exercises:['deadlift','underhandPulldown','singleArmRow','bulgarianSplit','singleLegRDL','seatedCalfRaise','cableTricepOverhead','ropePushdown']},
+    ],
+    dows:[0,1,3,4],
+    progression:'התקדמות כפולה: הגע לראש טווח החזרות בכל הסטים ואז העלה משקל. הרגליים מפוצלות בין שני ימי B — סקוואט באחד, ציר בשני — כדי שלא ייפלו תמיד בסוף אימון ארוך.',
+    schedule:'א׳ A כוח · ב׳ B סקוואט · ד׳ A נפח · ה׳ B ציר'
+  },
   '4ab':{
     days:[
       {id:'push',label:'עליון א׳ — כוח עליון',shortLabel:'עליון א׳',color:'#CCFF00',
@@ -5904,7 +5919,7 @@ function getWorkoutFreqLabel(freq,split){
   if(freq===1) return '1×/שבוע — כל הגוף';
   if(freq===2) return '2×/שבוע — כל הגוף';
   if(freq===3) return split==='3ab'?'3×/שבוע — עליון/תחתון':split==='3ss'?'3×/שבוע — סופרסטים פול-בודי':'3×/שבוע — דחיפה/משיכה/רגליים';
-  if(freq===4) return split==='4ab'?'4×/שבוע — עליון/תחתון א׳-ב׳':'4×/שבוע — דחיפה/משיכה/רגליים + ידיים';
+  if(freq===4) return split==='4ab'?'4×/שבוע — עליון/תחתון א׳-ב׳':split==='4ant'?'4×/שבוע — חזה·כתפיים·יד קדמית ↔ גב·יד אחורית·רגליים':'4×/שבוע — דחיפה/משיכה/רגליים + ידיים';
   if(freq===5) return '5×/שבוע — דחיפה/משיכה/רגליים + עליון + תחתון';
   if(freq===6) return '6×/שבוע — דחיפה/משיכה/רגליים ×2';
   if(freq===7) return '7×/שבוע — לא מומלץ';

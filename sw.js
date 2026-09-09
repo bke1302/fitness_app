@@ -1,4 +1,4 @@
-const CACHE = 'protocolos-v33';
+const CACHE = 'protocolos-v34';
 
 // Install — cache app shell only; Vite-hashed assets cached dynamically on fetch
 self.addEventListener('install', e => {
