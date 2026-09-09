@@ -842,8 +842,13 @@ function saveSettingsForm(){
   const freqWarn=workout_freq===7?'נשמר — אבל 7 ימים ברצף לא מומלץ, הגוף חייב מנוחה':'';
   const workout_location=document.getElementById('sf-workout-location')?.value||'gym';
   const home_equipment=document.getElementById('sf-home-equipment')?.value||'none';
+  // The calories field is auto-filled from the form on every keystroke, so it
+  // only counts as a manual target when it disagrees with what these very
+  // values compute. Judging it against the stored profile instead would mark
+  // every weight change as a deliberate override.
+  const calories_manual=Math.abs(calories-calcNutrition({weight,height,age,gender,goal,activity}).auto)>1;
   if(idx>=0){
-    users[idx]={...users[idx],name,weight,height,age,calories,goal,activity,workout_time,gender,meal_count,cholesterol,workout_freq,workout_split,workout_location,home_equipment};
+    users[idx]={...users[idx],name,weight,height,age,calories,calories_manual,goal,activity,workout_time,gender,meal_count,cholesterol,workout_freq,workout_split,workout_location,home_equipment};
     saveUsers(users);
     renderUserList();
     renderNutritionPanel();
@@ -891,16 +896,29 @@ function invalidateUserCache(){_cachedUser=null;_cachedUserId=null;}
 
 /** @param {{weight:number,height:number,age:number,gender:string,goal:string}} u @returns {{target:number,protein:number,carbs:number,fat:number,bmr:number,tdee:number}} */
 function calcNutrition(u){
+  const w=u.weight||75;
   const sex=(u.gender||'m')==='f'?-161:5;
-  const bmr=Math.round(10*(u.weight||75)+6.25*(u.height||175)-5*(u.age||30)+sex);
+  const bmr=Math.round(10*w+6.25*(u.height||175)-5*(u.age||30)+sex);
   const tdee=Math.round(bmr*(u.activity||1.55));
   const surplusMap={lean_bulk:350,bulk:600,cut:-400,maintain:0};
-  const surplus=surplusMap[u.goal||'lean_bulk']??350;
-  const target=Math.max(1200,u.calories||Math.round(tdee+surplus));
-  const protein=Math.round((u.weight||75)*2.5);
-  const fat=Math.round(target*0.27/9);
+  const goal=u.goal||'lean_bulk';
+  const surplus=surplusMap[goal]??350;
+  const auto=Math.round(tdee+surplus);
+  // u.calories is written once, at sign-up. It used to win here unconditionally,
+  // so the target froze: put on six kilos and the app still fed you for the
+  // bodyweight you signed up with. It only wins now if the lifter typed a
+  // number of their own, which saveSettingsForm records as calories_manual.
+  const target=Math.max(1200,(u.calories_manual&&u.calories)||auto);
+  // Protein follows the goal. A deficit needs more of it to defend lean mass;
+  // a surplus does not, and every gram above the requirement is a gram of
+  // carbohydrate not fuelling the session.
+  const gPerKg=goal==='cut'?2.6:2.2;
+  const protein=Math.round(w*gPerKg);
+  // 27% of calories, but never under ~0.8 g/kg: on a deep cut the percentage
+  // alone drops fat low enough to matter hormonally.
+  const fat=Math.max(Math.round(w*0.8),Math.round(target*0.27/9));
   const carbs=Math.max(0,Math.round((target-protein*4-fat*9)/4));
-  return{bmr,tdee,target,protein,fat,carbs};
+  return{bmr,tdee,target,protein,fat,carbs,auto,gPerKg};
 }
 
 const GOAL_LABELS={lean_bulk:'עלייה נקייה',bulk:'מסה מקסימלית',cut:'הורדת שומן',maintain:'שמירה'};
@@ -1301,7 +1319,11 @@ function prefillSettingsForm(){
   const sw=document.getElementById('sf-weight'); if(sw) sw.value=s.weight;
   const sh=document.getElementById('sf-height'); if(sh) sh.value=s.height;
   const sa=document.getElementById('sf-age'); if(sa) sa.value=s.age;
-  const sc2=document.getElementById('sf-calories'); if(sc2) sc2.value=s.calories;
+  const sc2=document.getElementById('sf-calories');
+  if(sc2){ sc2.value=s.calories;
+    // Carry the profile's own answer into the field's state, so loading a
+    // profile without a manual target lets the auto-fill resume.
+    if(u&&u.calories_manual) sc2.dataset.touched='1'; else delete sc2.dataset.touched; }
   const sk=document.getElementById('sf-apikey'); if(sk) sk.value=_store.getItem('proFit_apiKey')||'';
   // New fields from user record
   const sg=document.getElementById('sf-goal'); if(sg) sg.value=u.goal||'lean_bulk';
@@ -2379,7 +2401,12 @@ function addWeightForm(){
   if(kEl) kEl.value='';
   // Sync latest weight to active user profile so BMR stays current
   const _au=getActiveUser();
-  if(_au){ _au.weight=kg; const us=getUsers(); const idx2=us.findIndex(u=>u.id===_au.id); if(idx2>=0){us[idx2]=_au; _store.setItem(USERS_KEY,JSON.stringify(us)); invalidateUserCache();} }
+  if(_au){ _au.weight=kg; const us=getUsers(); const idx2=us.findIndex(u=>u.id===_au.id); if(idx2>=0){us[idx2]=_au; _store.setItem(USERS_KEY,JSON.stringify(us)); invalidateUserCache();
+    // proFit_settings feeds the topbar chip, the footer and the dashboard; leave
+    // it behind and they keep quoting the weight you signed up with.
+    const _n=calcNutrition(_au);
+    saveSettings({...getSettings(),weight:kg,calories:_n.target});
+    renderNutritionPanel(); renderDashboardStats(_au);} }
   showToast('משקל נשמר — '+kg+' ק"ג');
   renderWLog(); renderWChart();
 }
@@ -3065,9 +3092,11 @@ function renderFoodPanel(){
   const s=getSettings();
   const log=getFoodLog();
   const totals=log.reduce((acc,e)=>({cal:acc.cal+e.cal,p:acc.p+e.p,c:acc.c+e.c,f:acc.f+e.f}),{cal:0,p:0,c:0,f:0});
-  const pct=(v,g)=>Math.min(100,(v/g)*100);
-  // the targets tab and this diary must not disagree about the same day
-  const n=calcNutrition(Object.assign({},getActiveUser()||{},s));
+  // One source, the same one the targets tab uses. This used to merge
+  // proFit_settings OVER the active user, and that mirror is stale from the
+  // moment you log a weigh-in — so the day after stepping on the scale the two
+  // screens quoted different protein goals for the same day.
+  const n=calcNutrition(getActiveUser()||s);
   const pGoal=n.protein, cGoal=n.carbs, fGoal=n.fat;
 
   wrap.innerHTML=`
@@ -3075,7 +3104,7 @@ function renderFoodPanel(){
     <div class="card-head"><h2>מעקב תזונה יומי — ${todayStr().split('-').reverse().join('/')}</h2></div>
     <div class="card-body">
       <div class="food-macro-bars">
-        ${macroBar('קלוריות','קל׳',totals.cal,s.calories,'linear-gradient(90deg,var(--red),#9333ea)')}
+        ${macroBar('קלוריות','קל׳',totals.cal,n.target,'linear-gradient(90deg,var(--red),#9333ea)')}
         ${macroBar('חלבון','ג׳',totals.p,pGoal,'var(--blue)')}
         ${macroBar('פחמימות','ג׳',totals.c,cGoal,'var(--yellow)')}
         ${macroBar('שומן','ג׳',totals.f,fGoal,'var(--green)')}
@@ -6154,6 +6183,7 @@ function cfTabata(){
 // served as-is; exposing them costs no privacy and makes the data auditable.
 Object.assign(window,{EX,WORKOUT_PLANS,_isHeavyCompound,_loadStep,_repRange,setsToday,todayStr,_dateKey,
   _store,_ns,getPRs,savePREntry,getElog,getLog,
+  getActiveUser,calcNutrition,getSettings,renderNutritionPanel,renderFoodPanel,getFoodLog,
   prescribe,prescriptionHTML,prescriptionLabel,currentWave,resetMesocycle,setsToday,setsLabelToday,roundsToday,
   gymPairCheck,toggleExSearch,estimateMinutes,_placeWarmup,initCollapsibles,renderSubNav,fixNumericRanges,
   openModal,closeModal,closeModalBg,closeAltModal,
