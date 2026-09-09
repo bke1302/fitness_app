@@ -1339,8 +1339,12 @@ function prefillSettingsForm(){
   const sfsplit4=document.getElementById('sf-workout-split-4');
   const _f=parseInt(u.workout_freq)||4;
   if(sfwrap) sfwrap.style.display=(_f===3||_f===4)?'block':'none';
-  if(sfsplit3){sfsplit3.value=['3ab','3abc','3ss'].includes(u.workout_split)?u.workout_split:'3abc';sfsplit3.style.display=_f===3?'block':'none';}
-  if(sfsplit4){sfsplit4.value=u.workout_split==='4ab'?'4ab':'';sfsplit4.style.display=_f===4?'block':'none';}
+  // Show the plan that actually resolves, not the raw stored split: that field
+  // can hold a leftover from another frequency, and the screen naming one plan
+  // while the week runs another is how this went unnoticed.
+  const _pk=String(_getPlanKey(u));
+  if(sfsplit3){sfsplit3.value=['3ab','3abc','3ss'].includes(_pk)?_pk:'3abc';sfsplit3.style.display=_f===3?'block':'none';}
+  if(sfsplit4){sfsplit4.value=_pk==='4ab'?'4ab':'';sfsplit4.style.display=_f===4?'block':'none';}
   const sfloc=document.getElementById('sf-workout-location'); if(sfloc) sfloc.value=u.workout_location||'gym';
   const sfeq=document.getElementById('sf-home-equipment'); if(sfeq) sfeq.value=u.home_equipment||'none';
   const sfeqwrap=document.querySelector('.sf-homeeq-wrap');
@@ -1493,6 +1497,10 @@ function _updateSplitSelector(){
   const s4=document.getElementById('ob-split-4');
   if(s3) s3.style.display=_obFreq===3?'grid':'none';
   if(s4) s4.style.display=_obFreq===4?'grid':'none';
+  // Changing frequency retires the previous frequency's choice. Without this it
+  // survived into a group where it does not belong, highlighted nothing the
+  // user could see, and still decided the plan.
+  if(_obSplit&&!(_SPLIT_FAMILY[_obFreq]||[]).includes(_obSplit)) _obSplit=null;
   if(_obFreq===3&&!_obSplit){
     _obSplit='3abc';
     document.querySelectorAll('.ob-split-btn').forEach(b=>b.classList.toggle('sel',b.dataset.split==='3abc'));
@@ -1824,13 +1832,26 @@ const HEB_DAYS2=['ראשון','שני','שלישי','רביעי','חמישי','�
 const DOWS_BY_FREQ={1:[3],2:[1,4],3:[0,2,4],4:[0,1,3,4],5:[0,1,3,4,5],6:[0,1,2,3,4,5],7:[0,1,2,3,4,5,6]};
 
 // Resolves the active plan key: home mode (by equipment) > gym freq/split
+// Which split values belong to which weekly frequency. Anything outside its
+// own family is a leftover from another choice and must not decide a plan.
+const _SPLIT_FAMILY={3:['3ab','3abc','3ss'],4:['4','4ab']};
+// The same training style at the other frequency. A choice left over from a
+// different frequency still says what the lifter wanted, so it is translated
+// rather than dropped: upper/lower stays upper/lower, push-pull-legs stays
+// push-pull-legs. The superset plan has no 4-day counterpart.
+const _SPLIT_EQUIV={'3ab':{4:'4ab'},'4ab':{3:'3ab'},'3abc':{4:'4'},'4':{3:'3abc'}};
 function _getPlanKey(u){
   if((u?.workout_location||'gym')==='home'){
     const eq=u?.home_equipment||'none';
     return eq==='db'?'home_db4':eq==='band'?'home_band3':'home_bw3';
   }
   const freq=parseInt(u?.workout_freq)||4;
-  const split=u?.workout_split||null;
+  // A split only means anything inside its own frequency. Onboarding let the
+  // choice leak across, so a 4-day profile could carry '3ab' and resolve to the
+  // 3-day upper/lower plan. Validating here repairs those profiles too.
+  const allowed=_SPLIT_FAMILY[freq]||[];
+  let split=u?.workout_split||null;
+  if(split&&!allowed.includes(split)) split=(_SPLIT_EQUIV[split]||{})[freq]||null;
   return freq===3?(split||'3abc'):freq===4?(split||4):freq;
 }
 
@@ -6184,6 +6205,7 @@ function cfTabata(){
 Object.assign(window,{EX,WORKOUT_PLANS,_isHeavyCompound,_loadStep,_repRange,setsToday,todayStr,_dateKey,
   _store,_ns,getPRs,savePREntry,getElog,getLog,
   getActiveUser,calcNutrition,getSettings,renderNutritionPanel,renderFoodPanel,getFoodLog,
+  _getPlanKey,_resolvePlan,_buildDayCfg,_obState:()=>({freq:_obFreq,split:_obSplit}),
   prescribe,prescriptionHTML,prescriptionLabel,currentWave,resetMesocycle,setsToday,setsLabelToday,roundsToday,
   gymPairCheck,toggleExSearch,estimateMinutes,_placeWarmup,initCollapsibles,renderSubNav,fixNumericRanges,
   openModal,closeModal,closeModalBg,closeAltModal,
