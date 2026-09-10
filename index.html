@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"/></noscript>
-<link rel="stylesheet" href="styles.css?v=39">
+<link rel="stylesheet" href="styles.css?v=40">
 </head>
 <body dir="rtl">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -1669,11 +1669,11 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
       <div>
         <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:4px;">משקל יעד (ק"ג)</label>
-        <input id="pc-target" type="number" min="0" max="500" step="2.5" placeholder="100" oninput="calcPlates()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:1rem;font-family:var(--font);box-sizing:border-box;"/>
+        <input id="pc-target" type="number" min="0" max="500" step="2.5" placeholder="100" oninput="calcPlates()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-family:var(--font);box-sizing:border-box;"/>
       </div>
       <div>
         <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:4px;">משקל מוט (ק"ג)</label>
-        <input id="pc-bar" type="number" min="10" max="30" step="1" value="20" oninput="calcPlates()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:1rem;font-family:var(--font);box-sizing:border-box;"/>
+        <input id="pc-bar" type="number" min="10" max="30" step="1" value="20" oninput="calcPlates()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-family:var(--font);box-sizing:border-box;"/>
       </div>
     </div>
     <div id="pc-result" style="min-height:60px;background:var(--bg2);border-radius:12px;padding:12px;">
@@ -1691,18 +1691,18 @@
     </div>
     <div style="margin-bottom:12px;">
       <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:4px;">תרגיל (מהיסטוריה)</label>
-      <select id="orm-ex-select" onchange="render1RM()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:0.94rem;font-family:var(--font);box-sizing:border-box;">
+      <select id="orm-ex-select" onchange="render1RM()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-family:var(--font);box-sizing:border-box;">
         <option value="">— בחר תרגיל —</option>
       </select>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
       <div>
         <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:4px;">משקל (ק"ג)</label>
-        <input id="orm-kg" type="number" min="0" step="0.5" placeholder="80" oninput="render1RM()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:1rem;font-family:var(--font);box-sizing:border-box;"/>
+        <input id="orm-kg" type="number" min="0" step="0.5" placeholder="80" oninput="render1RM()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-family:var(--font);box-sizing:border-box;"/>
       </div>
       <div>
         <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:4px;">חזרות</label>
-        <input id="orm-reps" type="number" min="1" max="30" placeholder="8" oninput="render1RM()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:1rem;font-family:var(--font);box-sizing:border-box;"/>
+        <input id="orm-reps" type="number" min="1" max="30" placeholder="8" oninput="render1RM()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-family:var(--font);box-sizing:border-box;"/>
       </div>
     </div>
     <div id="orm-result" style="background:var(--bg2);border-radius:12px;padding:12px;min-height:60px;">
@@ -1747,7 +1747,7 @@
         <div class="onboard-field"><label for="ob-height">גובה (ס״מ)</label><input id="ob-height" type="number" min="100" max="230" placeholder="175"/></div>
         <div class="onboard-field">
           <label for="ob-gender">מין</label>
-          <select id="ob-gender" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border2);border-radius:10px;padding:11px 14px;color:var(--text);font-size:.95rem;">
+          <select id="ob-gender" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border2);border-radius:10px;padding:11px 14px;color:var(--text);">
             <option value="m">זכר</option><option value="f">נקבה</option>
           </select>
         </div>
@@ -1897,6 +1897,6 @@
   <button class="timer-btn" id="timer-btn" onclick="onTimerBtnClick()">מנוחה</button>
 </div>
 
-    <script type="module" src="app.js?v=39"></script>
+    <script type="module" src="app.js?v=40"></script>
 </body>
 </html>

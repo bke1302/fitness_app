@@ -642,7 +642,7 @@ function openModal(key){
       ? `<div class="coach-tip coach-tip--${tip.type}"><span class="ct-icon">${_ic(tip.icon)}</span><span class="ct-msg">${tip.msg}</span></div>`
       : '';
   }
-  document.getElementById('modal-overlay').classList.add('open');
+  (_pushNav('modal'),document.getElementById('modal-overlay').classList.add('open'));
   document.body.style.overflow='hidden';
   // Focus trap — לכלוא focus בתוך המודל
   const FOCUSABLE='button,input,select,textarea,[tabindex]:not([tabindex="-1"])';
@@ -784,6 +784,7 @@ function showPanel(name,btn){
     setMobileNav(navMap[name]||'dashboard');
   }
   // Lazy-render panels that build their UI dynamically
+  _pushNav(name);
   renderSubNav(name);
   _placeWarmup(name);
   setTimeout(initCollapsibles,0);
@@ -1069,6 +1070,7 @@ function showAlternatives(exKey, exName){
     <div class="alt-item">
       <div><div class="alt-item-name">${_esc(a.name)}</div><div class="alt-item-tag">${_esc(a.tag)}</div></div>
     </div>`).join('');
+  _pushNav('alt');
   document.getElementById('alt-modal').classList.add('open');
 }
 function closeAltModal(){ document.getElementById('alt-modal').classList.remove('open'); }
@@ -3878,7 +3880,7 @@ function startGymMode(panelName,label,color){
   const badge=document.getElementById('gym-badge');
   if(badge){badge.textContent=label;badge.style.color=_gymColor;badge.style.borderColor=_gymColor;}
   renderGymExercise();
-  document.getElementById('gym-overlay').classList.add('open');
+  (_pushNav('gym'),document.getElementById('gym-overlay').classList.add('open'));
   document.body.style.overflow='hidden';
   gymRequestWakeLock();
   // Start stopwatch
@@ -5919,6 +5921,34 @@ function planTenureText(u){
   const base=w===1?'אתה על התוכנית הזו שבוע':`אתה על התוכנית הזו ${w} שבועות`;
   return w>=4?base+' — נקודה טובה להחליף, אם בא לך. ההיסטוריה והשיאים נשארים.':base;
 }
+
+// ─── Back button ─────────────────────────────────────────────────────────────
+// Nothing handled history, so on Android the back button left the app outright —
+// from a panel, from an exercise modal, from the middle of a set. Every screen
+// and overlay puts an entry on the stack; back unwinds the overlay first, then
+// the panel, and only leaves once there is nothing left to unwind.
+let _navPopping=false;
+function _pushNav(name){
+  if(_navPopping) return;
+  try{
+    if(history.state&&history.state.koach===name) return;
+    history.pushState({koach:name},'');
+  }catch(e){}
+}
+window.addEventListener('popstate',function(e){
+  _navPopping=true;
+  try{
+    const gym=document.getElementById('gym-overlay');
+    if(gym&&gym.classList.contains('open')){ confirmCloseGymMode(); return; }
+    const alt=document.getElementById('alt-modal');
+    if(alt&&alt.classList.contains('open')){ closeAltModal(); return; }
+    const mo=document.getElementById('modal-overlay');
+    if(mo&&mo.classList.contains('open')){ closeModal(); return; }
+    const st=(e.state&&e.state.koach)||'dashboard';
+    showPanel(st==='modal'||st==='gym'?'dashboard':st,null);
+  }catch(err){}
+  finally{ _navPopping=false; }
+});
 function renderAdaptivePanels(){
   const u=getActiveUser();
   const plan=_resolvePlan(u);
