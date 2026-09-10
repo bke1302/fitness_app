@@ -12,7 +12,7 @@ function _esc(str){ return String(str==null?'':str).replace(/&/g,'&amp;').replac
 // second profile read — and overwrote — the first one's sets, PRs and streak.
 // These keys belong to a profile. Anything not listed (the user list, the
 // active id, settings, the API key) is shared and passes through unchanged.
-const _PER_USER_KEY=/^(pf_setlog2|proFit_elog|proFit_pr|proFit_log|pf_xp|pf_plan_since|pf_achievements_seen|pf_recovery|pf_rpe|proFit_food|pf_meso_start|proFit_weight|pf_meas|pf_wod_scores|pf_habits|pf_water|pf_boss_|pf_deloadDismissed_|pf_chat)/;
+const _PER_USER_KEY=/^(pf_setlog2|proFit_elog|proFit_pr|proFit_log|pf_xp|pf_plan_since|pf_ex_swaps|pf_achievements_seen|pf_recovery|pf_rpe|proFit_food|pf_meso_start|proFit_weight|pf_meas|pf_wod_scores|pf_habits|pf_water|pf_boss_|pf_deloadDismissed_|pf_chat)/;
 const _rawLS=localStorage;
 /**
  * The first profile keeps the original key names, so data already on this
@@ -630,7 +630,9 @@ function openModal(key){
   // next to the exercise it would replace.
   const altWrap=document.getElementById('m-alt-wrap');
   if(altWrap){
-    altWrap.innerHTML=EX_ALTERNATIVES[key]
+    // Offered for every exercise now: the candidates come from the catalogue,
+    // so there is always something to show unless the equipment rules it out.
+    altWrap.innerHTML=true
       ? `<button class="m-alt-btn" onclick="showAlternatives('${key}',${JSON.stringify(e.name)})">החלף תרגיל</button>`
       : '';
   }
@@ -1057,19 +1059,40 @@ const EX_ALTERNATIVES = {
   cableCurl:[{name:'כפיפת מרפקים — מוט EZ',tag:'מוט EZ — יותר עומס, פחות עומס מרפק'},{name:'כפיפת מרפקים בספסל סקוט',tag:'Scott Bench — בידוד מלא, ללא תנופה'},{name:'כפיפת ריכוז',tag:'ריכוז — בידוד Long Head, ללא ציוד כבל'}],
 };
 
+// Which day slot is on screen. A swap is scoped to one day of one plan, so
+// swapping from the exercise-search screen has nothing to attach to.
+function _activeDayIndex(){
+  const el=document.querySelector('.panel.active');
+  const pid=el?el.id.replace('panel-',''):'';
+  return DAY_PANEL_IDS.indexOf(pid);
+}
 function showAlternatives(exKey, exName){
-  const alts=EX_ALTERNATIVES[exKey];
-  if(!alts||!alts.length){ showToast('אין חלופות מוגדרות לתרגיל זה'); return; }
-  document.getElementById('alt-title').textContent='חלופות ל: '+exName;
+  const dayIdx=_activeDayIndex();
+  if(dayIdx<0){ showToast('אפשר להחליף תרגיל מתוך יום אימון'); return; }
+  let u=null; try{ u=getActiveUser(); }catch(e){}
+  const plan=_resolvePlan(u);
+  const day=plan&&plan.days[dayIdx];
+  const cands=swapCandidates(exKey, day?day.exercises:[]);
+  const pk=String(_getPlanKey(u));
+  // was this slot already swapped? then offer the way back
+  const sw=getSwaps();
+  const originalKey=Object.keys(sw).find(id=>sw[id]===exKey&&id.indexOf(pk+'|'+dayIdx+'|')===0);
+  const orig=originalKey?originalKey.split('|')[2]:null;
+
+  document.getElementById('alt-title').textContent='החלף: '+exName;
+  const sub=document.querySelector('#alt-modal .alt-sub');
+  if(sub) sub.textContent=cands.length?('תרגילים שעובדים על '+(EX[exKey]||{}).cat+' — בחר אחד'):'אין חלופה מתאימה לציוד שלך';
   const list=document.getElementById('alt-list');
-  // The chevron and the pointer cursor promised a tap that never existed: the
-  // alternatives are editorial text, not exercise keys — only 9 of the 108
-  // name a movement the catalogue actually holds, so none of them could be
-  // swapped in even if the row were wired. It reads as a reference list now.
-  list.innerHTML=alts.map(a=>`
-    <div class="alt-item">
-      <div><div class="alt-item-name">${_esc(a.name)}</div><div class="alt-item-tag">${_esc(a.tag)}</div></div>
-    </div>`).join('');
+  list.innerHTML=(orig&&EX[orig]?`
+    <button class="alt-item alt-pick alt-revert" onclick="applySwap('${orig}',null,${dayIdx})">
+      <div><div class="alt-item-name">חזור ל${_esc(EX[orig].name)}</div>
+      <div class="alt-item-tag">התרגיל המקורי בתוכנית</div></div>
+    </button>`:'')
+    + cands.map(k=>`
+    <button class="alt-item alt-pick" onclick="applySwap('${exKey}','${k}',${dayIdx})">
+      <div><div class="alt-item-name">${_esc(EX[k].name)}</div>
+      <div class="alt-item-tag">${_esc(EX[k].cat)} · ${_esc(setsLabelToday(EX[k]))} · ${_esc(_exRest(EX[k]))}</div></div>
+    </button>`).join('');
   _pushNav('alt');
   document.getElementById('alt-modal').classList.add('open');
 }
@@ -1951,7 +1974,7 @@ function _getPlanKey(u){
 // Returns the plan object, re-timed to the user's chosen frequency when the
 // stock plan's day count doesn't match it
 function _resolvePlan(u){
-  const plan=WORKOUT_PLANS[_getPlanKey(u)];
+  const plan=_applySwaps(WORKOUT_PLANS[_getPlanKey(u)],u);
   if(!plan) return null;
   const dows=plan.dows||TRAIN_DAYS;
   const freq=parseInt(u?.workout_freq)||dows.length;
@@ -2733,7 +2756,7 @@ function _injectSwapButtons_unused(){
     const m=tr.getAttribute('onclick')?.match(/openModal\('(\w+)'\)/);
     if(!m) return;
     const key=m[1];
-    if(!EX_ALTERNATIVES[key]) return;
+    // every exercise can be swapped now, not only those with an editorial entry
     const nameCell=tr.querySelector('.ex-name-main');
     const actionCell=tr.querySelector('td:nth-child(3)')||nameCell;
     if(!nameCell||actionCell.querySelector('.ex-swap-btn')) return;
@@ -5949,6 +5972,101 @@ window.addEventListener('popstate',function(e){
   }catch(err){}
   finally{ _navPopping=false; }
 });
+
+// ─── Exercise swapping ───────────────────────────────────────────────────────
+// The old "החלף תרגיל" listed editorial text — movement names, most of which the
+// catalogue does not contain — and the rows had no handler, so tapping one did
+// nothing. Candidates now come from the catalogue, and the choice is applied in
+// _resolvePlan so every consumer sees it: the day table, gym mode, the weekly
+// volume and the progression engine.
+const SWAP_KEY='pf_ex_swaps';
+function getSwaps(){ try{ return JSON.parse(_store.getItem(SWAP_KEY)||'{}'); }catch(e){ return {}; } }
+function _swapId(planKey,dayIdx,exKey){ return planKey+'|'+dayIdx+'|'+exKey; }
+
+// The muscle a swap has to preserve. 'חזה עליון' may stand in for 'חזה';
+// 'חזה' may not stand in for 'גב'. Order matters: a category naming two muscles
+// is filed under the one the movement is really for.
+function _exFamily(cat){
+  const c=String(cat||'');
+  if(/ליבה|בטן/.test(c)) return 'ליבה';
+  if(/שוק/.test(c)) return 'שוק';
+  if(/מקרב/.test(c)) return 'מקרבים';
+  if(/ירך אחורי|כל הגוף/.test(c)) return 'ירך אחורי';
+  if(/ארבע ראשי|ירכיים|כל הרגל/.test(c)) return 'ארבע ראשי';
+  if(/ישבן/.test(c)) return 'ישבן';
+  if(/חזה/.test(c)) return 'חזה';
+  if(/גב/.test(c)) return 'גב';
+  if(/כתף|כתפיים/.test(c)) return 'כתפיים';
+  if(/טריצפס/.test(c)) return 'טריצפס';
+  if(/בייסס|בראכ/.test(c)) return 'יד קדמית';
+  if(/אמות|אחיזה/.test(c)) return 'אמות';
+  return c;
+}
+// Only offer what the lifter can actually load today.
+function _swapFitsEquipment(e,u){
+  if(((u&&u.workout_location)||'gym')!=='home') return true;
+  const have=(u&&u.home_equipment)||'none';
+  if(have==='none') return e.eq==='none';
+  if(have==='band') return e.eq==='none'||e.eq==='band';
+  return e.eq==='none'||e.eq==='band'||e.eq==='db';
+}
+/** Same muscle first, then the same muscle family. Never the same exercise, and
+    never one already scheduled on that day. */
+function swapCandidates(exKey,dayKeys){
+  const ex=EX[exKey]; if(!ex) return [];
+  let u=null; try{ u=getActiveUser(); }catch(e){}
+  const onDay=new Set(dayKeys||[]);
+  const exact=[],family=[];
+  for(const k in EX){
+    if(k===exKey||onDay.has(k)) continue;
+    const e=EX[k];
+    if(!_swapFitsEquipment(e,u)) continue;
+    if(e.cat===ex.cat) exact.push(k);
+    else if(_exFamily(e.cat)===_exFamily(ex.cat)) family.push(k);
+  }
+  // In a gym, the loadable options come first; bodyweight and bands are still
+  // offered, because the machine you wanted may be taken, but they are not the
+  // first answer.
+  const rank=k=>{const e=EX[k].eq||'';return e===''?0:e==='db'?1:e==='band'?2:3;};
+  const bySuitability=(x,y)=>rank(x)-rank(y);
+  return exact.sort(bySuitability).concat(family.sort(bySuitability));
+}
+/** Rewrite a plan's days through the lifter's saved choices. */
+function _applySwaps(plan,u){
+  const sw=getSwaps();
+  if(!plan||!plan.days||!Object.keys(sw).length) return plan;
+  const pk=String(_getPlanKey(u));
+  let touched=false;
+  const days=plan.days.map((d,i)=>{
+    const ex=(d.exercises||[]).map(k=>{
+      const to=sw[_swapId(pk,i,k)];
+      return (to&&EX[to])?to:k;
+    });
+    if(ex.every((k,j)=>k===d.exercises[j])) return d;
+    touched=true;
+    // a superset names its pair by key, so it has to follow the swap
+    const ss=(d.supersets||[]).map(s=>{
+      const pair=(s.pair||[]).map(k=>{ const to=sw[_swapId(pk,i,k)]; return (to&&EX[to])?to:k; });
+      return Object.assign({},s,{pair});
+    });
+    return Object.assign({},d,{exercises:ex},d.supersets?{supersets:ss}:{});
+  });
+  return touched?Object.assign({},plan,{days}):plan;
+}
+function applySwap(exKey,newKey,dayIdx){
+  let u=null; try{ u=getActiveUser(); }catch(e){}
+  const pk=String(_getPlanKey(u));
+  const sw=getSwaps();
+  const id=_swapId(pk,dayIdx,exKey);
+  if(newKey) sw[id]=newKey; else delete sw[id];
+  _store.setItem(SWAP_KEY,JSON.stringify(sw));
+  closeAltModal();
+  closeModal();
+  try{
+    renderAdaptivePanels(); initCheckboxes(); initTodayHero();
+    showToast(newKey?('הוחלף ל'+EX[newKey].name):'הוחזר התרגיל המקורי');
+  }catch(e){}
+}
 function renderAdaptivePanels(){
   const u=getActiveUser();
   const plan=_resolvePlan(u);
@@ -6446,7 +6564,7 @@ Object.assign(window,{EX,WORKOUT_PLANS,_isHeavyCompound,_loadStep,_repRange,sets
   elogSave,elogAdjust,swapMeal,selectFood,selectFoodResult,foodSearchDebounced,
   selectRecovery,submitRecovery,bossAddProgress,dismissDeload,
   toggleSidebar,openSidebar,closeSidebar,
-  switchUser,showAlternatives,savePRFromModal,
+  switchUser,showAlternatives,applySwap,swapCandidates,getSwaps,savePRFromModal,
   dismissInstallBanner,
   gymCheckSet,
   saveModalSetLog,

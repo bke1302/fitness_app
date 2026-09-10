@@ -3334,3 +3334,11 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
   .meas-input{ width:calc(50% - 4px); }
   .cfg-input{ font-size:16px; padding:8px 6px; }
 }
+
+/* The swap list is a menu again — but only now that tapping a row does
+   something. Each row is a real button, so it is reachable by keyboard too. */
+.alt-item.alt-pick{width:100%;text-align:inherit;background:none;border:none;border-bottom:1px solid var(--border);
+  color:var(--text);font-family:var(--font);cursor:pointer;transition:opacity .15s;}
+.alt-item.alt-pick:active{opacity:.6;}
+.alt-item.alt-revert .alt-item-name{color:var(--lime);}
+@media (hover:hover){ .alt-item.alt-pick:hover{opacity:.75;} }
