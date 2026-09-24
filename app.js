@@ -569,6 +569,101 @@ let _currentExKey = null;
 let _modalTrapFn = null;
 // Normalize exercise fields — supports both legacy schema (Hebrew cat, string muscles,
 // string rest/lvl) and the expanded schema (English cat, array muscles, numeric rest/lvl)
+// ─── Anatomy figure ──────────────────────────────────────────────────────────
+// A row said "יד קדמית" and stopped there. This draws the muscle instead: a
+// front and a back figure with the regions this exercise trains lit up, so the
+// lifter can see where the work is meant to land before the first set.
+//
+// Schematic on purpose — a readable silhouette, not an anatomy plate. Every
+// region is always in the markup and only its fill changes, so one figure
+// serves all 114 exercises with nothing per-exercise to keep in sync.
+
+// Which regions a category lights. First match wins, so a category naming two
+// muscles is filed under the one the movement is really for. The first region
+// in the list is the target; the rest are what it pays on the way.
+const _ANAT=[
+  [/ליבה|בטן/,                      ['abs']],
+  [/אחיזה/,                         ['forearm','abs']],
+  [/אמות|פרק/,                      ['forearm']],
+  [/שוק/,                           ['calf']],
+  [/מקרב/,                          ['adductor']],
+  [/כל הגוף/,                       ['ham','glute','lowback','midback','forearm']],
+  [/גב תחתון \+ ירך אחורי/,         ['ham','glute','lowback']],
+  [/ירך אחורי/,                     ['ham']],
+  [/ארבע ראשי/,                     ['quad']],
+  [/ירכיים \+ ישבן|ישבן \+ ירכיים/, ['quad','glute','ham']],
+  [/כל הרגל/,                       ['quad','glute','ham']],
+  [/ירכיים/,                        ['quad','glute']],
+  [/ישבן/,                          ['glute','ham']],
+  [/חזה/,                           ['chest','delt','triceps']],
+  [/גב רחב/,                        ['lat','biceps','midback']],
+  [/גב עבה|גב אמצעי|גב עליון/,      ['midback','lat','biceps']],
+  [/גב/,                            ['midback','lat']],
+  [/כתף אחורית/,                    ['deltRear','midback']],
+  [/כתף אמצעית|כתף קדמית/,          ['delt']],
+  [/כל הכתף|כתפיים/,                ['delt','triceps']],
+  [/טריצפס/,                        ['triceps']],
+  [/בייסס|בראכ/,                    ['biceps','forearm']],
+];
+function anatomyRegions(cat){
+  const c=String(cat||'');
+  for(const [re,regions] of _ANAT) if(re.test(c)) return regions;
+  return [];
+}
+
+function anatomySVG(cat){
+  const on=anatomyRegions(cat);
+  if(!on.length) return '';
+  // the target carries the strong fill, the assisting muscles a hint: a bench
+  // press is a chest exercise that also pays the triceps, and the picture
+  // should say both.
+  const cls=r=>'an-part'+(on[0]===r?' an-primary':on.includes(r)?' an-assist':'');
+
+  // One silhouette, drawn once, mirrored for the limbs. Arms hang away from the
+  // torso so the upper arm cannot be mistaken for the shoulder.
+  const body=`
+    <circle cx="50" cy="15" r="11" class="an-skin"/>
+    <path d="M44 25h12v5l14 7 3 12-2 38-5 4H39l-5-4-2-38 3-12 14-7z" class="an-skin"/>
+    <path d="M27 40q-6 3-7 9l-3 22q-1 5 2 6l4 1q3 0 4-4l5-21z" class="an-skin"/>
+    <path d="M73 40q6 3 7 9l3 22q1 5-2 6l-4 1q-3 0-4-4l-5-21z" class="an-skin"/>
+    <path d="M18 76q-4 2-4 7l-1 22q0 5 3 5h4q3 0 3-5l2-24z" class="an-skin"/>
+    <path d="M82 76q4 2 4 7l1 22q0 5-3 5h-4q-3 0-3-5l-2-24z" class="an-skin"/>
+    <path d="M38 91h24l4 12-3 40h-11l-2-30-2 30H37l-3-40z" class="an-skin"/>
+    <path d="M39 143h11l-1 34h-9zM52 143h11l-1 34h-9z" class="an-skin"/>`;
+
+  const front=body+`
+    <ellipse cx="29" cy="43" rx="10" ry="9" class="${cls('delt')}"/>
+    <ellipse cx="71" cy="43" rx="10" ry="9" class="${cls('delt')}"/>
+    <path d="M37 43h12v16H37zM51 43h12v16H51z" class="${cls('chest')}"/>
+    <rect x="42" y="59" width="16" height="28" rx="4" class="${cls('abs')}"/>
+    <ellipse cx="26" cy="60" rx="6" ry="12" transform="rotate(8 26 60)" class="${cls('biceps')}"/>
+    <ellipse cx="74" cy="60" rx="6" ry="12" transform="rotate(-8 74 60)" class="${cls('biceps')}"/>
+    <ellipse cx="20" cy="90" rx="5" ry="13" class="${cls('forearm')}"/>
+    <ellipse cx="80" cy="90" rx="5" ry="13" class="${cls('forearm')}"/>
+    <path d="M38 104h10l-2 36h-9zM52 104h10l1 36h-9z" class="${cls('quad')}"/>
+    <path d="M49 106h3v32h-3z" class="${cls('adductor')}"/>
+    <path d="M40 146h9l-1 28h-8zM53 146h9l-1 28h-8z" class="${cls('calf')}"/>`;
+
+  const back=body+`
+    <path d="M40 29h20l-5 13H45z" class="${cls('midback')}"/>
+    <ellipse cx="29" cy="43" rx="10" ry="9" class="${cls('deltRear')}"/>
+    <ellipse cx="71" cy="43" rx="10" ry="9" class="${cls('deltRear')}"/>
+    <path d="M35 44h14l-5 21h-9zM51 44h14l1 21h-9z" class="${cls('lat')}"/>
+    <rect x="43" y="66" width="14" height="14" rx="3" class="${cls('lowback')}"/>
+    <ellipse cx="26" cy="60" rx="6" ry="12" transform="rotate(8 26 60)" class="${cls('triceps')}"/>
+    <ellipse cx="74" cy="60" rx="6" ry="12" transform="rotate(-8 74 60)" class="${cls('triceps')}"/>
+    <ellipse cx="20" cy="90" rx="5" ry="13" class="${cls('forearm')}"/>
+    <ellipse cx="80" cy="90" rx="5" ry="13" class="${cls('forearm')}"/>
+    <path d="M38 88h24v15H38z" class="${cls('glute')}"/>
+    <path d="M38 105h10l-2 35h-9zM52 105h10l1 35h-9z" class="${cls('ham')}"/>
+    <path d="M40 146h9l-1 28h-8zM53 146h9l-1 28h-8z" class="${cls('calf')}"/>`;
+
+  return `<div class="anat-wrap">
+    <figure class="anat-fig"><svg viewBox="0 0 100 185" role="img" aria-label="השרירים שהתרגיל עובד עליהם, מלפנים"><g>${front}</g></svg><figcaption>מלפנים</figcaption></figure>
+    <figure class="anat-fig"><svg viewBox="0 0 100 185" role="img" aria-label="השרירים שהתרגיל עובד עליהם, מאחור"><g>${back}</g></svg><figcaption>מאחור</figcaption></figure>
+  </div>`;
+}
+
 function _exMuscles(e){ return Array.isArray(e.muscles)?e.muscles.join(', '):(e.muscles||''); }
 function _exRest(e){ return typeof e.rest==='number'?(e.rest>=120?(e.rest/60).toFixed(e.rest%60?1:0)+' דק׳':e.rest+' שנ׳'):(e.rest||''); }
 function _exLvl(e){ const m={1:'קל',2:'בינוני',3:'כבד'}; return typeof e.lvl==='number'?(m[e.lvl]||'בינוני'):(e.lvl||''); }
@@ -602,7 +697,8 @@ function openModal(key){
   document.getElementById('m-hero-en').textContent=e.en;
   document.getElementById('m-title').textContent=e.name;
   document.getElementById('m-desc').textContent=e.desc;
-  document.getElementById('m-muscles').textContent=_exMuscles(e);
+  const musEl=document.getElementById('m-muscles');
+  musEl.innerHTML=anatomySVG(e.cat)+'<div class="m-mus-text">'+_esc(_exMuscles(e))+'</div>';
   document.getElementById('m-info').innerHTML=
     `<div class="info-pill">סטים: <strong>${setsLabelToday(e)}</strong></div>
      <div class="info-pill">מנוחה: <strong>${_exRest(e)}</strong></div>
@@ -612,18 +708,24 @@ function openModal(key){
   const demoEl=document.getElementById('m-demo');
   if(demoEl){
     const q=EX_YT[key]||(e.en+' exercise tutorial form');
-    const ytUrl='https://www.youtube.com/results?search_query='+encodeURIComponent(q);
-    demoEl.innerHTML=`<a class="demo-card" href="${ytUrl}" target="_blank" rel="noopener noreferrer">
+    // One search is one person's idea of the movement. Three angles: the lift,
+    // what goes wrong with it, and the muscle it is supposed to reach.
+    const cards=[
+      {q:q,                                    t:'הדגמת ביצוע נכון',  s:'טכניקה מלאה'},
+      {q:e.en+' common mistakes form fix',     t:'טעויות נפוצות',     s:'מה לא לעשות'},
+      {q:e.en+' muscles worked anatomy',       t:'השריר שעובד',       s:'אנטומיה של התנועה'}
+    ];
+    demoEl.innerHTML=cards.map((c,i)=>`<a class="demo-card${i?' demo-card-sm':''}" href="https://www.youtube.com/results?search_query=${encodeURIComponent(c.q)}" target="_blank" rel="noopener noreferrer">
       <div class="demo-thumb">
         <svg class="ico demo-bg-ico"><use href="#i-dumbbell"/></svg>
         <div class="demo-play-ring"><svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
-        <span class="demo-ex-tag">${_esc(e.en)}</span>
+        <span class="demo-ex-tag">${_esc(i?c.s:e.en)}</span>
       </div>
       <div class="demo-bar">
-        <span class="demo-bar-text">הדגמת ביצוע נכון — לחץ לצפייה</span>
+        <span class="demo-bar-text">${_esc(c.t)}</span>
         <span class="demo-yt-pill">YouTube</span>
       </div>
-    </a>`;
+    </a>`).join('');
   }
   renderSetLogInModal(key);
   // Alternatives used to be a button on every table row; it belongs here,
@@ -5820,7 +5922,7 @@ function buildExRow(key,num,over){
   return `<tr onclick="openModal('${key}')">
     <td><div class="ex-num-cell">${num}</div></td>
     <td><div class="ex-name-main">${ex.name}</div><div class="ex-name-en" lang="en">${ex.en}</div>
-        <div class="ex-why">${ex.desc?ex.desc.slice(0,60)+'…':''}</div></td>
+        <div class="ex-why">${_esc(_exMuscles(ex))}</div></td>
     <td><span class="muscle-tag">${_exCatLabel(ex)}</span></td>
     <td class="sets-cell">${over?.sets||setsLabelToday(ex)||'3×10'}</td>
     <td class="rest-cell">${over?.rest||_exRest(ex)||'90 שנ׳'}</td>
@@ -6565,6 +6667,7 @@ Object.assign(window,{EX,WORKOUT_PLANS,_isHeavyCompound,_loadStep,_repRange,sets
   selectRecovery,submitRecovery,bossAddProgress,dismissDeload,
   toggleSidebar,openSidebar,closeSidebar,
   switchUser,showAlternatives,applySwap,swapCandidates,getSwaps,savePRFromModal,
+  anatomySVG,anatomyRegions,
   dismissInstallBanner,
   gymCheckSet,
   saveModalSetLog,

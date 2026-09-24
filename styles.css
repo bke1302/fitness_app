@@ -3342,3 +3342,25 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
 .alt-item.alt-pick:active{opacity:.6;}
 .alt-item.alt-revert .alt-item-name{color:var(--lime);}
 @media (hover:hover){ .alt-item.alt-pick:hover{opacity:.75;} }
+
+/* ─── Anatomy figure ───────────────────────────────────────────────────────
+   Two schematic bodies with the worked muscle lit. Lime is the target, a muted
+   olive the muscles that assist — the same colour language the rest of the app
+   uses for "this is the number that matters" versus "this is context". */
+.anat-wrap{display:flex;gap:10px;justify-content:center;margin:2px 0 12px;}
+.anat-fig{margin:0;text-align:center;}
+.anat-fig svg{width:74px;height:137px;display:block;}
+.anat-fig figcaption{font-size:.62rem;color:var(--muted2);margin-top:3px;letter-spacing:.2px;}
+.an-skin{fill:#1B1E26;stroke:#2A2E39;stroke-width:.8;}
+.an-part{fill:#252932;stroke:#2F3440;stroke-width:.6;}
+.an-assist{fill:#4A5A2E;}
+.an-primary{fill:var(--lime);}
+.m-mus-text{font-size:.82rem;line-height:1.55;color:var(--muted);}
+
+/* Three demo cards instead of one: the first keeps its size, the other two
+   share a row beneath it. */
+.demo-card-sm{margin-top:8px;}
+.demo-wrap{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.demo-wrap > .demo-card:first-child{grid-column:1/-1;}
+.demo-card-sm .demo-thumb{min-height:62px;}
+.demo-card-sm .demo-bar-text{font-size:.72rem;}
