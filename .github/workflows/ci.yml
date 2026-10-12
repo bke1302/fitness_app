@@ -1,4 +1,12 @@
-name: CI — Build & Test
+name: CI
+
+# The deploy job that used to live here pushed a vite build to a gh-pages
+# branch it had no permission to write, so it failed on every commit since at
+# least September while nobody read the red cross. It was also pointed at the
+# wrong thing: the live site is served by GitHub Pages from the root of main,
+# which is a separate workflow that has been succeeding all along. Had the
+# permission ever been granted, this job would have replaced the working site
+# with an untested build. Removed rather than repaired.
 
 on:
   push:
@@ -8,7 +16,7 @@ on:
 
 jobs:
   test:
-    name: Run Tests
+    name: Tests and training audits
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,24 +25,8 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - run: npm ci
-      - run: npm test
-
-  build:
-    name: Build & Deploy
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run build
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          cname: ''
+      # The rendered checks drive a real browser; the unit tests and the
+      # training audits do not, but one install covers all of them.
+      - run: npx playwright install --with-deps chromium
+      - name: npm test
+        run: npm test

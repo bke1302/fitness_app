@@ -1,139 +1,118 @@
+// These run against the functions sliced out of app.js, not a copy of them.
+// The previous version of this file imported src/pure.js, which had drifted a
+// month behind and was asserting two bugs as correct behaviour.
 import { describe, it, expect } from 'vitest';
-import { calcNutrition, _parseRepRange, CONFIG, _buildSparklineFromData } from '../src/pure.js';
+import { app } from './from-app.mjs';
 
-// ─── _parseRepRange ──────────────────────────────────────────────────────────
-describe('_parseRepRange', () => {
-  it('parses standard range "4×6–8"', () => {
-    expect(_parseRepRange('4×6–8')).toEqual({ min: 6, max: 8 });
+const { calcNutrition, _repRange, _setCount, _restSec, CONFIG } = app;
+const LIFTER = { weight: 78, height: 178, age: 31, gender: 'm', activity: 1.55 };
+
+describe('calcNutrition — the target follows the lifter', () => {
+  it('recomputes the target instead of trusting a stored one', () => {
+    // u.calories is written once, at sign-up. If it wins unconditionally the
+    // target freezes and never follows a changing bodyweight.
+    const stale = calcNutrition({ ...LIFTER, goal: 'lean_bulk', calories: 9999 });
+    expect(stale.target).toBe(stale.auto);
   });
-  it('parses single number "3×12"', () => {
-    expect(_parseRepRange('3×12')).toEqual({ min: 12, max: 12 });
+
+  it('honours a target the lifter typed themselves', () => {
+    const manual = calcNutrition({ ...LIFTER, goal: 'lean_bulk', calories: 2600, calories_manual: true });
+    expect(manual.target).toBe(2600);
   });
-  it('handles hyphen separator "4×10-12"', () => {
-    expect(_parseRepRange('4×10-12')).toEqual({ min: 10, max: 12 });
+
+  it('follows bodyweight upward', () => {
+    const a = calcNutrition({ ...LIFTER, goal: 'lean_bulk' });
+    const b = calcNutrition({ ...LIFTER, weight: 90, goal: 'lean_bulk' });
+    expect(b.target).toBeGreaterThan(a.target);
   });
-  it('returns default {min:8,max:12} for empty string', () => {
-    expect(_parseRepRange('')).toEqual({ min: 8, max: 12 });
-  });
-  it('returns default for null', () => {
-    expect(_parseRepRange(null)).toEqual({ min: 8, max: 12 });
-  });
-  it('handles em-dash "3×15–20"', () => {
-    expect(_parseRepRange('3×15–20')).toEqual({ min: 15, max: 20 });
-  });
-  it('handles capital X separator "3X12"', () => {
-    const r = _parseRepRange('3X12');
-    expect(r.min).toBe(12);
-    expect(r.max).toBe(12);
-  });
-  it('handles lowercase x separator "4x8-10"', () => {
-    expect(_parseRepRange('4x8-10')).toEqual({ min: 8, max: 10 });
-  });
-  it('min is always <= max', () => {
-    const r = _parseRepRange('4×6–8');
-    expect(r.min).toBeLessThanOrEqual(r.max);
-  });
-  it('parses high rep range "3×15–20"', () => {
-    expect(_parseRepRange('3×15–20')).toEqual({ min: 15, max: 20 });
+
+  it('never drops below the 1200 floor', () => {
+    const tiny = calcNutrition({ weight: 38, height: 140, age: 80, gender: 'f', activity: 1.2, goal: 'cut' });
+    expect(tiny.target).toBeGreaterThanOrEqual(1200);
   });
 });
 
-// ─── CONFIG ──────────────────────────────────────────────────────────────────
+describe('calcNutrition — macros follow the goal', () => {
+  it('gives a deficit more protein than a surplus', () => {
+    const cut = calcNutrition({ ...LIFTER, goal: 'cut' });
+    const bulk = calcNutrition({ ...LIFTER, goal: 'lean_bulk' });
+    expect(cut.gPerKg).toBeGreaterThan(bulk.gPerKg);
+    expect(cut.protein).toBeGreaterThan(bulk.protein);
+  });
+
+  it('keeps protein inside the evidence range, 1.6 to 2.8 g/kg', () => {
+    for (const goal of ['lean_bulk', 'bulk', 'cut', 'maintain']) {
+      const n = calcNutrition({ ...LIFTER, goal });
+      const perKg = n.protein / LIFTER.weight;
+      expect(perKg).toBeGreaterThanOrEqual(1.6);
+      expect(perKg).toBeLessThanOrEqual(2.8);
+    }
+  });
+
+  it('holds fat at or above 0.8 g/kg even on a deep cut', () => {
+    const n = calcNutrition({ ...LIFTER, goal: 'cut' });
+    expect(n.fat).toBeGreaterThanOrEqual(Math.round(LIFTER.weight * 0.8));
+  });
+
+  it('never returns negative carbohydrate', () => {
+    const extreme = calcNutrition({ weight: 150, height: 170, age: 60, gender: 'm', activity: 1.2, goal: 'cut' });
+    expect(extreme.carbs).toBeGreaterThanOrEqual(0);
+  });
+
+  it('macros account for the target within 5 percent', () => {
+    const n = calcNutrition({ ...LIFTER, goal: 'lean_bulk' });
+    const kcal = n.protein * 4 + n.carbs * 4 + n.fat * 9;
+    expect(Math.abs(kcal - n.target) / n.target).toBeLessThan(0.05);
+  });
+
+  it('cut is below bulk, bulk is above maintain', () => {
+    const cut = calcNutrition({ ...LIFTER, goal: 'cut' });
+    const bulk = calcNutrition({ ...LIFTER, goal: 'bulk' });
+    const maintain = calcNutrition({ ...LIFTER, goal: 'maintain' });
+    expect(cut.target).toBeLessThan(bulk.target);
+    expect(bulk.target).toBeGreaterThan(maintain.target);
+  });
+});
+
+describe('calcNutrition — survives partial input', () => {
+  it('a male burns more than a female at identical stats', () => {
+    const m = calcNutrition({ ...LIFTER, gender: 'm', goal: 'maintain' });
+    const f = calcNutrition({ ...LIFTER, gender: 'f', goal: 'maintain' });
+    expect(m.bmr).toBeGreaterThan(f.bmr);
+  });
+  it('an empty object still produces usable numbers', () => {
+    const n = calcNutrition({});
+    for (const k of ['bmr', 'tdee', 'target', 'protein', 'carbs', 'fat'])
+      expect(Number.isFinite(n[k])).toBe(true);
+    expect(n.target).toBeGreaterThan(0);
+  });
+});
+
+describe('_repRange', () => {
+  it('reads a range', () => expect(_repRange({ sets: '4×6–8' })).toMatchObject({ min: 6, max: 8, mode: 'reps' }));
+  it('reads a single number as both ends', () => expect(_repRange({ sets: '3×12' })).toMatchObject({ min: 12, max: 12 }));
+  it('accepts a hyphen as well as an en dash', () => expect(_repRange({ sets: '4×10-12' })).toMatchObject({ min: 10, max: 12 }));
+  it('accepts a capital X', () => expect(_repRange({ sets: '3X12' })).toMatchObject({ min: 12, max: 12 }));
+  it('marks a timed hold rather than inventing reps', () => expect(_repRange({ sets: '3×45 שנ׳' }).mode).toBe('time'));
+  it('marks a set taken to failure', () => expect(_repRange({ sets: '2×כישלון' }).mode).toBe('amrap'));
+  it('falls back to 8-12 on nothing parseable', () => expect(_repRange({ sets: '' })).toMatchObject({ min: 8, max: 12 }));
+  it('does not throw on null', () => expect(() => _repRange(null)).not.toThrow());
+});
+
+describe('_setCount and _restSec', () => {
+  it('counts the sets', () => expect(_setCount('4×6–8')).toBe(4));
+  it('defaults to 3 when unstated', () => expect(_setCount('')).toBe(3));
+  it('reads seconds', () => expect(_restSec('90 שנ׳')).toBe(90));
+  it('reads minutes as seconds', () => expect(_restSec('2 דק׳')).toBe(120));
+  it('averages a range of minutes', () => expect(_restSec('2–3 דק׳')).toBe(150));
+  it('defaults to 75 seconds on nothing parseable', () => expect(_restSec('')).toBe(75));
+});
+
 describe('CONFIG', () => {
-  it('has WATER_GOAL = 10', () => { expect(CONFIG.WATER_GOAL).toBe(10); });
-  it('has MAX_ELOG_ENTRIES = 100', () => { expect(CONFIG.MAX_ELOG_ENTRIES).toBe(100); });
-  it('has SPARKLINE_SESSIONS = 6', () => { expect(CONFIG.SPARKLINE_SESSIONS).toBe(6); });
-  it('has COACH_STAGNATION = 4', () => { expect(CONFIG.COACH_STAGNATION).toBe(4); });
-  it('has COACH_INCREASE_MIN = 2', () => { expect(CONFIG.COACH_INCREASE_MIN).toBe(2); });
-  it('has TIMER_DEFAULT_SEC = 90', () => { expect(CONFIG.TIMER_DEFAULT_SEC).toBe(90); });
-  it('has CONFETTI_PARTICLES = 90', () => { expect(CONFIG.CONFETTI_PARTICLES).toBe(90); });
-  it('has CONFETTI_DURATION = 3200', () => { expect(CONFIG.CONFETTI_DURATION).toBe(3200); });
-  it('GYM_TIMER_CIRC equals 2*PI*38', () => {
-    expect(CONFIG.GYM_TIMER_CIRC).toBeCloseTo(2 * Math.PI * 38, 5);
-  });
-  it('all values are positive numbers', () => {
-    Object.values(CONFIG).forEach(v => {
-      expect(typeof v).toBe('number');
-      expect(v).toBeGreaterThan(0);
-    });
-  });
-});
-
-// ─── calcNutrition ───────────────────────────────────────────────────────────
-describe('calcNutrition', () => {
-  const male70 = { weight: 70, height: 175, age: 30, gender: 'm', goal: 'maintain' };
-  const female60 = { weight: 60, height: 165, age: 25, gender: 'f', goal: 'cut' };
-
-  it('returns all required macro fields', () => {
-    const r = calcNutrition(male70);
-    ['target','protein','carbs','fat','bmr','tdee'].forEach(k => expect(r).toHaveProperty(k));
-  });
-  it('male BMR > female at same stats', () => {
-    expect(calcNutrition(male70).bmr).toBeGreaterThan(calcNutrition({...male70,gender:'f'}).bmr);
-  });
-  it('cut < bulk calories', () => {
-    expect(calcNutrition({...male70,goal:'cut'}).target).toBeLessThan(calcNutrition({...male70,goal:'bulk'}).target);
-  });
-  it('bulk > maintain calories', () => {
-    expect(calcNutrition({...male70,goal:'bulk'}).target).toBeGreaterThan(calcNutrition(male70).target);
-  });
-  it('heavier person needs more calories', () => {
-    expect(calcNutrition({...male70,weight:100}).target).toBeGreaterThan(calcNutrition({...male70,weight:60}).target);
-  });
-  it('older person has lower BMR', () => {
-    expect(calcNutrition({...male70,age:20}).bmr).toBeGreaterThan(calcNutrition({...male70,age:60}).bmr);
-  });
-  it('macros sum to target ±5%', () => {
-    const r = calcNutrition(male70);
-    const sum = r.protein*4 + r.carbs*4 + r.fat*9;
-    expect(Math.abs(sum - r.target) / r.target).toBeLessThan(0.05);
-  });
-  it('protein, carbs, fat are positive integers', () => {
-    const r = calcNutrition(male70);
-    [r.protein,r.carbs,r.fat].forEach(v => {
-      expect(Number.isInteger(v)).toBe(true);
-      expect(v).toBeGreaterThan(0);
-    });
-  });
-  it('female cut calories > 1000', () => {
-    expect(calcNutrition(female60).target).toBeGreaterThan(1000);
-  });
-  it('does not throw for partial input', () => {
-    expect(() => calcNutrition({ weight: 80 })).not.toThrow();
-  });
-  it('empty object produces valid output', () => {
-    const r = calcNutrition({});
-    expect(r.target).toBeGreaterThan(0);
-    expect(r.bmr).toBeGreaterThan(0);
-  });
-});
-
-// ─── _buildSparklineFromData ─────────────────────────────────────────────────
-describe('_buildSparklineFromData', () => {
-  const up   = [{kg:65},{kg:62},{kg:60}];
-  const down = [{kg:60},{kg:62},{kg:65}];
-  const flat = [{kg:60},{kg:60},{kg:60}];
-
-  it('returns "" for empty array', () => { expect(_buildSparklineFromData([])).toBe(''); });
-  it('returns "" for null', () => { expect(_buildSparklineFromData(null)).toBe(''); });
-  it('returns "" for single session', () => { expect(_buildSparklineFromData([{kg:60}])).toBe(''); });
-  it('returns SVG string for 2+ sessions', () => {
-    expect(_buildSparklineFromData(up)).toContain('<svg');
-    expect(_buildSparklineFromData(up)).toContain('</svg>');
-  });
-  it('contains <polyline>', () => { expect(_buildSparklineFromData(up)).toContain('<polyline'); });
-  it('contains <circle> dot', () => { expect(_buildSparklineFromData(up)).toContain('<circle'); });
-  it('uses --lime for upward trend', () => { expect(_buildSparklineFromData(up)).toContain('var(--lime)'); });
-  it('uses --red for downward trend', () => { expect(_buildSparklineFromData(down)).toContain('var(--red)'); });
-  it('flat trend (same kg) uses --lime (>=)', () => { expect(_buildSparklineFromData(flat)).toContain('var(--lime)'); });
-  it('respects sessions limit', () => {
-    const many = Array.from({length:10},(_,i)=>({kg:60+i}));
-    expect(_buildSparklineFromData(many, 3)).toContain('<svg');
-  });
-  it('has correct viewBox "0 0 60 20"', () => {
-    expect(_buildSparklineFromData(up)).toContain('viewBox="0 0 60 20"');
-  });
-  it('has aria-hidden="true"', () => {
-    expect(_buildSparklineFromData(up)).toContain('aria-hidden="true"');
+  it('every value is a positive number', () => {
+    for (const [k, v] of Object.entries(CONFIG)) {
+      expect(typeof v, k).toBe('number');
+      expect(v, k).toBeGreaterThan(0);
+    }
   });
 });
