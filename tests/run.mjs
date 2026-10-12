@@ -4,6 +4,7 @@
 // mistakes. Then the rendered checks, which start their own server so nothing
 // outside this repo has to be running.
 import { auditOrder } from './audit_order.mjs';
+import { auditExercises } from './audit_exercises.mjs';
 import { auditVolume, auditDuplicates, auditVariants, auditIntegrity, HE } from './audit_plans.mjs';
 import { EX, PLANS } from './catalogue.mjs';
 import { smoke } from './probe_smoke.mjs';
@@ -21,6 +22,12 @@ console.log('  ' + Object.keys(EX).length + ' תרגילים · ' + Object.keys(
 
 const integrity = auditIntegrity();
 integrity.length ? fail('שלמות הקטלוג', integrity) : pass('שלמות הקטלוג — אין הפניה שבורה, אין שדה חסר');
+
+console.log('\n── מרשם התרגילים ──');
+const rx = auditExercises();
+rx.length
+  ? fail(rx.length + ' ממצאי מרשם', rx.map(f => '[' + f.key + '] ' + f.rule + ': ' + f.text))
+  : pass('טווח חזרות, מנוחה ותיאור מתאימים לכל ' + Object.keys(EX).length + ' התרגילים');
 
 console.log('\n── סדר התרגילים ──');
 const order = auditOrder();
