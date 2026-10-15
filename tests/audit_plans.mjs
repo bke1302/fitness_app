@@ -117,15 +117,11 @@ export function auditDuplicates() {
 
 /** Days labelled as variants of each other must not be the same workout twice.
  *  A template that runs more than once a week is 100% identical by definition. */
-// Overlaps that are open work rather than regressions: the home plans repeat
-// themselves because the bodyweight and band catalogue is too thin to fill a
-// third distinct day. Listed pair by pair, so a new overlap anywhere — including
-// a new one in these same plans — still fails.
-const KNOWN_OVERLAP = {
-  home_bw3:   ['בית א׳|בית ג׳'],
-  home_band3: ['גומי א׳|גומי ג׳'],
-  home_db4:   ['תחתון א׳|תחתון ב׳'],
-};
+// Overlaps that are open work rather than regressions, listed pair by pair so a
+// new overlap anywhere — including a new one in these same plans — still fails.
+// Empty: the home plans' bodyweight/band/db catalogue grew enough to give every
+// variant day its own identity.
+const KNOWN_OVERLAP = {};
 
 export function auditVariants(limit = 50) {
   const out = [];
