@@ -22,7 +22,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # 22, not 20: node's test runner only learned to match a quoted
+          # glob itself in 21. On 20 it looks for a file literally named
+          # "tests/**/*.test.js" and fails.
+          node-version: '22'
           cache: 'npm'
       # The unit tests and the training audits need nothing installed — they
       # run on node alone. Only the rendered pass wants a browser, and it
