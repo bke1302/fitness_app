@@ -5,7 +5,7 @@
 // the data audits do that — but it catches the class of failure that only
 // appears once the page is built: a day that resolves to nothing, a modal
 // missing its figures, a script error on one plan and not another.
-import { launch } from './pw.mjs';
+import { launch, available } from './pw.mjs';
 import { serve } from './serve.mjs';
 
 const CONFIGS = [
@@ -14,6 +14,9 @@ const CONFIGS = [
 ];
 
 export async function smoke() {
+  // Without a browser there is nothing to render. Say so and let the data
+  // audits stand on their own rather than failing the whole run.
+  if (!await available()) return { skipped: true, configs: 0, problems: [], errors: [] };
   const server = await serve();
   const port = server.address().port;
   const browser = await launch();

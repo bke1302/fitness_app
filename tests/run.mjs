@@ -62,9 +62,12 @@ rows.filter(r => (r.accepted || []).length).forEach(r =>
 
 console.log('\n── רינדור ──');
 const sm = await smoke();
-sm.problems.length || sm.errors.length
-  ? fail('בעיות רינדור', sm.problems.concat(sm.errors))
-  : pass(sm.configs + ' תצורות תוכנית · כל יום מרנדר · כל חלון תרגיל שלם');
+if (sm.skipped)
+  console.log('  דילוג  playwright לא מותקן — בדיקות הנתונים רצו, הרינדור לא נבדק');
+else if (sm.problems.length || sm.errors.length)
+  fail('בעיות רינדור', sm.problems.concat(sm.errors));
+else
+  pass(sm.configs + ' תצורות תוכנית · כל יום מרנדר · כל חלון תרגיל שלם');
 
 console.log('\n' + (failed ? '✗ ' + failed + ' קבוצות נכשלו' : '✓ הכל עבר') + '\n');
 process.exit(failed ? 1 : 0);

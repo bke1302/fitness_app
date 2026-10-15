@@ -24,9 +24,10 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+      # The unit tests and the training audits need nothing installed — they
+      # run on node alone. Only the rendered pass wants a browser, and it
+      # reports itself skipped rather than failing if one is missing.
       - run: npm ci
-      # The rendered checks drive a real browser; the unit tests and the
-      # training audits do not, but one install covers all of them.
       - run: npx playwright install --with-deps chromium
       - name: npm test
         run: npm test
