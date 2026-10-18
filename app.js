@@ -367,6 +367,14 @@ const EX = {
     desc:'שכיבה על הגב, גב תחתון צמוד לרצפה, ידיים ורגליים באוויר. תרגיל הליבה של מתעמלים.',
     muscles:'Rectus Abdominis, ליבה עמוקה.',
     tips:['גב תחתון חייב להישאר צמוד לרצפה','קשה מדי? כופף ברכיים','ידיים מעל הראש = קשה','איכות לפני זמן']},
+  pushupWide:{name:'שכיבות סמיכה אחיזה רחבה',en:'Wide-Grip Push-up',e:'',cat:'חזה',sets:'4×8–20',rest:'90 שנ׳',lvl:'בינוני',eq:'none',
+    desc:'ידיים מעל רוחב הכתפיים בכ-1.5 — טווח תנועה קצר יותר אך עומס גדול יותר על החזה הרחב, ופחות טריצפס.',
+    muscles:'חזה הגדול (רחב), כתפיים קדמיות.',
+    tips:['ידיים ברוחב של כ-1.5 כתפיים','מרפקים נפתחים קצת לצדדים, לא צמודים לגוף','חזה נוגע ברצפה בכל חזרה','גוף ישר — אגן לא שמוט']},
+  pikePushupElevated:{name:'שכיבות פייק רגליים מוגבהות',en:'Feet-Elevated Pike Push-up',e:'',cat:'כתפיים',sets:'3×6–12',rest:'90 שנ׳',lvl:'קשה',eq:'none',
+    desc:'כמו שכיבות פייק, אך הרגליים על כיסא — מגדיל את זווית הדחיפה האנכית וקרוב יותר ללחיצת כתפיים אמיתית.',
+    muscles:'דלטואיד קדמי + אמצעי, טריצפס, טרפז עליון.',
+    tips:['רגליים על כיסא/ספה יציבה','אגן גבוה ככל האפשר, גוף בצורת V הפוך','הראש יורד בין הידיים לכיוון הרצפה','קשה מדי? התחל בלי הגבהה ועלה בהדרגה']},
 
   // ═══ HOME — גומיות התנגדות (eq:'band') ═══
   chestSupportedRow:{name:'חתירה בתמיכת חזה',en:'Chest-Supported DB Row',e:'',cat:'גב אמצעי',sets:'4×10–12',rest:'90 שנ׳',lvl:'בינוני',eq:'db',
@@ -413,6 +421,14 @@ const EX = {
     desc:'גומייה סביב הצוואר-כתפיים ומתחת לרגליים. תבנית ציר הירך הביתית — תחליף RDL קל.',
     muscles:'Hamstrings, Glutes, Erector Spinae.',
     tips:['כיפוף מהאגן — לא מהגב','גב ישר לחלוטין','דחוף אגן קדימה בסיום','הרגש מתיחה בירך אחורי']},
+  bandSingleRow:{name:'חתירה חד-ידנית עם גומייה',en:'Band Single-Arm Row',e:'',cat:'גב אמצעי',sets:'4×12–20 לצד',rest:'75 שנ׳',lvl:'בינוני',eq:'band',
+    desc:'עיגון הגומייה בגובה בית החזה, משיכה ביד אחת לכיוון המותן. חד-צדדי — חושף הבדלים בין הצדדים.',
+    muscles:'Rhomboids, Lat, Trapezius, בייסס.',
+    tips:['עיגון בגובה בית החזה','סובב קלות את הגו בסוף המשיכה','שכמה נסגרת לפני שהיד מגיעה','אל תתן לגו לעזור — היד עובדת']},
+  bandRevFly:{name:'פרפר הפוך עם גומייה',en:'Band Reverse Fly',e:'',cat:'כתף אחורית',sets:'4×15–25',rest:'45 שנ׳',lvl:'בידוד',eq:'band',
+    desc:'עיגון הגומייה בגובה החזה, פתיחת הידיים לצדדים כמו פרפר הפוך. תחליף גומייה לפרפר הפוך עם משקולות.',
+    muscles:'Rear Deltoid, Rhomboids, Middle Trapezius.',
+    tips:['עיגון בגובה החזה, לא גבוה מזה','מרפקים כפופים קלות וקבועים','הובל עם המרפק, לא עם כף היד','עצור רגע בשיא הפתיחה']},
 
   // ═══ HOME — משקולות מתכווננות (eq:'db') ═══
   dbFloorPress:{name:'לחיצת חזה מהרצפה',en:'Dumbbell Floor Press',e:'',cat:'חזה',sets:'4×8–12',rest:'90 שנ׳',lvl:'כבד',eq:'db',
@@ -434,7 +450,11 @@ const EX = {
   dbShoulderPress:{name:'לחיצת כתפיים משקולות',en:'DB Shoulder Press',e:'',cat:'כתפיים',sets:'3×8–12',rest:'90 שנ׳',lvl:'בינוני',eq:'db',
     desc:'עמידה או ישיבה על כיסא עם גב. תחליף מלא ללחיצת כתפיים במוט.',
     muscles:'דלטואיד קדמי + אמצעי, טריצפס.',
-    tips:['ליבה אסופה — אל תקשת גב','דחוף עד יישור בלי לנעול','אפשר Arnold Press לגיוון','ירידה עד גובה אוזניים לפחות']}
+    tips:['ליבה אסופה — אל תקשת גב','דחוף עד יישור בלי לנעול','אפשר Arnold Press לגיוון','ירידה עד גובה אוזניים לפחות']},
+  dbReverseLunge:{name:'פסיעה אחורה עם משקולות',en:'DB Reverse Lunge',e:'',cat:'כל הרגל',sets:'3×10–12 לצד',rest:'2 דק׳',lvl:'בינוני',eq:'db',
+    desc:'משקולות בידיים בצדי הגוף, פסיעה אחורה לכריעה ודחיפה חזרה. קל יותר לברכיים מפסיעה קדימה, ועדיין מלא לרגל.',
+    muscles:'Quadriceps, Glutes, Hamstrings, שרירי איזון.',
+    tips:['צעד אחורה ארוך, לא קצר','ברך קדמית לא עוברת את קצות האצבעות','גו זקוף כל הדרך','דחוף מהעקב הקדמי בחזרה']}
 };
 
 const EX_YT={
@@ -483,10 +503,12 @@ const EX_YT={
   bandChestPress:'resistance band chest press proper form tutorial',
   bandCurl:'resistance band bicep curl proper form tutorial',
   bandFacePull:'resistance band face pull proper form tutorial',
+  bandRevFly:'resistance band reverse fly rear delt proper form',
   bandGoodMorning:'resistance band good morning hamstring proper form',
   bandLateral:'resistance band lateral raise proper form tutorial',
   bandPulldown:'resistance band lat pulldown kneeling proper form',
   bandRow:'resistance band seated row proper form tutorial',
+  bandSingleRow:'resistance band single arm row proper form tutorial',
   bandTricep:'resistance band triceps extension proper form tutorial',
   bulgSplitHome:'bulgarian split squat using a chair at home proper form',
   bulgarianSplit:'bulgarian split squat dumbbell proper form tutorial',
@@ -502,6 +524,7 @@ const EX_YT={
   closeGripBenchDB:'close grip barbell bench press triceps proper form',
   dbFloorPress:'dumbbell floor press proper form tutorial',
   dbGobletSquat:'dumbbell goblet squat proper form tutorial',
+  dbReverseLunge:'dumbbell reverse lunge proper form tutorial',
   dbRdl:'dumbbell romanian deadlift proper form tutorial',
   dbReverseFly:'bent over dumbbell reverse fly rear delt proper form',
   dbRow:'one arm dumbbell row bench supported proper form',
@@ -518,11 +541,13 @@ const EX_YT={
   nordicHome:'nordic hamstring curl at home beginner progression',
   pecDeck:'pec deck machine chest fly proper form tutorial',
   pikePushup:'pike push up shoulder press progression proper form',
+  pikePushupElevated:'feet elevated pike push up shoulder proper form',
   pistolBox:'box pistol squat progression proper form tutorial',
   plank:'front plank hold proper form tutorial abs',
   plankReach:'plank shoulder tap proper form tutorial',
   proneReverseFly:'prone y raise t raise rear delt on floor proper form',
   pushup:'push up proper form tutorial chest',
+  pushupWide:'wide grip push up chest proper form tutorial',
   reverseCurl:'reverse grip barbell curl brachialis proper form',
   reverseFly:'reverse pec deck machine rear delt fly proper form',
   seatedDBPress:'seated dumbbell overhead press proper form tutorial',
@@ -5789,7 +5814,7 @@ const WORKOUT_PLANS={
       {id:'pull',label:'פול-בודי ב׳ — ביתי',shortLabel:'בית ב׳',color:'#00D9FF',
        exercises:['declinePushup','chinupHome','bulgSplitHome','nordicHome','diamondPushup','hollowHold']},
       {id:'legs',label:'פול-בודי ג׳ — ביתי',shortLabel:'בית ג׳',color:'#B47CFF',
-       exercises:['pikePushup','chinupHome','pistolBox','gluteBridgeSL','pushup','proneReverseFly','calfRaiseHome','hollowHold']},
+       exercises:['pikePushupElevated','chinupHome','pistolBox','gluteBridgeSL','pushupWide','proneReverseFly','calfRaiseHome','hollowHold']},
     ],
     dows:[0,2,4],
     schedule:'א׳ א׳ · ג׳ ב׳ · ה׳ ג׳ — משקל גוף בלבד, 48 שעות מנוחה בין אימונים'
@@ -5801,7 +5826,7 @@ const WORKOUT_PLANS={
       {id:'pull',label:'פול-בודי ב׳ — גומיות',shortLabel:'גומי ב׳',color:'#00D9FF',
        exercises:['bandPulldown','pikePushup','declinePushup','bulgSplitHome','bandLateral','bandCurl','bandTricep','hollowHold']},
       {id:'legs',label:'פול-בודי ג׳ — גומיות',shortLabel:'גומי ג׳',color:'#B47CFF',
-       exercises:['pistolBox','bandChestPress','bandRow','gluteBridgeSL','bandLateral','bandFacePull','calfRaiseHome','plankReach']},
+       exercises:['pistolBox','bandChestPress','bandSingleRow','gluteBridgeSL','bandLateral','bandRevFly','calfRaiseHome','plankReach']},
     ],
     dows:[0,2,4],
     schedule:'א׳ א׳ · ג׳ ב׳ · ה׳ ג׳ — גומיות התנגדות + משקל גוף'
@@ -5815,7 +5840,7 @@ const WORKOUT_PLANS={
       {id:'legs',label:'עליון ב׳ — ביתי',shortLabel:'עליון ב׳',color:'#00D9FF',
        exercises:['chinupHome','declinePushup','pushup','dbRow','lateralRaise','dbReverseFly','inclineCurl','ohTricep','plankReach']},
       {id:'arms',label:'תחתון ב׳ — ביתי',shortLabel:'תחתון ב׳',color:'#FF7A45',
-       exercises:['dbRdl','pistolBox','dbGobletSquat','nordicHome','calfRaiseHome','hollowHold']},
+       exercises:['dbRdl','pistolBox','dbReverseLunge','nordicHome','calfRaiseHome','hollowHold']},
     ],
     dows:[0,1,3,4],
     schedule:'א׳ עליון א׳ · ב׳ תחתון א׳ · ד׳ עליון ב׳ · ה׳ תחתון ב׳'

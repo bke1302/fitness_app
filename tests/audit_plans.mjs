@@ -121,11 +121,7 @@ export function auditDuplicates() {
 // themselves because the bodyweight and band catalogue is too thin to fill a
 // third distinct day. Listed pair by pair, so a new overlap anywhere — including
 // a new one in these same plans — still fails.
-const KNOWN_OVERLAP = {
-  home_bw3:   ['בית א׳|בית ג׳'],
-  home_band3: ['גומי א׳|גומי ג׳'],
-  home_db4:   ['תחתון א׳|תחתון ב׳'],
-};
+const KNOWN_OVERLAP = {};
 
 export function auditVariants(limit = 50) {
   const out = [];
