@@ -9,6 +9,7 @@ import { auditVolume, auditDuplicates, auditVariants, auditIntegrity, HE } from 
 import { EX, PLANS } from './catalogue.mjs';
 import { smoke } from './probe_smoke.mjs';
 import { nutritionProbe } from './probe_nutrition.mjs';
+import { progressionProbe } from './probe_progression.mjs';
 
 let failed = 0;
 const pass = m => console.log('  PASS  ' + m);
@@ -78,6 +79,15 @@ else if (nut.problems.length || nut.errors.length)
   fail('בעיות במסכי התזונה', nut.problems.concat(nut.errors));
 else
   pass(nut.checks + ' בדיקות · קלוריות הארוחה תואמות למקרו שלה · היעד זהה בכל מסך');
+
+console.log('\n── מנוע ההתקדמות ──');
+const prog = await progressionProbe();
+if (prog.skipped)
+  console.log('  דילוג  playwright לא מותקן — ההתקדמות לא נבדקה');
+else if (prog.problems.length || prog.errors.length)
+  fail('מנוע ההתקדמות לא מקדם', prog.problems.concat(prog.errors));
+else
+  pass(prog.checks + ' תרגילים · 20 שבועות · המשקל עולה למי שמתחזק ויורד למי שנתקע');
 
 console.log('\n' + (failed ? '✗ ' + failed + ' קבוצות נכשלו' : '✓ הכל עבר') + '\n');
 process.exit(failed ? 1 : 0);

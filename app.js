@@ -165,7 +165,7 @@ const EX = {
     desc:'מוט ישר = supination מלאה של האמה — מגרה את הביצפס בצורה מיטבית.',
     muscles:'Biceps Brachii, Brachialis.',
     tips:['מרפקים קבועים בצדי הגוף','תנועה מלאה — מתח עד כיפוף מלא','האט בירידה','לא להשתמש בתנופה — גוף ישר']},
-  hammerCurl:{name:'כפיפות פטיש',en:'Hammer Curl',e:'',cat:'בראכיאליס',sets:'3×12',rest:'60 שנ׳',lvl:'בידוד',
+  hammerCurl:{name:'כפיפות פטיש',en:'Hammer Curl',e:'',cat:'בראכיאליס',sets:'3×10–12',rest:'60 שנ׳',lvl:'בידוד',
     desc:'אחיזה ניטרלית. מחזק Brachialis שנמצא מתחת לבייסס ומרים אותה ויזואלית.',
     muscles:'Brachialis, Brachioradialis, Biceps.',
     tips:['כף יד פונה פנימה לאורך כל התרגיל','אפשר חילופין ימין-שמאל','גוף ישר, אל תשתמש בתנופה','כבל = מתח קבוע יותר ממשקולות']},
@@ -185,7 +185,7 @@ const EX = {
     desc:'ישיבה עם הירך כפופה, כרית מעל הקרסוליים, כיפוף הברכיים לאחור. ההבדל מהגרסה בשכיבה: הירך הכפופה מאריכה את הירך האחורי לאורך כל התרגיל.',
     muscles:'Hamstrings (Biceps Femoris, Semitendinosus, Semimembranosus).',
     tips:['הישבן צמוד למושב — לא מתרומם','כרית האגן הדוקה כדי שלא תעוף מהכיסא','ירידה איטית — שם רוב הגירוי','אל תנעל ברכיים בפתיחה','טווח מלא עדיף על משקל כבד']},
-  legCurl:{name:'כפיפות רגליים — שכיבה',en:'Lying Leg Curl',e:'',cat:'ירך אחורי',sets:'3×12',rest:'60 שנ׳',lvl:'בידוד',
+  legCurl:{name:'כפיפות רגליים — שכיבה',en:'Lying Leg Curl',e:'',cat:'ירך אחורי',sets:'3×10–12',rest:'60 שנ׳',lvl:'בידוד',
     desc:'בידוד לירך האחורי — חיוני לאיזון ולמניעת פציעות ברכיים.',
     muscles:'Biceps Femoris, Semitendinosus.',
     tips:['שכב שטוח — רק הרגל זזה','תנועה מלאה','האט בהורדה','לפחות 3 סטים — שריר מוזנח לעיתים']},
@@ -247,7 +247,7 @@ const EX = {
     muscles:'Grip strength, Trapezius, Core, Erector Spinae.',
     tips:['גב ישר, כתפיים מאחורה','צעדים קצרים ומהירים','עד קצה האולם וחזרה','המשקולות לא נוגעות בגוף','כשהאחיזה נשברת — עצור']},
   bulgSplit:{name:'סקוואט בולגרי',en:'Bulgarian Split Squat',e:'',cat:'ירכיים',
-    sets:'3×10 לצד',rest:'90 שנ׳',lvl:'בינוני',
+    sets:'3×8–12 לצד',rest:'90 שנ׳',lvl:'בינוני',
     desc:'מלך תרגילי הרגל החד-צדדיים — מבדיל בין הרגליים ומחזק יציבות.',
     muscles:'קוואדריצפס, גלוטאוס, המסטרינג, שרירי יציבה.',
     tips:['שים רגל אחורית על ספסל בגובה הברך','ברך קדמית לא עוברת את האצבעות','גב ישר לאורך כל התנועה','ירד לאט — 2–3 שניות']},
@@ -262,7 +262,7 @@ const EX = {
     muscles:'ביצפס (שני ראשים), ברכיאליס.',
     tips:['אחיזה ב-45 מעלות על המוט','מרפקים קבועים לצד הגוף','עלה מהר, ירד לאט (2 שנ)','כיווץ מלא בפסגה']},
   cableCurl:{name:'כפיפות כבל עמידה',en:'Standing Cable Curl',e:'',cat:'בייסס',
-    sets:'3×15',rest:'60 שנ׳',lvl:'בידוד',
+    sets:'3×12–15',rest:'60 שנ׳',lvl:'בידוד',
     desc:'כבל שומר על מתח קבוע לאורך כל טווח התנועה — שאב דם מושלם לסיום.',
     muscles:'ביצפס, ברכיאליס.',
     tips:['זרוע ישרה לגמרי בתחתית','כיווץ מלא בפסגה','תנועה איטית ומבוקרת','אפשר לעשות חד-צדדי']},
@@ -4275,13 +4275,33 @@ function prescribe(exKey){
   const step=_loadStep(ex);
   const allTop=last.every(s=>+s.reps>=range.max);
   const anyBelow=last.some(s=>+s.reps<range.min);
+  // The range the engine widens to when a load jump would be too large. It is
+  // never stored, so it is recomputed from the catalogue range wherever needed.
+  const wide=range.max+2;
 
   // two sessions in a row where the first working set missed the bottom of
   // the range is the app's own stated rule for backing off
   const prev=_workingSets(hist[1]||{});
+  const prevLoad=prev.length?Math.max(...prev.map(s=>+s.kg)):0;
   const failedNow=+last[0].reps<range.min;
-  const failedBefore=prev.length&&+prev[0].reps<range.min;
-  if(failedNow&&failedBefore){
+  // Only a real stall counts. Landing under the range is the normal first
+  // session after a load rise, and a trainee who gained a rep is not stalling
+  // — cutting 10% in either case turned every jump into a loop back down to
+  // the load it started from.
+  const failedBefore=prev.length&&+prev[0].reps<range.min
+    &&prevLoad>=load&&+last[0].reps<=+prev[0].reps;
+  // The heaviest load in recent history where every working set reached the top
+  // of the range: a load this trainee has already beaten. Dropping below it is
+  // never the right answer — the first sessions after a load rise sit under the
+  // range by arithmetic, not by failure.
+  let cleared=0;
+  for(const h of hist.slice(0,10)){
+    const ws=_workingSets(h);
+    if(ws.length&&ws.every(s=>+s.reps>=range.max))
+      cleared=Math.max(cleared,Math.max(...ws.map(s=>+s.kg)));
+  }
+  const building=cleared>0&&load>cleared;
+  if(failedNow&&failedBefore&&!building){
     const cut=step?Math.max(step,Math.round(load*0.1/step)*step):0;
     return Object.assign({},base,{kg:+(load-cut).toFixed(1),state:'backoff',
       reason:'שני אימונים מתחת לטווח — יורדים 10% ובונים מחדש'});
@@ -4290,8 +4310,25 @@ function prescribe(exKey){
     if(!step)
       return Object.assign({},base,{kg:null,state:'addreps',
         reason:'הגעת לראש הטווח — הוסף חזרות או האט את הקצב'});
-    if(step/load>_MAX_JUMP_FRACTION)
-      return Object.assign({},base,{kg:load,repHigh:range.max+2,state:'addreps',
+    // A 2.5 kg plate on a 10 kg lateral raise is a 25% jump, so the engine
+    // widens the range and asks for reps instead. That used to be the end of
+    // the road: the widened range is not stored anywhere, so allTop kept
+    // firing against the catalogue range, kg:load came back unchanged, and the
+    // load never rose again for any lift under step×20 — 100 kg for the squat
+    // and the deadlift, 50 kg for most of the catalogue, 40 kg for dumbbells,
+    // which is 61 of the 84 loadable exercises in the plans. Simulated over 20
+    // weeks against the real engine: a trainee squatting 80 kg was still being
+    // told 80 kg × 10 every week while their 1RM went 110 → 126, and the same
+    // held for the overhead press, every curl, every pushdown, every raise and
+    // every machine. Bench press progressed normally, because at 60 kg it is
+    // above its own threshold — the one lift people watch was the one lift
+    // that worked.
+    //
+    // Clearing the widened range as well is what earns the jump: at that point
+    // the smallest plate in the building is the smallest plate, and there is
+    // nothing smaller left to add.
+    if(step/load>_MAX_JUMP_FRACTION&&!last.every(s=>+s.reps>=wide))
+      return Object.assign({},base,{kg:load,repHigh:wide,state:'addreps',
         reason:'קפיצת משקל תהיה גדולה מדי — מרחיבים את הטווח'});
     return Object.assign({},base,{kg:+(load+step).toFixed(1),state:'up',
       reason:'כל הסטים בראש הטווח — מעלים משקל'});
