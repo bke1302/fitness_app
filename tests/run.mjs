@@ -8,6 +8,7 @@ import { auditExercises } from './audit_exercises.mjs';
 import { auditVolume, auditDuplicates, auditVariants, auditIntegrity, HE } from './audit_plans.mjs';
 import { EX, PLANS } from './catalogue.mjs';
 import { smoke } from './probe_smoke.mjs';
+import { nutritionProbe } from './probe_nutrition.mjs';
 
 let failed = 0;
 const pass = m => console.log('  PASS  ' + m);
@@ -68,6 +69,15 @@ else if (sm.problems.length || sm.errors.length)
   fail('בעיות רינדור', sm.problems.concat(sm.errors));
 else
   pass(sm.configs + ' תצורות תוכנית · כל יום מרנדר · כל חלון תרגיל שלם');
+
+console.log('\n── מסכי התזונה ──');
+const nut = await nutritionProbe();
+if (nut.skipped)
+  console.log('  דילוג  playwright לא מותקן — חשבון התזונה נבדק, המסכים לא');
+else if (nut.problems.length || nut.errors.length)
+  fail('בעיות במסכי התזונה', nut.problems.concat(nut.errors));
+else
+  pass(nut.checks + ' בדיקות · קלוריות הארוחה תואמות למקרו שלה · היעד זהה בכל מסך');
 
 console.log('\n' + (failed ? '✗ ' + failed + ' קבוצות נכשלו' : '✓ הכל עבר') + '\n');
 process.exit(failed ? 1 : 0);

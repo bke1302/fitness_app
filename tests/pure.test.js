@@ -58,9 +58,14 @@ test('holds fat at or above 0.8 g/kg even on a deep cut', () => {
   assert.ok(n.fat >= Math.round(LIFTER.weight * 0.8), 'got ' + n.fat + 'g');
 });
 
-test('never returns negative carbohydrate', () => {
-  const extreme = calcNutrition({ weight: 150, height: 170, age: 60, gender: 'm', activity: 1.2, goal: 'cut' });
-  assert.ok(extreme.carbs >= 0, 'got ' + extreme.carbs);
+// This used to assert only `carbs >= 0`, and so went green on precisely the
+// input that was broken: the clamp at zero hid three macros that summed to
+// 13.7% ABOVE the target printed on the same card.
+test('the extreme profile that used to overflow now balances', () => {
+  const n = calcNutrition({ weight: 150, height: 170, age: 60, gender: 'm', activity: 1.2, goal: 'cut' });
+  assert.ok(n.carbs > 5, 'carbohydrate collapsed to ' + n.carbs + 'g');
+  const kcal = n.protein * 4 + n.carbs * 4 + n.fat * 9;
+  assert.ok(kcal <= n.target * 1.02, kcal + ' kcal of macros against a ' + n.target + ' target');
 });
 
 test('macros account for the target within 5 percent', () => {
@@ -89,6 +94,70 @@ test('an empty object still produces usable numbers', () => {
   for (const k of ['bmr', 'tdee', 'target', 'protein', 'carbs', 'fat'])
     assert.ok(Number.isFinite(n[k]), k + ' was ' + n[k]);
   assert.ok(n.target > 0);
+});
+
+// ── the whole input space, not one lifter ────────────────────────────────────
+// Every assertion above runs a single profile, and that is how the macro
+// squeeze survived: a rule that holds for a 78 kg male at 1.55 says nothing
+// about a 68 kg woman at 155 cm, who was being handed 2 g of carbohydrate a
+// day. These walk the space instead.
+const GRID = [];
+for (const weight of [38, 45, 52, 60, 68, 75, 78, 85, 92, 100, 110, 120, 130, 150])
+  for (const height of [145, 155, 165, 175, 185, 195])
+    for (const age of [18, 35, 55, 80])
+      for (const gender of ['m', 'f'])
+        for (const activity of [1.2, 1.375, 1.55, 1.725])
+          for (const goal of ['cut', 'lean_bulk', 'bulk', 'maintain'])
+            GRID.push({ weight, height, age, gender, activity, goal });
+
+const show = u => u.weight + 'kg/' + u.height + 'cm ' + u.gender + ' ' + u.age + 'y act' + u.activity + ' ' + u.goal;
+// Mirrors calcNutrition: per-kilo figures apply to this, not to scale weight.
+const refWeight = u => Math.min(u.weight, Math.round(30 * Math.pow(u.height / 100, 2)));
+
+test('the macros never add up to more than the target shown beside them', () => {
+  for (const u of GRID) {
+    const n = calcNutrition(u), kcal = n.protein * 4 + n.carbs * 4 + n.fat * 9;
+    assert.ok(kcal <= n.target * 1.02,
+      show(u) + ': ' + kcal + ' kcal of macros against a ' + n.target + ' target');
+  }
+});
+
+test('carbohydrate is never squeezed out of the day', () => {
+  for (const u of GRID) {
+    const n = calcNutrition(u);
+    assert.ok(n.carbs > 5, show(u) + ': ' + n.carbs + 'g of carbohydrate');
+  }
+});
+
+test('protein never falls below 1.8 g/kg of the reference weight', () => {
+  for (const u of GRID) {
+    const perKg = calcNutrition(u).protein / refWeight(u);
+    assert.ok(perKg >= 1.79, show(u) + ': ' + perKg.toFixed(2) + ' g/kg');
+  }
+});
+
+test('fat never falls below the 0.6 g/kg hormonal floor', () => {
+  for (const u of GRID) {
+    const perKg = calcNutrition(u).fat / refWeight(u);
+    assert.ok(perKg >= 0.59, show(u) + ': ' + perKg.toFixed(2) + ' g/kg');
+  }
+});
+
+// The reference weight exists for the obese end of the range, where protein and
+// fat priced per scale kilo crowded carbohydrate out of the day. It must not
+// quietly reprice anyone of ordinary build, which is most of the users.
+test('an untight lifter under BMI 30 keeps the full per-kilo allowance', () => {
+  for (const u of GRID) {
+    if (u.weight / Math.pow(u.height / 100, 2) > 30) continue;
+    const n = calcNutrition(u);
+    const fullProtein = Math.round(u.weight * n.gPerKg);
+    const prefFat = Math.max(Math.round(u.weight * 0.8), Math.round(n.target * 0.27 / 9));
+    // Skip the profiles the budget genuinely cannot hold — the assertions above
+    // already cover what happens to those.
+    if (fullProtein * 4 + prefFat * 9 + Math.round(n.target * 0.15 / 4) * 4 > n.target) continue;
+    assert.equal(n.protein, fullProtein, show(u) + ' protein');
+    assert.equal(n.fat, prefFat, show(u) + ' fat');
+  }
 });
 
 // ── parsing what the catalogue writes ────────────────────────────────────────

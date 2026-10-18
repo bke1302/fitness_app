@@ -57,6 +57,19 @@ export async function smoke() {
           const figs = document.querySelectorAll('#m-muscles svg').length;
           const cards = document.querySelectorAll('#m-demo .demo-card').length;
           if (figs !== 2 || cards !== 3) out.modals.push(k + ' (figures ' + figs + ', cards ' + cards + ')');
+          // The swap button carries its handler in an HTML attribute. The
+          // exercise name was once interpolated into it with JSON.stringify,
+          // whose double quotes closed the attribute early: the handler was
+          // truncated, the rest of the name became bogus attributes, and every
+          // click threw. The button rendered perfectly and did nothing, which
+          // is why it survived so long. Anything beyond class and onclick here
+          // means a name has broken out of the attribute again.
+          const alt = document.querySelector('.m-alt-btn');
+          if (!alt) out.modals.push(k + ' (no swap button)');
+          else {
+            const stray = alt.getAttributeNames().filter(a => a !== 'class' && a !== 'onclick');
+            if (stray.length) out.modals.push(k + ' (swap button broken by its own name: ' + stray.join(' ') + ')');
+          }
           window.closeModal();
         }
         return out;

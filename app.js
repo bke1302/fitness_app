@@ -734,9 +734,14 @@ function openModal(key){
   if(altWrap){
     // Offered for every exercise now: the candidates come from the catalogue,
     // so there is always something to show unless the equipment rules it out.
-    altWrap.innerHTML=true
-      ? `<button class="m-alt-btn" onclick="showAlternatives('${key}',${JSON.stringify(e.name)})">החלף תרגיל</button>`
-      : '';
+    // Only the key goes into the attribute. The name used to be interpolated
+    // with JSON.stringify, which puts double quotes inside a double-quoted
+    // onclick — so the HTML parser closed the attribute at the first one. The
+    // handler was truncated to showAlternatives('benchPress', the rest of the
+    // name became three bogus attributes, and every click threw "Unexpected
+    // end of input". The button rendered perfectly and did nothing at all.
+    // The name is looked up inside showAlternatives instead.
+    altWrap.innerHTML=`<button class="m-alt-btn" onclick="showAlternatives('${key}')">החלף תרגיל</button>`;
   }
   // Coach tip
   const coachEl=document.getElementById('m-coach-tip');
@@ -899,6 +904,9 @@ function showPanel(name,btn){
   if(name==='food') setTimeout(renderFoodPanel,0);
   if(name==='chat') setTimeout(renderChatPanel,0);
   if(name==='crossfit') setTimeout(renderCrossfitPanel,0);
+  // Stale otherwise: this is built once at boot, and its numbers come from the
+  // food log, the workout log and the PR list — all edited in other panels.
+  if(name==='progress') setTimeout(renderWeeklyReport,0);
   if(['push','pull','legs','arms','day5','day6','day7','day-a','day-b','day-c'].includes(name)) setTimeout(injectSparklines,0);
 }
 // Sidebar was removed from the HTML — keep safe no-ops for any leftover callers
@@ -989,13 +997,19 @@ function updateBMRPreview(){
   const a=parseInt(document.getElementById('sf-age')?.value)||0;
   const prev=document.getElementById('bmr-preview');
   if(!prev||!w||!h||!a){if(prev)prev.innerHTML='הזן נתונים כדי לחשב את היעד היומי';return;}
-  const _g=(getActiveUser()?.gender||'m')==='f'?-161:5;
-  const bmr=Math.round(10*w+6.25*h-5*a+_g);
-  const actVal=parseFloat(document.getElementById('sf-activity')?.value)||1.55;
-  const tdee=Math.round(bmr*actVal);
-  const goalVal=document.getElementById('sf-goal')?.value||'lean_bulk';
-  const surp={lean_bulk:350,bulk:600,cut:-400,maintain:0}[goalVal]??350;
-  const target=tdee+surp;
+  // One source for the target. This used to recompute it by hand and read
+  // gender from the saved profile rather than the form, so switching מין left
+  // the preview on the old sex while saveSettingsForm computed the new one;
+  // the two then disagreed and calories_manual was written for a number the
+  // lifter never typed, freezing the target for good. It also had no 1,200
+  // floor, so a 45 kg profile was shown 997 here and 1,200 everywhere else.
+  const n=calcNutrition({weight:w,height:h,age:a,
+    gender:document.getElementById('sf-gender')?.value||'m',
+    goal:document.getElementById('sf-goal')?.value||'lean_bulk',
+    activity:parseFloat(document.getElementById('sf-activity')?.value)||1.55});
+  const target=n.target,tdee=n.tdee;
+  // The real gap, not the goal's nominal offset: the 1,200 floor moves it.
+  const surp=target-tdee;
   const surpLabel=surp>0?'+'+surp:String(surp);
   prev.innerHTML=`היעד שלך: <strong style="color:var(--lime)">${target.toLocaleString()}</strong> קל׳ ליום `
     +`<span style="color:var(--muted2)">· ${surpLabel} · שריפה יומית ${tdee.toLocaleString()}</span>`;
@@ -1036,7 +1050,9 @@ function saveSettingsForm(){
   // only counts as a manual target when it disagrees with what these very
   // values compute. Judging it against the stored profile instead would mark
   // every weight change as a deliberate override.
-  const calories_manual=Math.abs(calories-calcNutrition({weight,height,age,gender,goal,activity}).auto)>1;
+  // Against .target, not .auto: .auto ignores the 1,200 floor, so every
+  // profile small enough to be floored was marked as a manual override.
+  const calories_manual=Math.abs(calories-calcNutrition({weight,height,age,gender,goal,activity}).target)>1;
   if(idx>=0){
     users[idx]={...users[idx],name,weight,height,age,calories,calories_manual,goal,activity,workout_time,gender,meal_count,cholesterol,workout_freq,workout_split,workout_location,home_equipment};
     saveUsers(users);
@@ -1102,11 +1118,29 @@ function calcNutrition(u){
   // Protein follows the goal. A deficit needs more of it to defend lean mass;
   // a surplus does not, and every gram above the requirement is a gram of
   // carbohydrate not fuelling the session.
+  // The per-kilo figures apply to a reference weight, not the scale weight: a
+  // kilo of fat mass needs neither protein nor dietary fat. A 130 kg lifter at
+  // 180 cm on a cut was handed 338 g protein and 104 g fat — 99% of a 2,306
+  // kcal target — leaving 5 g of carbohydrate for the day. BMI 30 and not
+  // lower on purpose: a lean 100 kg lifter at 180 cm is BMI 30.9 and keeps
+  // essentially his whole allowance.
+  const wRef=Math.min(w,Math.round(30*Math.pow((u.height||175)/100,2)));
   const gPerKg=goal==='cut'?2.6:2.2;
-  const protein=Math.round(w*gPerKg);
+  let protein=Math.round(wRef*gPerKg);
   // 27% of calories, but never under ~0.8 g/kg: on a deep cut the percentage
   // alone drops fat low enough to matter hormonally.
-  const fat=Math.max(Math.round(w*0.8),Math.round(target*0.27/9));
+  let fat=Math.max(Math.round(wRef*0.8),Math.round(target*0.27/9));
+  // A small target cannot hold all three at once, and the three used to sum to
+  // as much as 48% ABOVE the target printed on the same card. Something has to
+  // yield, and the order is the whole question: in a deficit protein is what
+  // defends lean mass, so fat gives way first — down to 0.6 g/kg, still inside
+  // the hormonal floor — and protein yields last, never below 1.8 g/kg.
+  const _cMin=Math.round(target*0.15/4),_fMin=Math.round(wRef*0.6);
+  if(protein*4+fat*9+_cMin*4>target){
+    fat=Math.max(_fMin,Math.floor((target-protein*4-_cMin*4)/9));
+    if(protein*4+fat*9+_cMin*4>target)
+      protein=Math.max(Math.round(wRef*1.8),Math.floor((target-fat*9-_cMin*4)/4));
+  }
   const carbs=Math.max(0,Math.round((target-protein*4-fat*9)/4));
   return{bmr,tdee,target,protein,fat,carbs,auto,gPerKg};
 }
@@ -1169,6 +1203,8 @@ function _activeDayIndex(){
   return DAY_PANEL_IDS.indexOf(pid);
 }
 function showAlternatives(exKey, exName){
+  // The modal's button passes the key alone — see the note where it is built.
+  if(!exName) exName=(EX[exKey]||{}).name||'';
   const dayIdx=_activeDayIndex();
   if(dayIdx<0){ showToast('אפשר להחליף תרגיל מתוך יום אימון'); return; }
   let u=null; try{ u=getActiveUser(); }catch(e){}
@@ -1206,8 +1242,11 @@ function renderDashboardStats(u){
   const w=u.weight||75;
   const g=u.goal||'lean_bulk';
   const act=u.activity||1.55;
-  const surplusMap={lean_bulk:350,bulk:600,cut:-400,maintain:0};
-  const surplus=surplusMap[g]??350;
+  // The real gap, not the goal's nominal offset: a manual target or the 1,200
+  // floor moves it. A lifter who typed 2,600 and then switched to מסה was told
+  // "יעד מסה (+600)" above a 2,600 target with a 2,702 TDEE — a 102 kcal
+  // deficit labelled as a 600 kcal surplus.
+  const surplus=n.target-n.tdee;
   const surpLabel=surplus>0?'(+'+surplus+')':surplus<0?'('+surplus+')':'';
   const goalHe={lean_bulk:'עלייה נקייה',bulk:'מסה',cut:'הורדת שומן',maintain:'שמירה'};
 
@@ -1240,7 +1279,7 @@ function renderDashboardStats(u){
   setW('dash-tdee-bar', Math.min(100,Math.round(n.tdee/n.target*100))+'%');
 
   // Target label
-  set('dash-target-lbl', 'יעד '+goalHe[g]+' '+surpLabel);
+  set('dash-target-lbl', 'יעד '+goalHe[g]+' '+surpLabel+(u.calories_manual?' · ידני':''));
   set('dash-target-val', n.target.toLocaleString('he-IL')+' קל׳');
 
   // Rings card
@@ -1410,10 +1449,14 @@ function getMealPlan(u,n){
 }
 
 function _buildMealCard(m, i, n, swaps){
-  const kcal=Math.round(n.target*m.pct);
   const p=Math.round(n.protein*m.pRat);
   const c=Math.round(n.carbs*m.cRat);
   const f=Math.round(n.fat*m.fRat);
+  // From this card's own macros. pct, pRat, cRat and fRat are renormalised
+  // independently — which is what makes the day add up exactly — so reading
+  // kcal from pct let the two numbers on one card drift apart: the 130 kg
+  // cut's ערב card read 179 קל׳ beside macros worth 320.
+  const kcal=p*4+c*4+f*9;
   const borderStyle=m.accent==='red'?' style="border-color:rgba(232,168,124,.35);"':'';
   const timeStyle=m.accent==='red'?' style="color:var(--red)"':'';
   const tipColor='var(--muted2)';
@@ -3315,7 +3358,10 @@ let _searchResults=[];   // current dropdown results (local + Open Food Facts)
 let _offReqId=0;         // guards against out-of-order async responses
 
 function getFoodLog(){ try{const d=_store.getItem(FOOD_KEY+'_'+todayStr());return d?JSON.parse(d):[]}catch(e){return[];} }
-function saveFoodLog(log){ _store.setItem(FOOD_KEY+'_'+todayStr(),JSON.stringify(log)); }
+// Through the quota guard like every other growing key: a raw setItem threw
+// out of addFoodEntry on a full quota, window.onerror swallowed it, and
+// renderFoodPanel() never ran — the entry just failed to appear, with no toast.
+function saveFoodLog(log){ _safeSet(FOOD_KEY+'_'+todayStr(),JSON.stringify(log)); }
 
 function renderFoodPanel(){
   const wrap=document.getElementById('food-content'); if(!wrap) return;
@@ -3492,9 +3538,16 @@ function selectFood(idx){
   _searchResults=[f]; selectFoodResult(0);
 }
 
+// min="0.5" on the input is advisory only — .value is read directly, so a
+// typed "-2" used to subtract two servings from the day. One helper for both
+// readers, so the preview and the stored entry can never disagree.
+function _foodQty(){
+  return Math.min(20,Math.max(0.1,parseFloat(document.getElementById('food-qty')?.value)||1));
+}
+
 function updateFoodPreview(){
   if(!_selectedFood) return;
-  const qty=parseFloat(document.getElementById('food-qty')?.value)||1;
+  const qty=_foodQty();
   const pr=document.getElementById('food-preview');
   if(pr) pr.textContent=`${Math.round(_selectedFood.cal*qty)} קל׳ · חלבון ${Math.round(_selectedFood.p*qty)} ג׳ · פחמימות ${Math.round(_selectedFood.c*qty)} ג׳ · שומן ${Math.round(_selectedFood.f*qty)} ג׳`;
 }
@@ -3502,7 +3555,7 @@ document.addEventListener('input',e=>{if(e.target.id==='food-qty') updateFoodPre
 
 function addFoodEntry(){
   if(!_selectedFood) return;
-  const qty=parseFloat(document.getElementById('food-qty')?.value)||1;
+  const qty=_foodQty();
   const log=getFoodLog();
   if(log.length>=30){ showToast('הגעת למגבלת 30 רשומות ביום'); return; }
   log.push({name:_selectedFood.name,qty,cal:_selectedFood.cal*qty,p:_selectedFood.p*qty,c:_selectedFood.c*qty,f:_selectedFood.f*qty});
@@ -3579,10 +3632,17 @@ function renderChatPanel(){
 }
 
 function renderWelcomeMsg(s,totals){
+  // From calcNutrition, like every other surface. This bubble was the last
+  // place still quoting the flat 2.5 g/kg rule that app.js dropped in
+  // September, so the first thing a lifter read on this tab was a protein
+  // target 23 g away from the one on the bar beside it. The cholesterol line
+  // was unconditional too — every user was told they were on a saturated-fat
+  // restriction whether or not they had ever set one.
+  const u=getActiveUser()||s, n=calcNutrition(u);
   return `<div class="chat-bubble ai">שלום! אני יועץ התזונה שלך. אני מכיר את:
-    <br>• יעד קלוריות: ${s.calories} קל׳ ביום
-    <br>• יעד חלבון: ${Math.round(s.weight*2.5)}g ביום
-    <br>• מגבלה: שומן רווי נמוך (כולסטרול)
+    <br>• יעד קלוריות: ${n.target.toLocaleString('he-IL')} קל׳ ביום
+    <br>• יעד חלבון: ${n.protein}g ביום
+    ${u.cholesterol?'<br>• מגבלה: שומן רווי נמוך (כולסטרול)':''}
     <br>• היום אכלת: ${Math.round(totals.cal)} קל׳ · ${Math.round(totals.p)}g חלבון
     <br><br>שאל אותי כל שאלה על תזונה!</div>`;
 }
@@ -5495,7 +5555,10 @@ function _buildWeekStats(weekDates){
   });
   const weekPRs=Object.entries(prs).filter(([,v])=>weekDates.includes(v.date)).length;
   const foodLogs=weekDates.map(d=>{try{return JSON.parse(_store.getItem(FOOD_KEY+'_'+d)||'[]');}catch(e){return[];}});
-  const avgCal=Math.round(foodLogs.reduce((s,fl)=>s+fl.reduce((a,f)=>a+(f.cal||0)*(f.qty||1),0),0)/Math.max(1,foodLogs.filter(fl=>fl.length).length));
+  // e.cal is already the whole entry — addFoodEntry stores cal*qty. Multiplying
+  // by qty a second time here doubled anything logged as two servings, so the
+  // weekly average disagreed with the food panel's own total for the same day.
+  const avgCal=Math.round(foodLogs.reduce((s,fl)=>s+fl.reduce((a,f)=>a+(f.cal||0),0),0)/Math.max(1,foodLogs.filter(fl=>fl.length).length));
   return {workoutDays,weekPRs,weekVol,avgCal};
 }
 function _buildWeekCoachSection(){
