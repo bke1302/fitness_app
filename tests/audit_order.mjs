@@ -5,10 +5,15 @@
 // a push day — press first, raises after, which is correct — and "two heavy
 // lifts in a row" fired on squat into bench press, which contend for nothing.
 // Together they produced 39 of 51 flags. What remains fires only on real cost.
-import { EX, PLANS, FAM, isHeavy, isCompound } from './catalogue.mjs';
+// demandsFirst, not isHeavy: these rules are about which lift needs maximal
+// freshness, not about which lift is expensive to recover from. See the note
+// on both predicates in catalogue.mjs — borrowing the recovery-cost one made
+// every rule here fire on press-then-row and on a hip thrust closing a leg
+// day, neither of which is a defect.
+import { EX, PLANS, FAM, demandsFirst, isCompound } from './catalogue.mjs';
 
 const SPINAL = /squat|deadlift|romanian|bent-over|bent over|good morning|overhead press/i;
-const isSpinal = ex => SPINAL.test(ex.en || '') && isHeavy(ex);
+const isSpinal = ex => SPINAL.test(ex.en || '') && demandsFirst(ex);
 
 export function auditOrder() {
   const out = [];
@@ -20,7 +25,7 @@ export function auditOrder() {
     const label = d.shortLabel || d.label;
 
     // the day opens with its most demanding lift, while the lifter is fresh
-    const heavy = ex.map((x, i) => isHeavy(x) ? i : -1).filter(i => i >= 0);
+    const heavy = ex.map((x, i) => demandsFirst(x) ? i : -1).filter(i => i >= 0);
     if (heavy.length && heavy[0] > 1)
       add(pk, label, 'high', 'כבד לא ראשון',
         ex[heavy[0]].name + ' הוא הכבד ביותר ומגיע במקום ' + (heavy[0] + 1));
@@ -37,7 +42,7 @@ export function auditOrder() {
     // two heavy lifts adjacent that actually contend
     for (let i = 0; i + 1 < ex.length; i++) {
       const a = ex[i], b = ex[i + 1];
-      if (!isHeavy(a) || !isHeavy(b)) continue;
+      if (!demandsFirst(a) || !demandsFirst(b)) continue;
       const sameMuscle = FAM(a.cat) === FAM(b.cat);
       if (!sameMuscle && !(isSpinal(a) && isSpinal(b))) continue;
       add(pk, label, 'med', sameMuscle ? 'שני כבדים לאותו שריר' : 'שני כבדים על הגב',
@@ -55,7 +60,7 @@ export function auditOrder() {
 
     // load trends down across a session; it should not climb back up
     const climb = ex.findIndex((x, i) =>
-      i > 0 && isHeavy(x) && ex.slice(0, i).some(y => !isCompound(y)));
+      i > 0 && demandsFirst(x) && ex.slice(0, i).some(y => !isCompound(y)));
     if (climb > 0)
       add(pk, label, 'med', 'כבד אחרי בידוד',
         ex[climb].name + ' (' + (climb + 1) + ') אחרי תרגילי בידוד');

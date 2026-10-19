@@ -4,7 +4,35 @@
 // 0.5 to the second. Chest presses credit half a set to triceps and front
 // delts — crediting rows with half a biceps set while not doing the same on the
 // pressing side understates one half of the body.
-import { EX, PLANS, setCount, weekFreq } from './catalogue.mjs';
+import { EX, PLANS, setCount, weekFreq, isHeavy } from './catalogue.mjs';
+
+/** Sets performed in a given week of the block — setsToday's rule, in the same
+ *  order it applies it. This audit used to count the base prescription only,
+ *  which is week 1, while reporting "every plan in range for every muscle". It
+ *  was verifying one week in four and claiming all of them.
+ *
+ *  The wave is: 1 accumulate, 2 overload, 3 peak, 4 deload. Weeks 2 and 3 add a
+ *  set to everything that is not already expensive to recover from. */
+const setsInWeek = (ex, week) => {
+  const base = setCount(ex);
+  if (week === 4) return Math.max(2, Math.ceil(base / 2));
+  if (isHeavy(ex)) return base;
+  return week >= 2 ? base + 1 : base;
+};
+
+/** How far past MRV the loading weeks may go.
+ *
+ *  Not zero, on purpose. MRV is the ceiling for training that continues
+ *  indefinitely; a four-week wave that ends in a deload is supposed to spend
+ *  its last loading weeks above it and then recover. Treating any breach as a
+ *  defect would be marking correct periodisation as a fault — the same mistake
+ *  that got two order rules deleted.
+ *
+ *  15% is the line because that is roughly what one added set per isolation
+ *  comes to in a plan that starts with room, and a plan that needs more than
+ *  that to absorb the overload week was already at its ceiling in week 1 —
+ *  which is a real finding about the plan, not about the wave. */
+const OVERREACH = 1.15;
 
 const MAP = {
   'חזה': { chest: 1 }, 'חזה עליון': { chest: 1 }, 'חזה תחתון': { chest: 1 },
@@ -52,17 +80,30 @@ const muscles = ex => {
 export function auditVolume() {
   const rows = [], unmapped = new Set();
   for (const pk in PLANS) {
-    const plan = PLANS[pk], freq = weekFreq(plan), vol = {};
+    const plan = PLANS[pk], freq = weekFreq(plan), vol = {}, peak = {};
     (plan.days || []).forEach((d, i) => {
       if (!freq[i]) return;
       (d.exercises || []).forEach(k => {
         const ex = EX[k]; if (!ex) return;
         const m = muscles(ex);
         if (!m) { unmapped.add(ex.cat); return; }
-        const n = setCount(ex);
-        for (const mus in m) vol[mus] = (vol[mus] || 0) + n * m[mus] * freq[i];
+        const n = setCount(ex), p = setsInWeek(ex, 2);
+        for (const mus in m) {
+          vol[mus] = (vol[mus] || 0) + n * m[mus] * freq[i];
+          peak[mus] = (peak[mus] || 0) + p * m[mus] * freq[i];
+        }
       });
     });
+    // Weeks 2 and 3 carry the added set. A plan that cannot hold it without
+    // going more than OVERREACH past the ceiling had no headroom to overload
+    // into, which is a fact about the plan rather than about the wave.
+    const overreach = [];
+    for (const mus in LAND) {
+      const mrv = LAND[mus][1];
+      if ((peak[mus] || 0) > mrv * OVERREACH)
+        overreach.push(HE[mus] + ' ' + (vol[mus] || 0) + '→' + peak[mus] + '/' + mrv +
+                       ' (' + Math.round(((peak[mus] || 0) / mrv - 1) * 100) + '% מעל)');
+    }
     const under = [], over = [];
     for (const mus in LAND) {
       const v = vol[mus] || 0, mev = LAND[mus][0], mrv = LAND[mus][1];
@@ -78,7 +119,7 @@ export function auditVolume() {
     // anything else in that plan drops below the line.
     const accepted = ALLOWED[pk] || [];
     rows.push({
-      plan: pk, days, vol, over,
+      plan: pk, days, vol, over, peak, overreach,
       under: under.filter(u => !accepted.some(a => u.startsWith(a))),
       inherent: days <= 2,
       accepted: under.filter(u => accepted.some(a => u.startsWith(a))),

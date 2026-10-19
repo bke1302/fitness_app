@@ -54,3 +54,23 @@ export const app = load(
    'function _setCount(str){', 'function _restSec(str){'],
   ['calcNutrition', '_repRange', 'CONFIG', '_setCount', '_restSec']
 );
+
+/** _isHeavyCompound, sliced rather than restated.
+ *
+ *  catalogue.mjs used to carry its own `isHeavy` with a comment claiming it was
+ *  "the app's own definition, so audits and the progression engine agree". It
+ *  was not: it had the rest-and-reps test but neither the early false on
+ *  בידוד/קל nor the early true on כבד, so it disagreed with the app on every
+ *  entry whose lvl says so in words. The same shape of mistake as src/pure.js,
+ *  just smaller — and it is why two measurements of the week-2 volume came back
+ *  different.
+ *
+ *  `_exRest` has to come with it. The real function reads it as
+ *  `_exRest?_exRest(ex):ex.rest`, which looks like a guard but throws a
+ *  ReferenceError when the name was never declared at all — a sliced copy
+ *  without it does not fall through, it dies. */
+export const heavy = load(
+  ['function _exRest(e){', 'function _restSec(str){', 'function _repRange(ex){',
+   'function _isHeavyCompound(ex){'],
+  ['_isHeavyCompound']
+)._isHeavyCompound;

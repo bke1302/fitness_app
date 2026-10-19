@@ -62,6 +62,13 @@ rows.filter(r => r.inherent).forEach(r =>
 rows.filter(r => (r.accepted || []).length).forEach(r =>
   console.log('        (' + r.plan + ' — מגבלת ציוד מוכרת: ' + r.accepted.join(', ') + ')'));
 
+console.log('\n── שבועות העומס (2–3) ──');
+const stretched = rows.filter(r => (r.overreach || []).length);
+stretched.length
+  ? fail(stretched.length + ' תוכניות בלי מרווח לעומס',
+         stretched.map(r => r.plan + ' (' + r.days + ' ימים): ' + r.overreach.join(', ')))
+  : pass('הסט הנוסף בשבועות 2–3 נכנס בכל תוכנית בלי לעבור 15% מעל MRV');
+
 console.log('\n── רינדור ──');
 const sm = await smoke();
 if (sm.skipped)
