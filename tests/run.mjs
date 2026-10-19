@@ -87,7 +87,7 @@ if (prog.skipped)
 else if (prog.problems.length || prog.errors.length)
   fail('מנוע ההתקדמות לא מקדם', prog.problems.concat(prog.errors));
 else
-  pass(prog.checks + ' תרגילים · 20 שבועות · המשקל עולה למי שמתחזק ויורד למי שנתקע');
+  pass(prog.checks + ' תרגילים · המשקל עולה למי שמתחזק, יורד למי שנתקע, ושבוע הדילואד קל יותר');
 
 console.log('\n' + (failed ? '✗ ' + failed + ' קבוצות נכשלו' : '✓ הכל עבר') + '\n');
 process.exit(failed ? 1 : 0);

@@ -4292,29 +4292,6 @@ function prescribe(exKey){
     return Object.assign({},base,{kg:null,state:'calibrate',
       reason:'סט היכרות — מצא משקל שאפשר לעצור איתו עם 3 בבנק'});
 
-  const last=_workingSets(hist[0]);
-  if(!last.length)
-    return Object.assign({},base,{kg:null,state:'calibrate',reason:'אין נתונים מהאימון האחרון'});
-
-  const load=Math.max(...last.map(s=>+s.kg));
-  const step=_loadStep(ex);
-  const allTop=last.every(s=>+s.reps>=range.max);
-  const anyBelow=last.some(s=>+s.reps<range.min);
-  // The range the engine widens to when a load jump would be too large. It is
-  // never stored, so it is recomputed from the catalogue range wherever needed.
-  const wide=range.max+2;
-
-  // two sessions in a row where the first working set missed the bottom of
-  // the range is the app's own stated rule for backing off
-  const prev=_workingSets(hist[1]||{});
-  const prevLoad=prev.length?Math.max(...prev.map(s=>+s.kg)):0;
-  const failedNow=+last[0].reps<range.min;
-  // Only a real stall counts. Landing under the range is the normal first
-  // session after a load rise, and a trainee who gained a rep is not stalling
-  // — cutting 10% in either case turned every jump into a loop back down to
-  // the load it started from.
-  const failedBefore=prev.length&&+prev[0].reps<range.min
-    &&prevLoad>=load&&+last[0].reps<=+prev[0].reps;
   // The heaviest load in recent history where every working set reached the top
   // of the range: a load this trainee has already beaten. Dropping below it is
   // never the right answer — the first sessions after a load rise sit under the
@@ -4325,6 +4302,55 @@ function prescribe(exKey){
     if(ws.length&&ws.every(s=>+s.reps>=range.max))
       cleared=Math.max(cleared,Math.max(...ws.map(s=>+s.kg)));
   }
+
+  // Which session sets today's working load. A deload is performed at 60% of
+  // it, so that session must not be read as the new baseline — every block
+  // would restart lighter than the one before it. A deliberate backoff is only
+  // 10% down, so the 70% line tells a deload from a backoff without having to
+  // store anything new on a session. An empty session is skipped for the same
+  // reason: it should not erase what came before it.
+  let at=0;
+  while(at<hist.length-1){
+    const ws=_workingSets(hist[at]);
+    if(ws.length&&!(cleared&&Math.max(...ws.map(s=>+s.kg))<=cleared*0.7)) break;
+    at++;
+  }
+
+  const last=_workingSets(hist[at]);
+  if(!last.length)
+    return Object.assign({},base,{kg:null,state:'calibrate',reason:'אין נתונים מהאימון האחרון'});
+
+  const load=Math.max(...last.map(s=>+s.kg));
+  const step=_loadStep(ex);
+
+  // The other half of the deload's own promise. setsToday already halves the
+  // sets; this reduces the load, which nothing did. Without it the week whose note
+  // reads "חצי מהסטים ו-60% מהמשקל" was prescribing the full working weight,
+  // and once the load jump was unblocked it was prescribing a personal best.
+  const wv=_todayWave();
+  if(wv&&wv.label==='דילואד'){
+    const dl=step?Math.max(step,Math.round(load*0.6/step)*step):+(load*0.6).toFixed(1);
+    return Object.assign({},base,{kg:dl,state:'deload',
+      reason:'שבוע דילואד — 60% מהמשקל וחצי מהסטים. ההתאוששות היא האימון'});
+  }
+
+  const allTop=last.every(s=>+s.reps>=range.max);
+  const anyBelow=last.some(s=>+s.reps<range.min);
+  // The range the engine widens to when a load jump would be too large. It is
+  // never stored, so it is recomputed from the catalogue range wherever needed.
+  const wide=range.max+2;
+
+  // two sessions in a row where the first working set missed the bottom of
+  // the range is the app's own stated rule for backing off
+  const prev=_workingSets(hist[at+1]||{});
+  const prevLoad=prev.length?Math.max(...prev.map(s=>+s.kg)):0;
+  const failedNow=+last[0].reps<range.min;
+  // Only a real stall counts. Landing under the range is the normal first
+  // session after a load rise, and a trainee who gained a rep is not stalling
+  // — cutting 10% in either case turned every jump into a loop back down to
+  // the load it started from.
+  const failedBefore=prev.length&&+prev[0].reps<range.min
+    &&prevLoad>=load&&+last[0].reps<=+prev[0].reps;
   const building=cleared>0&&load>cleared;
   if(failedNow&&failedBefore&&!building){
     const cut=step?Math.max(step,Math.round(load*0.1/step)*step):0;

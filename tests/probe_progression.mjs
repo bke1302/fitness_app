@@ -113,7 +113,75 @@ export async function progressionProbe() {
         problems.push(r.key + ' (no strength gain): never backed off in ' + WEEKS +
           ' weeks — states seen: ' + r.states.join(','));
     }
-    return { skipped: false, checks: up.length + flat.length, problems, errors, up, flat };
+    // ── across block boundaries, where the deload lives ─────────────────────
+    // Everything above runs in week 1 of the block, because _mesoStart()
+    // defaults to this Monday. That left the deload entirely uncovered — and
+    // the deload is where two opposite failures live: the week telling the
+    // trainee to add weight, and the fix for that quietly making the deload
+    // session the next block's baseline so every cycle restarts lighter.
+    const blocks = await page.evaluate(async ([weeks, growth]) => {
+      const repsAt = (oneRM, kg) => Math.max(0, Math.min(30, Math.floor(30 * (oneRM / kg - 1))));
+      const p2 = x => String(x).padStart(2, '0');
+      const dayKey = back => {
+        const d = new Date(); d.setDate(d.getDate() - back);
+        return d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate());
+      };
+      const out = [];
+      for (const [key, kg0, rm0] of [['squat', 80, 110], ['benchPress', 60, 82], ['legExt', 45, 70]]) {
+        const ex = window.EX[key] || {};
+        const range = window._repRange(ex);
+        let oneRM = rm0, kg = kg0;
+        const log = {};
+        log[key] = [{ date: dayKey(7), sets: Array.from({ length: 3 }, () => ({ kg: kg0, reps: range.max })) }];
+        localStorage.setItem('pf_setlog2', JSON.stringify(log));
+        const weekly = [];
+        for (let w = 1; w <= weeks; w++) {
+          // Move the block anchor so the wave advances a week each iteration.
+          localStorage.setItem('pf_meso_start', dayKey((w - 1) * 7));
+          const wv = window.currentWave(window._resolvePlan(window.getActiveUser()));
+          const p = window.prescribe(key);
+          const askKg = p.kg == null ? kg : p.kg;
+          const did = Math.max(1, Math.min(p.repHigh || range.max, repsAt(oneRM, askKg)));
+          weekly.push({ w, label: wv && wv.label, kg: askKg, state: p.state });
+          kg = askKg;
+          const cur = JSON.parse(localStorage.getItem('pf_setlog2') || '{}');
+          const arr = (cur[key] || []).slice();
+          arr.unshift({ date: dayKey(0), sets: Array.from({ length: 3 }, () => ({ kg: askKg, reps: did })) });
+          cur[key] = arr.slice(0, 12).map((e, i) => ({ ...e, date: dayKey(i * 7 + 1) }));
+          localStorage.setItem('pf_setlog2', JSON.stringify(cur));
+          oneRM *= 1 + growth;
+        }
+        out.push({ key, kg0, weekly });
+      }
+      localStorage.removeItem('pf_meso_start');
+      return out;
+    }, [24, GROWTH]);
+
+    for (const r of blocks) {
+      const deloads = r.weekly.filter(x => x.label === 'דילואד');
+      const pushes = r.weekly.filter(x => x.label !== 'דילואד');
+      // The deload must actually be lighter than the week before it.
+      for (const d of deloads) {
+        const before = r.weekly[r.weekly.findIndex(x => x.w === d.w) - 1];
+        if (before && d.kg >= before.kg)
+          problems.push(r.key + ': the deload in week ' + d.w + ' prescribes ' + d.kg +
+            'kg against ' + before.kg + 'kg the week before — the recovery week is not lighter');
+        if (d.state !== 'deload')
+          problems.push(r.key + ': week ' + d.w + ' is a deload week but the card state is "' + d.state + '"');
+      }
+      // And the deload must not drag the block down: each block's working weeks
+      // must start at least as heavy as the previous block's did.
+      const firsts = r.weekly.filter(x => x.label === 'צבירה').map(x => x.kg);
+      for (let i = 1; i < firsts.length; i++)
+        if (firsts[i] < firsts[i - 1])
+          problems.push(r.key + ': block ' + (i + 1) + ' opens at ' + firsts[i] + 'kg after block ' +
+            i + ' opened at ' + firsts[i - 1] + 'kg — the deload became the new baseline');
+      if (!deloads.length) problems.push(r.key + ': no deload week appeared in 24 weeks');
+      if (pushes[pushes.length - 1].kg <= r.kg0)
+        problems.push(r.key + ': 24 weeks across six blocks and the load never rose above ' + r.kg0 + 'kg');
+    }
+
+    return { skipped: false, checks: up.length + flat.length + blocks.length, problems, errors, up, flat, blocks };
   } finally {
     await browser.close();
     server.close();

@@ -3242,6 +3242,12 @@ bdi[dir="ltr"]{unicode-bidi:isolate;}
 .gym-target-backoff{border-inline-start-color:var(--coral)}
 .gym-target-backoff .gym-target-val{color:var(--coral)}
 .gym-target-calibrate .gym-target-val,.gym-target-asis .gym-target-val{color:var(--muted)}
+/* The deload is the one week doing less is the instruction, so it reads muted
+   on purpose — every other state on this card is a push. It still gets a rail,
+   unlike calibrate, because it is a deliberate prescription and not an absence
+   of one. */
+.gym-target-deload{border-inline-start-color:var(--muted)}
+.gym-target-deload .gym-target-val{color:var(--muted)}
 
 /* ═══════════════════════════════════════════════════════════════════
    THE WAVE — which week of the block this is
