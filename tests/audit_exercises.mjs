@@ -91,9 +91,23 @@ export function auditExercises() {
       add(key, 'low', 'קטגוריה שלא ממופה לשריר', ex.cat);
 
     // "Incline" in the English name is the ground truth for the angle; the
-    // Hebrew card name has to say so too, not call it "lying" (flat).
-    if (/\bincline\b/i.test(ex.en || '') && (!/נטייה/.test(ex.name || '') || /שכיבה/.test(ex.name || '')))
-      add(key, 'high', 'שם אומר שכיבה אבל התרגיל בנטייה', ex.name + ' — ' + ex.en);
+    // Hebrew has to say so too, not call it "lying" (flat).
+    //
+    // The description is checked as well as the name, because they sit on the
+    // same card and both tell the lifter how to set the bench. Renaming the
+    // three entries left inclineDB's desc reading "בשכיבה 30-45 מעלות" and
+    // inclineCurlDB's reading "בשכיבה להתמתחות מרבית" — directly under a name
+    // that now said בנטייה, so the card contradicted itself in two lines.
+    if (/\bincline\b/i.test(ex.en || '')) {
+      if (!/נטייה/.test(ex.name || '') || /שכיבה/.test(ex.name || ''))
+        add(key, 'high', 'שם אומר שכיבה אבל התרגיל בנטייה', ex.name + ' — ' + ex.en);
+      if (/בשכיבה|שכיבה של/.test(ex.desc || ''))
+        add(key, 'high', 'התיאור אומר שכיבה אבל התרגיל בנטייה', (ex.desc || '').slice(0, 70));
+    }
+    // And the inverse: a flat movement whose Hebrew claims an incline.
+    if (/\bflat\b|\bbench press\b/i.test(ex.en || '') && !/\bincline\b|\bdecline\b/i.test(ex.en || '')
+        && /נטייה/.test(ex.name || ''))
+      add(key, 'high', 'שם אומר נטייה אבל התרגיל בשכיבה', ex.name + ' — ' + ex.en);
   }
   return out;
 }
