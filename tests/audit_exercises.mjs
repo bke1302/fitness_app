@@ -89,6 +89,11 @@ export function auditExercises() {
       add(key, 'high', 'אין שרירים מעורבים', key);
     if (FAM(ex.cat) === ex.cat && !/ליבה|שוק|חזה|גב|כתפיים|טריצפס|יד קדמית|אמות|מקרבים|ארבע ראשי|ירך אחורי|ישבן/.test(FAM(ex.cat)))
       add(key, 'low', 'קטגוריה שלא ממופה לשריר', ex.cat);
+
+    // "Incline" in the English name is the ground truth for the angle; the
+    // Hebrew card name has to say so too, not call it "lying" (flat).
+    if (/\bincline\b/i.test(ex.en || '') && (!/נטייה/.test(ex.name || '') || /שכיבה/.test(ex.name || '')))
+      add(key, 'high', 'שם אומר שכיבה אבל התרגיל בנטייה', ex.name + ' — ' + ex.en);
   }
   return out;
 }
