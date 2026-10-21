@@ -5,7 +5,21 @@
 // curve, does the rest match the load, and do the fields agree with each other.
 // A heavy multi-joint lift at fifteen reps and sixty seconds' rest is not a
 // programming preference, it is a typo with a plausible face.
-import { EX, restSec, repMin, FAM } from './catalogue.mjs';
+import { EX, restSec, repMin, FAM, EX_ALTERNATIVES } from './catalogue.mjs';
+
+// The vocabulary the catalogue's array-form `muscles` field already uses
+// correctly. A name outside this list is either a typo with a plausible face
+// ('מכייס' is not a word) or a phrase that reads like a muscle but names
+// none ('עקמוניים ירכיים'), and the only way to catch either is a positive
+// list rather than a pattern — there is no regex for "not a real muscle".
+const KNOWN_MUSCLES = new Set([
+  'אדקטורים', 'ארבע ראשי', 'בטן אלכסוני', 'בטן אמצעי', 'בטן עליונה', 'בטן שטוחה',
+  'בטן תחתונה', 'ביצפס', 'ביצפס ראש קצר', 'ברכיאליס', 'ברכיו-ראדיאליס',
+  'גב עמוד אמצעי', 'גב רחב', 'גב תחתון', 'גלוטאוס מדיוס', 'היפ פלקסור', 'חזה',
+  'חזה עליון', 'חזה תחתון', 'טריצפס', 'טריצפס ראש ארוך', 'ירך אחורי',
+  'ירך פנימית', 'ירכיים', 'ישבן', 'ישבן צידי', 'כתף', 'כתף אמצעי', 'כתף קדמית',
+  'כתפיים', 'ליבה', 'עגל', 'ראמ"ן', 'שרירי אמה קדמי',
+]);
 
 const repMax = ex => {
   const s = String(ex?.sets || '');
@@ -87,6 +101,22 @@ export function auditExercises() {
       add(key, 'med', 'תיאור קצר מדי', key);
     if (!String(ex.muscles || '').trim() && !Array.isArray(ex.muscles))
       add(key, 'high', 'אין שרירים מעורבים', key);
+    if (Array.isArray(ex.muscles))
+      for (const m of ex.muscles)
+        if (!KNOWN_MUSCLES.has(m))
+          add(key, 'high', 'שם שריר שגוי או לא קיים', m);
+
+    // A card's own numbers have to agree: a prescription of 4 sets whose
+    // description insists on 5 ("ולא פחות") sends the lifter two instructions.
+    const descSets = (ex.desc || '').match(/(\d+)\s*סטים/);
+    if (descSets && n && +descSets[1] !== n)
+      add(key, 'high', 'התיאור סותר את מספר הסטים', ex.sets + ' — ' + descSets[0]);
+
+    // "אין לו תחליף" is only true until the app lists one. If EX_ALTERNATIVES
+    // carries alternatives for this exact exercise, the claim is false on the
+    // same screen that would offer them.
+    if (/לא ניתן להחליפו|אין (לו )?תחליף/.test(ex.desc || '') && (EX_ALTERNATIVES[key] || []).length)
+      add(key, 'high', 'התיאור טוען שאין תחליף אבל יש חלופות רשומות', (ex.desc || '').slice(0, 60));
     if (FAM(ex.cat) === ex.cat && !/ליבה|שוק|חזה|גב|כתפיים|טריצפס|יד קדמית|אמות|מקרבים|ארבע ראשי|ירך אחורי|ישבן/.test(FAM(ex.cat)))
       add(key, 'low', 'קטגוריה שלא ממופה לשריר', ex.cat);
 
