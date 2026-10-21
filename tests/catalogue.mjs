@@ -3,6 +3,7 @@
 import { slice, heavy } from './from-app.mjs';
 export const EX = (0, eval)('(' + slice('const EX = {').replace(/^const EX = /, '') + ')');
 export const PLANS = (0, eval)('(' + slice('const WORKOUT_PLANS={').replace(/^const WORKOUT_PLANS=/, '') + ')');
+export const EX_ALTERNATIVES = (0, eval)('(' + slice('const EX_ALTERNATIVES = {').replace(/^const EX_ALTERNATIVES = /, '') + ')');
 
 export const setCount = ex => { const m = String(ex?.sets || '').match(/^\s*(\d+)/); return m ? +m[1] : 3; };
 export const restSec = r => {
